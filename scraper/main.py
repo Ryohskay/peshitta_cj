@@ -99,5 +99,5 @@ def get_and_save(
 
 if __name__ == "__main__":
     http = urllib3.PoolManager()
-    get_and_save("./example.html", http)
+    get_and_save("./out/example.html", http)
     print("Process Complete!")
