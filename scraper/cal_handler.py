@@ -64,7 +64,7 @@ def get_a_chapter(
 
 
 def get_and_save(
-        fpath: str,
+        fpath: str | Path,
         pool_mgr: urllib3.PoolManager,
         book_id: str="62001", 
         section: str=None, 
@@ -78,7 +78,7 @@ def get_and_save(
 
     If no section is specified, the whole book will be fetched.
 
-    fpath: str
+    fpath: str | pathlib.Path
         The name of the file to save the data fetched from CAL.
         It's passed to pathlib, so it can handle both POSIX and
         MS Windows paths.
@@ -89,16 +89,19 @@ def get_and_save(
         uses pathlib.Path.write_text() without try/catch.
     """
     qr = get_a_chapter(pool_mgr, book_id, section, display_in)
-    dest = Path(fpath)
+    if isinstance(fpath, Path):
+        dest = fpath
+    else:
+        dest = Path(fpath)
     
     if dest.exists() and not dest.is_file():
-        raise ValueError("The specified path " + fpath + " exists, and it is not a file path.")
+        raise ValueError("The specified path {} exists, and it is not a file path.".format(fpath))
 
-    # Avoid overwriting files
+    # Avoid overwriting files unless explicitly allowed
     if dest.exists() and not allow_overwrite:
-        raise FileExistsError("Overwrite not allowed: The file " + fpath + " exists, and allow_overwrite parameter is False!")
+        raise FileExistsError("Overwrite not allowed: The file {} exists, and allow_overwrite parameter is False!".format(fpath))
     elif dest.exists():
-        print("Overwriting: " + fpath)
+        print("Overwriting: {}".format(fpath))
 
     dest.write_text(qr)
 
