@@ -6,35 +6,6 @@ from cal_handler import pool_init, get_a_chapter, follow_link
 import re
 import json
 
-def clean_word(text: str, flags: dict) -> str:
-    # Initial cleaning
-    text = text.strip()
-
-    if "#" in text and "<" in text:
-        # If the word is surrounded by "< >"
-        text = text.replace("<", "").replace(">", "")
-    
-    if flags["in_variant"] and "/" in text:
-        # second "/" marking the end of variant spelling,
-        # remove the text before this "/"
-        text = re.sub(".+/", "", text)
-        flags["in_variant"] = False
-    elif flags["in_variant"]:
-        # inside the variant spelling format, ignore this word
-        text = ""
-    elif "#" in text and "/" in text:
-        # If the word contains a variant spelling formatted like "???/???#3#/",
-        # Remove it
-        text = re.sub("/.+/", "", text)
-    elif "/" in text:
-        # beginning of a variant spelling, where it's one word in the revised text
-        # but it's multiple words in the referenced alternative source
-        flags["in_variant"] = True
-    text = re.sub("#.+#", "", text)  # remove "#3#"
-    text = text.replace("\\", "")  # remove "\"
-
-    return text
-
 
 http = pool_init()
 result = get_a_chapter(http)
