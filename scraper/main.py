@@ -48,52 +48,52 @@ flag_dict = {
 }
 word_lis = []
 
-for link in soup.find_all('a'):
+for table_data in soup.find_all('td'):
+    for link in table_data.find_all('a'):
 
-    # Remove the default variant spelling format "???/???#3#/"
-    anchor_text = re.sub("/.+/", "", link.text.strip())
+        # Remove the default variant spelling format "???/???#3#/"
+        anchor_text = re.sub("/.+/", "", link.text.strip())
 
-    # Set flags to control for variant spelling spanning multiple words
-    if not flag_dict["in_variant"] and "/" in anchor_text:
-        flag_dict["in_variant"] = True
-    elif "/" in anchor_text:
-        flag_dict["in_variant"] = False
+        # Set flags to control for variant spelling spanning multiple words
+        if not flag_dict["in_variant"] and "/" in anchor_text:
+            flag_dict["in_variant"] = True
+        elif "/" in anchor_text:
+            flag_dict["in_variant"] = False
 
-    # Skip <a> tags if it's inside multi-word variance
-    if flag_dict["in_variant"]:
-        # deal with things like:
-        # wpr:$)/w)p pr:$)#3#/,
-        continue
+        # Skip <a> tags if it's inside multi-word variance
+        if flag_dict["in_variant"]:
+            # deal with things like:
+            # wpr:$)/w)p pr:$)#3#/,
+            # \slqw (mh /#3#/,
+            # \wlmk nsb_ lh /wnsb lh lmk#3#/
+            continue
 
-    # TODO: deal with things like:
-    # \slqw (mh /#3#/,
+        lex_url = link["href"]
 
-    # TODO: deal with things like:
-    # \wlmk nsb_ lh /wnsb lh lmk#3#/
+        if "getlex" in lex_url:
+            # if it's linked to getlex.php file, it's a word
+            # follow the link to get the lemma(ta) page
+            lex_page = follow_link(http, lex_url)
+            lex_soup = BeautifulSoup(lex_page, 'lxml')
+            lex_body = lex_soup.body
+            for body_child in lex_body.children:
+                if body_child.name is None:
+                    # if the content of body tag is not within any tag
+                    # but a raw string
+                    stripped = body_child.text.strip()
+                    # remove trailing periods lying outside the tags
+                    res = re.sub("^\\.$", "", stripped)
+                    if res != "" and "part of previous word" not in res:
+                        word_lis.append(res.split(' ')[0])
 
-    lex_url = link["href"]
-
-    if "getlex" in lex_url:
-        # if it's linked to getlex.php file, it's a word
-        # follow the link to get the lemma(ta) page
-        lex_page = follow_link(http, lex_url)
-        lex_soup = BeautifulSoup(lex_page, 'lxml')
-        lex_body = lex_soup.body
-        for body_child in lex_body.children:
-            if body_child.name is None:
-                # if the content of body tag is not within any tag
-                # but a raw string
-                stripped = body_child.text.strip()
-                # remove trailing periods lying outside the tags
-                res = re.sub("^\\.$", "", stripped)
-                if res != "" and "part of previous word" not in res:
-                    word_lis.append(res.split(' ')[0])
-    elif len(word_lis) > 0:
+    # when the scraper reaches a new row on the table
+    if len(word_lis) > 0:
         print(word_lis)
         lines.append(word_lis)
         word_lis = []
 
 # print(lines)
+# Dump the scraped lines into a json file
 with open("scraper_results.json", "w+") as sr:
     json.dump(lines, sr)
 
