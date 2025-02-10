@@ -48,31 +48,37 @@ def clean_word(text: str, flags: dict) -> str:
 http = pool_init()
 result = get_a_chapter(http)
 
-soup = BeautifulSoup(result, 'html.parser')
+soup = BeautifulSoup(result, 'lxml')
 
-lines = []
+# lines = []
 flag_dict = {
     "in_variant": False
 }
-word_lis = []
+# word_lis = []
 
-for link in soup.find_all('a'):
-    # TODO: follow the links
-    word = ""
-    if "getlex" in link["href"]:
-        # if it's linked to getlex.php file, it's a word
-        # follow the link to get the lemma(ta) page
-        lex_page = follow_link(http, link["href"])
-        lex_soup = BeautifulSoup(lex_page, "html.parser")
-        lemmata = lex_soup.find_all("span", class_="lem")
-        for lemma in lemmata:
-            lemma_variants = lemma.text.split(", ")  # variations of the same lemma
-            lemma_one = lemma_variants[0]
-            print(lemma_one)
-            word_lis.append(lemma_one)        
-    else:
-        lines.append(word_lis)
-        word_lis = []
+# for link in soup.find_all('a'):
+lex_url = "getlex.php?coord=620011028&word=2" # link["href"]
+# TODO: follow the links
+word = ""
+if "getlex" in lex_url:
+    print(lex_url)
+    # if it's linked to getlex.php file, it's a word
+    # follow the link to get the lemma(ta) page
+    lex_page = follow_link(http, lex_url)
+    lex_soup = BeautifulSoup(lex_page, 'lxml')
+    lex_body = lex_soup.body
+    for body_child in lex_body.children:
+        if body_child.name is None:
+            # if the content of body tag is not within any tag
+            # but a raw string
+            stripped = body_child.text.strip()
+            # remove trailing periods lying outside the tags
+            res = re.sub("^\\.$", "", stripped)
+            if res != "":
+                print(res)
+# else:
+#     lines.append(word_lis)
+#     word_lis = []
 
 print("Process Complete!")
-print(lines)
+# print(lines)
