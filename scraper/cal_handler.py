@@ -106,6 +106,20 @@ def get_and_save(
     dest.write_text(qr)
 
 
+def follow_link(pool: urllib3.PoolManager, link_url: str)  -> str:
+    """Follow the url to the getlex.php result page and get lemma(ta).
+    
+    pool: urllib3.PoolManager
+        Connection pool for urllib3.
+    
+    link_url: str
+        relative url link to the lemma(ta) page.
+    """
+    lex_url = base_url + link_url
+    res = pool.request("GET", lex_url)
+    return res.data.decode("utf-8")  # return decoded text from response text html
+
+
 if __name__ == "__main__":
     http = urllib3.PoolManager()
     get_and_save("./out/example.html", http)

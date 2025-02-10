@@ -1,7 +1,7 @@
 """The main scraping script to get Syriac texts from CAL."""
 
 from bs4 import BeautifulSoup
-from cal_handler import pool_init, get_a_chapter
+from cal_handler import pool_init, get_a_chapter, follow_link
 # from pathlib import Path
 import re
 
@@ -46,9 +46,9 @@ def clean_word(text: str, flags: dict) -> str:
 
 
 http = pool_init()
-results = get_a_chapter(http)
+result = get_a_chapter(http)
 
-soup = BeautifulSoup(results, 'html.parser')
+soup = BeautifulSoup(result, 'html.parser')
 
 lines = []
 flag_dict = {
@@ -59,15 +59,20 @@ word_lis = []
 for link in soup.find_all('a'):
     # TODO: follow the links
     word = ""
-    if "getlex" in link["href"]:  # if it's linked to getlex.php file
-        word = clean_word(link.text, flag_dict)  # sanitise contents of each <a> tag
-        if word != "":
-            # only add strings that's not empty
-            print(word)
-            word_lis.append(word)
+    if "getlex" in link["href"]:
+        # if it's linked to getlex.php file, it's a word
+        # follow the link to get the lemma(ta) page
+        lex_page = follow_link(http, link["href"])
+        lex_soup = BeautifulSoup(lex_page, "html.parser")
+        lemmata = lex_soup.find_all("span", class_="lem")
+        for lemma in lemmata:
+            lemma_variants = lemma.text.split(", ")  # variations of the same lemma
+            lemma_one = lemma_variants[0]
+            print(lemma_one)
+            word_lis.append(lemma_one)        
     else:
         lines.append(word_lis)
         word_lis = []
 
 print("Process Complete!")
-# print(lines)
+print(lines)
