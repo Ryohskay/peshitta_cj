@@ -13,31 +13,10 @@ result = get_a_chapter(http)
 soup = BeautifulSoup(result, 'lxml')
 
 lines = []
-flag_dict = {
-    "in_variant": False,
-    "in_multi_word_variant": False
-}
 word_lis = []
 
 for table_data in soup.find_all('td'):
     for link in table_data.find_all('a'):
-
-        # Remove the default variant spelling format "???/???#3#/"
-        anchor_text = re.sub("/.+/", "", link.text.strip())
-
-        # Set flags to control for variant spelling spanning multiple words
-        if not flag_dict["in_variant"] and "/" in anchor_text:
-            flag_dict["in_variant"] = True
-        elif "/" in anchor_text:
-            flag_dict["in_variant"] = False
-
-        # Skip <a> tags if it's inside multi-word variance
-        if flag_dict["in_variant"]:
-            # deal with things like:
-            # wpr:$)/w)p pr:$)#3#/,
-            # \slqw (mh /#3#/,
-            # \wlmk nsb_ lh /wnsb lh lmk#3#/
-            continue
 
         lex_url = link["href"]
 
@@ -55,7 +34,10 @@ for table_data in soup.find_all('td'):
                     # remove trailing periods lying outside the tags
                     res = re.sub("^\\.$", "", stripped)
                     if res != "" and "part of previous word" not in res:
-                        word_lis.append(res.split(' ')[0])
+                        # remove numbering appended to lemma, like "#2"
+                        # and replace "@" in lemma with a space
+                        res = re.sub("#\d", "", res.split(' ')[0]).replace("@", " ")
+                        word_lis.append(res)
 
     # when the scraper reaches a new row on the table
     if len(word_lis) > 0:
