@@ -7,11 +7,8 @@ import urllib3
 base_url = "https://cal.huc.edu/"
 
 
-# https://cal.huc.edu/showsubtexts.php?subtext=62040&cset=Latin
-
-# https://cal.huc.edu/get_a_chapter.php?file=62040&cset=
-
 def pool_init() -> urllib3.PoolManager:
+    """Initialise a PoolManager instance and return the object."""
     return urllib3.PoolManager()
 
 def get_a_chapter(
@@ -57,7 +54,6 @@ def get_a_chapter(
         # Add "sub" query param
         params.update({"sub": section})
 
-    # Code adapted from https://www.geeksforgeeks.org/how-to-pass-parameters-in-url-with-python/
     query_url = base_url + "get_a_chapter.php?" + urlencode(params)
     res = pool.request("GET", query_url)
     return res.data.decode("utf-8")  # return decoded text from response text html
