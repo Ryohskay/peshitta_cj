@@ -44,7 +44,7 @@ def find_lemma(markup_tag: Tag):
 
 if __name__ == "__main__":
     http = pool_init()
-    result = get_a_chapter(http, section=50)
+    result = get_a_chapter(http)
 
     # Use lxml parser to correctly handle raw texts in body tag
     soup = BeautifulSoup(result, 'lxml')
@@ -60,15 +60,8 @@ if __name__ == "__main__":
     num_links = 0
 
     for table_data in soup.find_all('td'):
-        if "valign" in table_data.attrs.keys() and table_data["valign"] ==  "top":
+        if "valign" in table_data.attrs.keys() and table_data["valign"] == "top":
             # when the scraper reaches a new row on the table.
-            # push the scraped lemmata 
-            if len(word_lis) > 0:
-                print(word_lis)
-                num_lemmata = num_lemmata + len(word_lis)
-                verses.append(word_lis)
-                word_lis = []
-            
             # add the verse identifier (e.g. "01:01")
             verse_id = re.match("\\d\\d:\\d\\d", table_data.text)
             if verse_id is not None:
@@ -96,12 +89,21 @@ if __name__ == "__main__":
                         res = find_lemma(body_child)
                         if res is not None:
                             word_lis.append(res)
+                        # push the scraped lemmata
+            # when all links in one table cell has been explored,
+            # push the list of scraped lemmata to verses[]
+            if len(word_lis) > 0:
+                print(word_lis)
+                num_lemmata = num_lemmata + len(word_lis)
+                verses.append(word_lis)
+                word_lis = []
         
     # the number of scribal variances is number of slashes divided by 2
     num_variances = num_slashes / 2
 
     if len(verses) != len(verse_ids):
-        print("Something is wrong with verse ids vs verses")
+        print("Something is wrong with the number of verses vs verse_ids")
+        print(f"verses: {len(verses)} but verse_ids: {len(verse_ids)}")
 
     # format the data in CSV format
     formatted_data = "Verse No.,Text\n"
