@@ -14,7 +14,7 @@ def pool_init() -> urllib3.PoolManager:
 def get_a_chapter(
         pool: urllib3.PoolManager,
         book_id: str="62001", 
-        section: str=None, 
+        section: int=None, 
         display_in: str="Latin") -> str:
     """Query the https://cal.huc.edu/get_a_chapter.php endpoint with given parameters.
 
@@ -29,9 +29,9 @@ def get_a_chapter(
         Must be a string of five-digit numeral to avoid passing "00001" as 1.
         Defaults to OT Peshitta Genesis.
 
-    section: "%2d" (string of two-digit numeral)
+    section: int
         Corresponds to `sub` URL query parameter.
-        It must be in the form of "01", "02", ... etc. to work correctly.
+        The URL parameter must be in the form of "01", "02", ... etc. to work correctly.
         Defaults to None, in which case the whole book will be fetched.
 
     display_in: ["R", "L", "Latin", "S", "Syriac"]
@@ -52,7 +52,7 @@ def get_a_chapter(
 
     if section is not None:
         # Add "sub" query param
-        params.update({"sub": section})
+        params.update({"sub": f"{section:02}"})
 
     query_url = base_url + "get_a_chapter.php?" + urlencode(params)
     res = pool.request("GET", query_url)
