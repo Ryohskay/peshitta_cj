@@ -43,8 +43,11 @@ def find_lemma(markup_tag: Tag):
 
 
 if __name__ == "__main__":
+
+    book_idx = "62001"
+
     http = pool_init()
-    result = get_a_chapter(http)
+    result = get_a_chapter(http, book_id=book_idx)
 
     # Use lxml parser to correctly handle raw texts in body tag
     soup = BeautifulSoup(result, 'lxml')
@@ -108,10 +111,11 @@ if __name__ == "__main__":
     # format the data in CSV format
     formatted_data = "Verse No.,Text\n"
     for i in range(len(verses)):
-        formatted_data = formatted_data + f"{verse_ids[i]},{' '.join(verses[i])}\n"
+        indices = verse_ids[i].split(":")
+        formatted_data = formatted_data + f"Chapter {indices[0]} verse {indices[1]},{' '.join(verses[i])}\n"
 
     # Store the scraped lines into a csv file
-    p = Path("./out/scraper_results.csv")
+    p = Path(f"./out/scraper_results_{book_idx}.csv")
     p.write_text(formatted_data)
 
     print("Process Complete!")
