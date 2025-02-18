@@ -116,6 +116,11 @@ def follow_link(pool: urllib3.PoolManager, link_url: str)  -> str:
     return res.data.decode("utf-8")  # return decoded text from response text html
 
 
+def get_verse_url(lex_url: str):
+    """Derive the url to a verse page from given url to the lexicon entry."""
+    
+
+
 if __name__ == "__main__":
     http = urllib3.PoolManager()
     get_and_save("./out/example.html", http)

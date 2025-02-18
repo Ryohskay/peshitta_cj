@@ -1,7 +1,7 @@
 """The main scraping script to get Syriac texts from CAL."""
 
 from bs4 import BeautifulSoup, Tag
-from cal_handler import pool_init, get_a_chapter, follow_link
+from cal_handler import pool_init, get_a_chapter, follow_link, get_verse_urla``
 from pathlib import Path
 import re
 
@@ -56,6 +56,9 @@ if __name__ == "__main__":
     verses = []
     word_lis = []
     verse_ids = []
+    verse_urls = []
+
+    lex_url = ""
 
     # counters
     num_slashes = 0
@@ -71,6 +74,7 @@ if __name__ == "__main__":
                 vid = verse_id.group()
                 print(vid)
                 verse_ids.append(vid)
+
         else:  # If it's the cell containing verse
             # go through all links in the table data cell
             for link in table_data.find_all('a'):
@@ -79,6 +83,8 @@ if __name__ == "__main__":
 
                 if "getlex" in lex_url:
                     # if it's linked to getlex.php file, it's a word
+                    # remember the url to the lexeme
+                    verse_url = lex_url
                     # count the number of slash
                     num_slashes = num_slashes + count_char("/", link.text)
                     # count the number of links
@@ -92,7 +98,7 @@ if __name__ == "__main__":
                         res = find_lemma(body_child)
                         if res is not None:
                             word_lis.append(res)
-                        # push the scraped lemmata
+
             # when all links in one table cell has been explored,
             # push the list of scraped lemmata to verses[]
             if len(word_lis) > 0:
@@ -100,7 +106,11 @@ if __name__ == "__main__":
                 num_lemmata = num_lemmata + len(word_lis)
                 verses.append(word_lis)
                 word_lis = []
-        
+
+            # extract the hyperlink to verse from the lex_url
+            verse_url = get_verse_url(lex_url)
+            verse_urls.append(verse_url)
+
     # the number of scribal variances is number of slashes divided by 2
     num_variances = num_slashes / 2
 
@@ -109,10 +119,10 @@ if __name__ == "__main__":
         print(f"verses: {len(verses)} but verse_ids: {len(verse_ids)}")
 
     # format the data in CSV format
-    formatted_data = "Verse No.,Text\n"
+    formatted_data = "Verse No.,Verse URL,Text\n"
     for i in range(len(verses)):
         indices = verse_ids[i].split(":")
-        formatted_data = formatted_data + f"Chapter {indices[0]} verse {indices[1]},{' '.join(verses[i])}\n"
+        formatted_data = formatted_data + f"Chapter {indices[0]} verse {indices[1]},{verse_url},{' '.join(verses[i])}\n"
 
     # Store the scraped lines into a csv file
     p = Path(f"./out/scraper_results_{book_idx}.csv")
