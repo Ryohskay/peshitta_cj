@@ -1,7 +1,7 @@
 """The main scraping script to get Syriac texts from CAL."""
 
 from bs4 import BeautifulSoup, Tag
-from cal_handler import pool_init, get_a_chapter, follow_link, get_verse_urla``
+from cal_handler import pool_init, get_a_chapter, follow_link, get_verse_url
 from pathlib import Path
 import re
 
@@ -42,6 +42,23 @@ def find_lemma(markup_tag: Tag):
             return re.sub("#\\d", "", res).replace("@", " ")
 
 
+def is_lex(url: str) -> bool:
+    if "getlex" in url:
+        return True
+    return False
+
+
+def get_raw_word(text: str) -> str:
+    """Get the raw, inflected word from the given segment of a sentence.
+    
+    Returns an empty string if the input text is empty or None.
+    """
+    if text is not None and text != "":
+        # remove all text after slash to ignore unnecessary annotations
+        return re.sub("/.+", "", text)
+    return ""
+
+
 if __name__ == "__main__":
 
     book_idx = "62001"
@@ -54,11 +71,14 @@ if __name__ == "__main__":
 
     # lists to store results
     verses = []
-    word_lis = []
-    verse_ids = []
+    raw_verses = [] # aggregate list of inflected texts from all verses
+    raw_words = [] # inflected form of words in each verse, as a list
+    word_lis = []  # lemmatised words of each verse as a list of lemmata
+    verse_ref_nums = [] # the reference numbers for each verse
     verse_urls = []
 
     lex_url = ""
+    verse_url = ""
 
     # counters
     num_slashes = 0
@@ -69,11 +89,11 @@ if __name__ == "__main__":
         if "valign" in table_data.attrs.keys() and table_data["valign"] == "top":
             # when the scraper reaches a new row on the table.
             # add the verse identifier (e.g. "01:01")
-            verse_id = re.match("\\d\\d:\\d\\d", table_data.text)
-            if verse_id is not None:
-                vid = verse_id.group()
+            verse_ref = re.match("\\d\\d:\\d\\d", table_data.text)
+            if verse_ref is not None:
+                vid = verse_ref.group()
                 print(vid)
-                verse_ids.append(vid)
+                verse_ref_nums.append(vid)
 
         else:  # If it's the cell containing verse
             # go through all links in the table data cell
@@ -81,12 +101,16 @@ if __name__ == "__main__":
 
                 lex_url = link["href"]
 
-                if "getlex" in lex_url:
+                if is_lex(lex_url):
                     # if it's linked to getlex.php file, it's a word
                     # remember the url to the lexeme
                     verse_url = lex_url
                     # count the number of slash
                     num_slashes = num_slashes + count_char("/", link.text)
+                    # get the inflected, non-lemmatised word
+                    raw = get_raw_word(link.text)
+                    if len(raw) > 0:
+                        raw_words.append(raw)
                     # count the number of links
                     num_links = num_links + 1
                     # follow the link to get the lemma(ta) page
@@ -105,24 +129,30 @@ if __name__ == "__main__":
                 print(word_lis)
                 num_lemmata = num_lemmata + len(word_lis)
                 verses.append(word_lis)
+                raw_verses.append(raw_words)
+                # reset the lists
                 word_lis = []
+                raw_words = []
 
             # extract the hyperlink to verse from the lex_url
-            verse_url = get_verse_url(lex_url)
-            verse_urls.append(verse_url)
+            if verse_url != "":
+                verse_url = get_verse_url(lex_url)
+                verse_urls.append(verse_url)
 
     # the number of scribal variances is number of slashes divided by 2
     num_variances = num_slashes / 2
 
-    if len(verses) != len(verse_ids):
-        print("Something is wrong with the number of verses vs verse_ids")
-        print(f"verses: {len(verses)} but verse_ids: {len(verse_ids)}")
+    if len(verses) != len(verse_ref_nums):
+        print("Something is wrong with the number of verses vs verse_ref_nums")
+        print(f"verses: {len(verses)} but verse_ref_nums: {len(verse_ref_nums)}")
 
-    # format the data in CSV format
-    formatted_data = "Verse No.,Verse URL,Text\n"
+    # format the data in a string of CSV format
+    formatted_data = "Verse Ref. No.,Verse URL,Raw Text,Lemmatised Text\n"
     for i in range(len(verses)):
-        indices = verse_ids[i].split(":")
-        formatted_data = formatted_data + f"Chapter {indices[0]} verse {indices[1]},{verse_url},{' '.join(verses[i])}\n"
+        indices = verse_ref_nums[i].split(":")
+        raw_txt_verse = ' '.join(raw_verses[i])
+        lemma_verse = ' '.join(verses[i])
+        formatted_data = formatted_data + f'"Chapter {indices[0]} verse {indices[1]}",{verse_urls[i]},"{raw_txt_verse}","{lemma_verse}"\n'
 
     # Store the scraped lines into a csv file
     p = Path(f"./out/scraper_results_{book_idx}.csv")
