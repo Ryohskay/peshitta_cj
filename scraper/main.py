@@ -48,17 +48,6 @@ def is_lex(url: str) -> bool:
     return False
 
 
-def get_raw_word(text: str) -> str:
-    """Get the raw, inflected word from the given segment of a sentence.
-    
-    Returns an empty string if the input text is empty or None.
-    """
-    if text is not None and text != "":
-        # remove all text after slash to ignore unnecessary annotations
-        return re.sub("/.+", "", text)
-    return ""
-
-
 if __name__ == "__main__":
 
     book_idx = "62001"
@@ -108,9 +97,7 @@ if __name__ == "__main__":
                     # count the number of slash
                     num_slashes = num_slashes + count_char("/", link.text)
                     # get the inflected, non-lemmatised word
-                    raw = get_raw_word(link.text)
-                    if len(raw) > 0:
-                        raw_words.append(raw)
+                    raw_words.append(link.text.strip())
                     # count the number of links
                     num_links = num_links + 1
                     # follow the link to get the lemma(ta) page
