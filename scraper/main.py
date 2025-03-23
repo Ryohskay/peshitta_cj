@@ -215,8 +215,7 @@ if __name__ == "__main__":
             indices = verse_ref_nums[i].split(":")
             raw_txt_verse = ' '.join(raw_verses[i])
             lemma_verse = ' '.join(verses[i])
-            formatted_data = formatted_data + 
-            f'"Chapter {indices[0]} verse {indices[1]}","{verse_urls[i]}","{raw_txt_verse}","{lemma_verse}"\n'
+            formatted_data = formatted_data + f'"Chapter {indices[0]} verse {indices[1]}","{verse_urls[i]}","{raw_txt_verse}","{lemma_verse}"\n'
 
         # Store the scraped lines into a csv file
         p = Path(f"./out/scraper_results_{book[0]}.csv")
