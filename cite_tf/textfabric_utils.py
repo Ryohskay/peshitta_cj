@@ -38,7 +38,7 @@ def get_verses(
             for chapter in chapters:
                 if int(F.chapter.v(chapter)) in target_books[book[1]]:
                     for verse in L.d(chapter, otype="verse"):
-                        verse_ref = f"{book[1]} Chapter {F.chapter.v(chapter)} Verse {F.verse.v(verse)}"
+                        verse_ref = f"{book[1]} Chapter {int(F.chapter.v(chapter)):02} Verse {int(F.verse.v(verse)):02}"
                         # get all words in this verse
                         words = L.d(verse, otype="word")
                         # transliteration of this verse as a list of words
