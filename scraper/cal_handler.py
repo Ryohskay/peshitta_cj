@@ -83,6 +83,8 @@ def get_a_chapter(
     If no section is specified, the whole book will be fetched.
     Returns the responded html after decoding in UTF-8.
 
+    See make_url for params: book_id, display_in and section.
+
     pool: urllib3.PoolManager
         Connection pool for urllib3.
 

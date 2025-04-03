@@ -122,12 +122,14 @@ if __name__ == "__main__":
 
     # book_idx = "62006"
 
+    cset = "Latin"
+
     print(time.asctime())
 
     http = pool_init()
     for book in target_books:
         print(f"Book: {book[0]}")
-        result = get_a_chapter(http, book_id=book[1])
+        result = get_a_chapter(http, book_id=book[1], display_in=cset)
     # for i in range(15,16):
         # book_idx = target_books[0]
         # print(f"Chapter: {i}")
@@ -285,7 +287,7 @@ if __name__ == "__main__":
         #             )
 
         # Store the scraped lines into a csv file
-        with Path(f'./out/scraper_results_{book[0]}.json').open(mode="w") as fp:
+        with Path(f'./out/scraper_results_{cset}_{book[0]}.json').open(mode="w") as fp:
             book_data = {
                     'book_title': book[0],
                     'verse_refs': verse_ref_nums,
