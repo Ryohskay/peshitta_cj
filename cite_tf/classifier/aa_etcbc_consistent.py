@@ -1,9 +1,9 @@
 from sklearn.naive_bayes import MultinomialNB
-from eval_utils import evaluate_classifier, save_all_preds, save_mislabels
-from fitting_utils import BoW_Estimator
-from textfabric_utils import get_verses
+from classifier.eval_utils import evaluate_classifier, save_all_preds, save_mislabels
+from classifier.fitting_utils import BoW_Estimator
+from classifier.textfabric_utils import get_verses
 import numpy as np
-import book_data
+import classifier.book_data as book_data
 
 
 def csvify_etcbc(

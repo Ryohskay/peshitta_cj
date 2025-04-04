@@ -4,14 +4,7 @@ from collections.abc import Callable
 from collections import Counter
 from nltk.util import ngrams
 
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
-
 import numpy as np
-from pathlib import Path
-import numpy as np
-import pickle
 
 
 def get_verses(

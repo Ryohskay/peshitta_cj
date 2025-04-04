@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-import book_data
+import classifier.book_data as book_data
 
 
 def normalise_title(title: str) -> str:

@@ -1,3 +1,5 @@
+"""Dictionaries to specify which chapters from which book to be fetched."""
+
 # Try Fs("book@en").items() to get names of the book included in the text-fabric dataset
 ot_train_books = {
     "Genesis": list(range(1,50+1)),

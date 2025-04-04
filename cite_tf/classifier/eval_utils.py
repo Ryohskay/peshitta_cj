@@ -2,7 +2,7 @@ from sklearn.metrics import accuracy_score, auc, ConfusionMatrixDisplay, f1_scor
 from collections import Counter
 from collections.abc import Callable
 from pathlib import Path
-from fitting_utils import BoW_Estimator
+from classifier.fitting_utils import BoW_Estimator
 
 import matplotlib.pyplot as plt
 import numpy as np
