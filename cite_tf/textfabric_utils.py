@@ -4,7 +4,6 @@ from collections.abc import Callable
 from collections import Counter
 from nltk.util import ngrams
 
-from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
@@ -34,7 +33,6 @@ def get_verses(
             print(book[1])
             chapters = L.d(book[0], otype="chapter")
             # results = "Verse Reference,Lemmatised Transliteration,Plain Transliteration,Original Syriac Text\n"
-            num_book_verses = 0
             for chapter in chapters:
                 if int(F.chapter.v(chapter)) in target_books[book[1]]:
                     for verse in L.d(chapter, otype="verse"):

@@ -8,11 +8,10 @@ from nltk.util import ngrams
 import numpy as np
 
 def count_n_grams(
-        word_count: int,
         words: list[str],
         ngram_formatter: Callable,
         span: int=3
-    ) -> (int, Counter):
+    ) -> Counter:
     """Count n-grams in the verse_words, using nltk.util.ngrams().
     
     ngram_formatter: Callable
@@ -33,26 +32,36 @@ def count_n_grams(
     n_gram_counts = Counter(n_grams)
     
     # Keep the ngram counters
-    return (word_count+len(words), n_gram_counts)
+    return n_gram_counts
 
 
-def make_vocab(verses: list[tuple], ngram_formatter: Callable, span: int=3, mode: int=1) -> tuple[Counter, list[Counter]]:
+def make_vocab(
+        verses: list[tuple],
+        ngram_formatter: Callable,
+        span: int=3,
+        mode: int=1
+    ) -> tuple[Counter, list[Counter]]:
     """Construct the model's vocabulary by extracting n-grams from verses.
 
     ngram_formatter: Callable
         This is a pre-processing function or method to apply to the text of each verse.
         See count_n_grams for more details.
 
-    mode:
-        if 1, then use ETCBC transliteration
-        if 2, then use original Syriac script
+    mode: int
+        Access an item in verse tuple at this index.
+        On ETCBC data:
+            if 1, then use ETCBC transliteration
+            if 2, then use original Syriac script
+        On CAL data:
+            must be 1.
     """
     word_cnt = 0
     n_gram_vocabs = None
     n_gram_counters = []
 
     for verse in verses:
-        word_cnt, n_gram_counter = count_n_grams(word_cnt, verse[mode], ngram_formatter, span)
+        n_gram_counter = count_n_grams(verse[mode], ngram_formatter, span)
+        word_cnt += (len(verse[mode]))
 
         n_gram_counters.append(n_gram_counter)
     
@@ -69,11 +78,19 @@ def identity(input: type) -> type:
     return input
 
 
-def make_word_n_gram_vocab(verses: list[tuple], span: int=3, mode: int=1) -> tuple[Counter, list[Counter]]:
+def make_word_n_gram_vocab(
+        verses: list[tuple],
+        span: int=3,
+        mode: int=1
+    ) -> tuple[Counter, list[Counter]]:
     return make_vocab(verses, identity, span, mode)
 
 
-def make_char_n_gram_vocab(verses: list[tuple], span: int=3, mode: int=1) -> tuple[Counter, list[Counter]]:
+def make_char_n_gram_vocab(
+        verses: list[tuple],
+        span: int=3,
+        mode: int=1
+    ) -> tuple[Counter, list[Counter]]:
     return make_vocab(verses, ' '.join, span, mode)
 
 
@@ -122,7 +139,12 @@ def vectorise(
     bag_of_words = _make_empty_bow(vocab)
 
     for verse in verses:
-        wc, local_n_gram_counts = count_n_grams(word_count=wc, words=verse[1], ngram_formatter=ngram_formatter, span=span)
+        wc += (len(verse[1]))
+        local_n_gram_counts = count_n_grams(
+                                        words=verse[1],
+                                        ngram_formatter=ngram_formatter,
+                                        span=span
+                                    )
         n_gram_bow = dict.fromkeys(bag_of_words.keys(), 0)
         merge_counts(local_n_gram_counts, n_gram_bow)
         verse_n_grams.append(list(n_gram_bow.values()))
@@ -137,10 +159,6 @@ class BoW_Estimator(BaseEstimator):
             clf,
             formatter,
             n: int=3,
-            alpha=1.0,
-            force_alpha=True,
-            fit_prior=True,
-            class_prior=None
         ):
         self.algo = clf
         self.n = n
@@ -150,7 +168,12 @@ class BoW_Estimator(BaseEstimator):
         self.pred_x = None
 
     def fit(self, X, y, sample_weight=None):
+        if len(X) != len(y):
+            msg = f"Length of X ({len(X)}) and y ({len(y)}) do not match."
+            raise ValueError(msg)
         self.vocabs = make_char_n_gram_vocab(X, span=self.n)
+        print(f"Found {len(self.vocabs[0])} independent n-grams "
+              + f"from {len(self.vocabs[1])} verses!")
         n_gram_feat = make_feature(self.vocabs)
         self.train_x = n_gram_feat
         self.algo.fit(n_gram_feat, y, sample_weight)

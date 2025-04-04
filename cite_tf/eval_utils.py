@@ -1,44 +1,89 @@
-from sklearn.metrics import accuracy_score, auc, confusion_matrix, f1_score, recall_score
+from sklearn.metrics import accuracy_score, auc, ConfusionMatrixDisplay, f1_score, recall_score
 from collections import Counter
+from collections.abc import Callable
 from pathlib import Path
+from fitting_utils import BoW_Estimator
 
+import matplotlib.pyplot as plt
 import numpy as np
 from typing import Union
 
 
-def find_mislabels(y_correct: list, y_pred: list, X: None | list=None):
-    result = {
-            "mislabel_ids": [],
-            "mislabels": [],
-            "mislabelled_verses": None
-            }
+def quick_stats(
+        inputs: np.ndarray,
+        y_correct: np.ndarray,
+        prediction: np.ndarray,
+    ) -> tuple[int, int]:
+    """Calculate and print some basic statistics on model inputs & outputs."""
+    sample_size = 0
+    try:
+        sample_size = inputs.shape[0]
+    except AttributeError:
+        sample_size = len(inputs)
+
+    if sample_size == 0:
+        msg = "Cannot measure the size of model input array X!"
+        raise ValueError(msg)
+
+    num_mislabels = ((y_correct != prediction).sum())
+    num_correct = sample_size - num_mislabels
+
+    print(f"Number of mislabeled points out of the total {sample_size} verses: "
+          + f"{num_mislabels}")
+    print(f"Local accuracy: {accuracy_score(y_correct, prediction):.02f}")
+
+    return (num_mislabels, num_correct)
+
+
+def find_mislabels(
+        y_correct: list,
+        y_pred: list,
+        X: None | list=None,
+        probas: list=None,
+    ) -> (list, list, None | list, None | list):
+    """Find and return mislabelled verses in string format."""
+    idcs = list()
+    mislabels = list()
+    correct_labels = list()
+    mislabel_verses = list()
+    mislabel_probas = list()
+
     for i in range(len(y_correct)):
         if y_correct[i] != y_pred[i]:
-            result["mislabel_ids"].append(i)
-            result["mislabels"].append((y_correct[i], y_pred[i]))
-    if X is not None:
+            idcs.append(i)
+            mislabels.append(y_pred[i])
+            correct_labels.append(y_correct[i])
+
+    if X is not None and isinstance(X, np.ndarray):
         # give the contents of mislabelled verses
-        result[2] = np.array(X)[result["mislabel_ids"]]
-    return result
+        mislabel_verses = X[idcs]
+    elif X is not None:
+        # give the contents of mislabelled verses
+        # in case X is not np array
+        verses = []
+        for idx in idcs:
+            verses.append(X[idx])
+        mislabel_verses = verses
+
+    if probas is not None:
+        mislabel_probas = np.array(probas)[idcs]
+
+    return (idcs, mislabels, correct_labels, mislabel_verses, mislabel_probas)
 
 
 def predict(
-        classifier, test_X: np.ndarray, test_labels: np.array
-    ) -> (np.array, np.array, np.array):
+        classifier: type,
+        test_X: np.ndarray | list,
+        test_labels: np.ndarray
+    ) -> (np.ndarray, np.ndarray, np.ndarray):
     """Predict on the data with a given classifier, and return some simple statistics.
 
     The classifier must have a method `.predict()`.
     """
     y_pred = classifier.predict(test_X)
+    num_mislabels, num_correct = quick_stats(test_X, test_labels, y_pred)
     
-    num_samples = test_X.shape[0]
-    num_mislabels = ((test_labels != y_pred).sum())
-    num_correct = num_samples - num_mislabels
-    
-    print("Number of mislabeled points out of the total %d verses: %d" % (num_samples, num_mislabels))
-    print(f"Local accuracy: {accuracy_score(test_labels, y_pred):.02f}")
-
-    return y_pred, num_mislabels, num_correct
+    return (y_pred, num_mislabels, num_correct)
 
 
 def _convert(probas: np.array) -> np.array:
@@ -58,7 +103,9 @@ def _convert(probas: np.array) -> np.array:
 
 
 def predict_proba(
-        classifier: type, test_X: np.ndarray, test_labels: np.array
+        classifier: type,
+        test_X: np.ndarray | list,
+        test_labels: np.array
     ) -> (np.array, np.array, np.array, np.array):
     """Predict on the data with the classifier, and return some simple statistics.
 
@@ -66,35 +113,43 @@ def predict_proba(
     """
     y_pred_proba = classifier.predict_proba(test_X)
     y_pred = _convert(y_pred_proba) # convert the list of probas to a label
+
+    num_mislabels, num_correct = quick_stats(test_X, test_labels, y_pred)
     
-    num_samples = test_X.shape[0]
-    num_mislabels = ((test_labels != y_pred).sum())
-    num_correct = num_samples - num_mislabels
-    
-    print(f"Number of mislabeled points out of the total {num_samples} verses:"
-          + f" {num_mislabels}")
-    print(f"Local accuracy: {accuracy_score(test_labels, y_pred):.02f}")
-    return y_pred_proba, y_pred, num_mislabels, num_correct
+    return (y_pred_proba, y_pred, num_mislabels, num_correct)
 
 
 def metricise(
         y_true: list[int],
         y_pred_pos: list[int] | None=None,
         y_pred_neg: list[int] | None=None,
-        y_all: list[int] | None=None
+        y_all: list[int] | None=None,
+        conf_m: bool=False,  
     ) -> tuple[float, float, float]:
-    """Measure the performance of a classifier using the outputs."""
+    """Calculate performance metrics of a classifier using the outputs.
+
+    conf_m:
+        if True, then display confusion matrix.
+    """
     y_pred = []
     if y_all is None and y_pred_pos is not None and y_pred_neg is not None:
         y_pred.extend(y_pred_pos)
         y_pred.extend(y_pred_neg)
-    else:
+    elif y_all is not None:
         y_pred = y_all
+    else:
+        msg = "Define (y_pred_neg and y_pred_pos) OR y_all."
+        raise ValueError(msg)
+
     y_pred = np.array(y_pred)
     
     accuracy = accuracy_score(y_true, y_pred)
     recall = recall_score(y_true, y_pred)
     f1_result = f1_score(y_true, y_pred)
+
+    if conf_m:
+        ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+        plt.show()
     
     print(f"Overall Accuracy: {accuracy:.02f}")
     print(f"Overall Recall: {recall:.02f}")
@@ -223,3 +278,96 @@ def split_list(lis: list, parts: int=5) -> list[list]:
         split_end += separator
     results.append(lis[split_start:])
     return results
+
+
+
+def evaluate_classifier(
+        clf: BoW_Estimator,
+        ot_test_X: list,
+        ot_test_y: list,
+        nt_test_X: list,
+        nt_test_y: list,
+        show_confusion_matrix: bool=False,
+    ) -> (list[(float, float)], list[(float, float)]):
+    """Evaluate a classifier with provided test sets."""
+    print("OT --->")
+    ot_probas, ot_y_preds, _, _  = predict_proba(
+                                                 clf,
+                                                 ot_test_X,
+                                                 np.array(ot_test_y)
+                                                 )
+    print("NT --->")
+    nt_probas, nt_y_preds, _, _ = predict_proba(
+                                                clf,
+                                                nt_test_X,
+                                                np.array(nt_test_y)
+                                                )
+    print("All --->")
+    all_test_y = []
+    all_test_y.extend(ot_test_y)
+    all_test_y.extend(nt_test_y)
+    all_test_y = np.array(all_test_y)
+    metricise(all_test_y, ot_y_preds, nt_y_preds, conf_m=show_confusion_matrix)
+
+    # figure out which verses the classifier mislabelled
+    ot_mislabels = find_mislabels(ot_test_y, ot_y_preds, X=ot_test_X, probas=ot_probas)
+    nt_mislabels = find_mislabels(nt_test_y, nt_y_preds, X=nt_test_X, probas=nt_probas)
+    return (ot_probas, nt_probas, ot_mislabels, nt_mislabels)
+
+
+def save_mislabels(
+        ot_mislabels: tuple,
+        nt_mislabels: tuple,
+        formatter: Callable,
+        ot_save_file: str="./out/prediction_mislabels_ot.csv",
+        nt_save_file: str="./out/prediction_mislabels_nt.csv",
+    ):
+    """Save mislabelled verses into a file.
+
+    formatter: Callable
+        any callable object (function, method, etc.)
+        that returns a formatted string which can be directly
+        written to a file.
+    """
+    ot_data = formatter(
+                X=ot_mislabels[3],
+                probas=ot_mislabels[4],
+                y_correct=ot_mislabels[2],
+            )
+
+    nt_data = formatter(
+                X=nt_mislabels[3],
+                probas=nt_mislabels[4],
+                y_correct=nt_mislabels[2],
+            )
+
+    # write formatted texts to files
+    Path(ot_save_file).write_text(ot_data)
+    Path(nt_save_file).write_text(nt_data)
+
+
+def save_all_preds(
+        ot_test_X: list,
+        ot_probas: list,
+        ot_test_y: list,
+        nt_test_X: list,
+        nt_probas: list,
+        nt_test_y: list,
+        formatter: Callable,
+        ot_save_file: str="./out/prediction_all_ot.csv",
+        nt_save_file: str="./out/prediction_all_nt.csv",
+    ):
+    """Save all verses into a file, along with prediction results.
+
+        formatter: Callable
+            any callable object (function, method, etc.)
+            that returns a formatted string which can be directly
+            written to a file.
+    """
+    # save all prediction results to csv files
+    ot_csv = formatter(X=ot_test_X, probas=ot_probas, y_correct=ot_test_y)
+    nt_csv = formatter(X=nt_test_X, probas=nt_probas, y_correct=nt_test_y)
+
+    # write CSV-formatted texts to files
+    Path(ot_save_file).write_text(ot_csv)
+    Path(nt_save_file).write_text(nt_csv)
