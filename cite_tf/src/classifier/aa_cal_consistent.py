@@ -1,9 +1,10 @@
+from pathlib import Path
 from sklearn.naive_bayes import MultinomialNB
 from classifier.eval_utils import evaluate_classifier, save_all_preds, save_mislabels
 from classifier.fitting_utils import BoW_Estimator
 from classifier.load_cal import load_df_json, get_book_verses
-import classifier.book_data as book_data
 import re
+import classifier.book_data as book_data
 
 
 def csvify_cal(
@@ -60,7 +61,7 @@ def remove_proper_nouns(verses: list) -> list:
 
 
 if __name__ == "__main__":
-    df = load_df_json("../scraper/cal_results/")
+    df = load_df_json(PROJ_ROOT / "/scraper/cal_results/")
 
     print("OT_train")
     ot_train_verses = get_book_verses(df, book_data.ot_train_books, trim_none=True)
@@ -139,28 +140,6 @@ if __name__ == "__main__":
 
     c_mnb_nub = BoW_Estimator(MultinomialNB(), ' '.join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
-
-    (ot_probas_nub, nt_probas_nub,
-     ot_mislabels_nub, nt_mislabels_nub) = evaluate_classifier(
-                                                c_mnb_nub,
-                                                ot_test_verses_no_ub,
-                                                ot_test_labels,
-                                                nt_test_verses_no_ub,
-                                                nt_test_labels,
-                                           )
-
-    save_mislabels(ot_mislabels_nub, nt_mislabels_nub,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_mislabels_ot_nub_both.csv",
-                   nt_save_file="./out/cal_mnb_prediction_mislabels_nt_nub_both.csv"
-                   )
-
-    save_all_preds(ot_test_verses_no_ub, ot_probas_nub, ot_test_labels,
-                   nt_test_verses_no_ub, nt_probas_nub, nt_test_labels,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_all_ot_nub_both.csv",
-                   nt_save_file="./out/cal_mnb_prediction_all_nt_nub_both.csv"
-                   )
 
     print("\nRemove PN & GN")
     print("> Remove PN & GN from the training set")

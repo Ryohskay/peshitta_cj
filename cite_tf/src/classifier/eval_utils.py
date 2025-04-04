@@ -319,8 +319,8 @@ def save_mislabels(
         ot_mislabels: tuple,
         nt_mislabels: tuple,
         formatter: Callable,
-        ot_save_file: str="./out/prediction_mislabels_ot.csv",
-        nt_save_file: str="./out/prediction_mislabels_nt.csv",
+        ot_save_file: str | Path="./out/prediction_mislabels_ot.csv",
+        nt_save_file: str | Path="./out/prediction_mislabels_nt.csv",
     ):
     """Save mislabelled verses into a file.
 
@@ -354,15 +354,22 @@ def save_all_preds(
         nt_probas: list,
         nt_test_y: list,
         formatter: Callable,
-        ot_save_file: str="./out/prediction_all_ot.csv",
-        nt_save_file: str="./out/prediction_all_nt.csv",
+        ot_save_file: str | Path="./out/prediction_all_ot.csv",
+        nt_save_file: str | Path="./out/prediction_all_nt.csv",
     ):
     """Save all verses into a file, along with prediction results.
 
-        formatter: Callable
-            any callable object (function, method, etc.)
+        :param Callable formatter: any callable object (function, method, etc.)
             that returns a formatted string which can be directly
             written to a file.
+
+        :note: This function uses pathlib.Path().write_text directly.
+            Error descriptions in this documentation are not thorough.
+        
+        :raises FileNotFoundError: [Errno 2] No such file or directory
+
+        :raises OSError: [Errno 30] Read only file system
+            (raised if no permission to write)
     """
     # save all prediction results to csv files
     ot_csv = formatter(X=ot_test_X, probas=ot_probas, y_correct=ot_test_y)
@@ -371,3 +378,74 @@ def save_all_preds(
     # write CSV-formatted texts to files
     Path(ot_save_file).write_text(ot_csv)
     Path(nt_save_file).write_text(nt_csv)
+
+
+def eval_and_save(
+        clf: BoW_Estimator,
+        ot_test_X: list,
+        ot_test_y: list,
+        nt_test_X: list,
+        nt_test_y: list,
+        formatter: Callable,
+        out_dir: str | Path=(PROJ_ROOT/"out/"),
+        save_file_prefix: str="",
+        save_file_suffix: str="",
+        save_file_ext: str=".csv"
+        ):
+    """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
+
+    See evaluate_classifier for params: clf, ot_test_X, ot_test_y,
+                                        nt_test_X, nt_test_y
+    See save_mislabels & save_all_preds for param: formatter
+
+    out_dir: str | Path
+        Path or string of path to the directory to save result files.
+
+    save_file_prefix, save_file_suffix: str
+        Prefixes and suffixes to add before/after the default file name for each
+        evaluation process. These are used to construct save file names
+        passed to save_mislabels and save_all_preds functions.
+
+    ERRORS:
+        This function uses pathlib.Path().write_text directly.
+        Thus, it may return e.g.:
+            FileNotFoundError
+                [Errno 2]
+                No such file or directory
+
+            OSError
+                [Errno 30]
+                Read only file system (Occurs if no permission to write)
+    """
+    (ot_probas, nt_probas,
+     ot_mislabels, nt_mislabels) = evaluate_classifier(
+                                                clf,
+                                                ot_test_X,
+                                                ot_test_y,
+                                                nt_test_X,
+                                                nt_test_y
+                                           )
+
+    # Construct save files' paths
+    ot_mislabels_file = (save_file_prefix + "prediction_mislabels_ot"
+                        + save_file_suffix + save_file_ext)
+    nt_mislabels_file = (save_file_prefix + "prediction_mislabels_nt"
+                        + save_file_suffix + save_file_ext)
+    ot_all_file = (save_file_prefix + "prediction_all_ot"
+                        + save_file_suffix + save_file_ext)
+    nt_all_file = (save_file_prefix + "prediction_all_nt"
+                        + save_file_suffix + save_file_ext)
+
+    # Save the evaluation results to files
+    save_mislabels(ot_mislabels, nt_mislabels,
+                   formatter=formatter,
+                   ot_save_file=(out_dir/ot_mislabels_file),
+                   nt_save_file=(out_dir/nt_mislabels_file),
+                   )
+
+    save_all_preds(ot_test_X, ot_probas, ot_test_y,
+                   nt_test_X, nt_probas, nt_test_y,
+                   formatter=formatter,
+                   ot_save_file=(out_dir/ot_all_file),
+                   nt_save_file=(out_dir/nt_all_file)
+                   )

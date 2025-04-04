@@ -26,7 +26,8 @@ def is_ot_book(title: str) -> bool:
     return False
 
 
-def load_df_json(data_dir: str) -> pd.DataFrame:
+def load_df_json(data_dir: str | Path) -> pd.DataFrame:
+    """Get CAL scraper results in json format and load as pd.DataFrame."""
     total_df = None
     for fpath in Path(data_dir).iterdir():
         # Load the json data
@@ -91,7 +92,6 @@ def get_book_verses(
                     lemma_annots.append((lemma, annot_r))
                 verse_box.append((refs, lemmata, lemma_annots))
     return verse_box
-                
 
 
 if __name__ == "__main__":
