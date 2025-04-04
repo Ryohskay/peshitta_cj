@@ -1,5 +1,5 @@
 from sklearn.naive_bayes import MultinomialNB
-from eval_utils import evaluate_classifier, save_all_preds, save_mislabels
+from classifier.eval_utils import evaluate_classifier, save_all_preds, save_mislabels
 from classifier.fitting_utils import BoW_Estimator
 from classifier.load_cal import load_df_json, get_book_verses
 import classifier.book_data as book_data
