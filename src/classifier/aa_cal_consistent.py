@@ -46,8 +46,8 @@ def csvify_cal(
     csv_data = ("Reference,Probability for OT,Probability for NT,"
                 + "Correct Label,Leammatised Verses")
 
-    assert len(verses_x) == len(probas)
-    assert len(y_correct) == len(probas)
+    if len(verses_x) != len(probas) or len(y_correct) != len(probas):
+        raise ValueError
 
     for i in range(len(probas)):
         csv_data += (

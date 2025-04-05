@@ -3,7 +3,7 @@ name = "peshitta-cj"
 version = "0.0.0"
 description = "A collection of tools and scripts to categorise Peshitta verses into Jewish and Christian authorship"
 authors = [
-    {name = "Ryohskay",email = "r.nagata.21@abdn.ac.uk"}
+    {name = "Ryosuke Nagata",email = "r.nagata.21@abdn.ac.uk"}
 ]
 license = {text = "BSD-2-Clause"}
 readme = "README.md"
