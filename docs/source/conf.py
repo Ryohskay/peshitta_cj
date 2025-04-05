@@ -8,11 +8,15 @@ sys.path.insert(0, str(Path("../../src").resolve()))
 project = "Peshitta CJ"
 author = "Ryosuke Nagata"
 copyright = "2025, Ryosuke Nagata"
-version = "0.0"
+version = "0.0.0"
+
+html_theme = "sphinx_rtd_theme"
+
 extensions = [
         "sphinx.ext.autodoc",
         "sphinx.ext.autosummary",
         ]
+
 nitpicky = True
 nitpick_ignore = {
     ('py:func', 'int'),
