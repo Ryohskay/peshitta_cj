@@ -29,3 +29,6 @@ This project is a work by Ryosuke Nagata (to be) submitted as his dissertation p
 ## Notes
 - To run the classifier code, execute `python3 -m classifier.{module-name}` at the `./src/` directory.
 - To build the Sphinx documentation, run `make html` at the `./docs/` directory.
+ - You can use `make autobuild` to run a web server that automatically rebuilds upon source file changes.
+ - But for this, you need to install `sphinx-autobuild` dependency yourself: `pip install -U sphinx-autobuild`
+ - In order to build the documentation locally, you also need the ReadTheDoc theme: `pip install -U sphinx-rtd-theme` 
