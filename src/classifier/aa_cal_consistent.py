@@ -1,10 +1,15 @@
-from pathlib import Path
-from sklearn.naive_bayes import MultinomialNB
-from classifier.eval_utils import evaluate_classifier, save_all_preds, save_mislabels
-from classifier.fitting_utils import BoW_Estimator
-from classifier.load_cal import load_df_json, get_book_verses
 import re
-import classifier.book_data as book_data
+
+from sklearn.naive_bayes import MultinomialNB
+
+from classifier import book_data
+from classifier.eval_utils import (
+    evaluate_classifier,
+    save_all_preds,
+    save_mislabels,
+)
+from classifier.fitting_utils import BoW_Estimator
+from classifier.load_cal import get_book_verses, load_df_json
 
 
 def csvify_cal(
@@ -31,7 +36,7 @@ def remove_proclitic_ubs(verses: list) -> list:
     for vrs in verses:
         vrs_lemmata = []
         for i in range(len(vrs[1])):
-            if "c" == vrs[2][i][1]:
+            if vrs[2][i][1] == "c":
                 vrs_lemmata.append(vrs[1][i][0].replace("_", ""))
             else:
                 vrs_lemmata.append(vrs[1][i][0])
@@ -81,7 +86,7 @@ if __name__ == "__main__":
 
     ot_prod = get_book_verses(df, book_data.ot_prod_books, trim_none=True)
 
-    c_mnb = BoW_Estimator(MultinomialNB(), ' '.join)
+    c_mnb = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb.fit(train_x, train_y)
 
     ot_probas, nt_probas, ot_mislabels, nt_mislabels = evaluate_classifier(
@@ -108,7 +113,7 @@ if __name__ == "__main__":
     print("\nRemove underbars marking proclitics, from training set")
     train_x_no_ub = remove_proclitic_ubs(train_x)
 
-    c_mnb_nub = BoW_Estimator(MultinomialNB(), ' '.join)
+    c_mnb_nub = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
 
     (ot_probas_nub, nt_probas_nub,
@@ -138,7 +143,7 @@ if __name__ == "__main__":
     ot_test_verses_no_ub = remove_proclitic_ubs(ot_test_verses)
     nt_test_verses_no_ub = remove_proclitic_ubs(nt_test_verses)
 
-    c_mnb_nub = BoW_Estimator(MultinomialNB(), ' '.join)
+    c_mnb_nub = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
 
     print("\nRemove PN & GN")
@@ -147,7 +152,7 @@ if __name__ == "__main__":
     # and train new classifiers
     train_x_removed = remove_proper_nouns(train_x)
 
-    c_mnb_r = BoW_Estimator(MultinomialNB(), ' '.join)
+    c_mnb_r = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_r.fit(train_x_removed, train_y)
 
     (ot_probas_r, nt_probas_r,
@@ -179,7 +184,7 @@ if __name__ == "__main__":
     ot_test_verses_r = remove_proper_nouns(ot_test_verses)
     nt_test_verses_r = remove_proper_nouns(nt_test_verses)
 
-    c_mnb_rboth = BoW_Estimator(MultinomialNB(), ' '.join)
+    c_mnb_rboth = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_rboth.fit(train_x_removed, train_y)
 
     (ot_probas_rboth, nt_probas_rboth,
@@ -211,7 +216,7 @@ if __name__ == "__main__":
     ot_test_verses_rnub = remove_proper_nouns(ot_test_verses_no_ub)
     nt_test_verses_rnub = remove_proper_nouns(nt_test_verses_no_ub)
 
-    c_mnb_rnub = BoW_Estimator(MultinomialNB(), ' '.join)
+    c_mnb_rnub = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_rnub.fit(train_x_removed_nub, train_y)
 
     (ot_probas_rnub, nt_probas_rnub,
@@ -233,4 +238,4 @@ if __name__ == "__main__":
                    ot_save_file="./out/cal_mnb_prediction_all_ot_removed_both_nub.csv",
                    nt_save_file="./out/cal_mnb_prediction_all_nt_removed_both_nub.csv"
                    )
- 
+

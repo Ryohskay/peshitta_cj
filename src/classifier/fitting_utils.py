@@ -2,10 +2,10 @@
 from collections import Counter
 from collections.abc import Callable
 
-from sklearn.base import BaseEstimator
-from nltk.util import ngrams
-
 import numpy as np
+from nltk.util import ngrams
+from sklearn.base import BaseEstimator
+
 
 def count_n_grams(
         words: list[str],
@@ -26,11 +26,11 @@ def count_n_grams(
     """
     # Format the verse to feed into ngrams()
     formatted_inputs = ngram_formatter(words)
-    
+
     # Generate and count ngrams
     n_grams = list(ngrams(formatted_inputs, span))
     n_gram_counts = Counter(n_grams)
-    
+
     # Keep the ngram counters
     return n_gram_counts
 
@@ -64,7 +64,7 @@ def make_vocab(
         word_cnt += (len(verse[mode]))
 
         n_gram_counters.append(n_gram_counter)
-    
+
         if n_gram_vocabs is None:
             n_gram_vocabs = n_gram_counter.copy()
         else:
@@ -91,7 +91,7 @@ def make_char_n_gram_vocab(
         span: int=3,
         mode: int=1
     ) -> tuple[Counter, list[Counter]]:
-    return make_vocab(verses, ' '.join, span, mode)
+    return make_vocab(verses, " ".join, span, mode)
 
 
 def make_feature(n_gram_vocabs: tuple[Counter, list[Counter]]) ->list[list[int]]:
@@ -120,7 +120,7 @@ def merge_counts(counter: Counter, feat_vec: dict) -> None:
     """
     for n_gram in counter.keys():
         # print(n_gram)
-        if n_gram in feat_vec.keys():
+        if n_gram in feat_vec:
             feat_vec[n_gram] = counter[n_gram]
 
 
@@ -154,6 +154,7 @@ def vectorise(
 
 class BoW_Estimator(BaseEstimator):
     """Wrapper around the BoW vectorisation to allow seamless fitting and predicting."""
+
     def __init__(
             self,
             clf,

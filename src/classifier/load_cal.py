@@ -1,17 +1,18 @@
 from pathlib import Path
+
 import pandas as pd
-import classifier.book_data as book_data
+
+from classifier import book_data
 
 
 def normalise_title(title: str) -> str:
     """Normalise the title of biblical books according to ETCBC."""
     if "_" in title:
         # 1_Samuel to Samuel_1
-        return '_'.join(title.split("_")[::-1])
+        return "_".join(title.split("_")[::-1])
     if "Nehemiah":
         return "Nehemia"
-    else:
-        return title
+    return title
 
 
 def is_ot_book(title: str) -> bool:
@@ -46,7 +47,7 @@ def get_book(df: pd.DataFrame, title: str) -> pd.DataFrame:
 
 
 def verse_in_chapters(verse: tuple, chapters: list[int]):
-    return int(verse.verse_refs.split(" ")[2]) in chapters 
+    return int(verse.verse_refs.split(" ")[2]) in chapters
 
 
 def get_book_verses(
@@ -80,12 +81,10 @@ def get_book_verses(
                 lemma_annots = []   # list[(lemma, annotations)]
                 for i in range(len(verse.lemmatised_verses)):
                     lemma = verse.lemmatised_verses[i]
-                    annot = verse.lemma_annotations[i] 
+                    annot = verse.lemma_annotations[i]
                     annot_r = annot if annot is not None else ""
                     # Handle lemma
-                    if trim_none and lemma is not None:
-                        lemmata.append(lemma)
-                    elif not trim_none:
+                    if (trim_none and lemma is not None) or not trim_none:
                         lemmata.append(lemma)
                     else:
                         continue

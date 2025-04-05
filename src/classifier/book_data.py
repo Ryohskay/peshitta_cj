@@ -13,7 +13,7 @@ ot_test_books = {
 ot_prod_books = {
     "Joshua": list(range(1,24+1)),
     "Judges": list(range(1,21+1)),
-    "Samuel_1": list(range(1,32+1)), 
+    "Samuel_1": list(range(1,32+1)),
     "Samuel_2": list(range(1,24+1)),
     "Kings_1": list(range(1,22+1)),
     "Kings_2": list(range(1,26+1)),

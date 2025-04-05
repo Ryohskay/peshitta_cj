@@ -1,9 +1,14 @@
+import numpy as np
 from sklearn.naive_bayes import MultinomialNB
-from classifier.eval_utils import evaluate_classifier, save_all_preds, save_mislabels
+
+from classifier import book_data
+from classifier.eval_utils import (
+    evaluate_classifier,
+    save_all_preds,
+    save_mislabels,
+)
 from classifier.fitting_utils import BoW_Estimator
 from classifier.textfabric_utils import get_verses
-import numpy as np
-import classifier.book_data as book_data
 
 
 def csvify_etcbc(
@@ -39,11 +44,11 @@ def remove_proper_nouns(verses: list) -> list:
             for j in verses_range:
                 if verses[i][1][j] in FREQUENT_PROPER_NOUN:
                     excludes.append(j)
-            
+
             translit_r = []
             syriac_r = []
             removed = []
-            
+
             for j in verses_range:
                 if j not in excludes:
                     translit_r.append(verses[i][1][j])
@@ -92,7 +97,7 @@ if __name__ == "__main__":
     nt_test_verse_labels = [1 for i in range(len(nt_test_verses))]
 
     # train classifier
-    est = BoW_Estimator(MultinomialNB(), ' '.join)
+    est = BoW_Estimator(MultinomialNB(), " ".join)
     est.fit(train_verse_txts, train_verse_labels)
 
     # evaluate and save results
@@ -119,7 +124,7 @@ if __name__ == "__main__":
     train_verses_removed = remove_proper_nouns(train_verse_txts)
     # assert(train_verses_removed != train_verse_txts)
 
-    mnb_r = BoW_Estimator(MultinomialNB(), ' '.join)
+    mnb_r = BoW_Estimator(MultinomialNB(), " ".join)
     mnb_r.fit(train_verses_removed, train_verse_labels)
 
     # evaluate and save results
@@ -147,7 +152,7 @@ if __name__ == "__main__":
     nt_test_verses_r = remove_proper_nouns(nt_test_verses)
     # assert(train_verses_removed != train_verse_txts)
 
-    mnb_r = BoW_Estimator(MultinomialNB(), ' '.join)
+    mnb_r = BoW_Estimator(MultinomialNB(), " ".join)
     mnb_r.fit(train_verses_removed, train_verse_labels)
 
     # evaluate and save results

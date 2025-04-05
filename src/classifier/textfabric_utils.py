@@ -1,10 +1,9 @@
-from tf.app import use
-
-from collections.abc import Callable
 from collections import Counter
-from nltk.util import ngrams
+from collections.abc import Callable
 
 import numpy as np
+from nltk.util import ngrams
+from tf.app import use
 
 
 def get_verses(
@@ -19,9 +18,9 @@ def get_verses(
     # Load text-fabric library
     api_handler = use(target_fabric, hoist=globals(), version=ver)
     result_verses = None
-    
-    for book in Fs("book@en").items():    
-        if book[1] in target_books.keys():
+
+    for book in Fs("book@en").items():
+        if book[1] in target_books:
             book_verses = []
             print(book[1])
             chapters = L.d(book[0], otype="chapter")
@@ -50,14 +49,14 @@ def count_n_grams(
         ngram_formatter: Callable,
         span: int=3
     ) -> (int, Counter):
-    
+
     # Format the verse to feed into ngrams()
     formatted_inputs = ngram_formatter(verse_words)
-    
+
     # Generate and count ngrams
     n_grams = list(ngrams(formatted_inputs, span))
     n_gram_counts = Counter(n_grams)
-    
+
     # Keep the ngram counters
     return (word_count+len(verse_words), n_gram_counts)
 
@@ -71,7 +70,7 @@ def make_vocab(verses: list[tuple[str, list[str]]], ngram_formatter: Callable, s
         word_cnt, n_gram_counter = count_n_grams(word_cnt, verse[1], ngram_formatter, span)
 
         n_gram_counters.append(n_gram_counter)
-    
+
         if n_gram_vocabs is None:
             n_gram_vocabs = n_gram_counter.copy()
         else:
@@ -90,7 +89,7 @@ def make_word_n_gram_vocab(verses: list[tuple[str, list[str]]], span: int=3) -> 
 
 
 def make_char_n_gram_vocab(verses: list[tuple[str, list[str]]], span: int=3) -> tuple[Counter, list[Counter]]:
-    return make_vocab(verses, ' '.join, span)
+    return make_vocab(verses, " ".join, span)
 
 
 def make_bow(vocabulary: dict) -> dict[tuple[str], int]:
@@ -112,7 +111,7 @@ def make_feature(n_gram_vocabs: tuple[Counter, list[Counter]]) ->list[list[int]]
 def merge_counts(counter: Counter, feat_vec: dict) -> None:
     for n_gram in counter.keys():
         # print(n_gram)
-        if n_gram in feat_vec.keys():
+        if n_gram in feat_vec:
             feat_vec[n_gram] = counter[n_gram]
 
 
@@ -144,11 +143,11 @@ def predict(
     The classifier must have a method `.predict()`.
     """
     y_pred = classifier.predict(test_X)
-    
+
     num_samples = test_X.shape[0]
     num_mislabels = ((test_labels != y_pred).sum())
     num_correct = num_samples - num_mislabels
-    
+
     print("Number of mislabeled points out of a total %d OT verses: %d" % (num_samples, num_mislabels))
     print(f"Local accuracy: {(num_correct/num_samples):.02f}")
     return y_pred, num_mislabels, num_correct

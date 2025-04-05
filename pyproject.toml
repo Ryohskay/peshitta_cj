@@ -24,6 +24,7 @@ packages = [
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.4"
 pytest = "^8.3.5"
+interrogate = "^1.7.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -38,12 +39,16 @@ ignore = [
     "ANN101",  # missing-type-self
     "ANN204",  # missing-return-type-special-method
     "COM812",  # missing-trailing-comma
+    "CPY001",  # missing-copyright-notice
     "D105",    # undocumented-magic-method
     "D107",    # undocumented-public-init
     "D203",    # one-blank-line-before-class
     "D213",    # multi-line-summary-second-line
     "D403",    # first-line-capitalized
+    "DOC501",  # docstring-missing-exception
+    "DOC502",  # docstring-extraneous-exception
     "ERA001",  # commented-out-code
+    "ISC003",  # explicit-string-concatenation
     "PLR2004", # magic-value-comparison
     "TID252",  # relative-imports
     "T201",    # print
@@ -53,10 +58,10 @@ ignore = [
 fixable = ["ALL"]
 unfixable = []
 
-line-length = 95
+line-length = 80
 
-# Assume Python 3.11.
-target-version = "py311"
+# Assume Python 3.12.
+target-version = "py312"
 
 [tool.ruff.format]
 skip-magic-trailing-comma = false
