@@ -1,8 +1,8 @@
-from bs4 import BeautifulSoup, Tag
-from cal_handler import pool_init, get_a_chapter, follow_link, get_verse_url
-from pathlib import Path
-from main import is_lex, count_char, find_lemma
 import re
+
+from bs4 import BeautifulSoup
+from cal_handler import follow_link, get_a_chapter, get_verse_url, pool_init
+from main import count_char, find_lemma, is_lex
 
 if __name__ == "__main__":
     book_idx = "62006"
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     result = get_a_chapter(http, book_id=book_idx, section=i)
 
     # Use lxml parser to correctly handle raw texts in body tag
-    soup = BeautifulSoup(result, 'lxml')
+    soup = BeautifulSoup(result, "lxml")
 
     # lists to store results
     verses = []
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         print(f"table_data: {table_data.text}")
     elif len(table_data.text) > 0:  # If it's the cell containing verse
         # go through all links in the table data cell
-        for link in table_data.find_all('a'):
+        for link in table_data.find_all("a"):
 
             lex_url = link["href"]
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
                 num_links = num_links + 1
                 # follow the link to get the lemma(ta) page
                 lex_page = follow_link(http, lex_url)
-                lex_soup = BeautifulSoup(lex_page, 'lxml')
+                lex_soup = BeautifulSoup(lex_page, "lxml")
                 lex_body = lex_soup.body
 
                 for body_child in lex_body.children:
@@ -97,8 +97,8 @@ if __name__ == "__main__":
         formatted_data = "Verse Ref. No.,Verse URL,Raw Text,Lemmatised Text\n"
         for i in range(len(verses)):
             indices = verse_ref_nums[i].split(":")
-            raw_txt_verse = ' '.join(raw_verses[i])
-            lemma_verse = ' '.join(verses[i])
+            raw_txt_verse = " ".join(raw_verses[i])
+            lemma_verse = " ".join(verses[i])
             formatted_data = formatted_data + f'"Chapter {indices[0]} verse {indices[1]}",{verse_urls[i]},"{raw_txt_verse}","{lemma_verse}"\n'
 
         # Store the scraped lines into a csv file

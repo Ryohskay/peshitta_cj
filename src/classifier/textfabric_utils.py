@@ -1,27 +1,28 @@
-"""BSD 2-Clause License
+# BSD 2-Clause License
 
-Copyright (c) 2025, Ryosuke Nagata
+# Copyright (c) 2025, Ryosuke Nagata
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 from collections import Counter
 from collections.abc import Callable
 
@@ -37,10 +38,12 @@ def get_verses(
 ) -> dict[str, list[tuple[str, list[str]]]]:
     """Extract verses from target_fabric.
 
-    Return a dict of format: {"BOOK_TITLE": [list of ("VERSE_REF", [list of words])]}
+    Returns:
+        a dict object pairing a book title to list of verses in format:
+        {"BOOK_TITLE": [list of ("VERSE_REF", [list of words])]}
     """
     # Load text-fabric library
-    api_handler = use(target_fabric, hoist=globals(), version=ver)
+    use(target_fabric, hoist=globals(), version=ver)
     result_verses = None
 
     for book in Fs("book@en").items():
@@ -48,12 +51,14 @@ def get_verses(
             book_verses = []
             print(book[1])
             chapters = L.d(book[0], otype="chapter")
-            # results = "Verse Reference,Lemmatised Transliteration,Plain Transliteration,Original Syriac Text
-"
             for chapter in chapters:
                 if int(F.chapter.v(chapter)) in target_books[book[1]]:
                     for verse in L.d(chapter, otype="verse"):
-                        verse_ref = f"{book[1]} Chapter {int(F.chapter.v(chapter)):02} Verse {int(F.verse.v(verse)):02}"
+                        verse_ref = (
+                                        f"{book[1]} Chapter "
+                                        + f"{int(F.chapter.v(chapter)):02} "
+                                        + f"Verse {int(F.verse.v(verse)):02}"
+                                     )
                         # get all words in this verse
                         words = L.d(verse, otype="word")
                         # transliteration of this verse as a list of words
@@ -77,7 +82,11 @@ def count_n_grams(
     verse_words: list[str],
     ngram_formatter: Callable,
     span: int = 3,
-) -> (int, Counter):
+) -> tuple[int, Counter]:
+    """Count n-grams in the given list of strings.
+
+    This function internally uses ::
+    """
     # Format the verse to feed into ngrams()
     formatted_inputs = ngram_formatter(verse_words)
 
@@ -204,11 +213,10 @@ def predict(
 def csvify(verses: list[tuple[str, list[str]]]) -> str:
     """Convert the verse data into a CSV-formatted string."""
     # Set header line
-    result = '"Verse Reference No.","ܐܠܦ ܒܝܬ ܣܘܪܝܝܐ","ETCBC Transliteration"
-'
+    result = '"Verse Reference No.","ܐܠܦ ܒܝܬ ܣܘܪܝܝܐ","ETCBC Transliteration"'
     # Extract & format verse data
     for verse in verses:
-        line = f'"{verse[0]}","{" ".join(verse[2])}","{" ".join(verse[1])}"
-'
+        line = (f'"{verse[0]}","{" ".join(verse[2])}",'
+                + f'"{" ".join(verse[1])}"')
         result += line
     return result

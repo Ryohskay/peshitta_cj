@@ -22,6 +22,7 @@ intersphinx_mapping = {
         "python": ("https://docs.python.org/3.12", None),
         "numpy": ("https://docs.scipy.org/doc/numpy/", None),
         "pandas": ("https://pandas.pydata.org/docs/", None),
+        "nltk": ("https://www.nltk.org/", None),
     }
 
 
@@ -30,3 +31,7 @@ nitpick_ignore = {
     ("py:func", "int"),
     ("envvar", "LD_LIBRARY_PATH"),
 }
+
+# napoleon extension configs
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False

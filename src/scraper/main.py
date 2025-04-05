@@ -1,11 +1,12 @@
 """The main scraping script to get Syriac texts from CAL."""
 
-from bs4 import BeautifulSoup, Tag
-from cal_handler import pool_init, get_a_chapter, follow_link, get_verse_url
-from pathlib import Path
+import json
 import re
 import time
-import json
+from pathlib import Path
+
+from bs4 import BeautifulSoup, Tag
+from cal_handler import follow_link, get_a_chapter, get_verse_url, pool_init
 
 
 def count_char(target: str, source: str) -> int:
@@ -30,7 +31,7 @@ def get_lemma_line(markup_tag: Tag) -> str | None:
     # which the HTML parser considers as a raw string under
     # the body tag.
     in_tag_txt = re.sub("^\\.$", "", stripped)
-    if markup_tag.name is None and in_tag_txt != '':
+    if markup_tag.name is None and in_tag_txt != "":
         # if the content of body tag is not within any tag
         # but a raw string directly under body tag
         # (this is how CAL lists lemmata in lexcicon entries)
@@ -64,14 +65,14 @@ def extract_lemma_annot(tag_txt: str) -> tuple[str | None, str | None]:
     """
     if is_lemma(tag_txt):
         # get the lemma and remove POS description etc.
-        split_line = tag_txt.split(' ')
+        split_line = tag_txt.split(" ")
         lemma = split_line[0]
         # remove numbering appended to lemma, like "???#2"
         # and replace "@" in compound words with a space
         lemma = re.sub("#\\d", "", lemma).replace("@", " ")
         # record the annotations if they exist
         if len(split_line) > 1:
-            annot = ' '.join(split_line[1:]) # lemma annotations like POS, morphology
+            annot = " ".join(split_line[1:]) # lemma annotations like POS, morphology
         else:
             print(f"INFO: Annotation not given for lemma: {lemma}")
             annot = None
@@ -136,7 +137,7 @@ if __name__ == "__main__":
         # result = get_a_chapter(http, book_id=book_idx, section=i)
 
         # Use lxml parser to correctly handle raw texts in body tag
-        soup = BeautifulSoup(result, 'lxml')
+        soup = BeautifulSoup(result, "lxml")
 
         # book-level vars
         # lists to store results
@@ -147,7 +148,7 @@ if __name__ == "__main__":
                           # retrieved
         error_lines = [] # lines where DB error is suspected
         xx_lines = [] # lines where the reference is XX
-        verse_urls = [] # list of verse urls 
+        verse_urls = [] # list of verse urls
         verse_annots = [] # aggregate list of verse annotations
 
         # book-level counters
@@ -166,7 +167,7 @@ if __name__ == "__main__":
         # verse-level flags
         is_verse_line = False
 
-        for table_data in soup.find_all('td'):
+        for table_data in soup.find_all("td"):
             if "valign" in table_data.attrs.keys() and table_data["valign"] == "top":
                 # when the scraper reaches a new row on the table.
                 # add the verse identifier (e.g. "01:01")
@@ -174,10 +175,10 @@ if __name__ == "__main__":
                 if verse_ref is not None:
                     vid = verse_ref.group()
                     print(vid)
-                    v_refs = vid.split(':')
+                    v_refs = vid.split(":")
                     reference = (
-                            f'{book[0]} Chapter {v_refs[0]}'
-                            + f' Verse {v_refs[1]}'
+                            f"{book[0]} Chapter {v_refs[0]}"
+                            + f" Verse {v_refs[1]}"
                             )
                     verse_ref_nums.append(reference)
                     is_verse_line = True
@@ -203,7 +204,7 @@ if __name__ == "__main__":
 
             elif len(table_data.text) > 0 and is_verse_line:  # If it's the cell containing verse
                 # go through all links in the table data cell
-                for link in table_data.find_all('a'):
+                for link in table_data.find_all("a"):
 
                     lex_url = link["href"]
 
@@ -219,7 +220,7 @@ if __name__ == "__main__":
                         num_links = num_links + 1
                         # follow the link to get the lemma(ta) page
                         lex_page = follow_link(http, lex_url)
-                        lex_soup = BeautifulSoup(lex_page, 'lxml')
+                        lex_soup = BeautifulSoup(lex_page, "lxml")
                         lex_body = lex_soup.body
 
                         for body_child in lex_body.children:
@@ -287,14 +288,14 @@ if __name__ == "__main__":
         #             )
 
         # Store the scraped lines into a csv file
-        with Path(f'./out/scraper_results_{cset}_{book[0]}.json').open(mode="w") as fp:
+        with Path(f"./out/scraper_results_{cset}_{book[0]}.json").open(mode="w") as fp:
             book_data = {
-                    'book_title': book[0],
-                    'verse_refs': verse_ref_nums,
-                    'verse_urls': verse_urls,
-                    'raw_text_verses': raw_verses,
-                    'lemmatised_verses': verses,
-                    'lemma_annotations': verse_annots
+                    "book_title": book[0],
+                    "verse_refs": verse_ref_nums,
+                    "verse_urls": verse_urls,
+                    "raw_text_verses": raw_verses,
+                    "lemmatised_verses": verses,
+                    "lemma_annotations": verse_annots
                     }
             json.dump(book_data, fp)
 

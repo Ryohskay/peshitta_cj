@@ -1,27 +1,27 @@
-"""BSD 2-Clause License
+# BSD 2-Clause License
 
-Copyright (c) 2025, Ryosuke Nagata
+# Copyright (c) 2025, Ryosuke Nagata
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Tools and functions to evaluate classifiers."""
 
 from collections import Counter
@@ -47,19 +47,21 @@ def quick_stats(
 ) -> tuple[int, int]:
     """Calculate and print some basic statistics on model inputs & outputs.
 
-    :param np.ndarray inputs: Inputs passed when the classifier
-        produced the predictions.
-    :param np.ndarray y_correct: Correct (gold-standard) labels
-        for the input verses.
-    :param np.ndarray prediction: Labels for the input verses
-        predicted by the classifier.
+    Args:
+        inputs: Inputs passed when the classifier
+            produced the predictions.
+        y_correct: Correct (gold-standard) labels
+            for the input verses.
+        prediction: Labels for the input verses
+            predicted by the classifier.
 
-    :raises ValueError: If the provided list of inputs to test is either zero
-        length or does not have a measureable length.
-
-    :return: number of mislabelled verses and that of
+    Returns:
+        number of mislabelled verses and that of
         correctly labelled verses.
-    :rtype: tuple[int, int]
+
+    Raises:
+        ValueError: If the provided list of inputs to test is either zero
+            length or does not have a measurable length.
     """
     sample_size = 0
     try:
@@ -77,7 +79,7 @@ def quick_stats(
     num_correct = sample_size - num_mislabels
 
     print(
-        f"Number of mislabeled points out of the total {sample_size} verses: "
+        f"Number of mislabelled points out of the total {sample_size} verses: "
         + f"{num_mislabels}"
     )
     print(f"Local accuracy: {accuracy_score(y_correct, prediction):.02f}")
@@ -91,12 +93,19 @@ def find_mislabels(
     test_x: list | None = None,
     probas: list | None = None,
 ) -> tuple[list, list, list | None, list | None]:
-    """Find and return mislabelled verses in string format."""
-    idcs = list()
-    mislabels = list()
-    correct_labels = list()
-    mislabel_verses = list()
-    mislabel_probas = list()
+    """Find and return mislabelled verses in string format.
+
+    Args:
+        y_correct: list of correct labels
+        y_pred: list of predictions
+        test_x: list of verses corresponding to the labels
+        probas: list of prediction probabilities
+    """
+    idcs = []
+    mislabels = []
+    correct_labels = []
+    mislabel_verses = []
+    mislabel_probas = []
 
     for i in range(len(y_correct)):
         if y_correct[i] != y_pred[i]:
@@ -316,7 +325,7 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
         print("Resulting split of sub-arrays will be uneven.")
 
     if len(lis) < parts:
-        msg = f"Cannot devide a list of length {len(lis)} into {parts} parts!"
+        msg = f"Cannot divide a list of length {len(lis)} into {parts} parts!"
         raise ValueError(msg)
 
     # Calculate where to split the array

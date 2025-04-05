@@ -1,7 +1,8 @@
 """Script and functions to fetch HTML data from CAL."""
 
-from urllib.parse import urlencode
 from pathlib import Path
+from urllib.parse import urlencode
+
 import urllib3
 
 base_url = "https://cal.huc.edu/"
@@ -57,7 +58,7 @@ def make_url(
     if query_params is not None:
         # if query_params are explicitly given, return a URL string with the params
         return base_url + page + "?" + urlencode(query_params)
-    
+
     # If no_parse is False and query_params are not given
     # Construct a dictionary of parameters
     params = {
@@ -98,8 +99,8 @@ def get_a_chapter(
 def get_and_save(
         fpath: str | Path,
         pool_mgr: urllib3.PoolManager,
-        book_id: str, 
-        section: int, 
+        book_id: str,
+        section: int,
         display_in: str,
         allow_overwrite: bool=False
         ):
@@ -125,15 +126,15 @@ def get_and_save(
         dest = fpath
     else:
         dest = Path(fpath)
-    
+
     if dest.exists() and not dest.is_file():
-        raise ValueError("The specified path {} exists, and it is not a file path.".format(fpath))
+        raise ValueError(f"The specified path {fpath} exists, and it is not a file path.")
 
     # Avoid overwriting files unless explicitly allowed
     if dest.exists() and not allow_overwrite:
-        raise FileExistsError("Overwrite not allowed: The file {} exists, and allow_overwrite parameter is False!".format(fpath))
-    elif dest.exists():
-        print("Overwriting: {}".format(fpath))
+        raise FileExistsError(f"Overwrite not allowed: The file {fpath} exists, and allow_overwrite parameter is False!")
+    if dest.exists():
+        print(f"Overwriting: {fpath}")
 
     dest.write_text(qr)
 
@@ -164,7 +165,7 @@ def get_verse_url(url: str):
     for param in query_params:
         if "coord" in param:
             verse_ref = param.split("=")[1]
-    v_url = make_url(file=verse_ref)  
+    v_url = make_url(file=verse_ref)
     print(f"v_url: {v_url}")
     return v_url
 
