@@ -320,9 +320,13 @@ def evaluate_classifier(
 ) -> (list[(float, float)], list[(float, float)]):
     """Evaluate a classifier with provided test sets."""
     print("OT --->")
-    ot_probas, ot_y_preds, _, _ = predict_proba(clf, ot_test_X, np.array(ot_test_y))
+    ot_probas, ot_y_preds, _, _ = predict_proba(
+        clf, ot_test_X, np.array(ot_test_y)
+    )
     print("NT --->")
-    nt_probas, nt_y_preds, _, _ = predict_proba(clf, nt_test_X, np.array(nt_test_y))
+    nt_probas, nt_y_preds, _, _ = predict_proba(
+        clf, nt_test_X, np.array(nt_test_y)
+    )
     print("All --->")
     all_test_y = []
     all_test_y.extend(ot_test_y)
@@ -331,8 +335,12 @@ def evaluate_classifier(
     metricise(all_test_y, ot_y_preds, nt_y_preds, conf_m=show_confusion_matrix)
 
     # figure out which verses the classifier mislabelled
-    ot_mislabels = find_mislabels(ot_test_y, ot_y_preds, test_x=ot_test_X, probas=ot_probas)
-    nt_mislabels = find_mislabels(nt_test_y, nt_y_preds, test_x=nt_test_X, probas=nt_probas)
+    ot_mislabels = find_mislabels(
+        ot_test_y, ot_y_preds, test_x=ot_test_X, probas=ot_probas
+    )
+    nt_mislabels = find_mislabels(
+        nt_test_y, nt_y_preds, test_x=nt_test_X, probas=nt_probas
+    )
     return (ot_probas, nt_probas, ot_mislabels, nt_mislabels)
 
 
@@ -444,13 +452,29 @@ def eval_and_save(
 
     # Construct save files' paths
     ot_mislabels_file = (
-        save_file_prefix + "prediction_mislabels_ot" + save_file_suffix + save_file_ext
+        save_file_prefix
+        + "prediction_mislabels_ot"
+        + save_file_suffix
+        + save_file_ext
     )
     nt_mislabels_file = (
-        save_file_prefix + "prediction_mislabels_nt" + save_file_suffix + save_file_ext
+        save_file_prefix
+        + "prediction_mislabels_nt"
+        + save_file_suffix
+        + save_file_ext
     )
-    ot_all_file = save_file_prefix + "prediction_all_ot" + save_file_suffix + save_file_ext
-    nt_all_file = save_file_prefix + "prediction_all_nt" + save_file_suffix + save_file_ext
+    ot_all_file = (
+        save_file_prefix
+        + "prediction_all_ot"
+        + save_file_suffix
+        + save_file_ext
+    )
+    nt_all_file = (
+        save_file_prefix
+        + "prediction_all_nt"
+        + save_file_suffix
+        + save_file_ext
+    )
 
     # Save the evaluation results to files
     save_mislabels(

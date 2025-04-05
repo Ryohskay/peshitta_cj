@@ -19,9 +19,9 @@ def is_ot_book(title: str) -> bool:
     """Check if a particular book is in the OT or NT."""
     book_title = normalise_title(title)
     if (
-            book_title in book_data.ot_train_books.keys()
-            or book_title in book_data.ot_test_books.keys()
-            or book_title in book_data.ot_prod_books.keys()
+        book_title in book_data.ot_train_books.keys()
+        or book_title in book_data.ot_test_books.keys()
+        or book_title in book_data.ot_prod_books.keys()
     ):
         return True
     return False
@@ -51,10 +51,8 @@ def verse_in_chapters(verse: tuple, chapters: list[int]):
 
 
 def get_book_verses(
-        df: pd.DataFrame,
-        target_books: dict,
-        trim_none: bool=False
-    ) -> list:
+    df: pd.DataFrame, target_books: dict, trim_none: bool = False
+) -> list:
     """Get all books in the dataframe and generate a list of tuples.
 
     Returns a list representing each verse as a tuple.
@@ -73,12 +71,14 @@ def get_book_verses(
         else:
             books = pd.concat([books, book_df], ignore_index=True)
 
-        selected_cols = books[["verse_refs", "lemmatised_verses", "lemma_annotations"]]
+        selected_cols = books[
+            ["verse_refs", "lemmatised_verses", "lemma_annotations"]
+        ]
         for verse in selected_cols.itertuples():
             if verse_in_chapters(verse, target_books[bk]):
                 refs = verse.verse_refs
-                lemmata = []        # list[lemma]
-                lemma_annots = []   # list[(lemma, annotations)]
+                lemmata = []  # list[lemma]
+                lemma_annots = []  # list[(lemma, annotations)]
                 for i in range(len(verse.lemmatised_verses)):
                     lemma = verse.lemmatised_verses[i]
                     annot = verse.lemma_annotations[i]

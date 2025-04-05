@@ -13,19 +13,21 @@ from classifier.load_cal import get_book_verses, load_df_json
 
 
 def csvify_cal(
-        X: list[str],
-        probas: list[float],
-        y_correct: list[int],
-    ) -> str:
+    X: list[str],
+    probas: list[float],
+    y_correct: list[int],
+) -> str:
     """Format classifier prediciton results into CSV format."""
     csv_data = "Reference,Probability for OT,Probability for NT,Correct Label,Leammatised Verses\n"
 
-    assert(len(X) == len(probas))
-    assert(len(y_correct) == len(probas))
+    assert len(X) == len(probas)
+    assert len(y_correct) == len(probas)
 
     for i in range(len(probas)):
-        csv_data += (f"{X[i][0]},{probas[i][0]:.04f},{probas[i][1]:.04f},"
-                     +f"{y_correct[i]},{' '.join(X[i][1])}\n")
+        csv_data += (
+            f"{X[i][0]},{probas[i][0]:.04f},{probas[i][1]:.04f},"
+            + f"{y_correct[i]},{' '.join(X[i][1])}\n"
+        )
 
     # print(csv_data.split('\n')[1])
     return csv_data
@@ -69,16 +71,24 @@ if __name__ == "__main__":
     df = load_df_json(PROJ_ROOT / "/scraper/cal_results/")
 
     print("OT_train")
-    ot_train_verses = get_book_verses(df, book_data.ot_train_books, trim_none=True)
+    ot_train_verses = get_book_verses(
+        df, book_data.ot_train_books, trim_none=True
+    )
     print("NT_train")
-    nt_train_verses = get_book_verses(df, book_data.nt_train_books, trim_none=True)
+    nt_train_verses = get_book_verses(
+        df, book_data.nt_train_books, trim_none=True
+    )
     train_x = ot_train_verses.copy()
     train_x.extend(nt_train_verses)
     train_y = [0 for i in range(len(ot_train_verses))]
     train_y.extend([1 for i in range(len(nt_train_verses))])
 
-    ot_test_verses = get_book_verses(df, book_data.ot_test_books, trim_none=True)
-    nt_test_verses = get_book_verses(df, book_data.nt_test_books, trim_none=True)
+    ot_test_verses = get_book_verses(
+        df, book_data.ot_test_books, trim_none=True
+    )
+    nt_test_verses = get_book_verses(
+        df, book_data.nt_test_books, trim_none=True
+    )
     ot_test_labels = [0 for i in range(len(ot_test_verses))]
     nt_test_labels = [1 for i in range(len(nt_test_verses))]
 
@@ -90,25 +100,31 @@ if __name__ == "__main__":
     c_mnb.fit(train_x, train_y)
 
     ot_probas, nt_probas, ot_mislabels, nt_mislabels = evaluate_classifier(
-                c_mnb,
-                ot_test_verses,
-                ot_test_labels,
-                nt_test_verses,
-                nt_test_labels,
-            )
+        c_mnb,
+        ot_test_verses,
+        ot_test_labels,
+        nt_test_verses,
+        nt_test_labels,
+    )
 
-    save_mislabels(ot_mislabels, nt_mislabels,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_mislabels_ot.csv",
-                   nt_save_file="./out/cal_mnb_prediction_mislabels_nt.csv"
-                   )
-    save_all_preds(ot_test_verses, ot_probas, ot_test_labels,
-                   nt_test_verses, nt_probas, nt_test_labels,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_all_ot.csv",
-                   nt_save_file="./out/cal_mnb_prediction_all_nt.csv"
-                   )
-
+    save_mislabels(
+        ot_mislabels,
+        nt_mislabels,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_mislabels_ot.csv",
+        nt_save_file="./out/cal_mnb_prediction_mislabels_nt.csv",
+    )
+    save_all_preds(
+        ot_test_verses,
+        ot_probas,
+        ot_test_labels,
+        nt_test_verses,
+        nt_probas,
+        nt_test_labels,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_all_ot.csv",
+        nt_save_file="./out/cal_mnb_prediction_all_nt.csv",
+    )
 
     print("\nRemove underbars marking proclitics, from training set")
     train_x_no_ub = remove_proclitic_ubs(train_x)
@@ -116,29 +132,39 @@ if __name__ == "__main__":
     c_mnb_nub = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
 
-    (ot_probas_nub, nt_probas_nub,
-     ot_mislabels_nub, nt_mislabels_nub) = evaluate_classifier(
-                                                c_mnb_nub,
-                                                ot_test_verses,
-                                                ot_test_labels,
-                                                nt_test_verses,
-                                                nt_test_labels,
-                                           )
+    (ot_probas_nub, nt_probas_nub, ot_mislabels_nub, nt_mislabels_nub) = (
+        evaluate_classifier(
+            c_mnb_nub,
+            ot_test_verses,
+            ot_test_labels,
+            nt_test_verses,
+            nt_test_labels,
+        )
+    )
 
-    save_mislabels(ot_mislabels_nub, nt_mislabels_nub,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_mislabels_ot_nub.csv",
-                   nt_save_file="./out/cal_mnb_prediction_mislabels_nt_nub.csv"
-                   )
+    save_mislabels(
+        ot_mislabels_nub,
+        nt_mislabels_nub,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_mislabels_ot_nub.csv",
+        nt_save_file="./out/cal_mnb_prediction_mislabels_nt_nub.csv",
+    )
 
-    save_all_preds(ot_test_verses, ot_probas_nub, ot_test_labels,
-                   nt_test_verses, nt_probas_nub, nt_test_labels,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_all_ot_nub.csv",
-                   nt_save_file="./out/cal_mnb_prediction_all_nt_nub.csv"
-                   )
+    save_all_preds(
+        ot_test_verses,
+        ot_probas_nub,
+        ot_test_labels,
+        nt_test_verses,
+        nt_probas_nub,
+        nt_test_labels,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_all_ot_nub.csv",
+        nt_save_file="./out/cal_mnb_prediction_all_nt_nub.csv",
+    )
 
-    print("\nRemove underbars marking proclitics, from both training & test sets")
+    print(
+        "\nRemove underbars marking proclitics, from both training & test sets"
+    )
     train_x_no_ub = remove_proclitic_ubs(train_x)
     ot_test_verses_no_ub = remove_proclitic_ubs(ot_test_verses)
     nt_test_verses_no_ub = remove_proclitic_ubs(nt_test_verses)
@@ -155,26 +181,35 @@ if __name__ == "__main__":
     c_mnb_r = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_r.fit(train_x_removed, train_y)
 
-    (ot_probas_r, nt_probas_r,
-     ot_mislabels_r, nt_mislabels_r) = evaluate_classifier(
-                                                c_mnb_r,
-                                                ot_test_verses, ot_test_labels,
-                                                nt_test_verses, nt_test_labels,
-                                           )
+    (ot_probas_r, nt_probas_r, ot_mislabels_r, nt_mislabels_r) = (
+        evaluate_classifier(
+            c_mnb_r,
+            ot_test_verses,
+            ot_test_labels,
+            nt_test_verses,
+            nt_test_labels,
+        )
+    )
 
-    save_mislabels(ot_mislabels_r, nt_mislabels_r,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_mislabels_ot_removed.csv",
-                   nt_save_file="./out/cal_mnb_prediction_mislabels_nt_removed.csv"
-                   )
+    save_mislabels(
+        ot_mislabels_r,
+        nt_mislabels_r,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_mislabels_ot_removed.csv",
+        nt_save_file="./out/cal_mnb_prediction_mislabels_nt_removed.csv",
+    )
 
-    save_all_preds(ot_test_verses, ot_probas_r, ot_test_labels,
-                   nt_test_verses, nt_probas_r, nt_test_labels,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_all_ot_removed.csv",
-                   nt_save_file="./out/cal_mnb_prediction_all_nt_removed.csv"
-                   )
-
+    save_all_preds(
+        ot_test_verses,
+        ot_probas_r,
+        ot_test_labels,
+        nt_test_verses,
+        nt_probas_r,
+        nt_test_labels,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_all_ot_removed.csv",
+        nt_save_file="./out/cal_mnb_prediction_all_nt_removed.csv",
+    )
 
     print("\nRemove PN & GN")
     print("> Remove PN & GN from both training & test sets")
@@ -187,25 +222,38 @@ if __name__ == "__main__":
     c_mnb_rboth = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_rboth.fit(train_x_removed, train_y)
 
-    (ot_probas_rboth, nt_probas_rboth,
-     ot_mislabels_rboth, nt_mislabels_rboth) = evaluate_classifier(
-                                                c_mnb_rboth,
-                                                ot_test_verses_r, ot_test_labels,
-                                                nt_test_verses_r, nt_test_labels,
-                                           )
+    (
+        ot_probas_rboth,
+        nt_probas_rboth,
+        ot_mislabels_rboth,
+        nt_mislabels_rboth,
+    ) = evaluate_classifier(
+        c_mnb_rboth,
+        ot_test_verses_r,
+        ot_test_labels,
+        nt_test_verses_r,
+        nt_test_labels,
+    )
 
-    save_mislabels(ot_mislabels_rboth, nt_mislabels_rboth,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_mislabels_ot_removed_both.csv",
-                   nt_save_file="./out/cal_mnb_prediction_mislabels_nt_removed_both.csv"
-                   )
+    save_mislabels(
+        ot_mislabels_rboth,
+        nt_mislabels_rboth,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_mislabels_ot_removed_both.csv",
+        nt_save_file="./out/cal_mnb_prediction_mislabels_nt_removed_both.csv",
+    )
 
-    save_all_preds(ot_test_verses_r, ot_probas_rboth, ot_test_labels,
-                   nt_test_verses_r, nt_probas_rboth, nt_test_labels,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_all_ot_removed_both.csv",
-                   nt_save_file="./out/cal_mnb_prediction_all_nt_removed_both.csv"
-                   )
+    save_all_preds(
+        ot_test_verses_r,
+        ot_probas_rboth,
+        ot_test_labels,
+        nt_test_verses_r,
+        nt_probas_rboth,
+        nt_test_labels,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_all_ot_removed_both.csv",
+        nt_save_file="./out/cal_mnb_prediction_all_nt_removed_both.csv",
+    )
 
     print("\nRemove PN, GN, underbars")
     print("> Remove PN, GN, underbars from both training & test sets")
@@ -219,23 +267,32 @@ if __name__ == "__main__":
     c_mnb_rnub = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_rnub.fit(train_x_removed_nub, train_y)
 
-    (ot_probas_rnub, nt_probas_rnub,
-     ot_mislabels_rnub, nt_mislabels_rnub) = evaluate_classifier(
-                                                c_mnb_rnub,
-                                                ot_test_verses_rnub, ot_test_labels,
-                                                nt_test_verses_rnub, nt_test_labels,
-                                           )
+    (ot_probas_rnub, nt_probas_rnub, ot_mislabels_rnub, nt_mislabels_rnub) = (
+        evaluate_classifier(
+            c_mnb_rnub,
+            ot_test_verses_rnub,
+            ot_test_labels,
+            nt_test_verses_rnub,
+            nt_test_labels,
+        )
+    )
 
-    save_mislabels(ot_mislabels_r, nt_mislabels_r,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_mislabels_ot_removed_both_nub.csv",
-                   nt_save_file="./out/cal_mnb_prediction_mislabels_nt_removed_both_nub.csv"
-                   )
+    save_mislabels(
+        ot_mislabels_r,
+        nt_mislabels_r,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_mislabels_ot_removed_both_nub.csv",
+        nt_save_file="./out/cal_mnb_prediction_mislabels_nt_removed_both_nub.csv",
+    )
 
-    save_all_preds(ot_test_verses_r, ot_probas_r, ot_test_labels,
-                   nt_test_verses_r, nt_probas_r, nt_test_labels,
-                   formatter=csvify_cal,
-                   ot_save_file="./out/cal_mnb_prediction_all_ot_removed_both_nub.csv",
-                   nt_save_file="./out/cal_mnb_prediction_all_nt_removed_both_nub.csv"
-                   )
-
+    save_all_preds(
+        ot_test_verses_r,
+        ot_probas_r,
+        ot_test_labels,
+        nt_test_verses_r,
+        nt_probas_r,
+        nt_test_labels,
+        formatter=csvify_cal,
+        ot_save_file="./out/cal_mnb_prediction_all_ot_removed_both_nub.csv",
+        nt_save_file="./out/cal_mnb_prediction_all_nt_removed_both_nub.csv",
+    )

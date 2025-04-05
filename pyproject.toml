@@ -32,32 +32,6 @@ build-backend = "poetry.core.masonry.api"
 
 # Ruff configurations
 [tool.ruff]
-# Enable all rules by default
-select = ["ALL"]
-# exclude specific rules
-ignore = [
-    "ANN101",  # missing-type-self
-    "ANN204",  # missing-return-type-special-method
-    "COM812",  # missing-trailing-comma
-    "CPY001",  # missing-copyright-notice
-    "D105",    # undocumented-magic-method
-    "D107",    # undocumented-public-init
-    "D203",    # one-blank-line-before-class
-    "D213",    # multi-line-summary-second-line
-    "D403",    # first-line-capitalized
-    "DOC501",  # docstring-missing-exception
-    "DOC502",  # docstring-extraneous-exception
-    "ERA001",  # commented-out-code
-    "ISC003",  # explicit-string-concatenation
-    "PLR2004", # magic-value-comparison
-    "TID252",  # relative-imports
-    "T201",    # print
-    ]
-
-# List of rules to apply when autofix is applied
-fixable = ["ALL"]
-unfixable = []
-
 line-length = 80
 
 # Assume Python 3.12.
@@ -72,6 +46,33 @@ line-ending = "lf"
 quote-style = "double"
 # indent with spaces, rather than tabs.
 indent-style = "space"
+# format docstrings
+docstring-code-format = true
+
+[tool.ruff.lint]
+# Enable all rules by default
+select = ["ALL"]
+# exclude specific rules
+ignore = [
+    "ANN204",  # missing-return-type-special-method
+    "COM812",  # missing-trailing-comma
+    "D105",    # undocumented-magic-method
+    "D107",    # undocumented-public-init
+    "D203",    # one-blank-line-before-class
+    "D213",    # multi-line-summary-second-line
+    "D403",    # first-line-capitalized
+    "ERA001",  # commented-out-code
+    "ISC003",  # explicit-string-concatenation
+    "PLR2004", # magic-value-comparison
+    "T201",    # print
+    ]
+
+# List of rules to apply when autofix is applied
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/*" = [
