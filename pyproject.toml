@@ -28,3 +28,55 @@ pytest = "^8.3.5"
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+# Ruff configurations
+[tool.ruff]
+# Enable all rules by default
+select = ["ALL"]
+# exclude specific rules
+ignore = [
+    "ANN101",  # missing-type-self
+    "ANN204",  # missing-return-type-special-method
+    "COM812",  # missing-trailing-comma
+    "D105",    # undocumented-magic-method
+    "D107",    # undocumented-public-init
+    "D203",    # one-blank-line-before-class
+    "D213",    # multi-line-summary-second-line
+    "D403",    # first-line-capitalized
+    "ERA001",  # commented-out-code
+    "PLR2004", # magic-value-comparison
+    "TID252",  # relative-imports
+    "T201",    # print
+    ]
+
+# List of rules to apply when autofix is applied
+fixable = ["ALL"]
+unfixable = []
+
+line-length = 95
+
+# Assume Python 3.11.
+target-version = "py311"
+
+[tool.ruff.format]
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+# Like Black:
+# use double quotes for strings.
+quote-style = "double"
+# indent with spaces, rather than tabs.
+indent-style = "space"
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/*" = [
+    "E402",  # module-import-not-at-top-of-file
+    "ANN001",
+    "ANN201",
+    "D100",
+    "D103",
+    "D205",
+    "D400",
+    "D401",
+    "S101"
+    ]
