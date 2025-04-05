@@ -1,5 +1,5 @@
-classifier
-==========
+src
+===
 
 .. toctree::
    :maxdepth: 4

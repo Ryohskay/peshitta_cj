@@ -17,6 +17,13 @@ extensions = [
         "sphinx.ext.autosummary",
         ]
 
+intersphinx_mapping = {
+        'python': ('https://docs.python.org/3.12', None),
+        'numpy': ('https://docs.scipy.org/doc/numpy/', None),
+        'pandas': ('https://pandas.pydata.org/docs/', None),
+    }
+
+
 nitpicky = True
 nitpick_ignore = {
     ('py:func', 'int'),

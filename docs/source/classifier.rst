@@ -1,6 +1,14 @@
 classifier package
 ==================
 
+Module contents
+---------------
+
+.. automodule:: classifier
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Submodules
 ----------
 
@@ -72,14 +80,6 @@ classifier.try\_different\_ns module
 ------------------------------------
 
 .. automodule:: classifier.try_different_ns
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-Module contents
----------------
-
-.. automodule:: classifier
    :members:
    :show-inheritance:
    :undoc-members:
