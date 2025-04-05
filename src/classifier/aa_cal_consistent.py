@@ -1,3 +1,27 @@
+"""BSD 2-Clause License
+
+Copyright (c) 2025, Ryosuke Nagata
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 import re
 
 from sklearn.naive_bayes import MultinomialNB
@@ -18,7 +42,8 @@ def csvify_cal(
     y_correct: list[int],
 ) -> str:
     """Format classifier prediciton results into CSV format."""
-    csv_data = "Reference,Probability for OT,Probability for NT,Correct Label,Leammatised Verses\n"
+    csv_data = "Reference,Probability for OT,Probability for NT,Correct Label,Leammatised Verses
+"
 
     assert len(X) == len(probas)
     assert len(y_correct) == len(probas)
@@ -26,10 +51,12 @@ def csvify_cal(
     for i in range(len(probas)):
         csv_data += (
             f"{X[i][0]},{probas[i][0]:.04f},{probas[i][1]:.04f},"
-            + f"{y_correct[i]},{' '.join(X[i][1])}\n"
+            + f"{y_correct[i]},{' '.join(X[i][1])}
+"
         )
 
-    # print(csv_data.split('\n')[1])
+    # print(csv_data.split('
+')[1])
     return csv_data
 
 
@@ -126,7 +153,8 @@ if __name__ == "__main__":
         nt_save_file="./out/cal_mnb_prediction_all_nt.csv",
     )
 
-    print("\nRemove underbars marking proclitics, from training set")
+    print("
+Remove underbars marking proclitics, from training set")
     train_x_no_ub = remove_proclitic_ubs(train_x)
 
     c_mnb_nub = BoW_Estimator(MultinomialNB(), " ".join)
@@ -163,7 +191,8 @@ if __name__ == "__main__":
     )
 
     print(
-        "\nRemove underbars marking proclitics, from both training & test sets"
+        "
+Remove underbars marking proclitics, from both training & test sets"
     )
     train_x_no_ub = remove_proclitic_ubs(train_x)
     ot_test_verses_no_ub = remove_proclitic_ubs(ot_test_verses)
@@ -172,7 +201,8 @@ if __name__ == "__main__":
     c_mnb_nub = BoW_Estimator(MultinomialNB(), " ".join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
 
-    print("\nRemove PN & GN")
+    print("
+Remove PN & GN")
     print("> Remove PN & GN from the training set")
     # Remove personal names and place names from the training data
     # and train new classifiers
@@ -211,7 +241,8 @@ if __name__ == "__main__":
         nt_save_file="./out/cal_mnb_prediction_all_nt_removed.csv",
     )
 
-    print("\nRemove PN & GN")
+    print("
+Remove PN & GN")
     print("> Remove PN & GN from both training & test sets")
     # Remove personal names and place names from
     # both the training and test datasets
@@ -255,7 +286,8 @@ if __name__ == "__main__":
         nt_save_file="./out/cal_mnb_prediction_all_nt_removed_both.csv",
     )
 
-    print("\nRemove PN, GN, underbars")
+    print("
+Remove PN, GN, underbars")
     print("> Remove PN, GN, underbars from both training & test sets")
     # Remove personal names and place names from
     # both the training and test datasets

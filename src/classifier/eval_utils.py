@@ -1,3 +1,27 @@
+"""BSD 2-Clause License
+
+Copyright (c) 2025, Ryosuke Nagata
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 """Tools and functions to evaluate classifiers."""
 
 from collections import Counter
@@ -227,10 +251,12 @@ def find_top_k_words(
     # print(top_translits[:10])
 
     if save_file is not None:
-        csv_data = "Syriac,Transliteration,Counts\n"
+        csv_data = "Syriac,Transliteration,Counts
+"
         for i in range(top_k):
             csv_data += f"'{top_syr_words[i]!s}',"
-            csv_data += f"{top_translits[i]!s},{int(top_cnts[i])}\n"
+            csv_data += f"{top_translits[i]!s},{int(top_cnts[i])}
+"
 
         Path(save_file).write_text(csv_data)
     return (top_syr_words, top_translits, top_cnts)
@@ -268,11 +294,14 @@ def get_top_n_grams(
         top_targets_syr = sorted_syr[::-1][:top_k]
 
         if save_file is not None:
-            csv_data = "Syriac,Transliteration,Counts\n"
+            csv_data = "Syriac,Transliteration,Counts
+"
             for i in range(top_k):
                 csv_data += f"'{''.join(top_targets_syr[i])}',"
-                csv_data += f"'{top_n_grams[i]!s}',{int(top_cnts[i])}\n"
-            # print(csv_data.split("\n")[1])
+                csv_data += f"'{top_n_grams[i]!s}',{int(top_cnts[i])}
+"
+            # print(csv_data.split("
+")[1])
             Path(save_file).write_text(csv_data)
         return (top_targets_syr, top_n_grams, top_cnts)
     return (None, top_n_grams, top_cnts)

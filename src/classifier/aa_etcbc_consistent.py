@@ -1,3 +1,27 @@
+"""BSD 2-Clause License
+
+Copyright (c) 2025, Ryosuke Nagata
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 import numpy as np
 from sklearn.naive_bayes import MultinomialNB
 
@@ -20,14 +44,16 @@ def csvify_etcbc(
     # Set header line
     result = (
         '"Reference","Probability for OT","Probability for NT","Correct Label",'
-        + '"No. Words","ܐܠܦܒܝܬ ܣܘܪܝܝܐ","ETCBC Transliteration"\n'
+        + '"No. Words","ܐܠܦܒܝܬ ܣܘܪܝܝܐ","ETCBC Transliteration"
+'
     )
     # Extract & format verse data
     for i in range(len(X)):
         result += (
             f'"{X[i][0]}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
             + f'{y_correct[i]}, {len(X[i][2])},"{" ".join(X[i][2])}",'
-            + f'"{" ".join(X[i][1])}"\n'
+            + f'"{" ".join(X[i][1])}"
+'
         )
     return result
 
@@ -153,7 +179,8 @@ if __name__ == "__main__":
     )
 
     # Remove a few common proper nouns
-    print("\nRemove common proper nouns from training verses")
+    print("
+Remove common proper nouns from training verses")
     train_verses_removed = remove_proper_nouns(train_verse_txts)
     # assert(train_verses_removed != train_verse_txts)
 
@@ -189,7 +216,8 @@ if __name__ == "__main__":
         nt_save_file="./out/etcbc_mnb_prediction_all_nt_removed.csv",
     )
 
-    print("\nRemove common proper nouns from both training & test verses")
+    print("
+Remove common proper nouns from both training & test verses")
     train_verses_removed = remove_proper_nouns(train_verse_txts)
     ot_test_verses_r = remove_proper_nouns(ot_test_verses)
     nt_test_verses_r = remove_proper_nouns(nt_test_verses)
