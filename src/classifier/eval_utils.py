@@ -179,7 +179,10 @@ def _sort_arrays(objs: np.array, vals: np.array):
 
 
 def _sort_counter(cnts: Counter):
-    """Sort the Counter contents by the counts, return them as np array."""
+    """Sort the Counter contents by the counts, return them as np array.
+
+        :param Counter cnts: a :class:`Counter` class object
+    """
     cnt_targets = list(cnts.keys())
     cnt_vals = list(cnts.values())
     return _sort_arrays(np.array(cnt_targets), np.array(cnt_vals))
@@ -209,9 +212,9 @@ def find_top_k_words(
     top_syr_words = sorted_syr_words[::-1][:top_k]
     top_translits = sorted_translits[::-1][:top_k]
     
-    print(top_cnts[:10])
-    print(top_syr_words[:10])
-    print(top_translits[:10])
+    # print(top_cnts[:10])
+    # print(top_syr_words[:10])
+    # print(top_translits[:10])
 
     if save_file is not None:
         csv_data = "Syriac,Transliteration,Counts\n"
@@ -337,10 +340,10 @@ def save_mislabels(
     ):
     """Save mislabelled verses into a file.
 
-    formatter: Callable
-        any callable object (function, method, etc.)
-        that returns a formatted string which can be directly
-        written to a file.
+        :param Callable formatter:
+            any callable object (function, method, etc.)
+            that returns a formatted string which can be directly
+            written to a file.
     """
     ot_data = formatter(
                 X=ot_mislabels[3],
@@ -375,14 +378,14 @@ def save_all_preds(
         :param Callable formatter: any callable object (function, method, etc.)
             that returns a formatted string which can be directly
             written to a file.
-
-        :note: This function uses pathlib.Path().write_text directly.
-            Error descriptions in this documentation are not thorough.
         
         :raises FileNotFoundError: [Errno 2] No such file or directory
 
         :raises OSError: [Errno 30] Read only file system
             (raised if no permission to write)
+
+        :note: This function uses pathlib.Path().write_text directly.
+            Error descriptions in this documentation are not thorough.
     """
     # save all prediction results to csv files
     ot_csv = formatter(X=ot_test_X, probas=ot_probas, y_correct=ot_test_y)
@@ -407,31 +410,28 @@ def eval_and_save(
         ):
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
 
-    out_dir: str | Path
-        Path or string of path to the directory to save result files.
+        :param str|Path out_dir: Path or string of path to the directory to save result files.
 
-    save_file_prefix, save_file_suffix: str
-        Prefixes and suffixes to add before/after the default file name for each
-        evaluation process. These are used to construct save file names
-        passed to save_mislabels and save_all_preds functions.
+        :param str save_file_prefix: Prefixes to add before/after the default file name for each
+            evaluation process. These are used to construct save file names
+            passed to save_mislabels and save_all_preds functions.
+        :param str save_file_suffix: Suffix in filenames. **Note** this is different
+            from the *file extension* defined with param ``save_file_ext``. See also
+            the param ``save_file_prefix``.
 
-    ERRORS:
-        This function uses pathlib.Path().write_text directly.
-        Thus, it may return e.g.:
-            FileNotFoundError
-                [Errno 2]
-                No such file or directory
+        :raises FileNotFoundError: [Errno 2] No such file or directory
+        :raises OSError: [Errno 30] Read only file system
+            (Occurs if no permission to write)
 
-            OSError
-                [Errno 30]
-                Read only file system (Occurs if no permission to write)
+        :note: This function uses pathlib.Path().write_text directly.
+            Error descriptions in this documentation are not thorough.
 
-
-    .. seealso::
-        :func:`classifier.eval_utils.evaluate_classifier` for params:
-            clf, ot_test_X, ot_test_y, nt_test_X, nt_test_y
-        :func:`classifier.eval_utils.save_mislabels`
-            & :func:`classifier.eval_utils.save_all_preds` for param: formatter
+        .. seealso::
+            :func:`classifier.eval_utils.evaluate_classifier` for params:
+                clf, ot_test_X, ot_test_y, nt_test_X, nt_test_y
+            :func:`classifier.eval_utils.save_mislabels`
+            & :func:`classifier.eval_utils.save_all_preds` for param:
+                formatter
     """
     (ot_probas, nt_probas,
      ot_mislabels, nt_mislabels) = evaluate_classifier(

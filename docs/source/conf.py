@@ -12,6 +12,9 @@ version = "0.0"
 extensions = [
         "sphinx.ext.autodoc",
         "sphinx.ext.autosummary",
-        # "sphinx_autodoc_typehints",
         ]
 nitpicky = True
+nitpick_ignore = {
+    ('py:func', 'int'),
+    ('envvar', 'LD_LIBRARY_PATH'),
+}

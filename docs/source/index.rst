@@ -7,4 +7,4 @@ TOC
 ---
 .. toctree::
 
-  api
+    modules
