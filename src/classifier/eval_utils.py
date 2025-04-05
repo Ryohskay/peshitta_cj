@@ -1,3 +1,4 @@
+"""Tools and functions to evaluate classifiers."""
 from sklearn.metrics import accuracy_score, auc, ConfusionMatrixDisplay, f1_score, recall_score
 from collections import Counter
 from collections.abc import Callable
@@ -14,7 +15,19 @@ def quick_stats(
         y_correct: np.ndarray,
         prediction: np.ndarray,
     ) -> tuple[int, int]:
-    """Calculate and print some basic statistics on model inputs & outputs."""
+    """Calculate and print some basic statistics on model inputs & outputs.
+
+    :param np.ndarray inputs: Inputs passed when the classifier
+        produced the predictions.
+    :param np.ndarray y_correct: Correct (gold-standard) labels
+        for the input verses.
+    :param np.ndarray prediction: Labels for the input verses
+        predicted by the classifier.
+
+    :return: number of mislabelled verses and that of
+        correctly labelled verses.
+    :rtype: tuple[int, int]
+    """
     sample_size = 0
     try:
         sample_size = inputs.shape[0]
@@ -387,16 +400,12 @@ def eval_and_save(
         nt_test_X: list,
         nt_test_y: list,
         formatter: Callable,
-        out_dir: str | Path=(PROJ_ROOT/"out/"),
+        out_dir: str | Path=("./out/"),
         save_file_prefix: str="",
         save_file_suffix: str="",
         save_file_ext: str=".csv"
         ):
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
-
-    See evaluate_classifier for params: clf, ot_test_X, ot_test_y,
-                                        nt_test_X, nt_test_y
-    See save_mislabels & save_all_preds for param: formatter
 
     out_dir: str | Path
         Path or string of path to the directory to save result files.
@@ -416,6 +425,13 @@ def eval_and_save(
             OSError
                 [Errno 30]
                 Read only file system (Occurs if no permission to write)
+
+
+    .. seealso::
+        :func:`classifier.eval_utils.evaluate_classifier` for params:
+            clf, ot_test_X, ot_test_y, nt_test_X, nt_test_y
+        :func:`classifier.eval_utils.save_mislabels`
+            & :func:`classifier.eval_utils.save_all_preds` for param: formatter
     """
     (ot_probas, nt_probas,
      ot_mislabels, nt_mislabels) = evaluate_classifier(
