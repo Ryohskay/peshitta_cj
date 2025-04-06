@@ -23,6 +23,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+"""Utilities to handle the text-fabric datasets."""
+
 from collections import Counter
 from collections.abc import Callable
 
@@ -30,12 +32,14 @@ import numpy as np
 from nltk.util import ngrams
 from tf.app import use
 
+from classifier.result_utils import Verse
+
 
 def get_verses(
     target_books: dict[str, list[int]],
     target_fabric: str = "etcbc/peshitta",
     ver: str = "0.2",
-) -> dict[str, list[tuple[str, list[str]]]]:
+) -> list[Verse]:
     """Extract verses from target_fabric.
 
     Returns:
@@ -48,11 +52,13 @@ def get_verses(
 
     for book in Fs("book@en").items():
         if book[1] in target_books:
-            book_verses = []
+            # extract all books with names found in ``target_books``
             print(book[1])
             chapters = L.d(book[0], otype="chapter")
             for chapter in chapters:
                 if int(F.chapter.v(chapter)) in target_books[book[1]]:
+                    # walk through all chapters with chapter numbers found in
+                    # ``target_books``
                     for verse in L.d(chapter, otype="verse"):
                         verse_ref = (
                                         f"{book[1]} Chapter "

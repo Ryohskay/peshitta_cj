@@ -31,29 +31,29 @@ from classifier.eval_utils import (
     save_all_preds,
     save_mislabels,
 )
-from classifier.fitting_utils import BoW_Estimator
+from classifier.fitting_utils import BoWEstimator
 from classifier.textfabric_utils import get_verses
 
 
 def csvify_etcbc(
-    X: list[str],
-    probas: list[float],
-    y_correct: list[int],
-) -> str:
+    samples: list[str],
+    probas: list[list[float]],
+    correct_labels: list[int],
+    ) -> str:
     """Convert the ETCBC verse data into a CSV-formatted string."""
     # Set header line
     result = (
         '"Reference","Probability for OT","Probability for NT","Correct Label",'
-        + '"No. Words","ܐܠܦܒܝܬ ܣܘܪܝܝܐ","ETCBC Transliteration"
-'
+        + '"No. Words","ܐܠܦܒܝܬ ܣܘܪܝܝܐ","ETCBC Transliteration"'
+
     )
     # Extract & format verse data
-    for i in range(len(X)):
+    for i in range(len(samples)):
         result += (
-            f'"{X[i][0]}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
-            + f'{y_correct[i]}, {len(X[i][2])},"{" ".join(X[i][2])}",'
-            + f'"{" ".join(X[i][1])}"
-'
+            f'"{samples[i][0]}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
+            + f'{correct_labels[i]}, {len(samples[i][2])},'
+            + f'{" ".join(samples[i][2])},'
+            + f'{" ".join(samples[i][1])}'
         )
     return result
 
@@ -101,7 +101,6 @@ def remove_proper_nouns(verses: list) -> list:
 
 if __name__ == "__main__":
     # Parse the dataset and get verses
-    # each verse in a tuple "(`verse reference`: str, `transliteration as a list of words`: list[str])"
 
     # extract verses from the ETCBC dataset
     ot_train_book_dict = get_verses(book_data.ot_train_books)

@@ -65,6 +65,7 @@ ignore = [
     "D415",    # missing-terminal-punctuation
     "ERA001",  # commented-out-code
     "ISC003",  # explicit-string-concatenation
+    "N803",    # invalid-argument-name
     "PLR2004", # magic-value-comparison
     "T201",    # print
     ]

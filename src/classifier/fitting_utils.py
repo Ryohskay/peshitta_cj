@@ -23,66 +23,99 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Utility functions to train algorithms."""
+"""Utility functions to handle learning algorithms."""
 
 from collections import Counter
 from collections.abc import Callable
+from typing import Any, Protocol, Self
 
 import numpy as np
 from nltk.util import ngrams
 from sklearn.base import BaseEstimator
 
+from classifier.result_utils import Verse
+
 
 def count_n_grams(
     words: list[str], ngram_formatter: Callable, span: int = 3
 ) -> Counter:
-    """Count n-grams in the verse_words, using nltk.util.ngrams().
+    """Count n-grams in a given verse, using nltk.util.ngrams().
 
-    ngram_formatter: Callable
-        This is a pre-processing function or method to apply to the text of each verse,
-        before passing it to nltk.util.ngrams().
+    Args:
+        words: list of strings to feed into :func:`nltk.util.ngrams()`.
+        ngram_formatter: This is a pre-processing function or method to apply
+            to the text of each verse, before passing it to
+            :func:`nltk.util.ngrams()`.
+            The format of strings passed to ngrams() function determines if
+            the function returns a list of character n-grams or that of word
+            n-grams. If you pass a single string, it returns character n-grams,
+            and if you pass a list of strings (= words), it returns
+            word n-grams.
+        span: the size of window for n-gram extraction, i.e. *N* of n-grams.
 
-        The format of strings passed to ngrams() function determines if the function
-        returns a list of character n-grams or that of word n-grams.
-
-        If you pass a single string, it returns character n-grams, and if you pass
-        a list of strings (= words), it returns word n-grams.
+    Returns:
+        A :class:Counter object, containing a key-value pair of
+        { n-gram: count }. This is basically a dict[str, int] object, but it
+        returns **0** if you access a non-existent n-gram.
     """
     # Format the verse to feed into ngrams()
     formatted_inputs = ngram_formatter(words)
 
     # Generate and count ngrams
     n_grams = list(ngrams(formatted_inputs, span))
-    n_gram_counts = Counter(n_grams)
-
-    # Keep the ngram counters
-    return n_gram_counts
+    return Counter(n_grams)
 
 
 def make_vocab(
-    verses: list[tuple], ngram_formatter: Callable, span: int = 3, mode: int = 1
+    verses: list[Verse],
+    ngram_formatter: Callable,
+    span: int = 3,
+    mode: int = 1
 ) -> tuple[Counter, list[Counter]]:
     """Construct the model's vocabulary by extracting n-grams from verses.
 
-    ngram_formatter: Callable
-        This is a pre-processing function or method to apply to the text of each verse.
-        See count_n_grams for more details.
+    Args:
+        verses: list of verses to find n-grams.
+        ngram_formatter: This is a pre-processing function or method to apply
+            to the text on each verse.
+            See :func:`classifier.fitting_utils.count_n_grams` for more details.
+        span: the size of window for n-gram extraction, i.e. *N* of n-grams.
+        mode: type of script to find the n-grams in.
 
-    mode: int
-        Access an item in verse tuple at this index.
-        On ETCBC data:
-            if 1, then use ETCBC transliteration
-            if 2, then use original Syriac script
-        On CAL data:
-            must be 1.
+    .. seealso::
+        :meth:`classifier.result_utils.Verse.get_words_in_mode`
+            for param: ``mode``.
+
+    Returns:
+        A tuple in the format of::
+
+            tuple[(Global n-gram counts), (n-gram counts for each verse)]
+
+    Raises:
+        ValueError: if ``verses`` has 0 verse in it.
+        RuntimeError: if n_gram_vocabs is None even after the parsing is done.
     """
-    word_cnt = 0
     n_gram_vocabs = None
     n_gram_counters = []
+    word_cnt = 0
 
+    if len(verses) < 1:
+        msg = "Provided verse seems empty. Please check the arguments."
+        raise ValueError(msg)
+
+    # Parse the verses
     for verse in verses:
-        n_gram_counter = count_n_grams(verse[mode], ngram_formatter, span)
-        word_cnt += len(verse[mode])
+        word_cnt += len(verse)
+
+        # get the words in this verse
+        verse_words = verse.get_words_in_mode(mode)
+
+        # count n-grams
+        n_gram_counter = count_n_grams(
+                                            verse_words,
+                                            ngram_formatter,
+                                            span
+                                            )
 
         n_gram_counters.append(n_gram_counter)
 
@@ -92,28 +125,82 @@ def make_vocab(
             n_gram_vocabs.update(n_gram_counter)
 
     print(f"Total words parsed: {word_cnt}")
+
+    if n_gram_vocabs is None:
+        msg = ("Verse parsing completed but the n-gram counter is empty. "
+               + "Make sure that the arguments are properly defined.")
+        raise RuntimeError(msg)
+
     return (n_gram_vocabs, n_gram_counters)
 
 
-def identity(input: type) -> type:
-    return input
+def identity(input_data: type) -> type:
+    """Identity function that returns the same thing as the input.
+
+    Args:
+        input_data: any value of any type.
+
+    Returns:
+        Identical to the input.
+    """
+    return input_data
 
 
 def make_word_n_gram_vocab(
-    verses: list[tuple], span: int = 3, mode: int = 1
+    verses: list[Verse], span: int = 3, mode: int = 1
 ) -> tuple[Counter, list[Counter]]:
+    """Wraps the ``make_vocab`` function with a formatter for word n-grams.
+
+    .. seealso:
+        See :func:`classifier.fitting_utils.make_vocab`
+            for params: ``verses``, ``span``, ``mode``.
+        See :meth:`classifier.result_utils.Verse.get_words_in_mode`
+            for param: ``mode``.
+
+    Returns:
+        A tuple in the format of::
+
+            tuple[(Global word n-gram counts),
+                    (word n-gram counts for each verse)]
+    """
     return make_vocab(verses, identity, span, mode)
 
 
 def make_char_n_gram_vocab(
-    verses: list[tuple], span: int = 3, mode: int = 1
+    verses: list[Verse], span: int = 3, mode: int = 1
 ) -> tuple[Counter, list[Counter]]:
+    """Wraps the ``make_vocab`` function with a formatter for character n-grams.
+
+    .. seealso:
+        See :func:`classifier.fitting_utils.make_vocab`
+            for params: ``verses``, ``span``, ``mode``.
+
+    Returns:
+        A tuple in the format of::
+
+            tuple[(Global character n-gram counts),
+                    (character n-gram counts for each verse)]
+    """
     return make_vocab(verses, " ".join, span, mode)
 
 
 def make_feature(
     n_gram_vocabs: tuple[Counter, list[Counter]],
 ) -> list[list[int]]:
+    """Make a feature vector from the list of pre-calculated Counter objects.
+
+    This function leverages the :class:`Counter` objects generated when
+    constructing the model n-gram vocabulary in
+    :func:``classifier.fitting_utils.make_vocab``
+
+    Args:
+        n_gram_vocabs: return values of
+            :func:``classifier.fitting_utils.make_vocab``
+
+    Returns:
+        A two-dimensional list containing feature vectors representing
+        the input verses by Bag-of-Words strategy.
+    """
     feature_list = []
     for i in range(len(n_gram_vocabs[1])):
         # Make a skeleton dict to use as the BoW feature, set all counts to 0
@@ -126,41 +213,74 @@ def make_feature(
 
 
 def _make_empty_bow(vocabulary: dict) -> dict[tuple[str], int]:
+    # Construct an empty Bag of Words from a Counter or dict object,
+    # whose keys are the n-grams.
     return dict.fromkeys(vocabulary.keys(), 0)
 
 
-def merge_counts(counter: Counter, feat_vec: dict) -> None:
+def merge_counts(counter: Counter, bow: dict) -> None:
     """Update the value of feat_vec with the value found in Counter.
 
     This function makes sure that the length of the feature vector
-    doesn't change when updating the n-gram counts in feat_vec.
-    If you use dict.update(), you accidentally add extra vocabs to
+    doesn't change when updating the n-gram counts in feat_vec, even with
+    unseen input vocabulary.
+    If you use dict.update(), you might accidentally add extra vocabs to
     feat_vec (which changes the length of the feature vector).
+
+
+    Args:
+        counter: :class:`Counter` instance containing counts for n-grams
+            in a particular verse.
+        bow: empty or populated Bag-of-Words in a dictionary-like format,
+            containing the model's predefined n-gram vocabulary and n-gram
+            counts.
     """
-    for n_gram in counter.keys():
-        # print(n_gram)
-        if n_gram in feat_vec:
-            feat_vec[n_gram] = counter[n_gram]
+    for n_gram in counter:
+        if n_gram in bow:
+            bow[n_gram] = counter[n_gram]
 
 
 def vectorise(
-    verses: list[tuple],
+    verses: list[Verse],
     vocab: Counter,
     ngram_formatter: Callable,
     span: int = 3,
+    mode: int = 1,
 ) -> list[list[int]]:
-    """Count n-grams in unseen verses, using the vocabulary from bag_of_words."""
-    # Get the verse of format [(VERSE_REF, [VERSE_translit_WORDS], [VERSE_syriac_WORDS])]
-    # Generate a list: [N_GRAM_COUNTS per each verse]
+    """Count n-grams in unseen verses, using predefined vocabulary.
+
+    Args:
+        verses: list of verses to find n-grams and vectorise for further
+            processing.
+        vocab: empty or populated Bag-of-Words in a dictionary-like format,
+            containing the model's predefined n-gram vocabulary and n-gram
+            counts.
+        ngram_formatter: This is a pre-processing function or method to apply
+            to the text on each verse.
+            See :func:`classifier.fitting_utils.count_n_grams` for more details.
+        span: the size of window for n-gram extraction, i.e. *N* of n-grams.
+        mode: type of script to find the n-grams in.
+
+    .. seealso::
+        :meth:`classifier.result_utils.Verse.get_words_in_mode`
+            for param: ``mode``.
+
+    Returns:
+        A two-dimensional list containing feature vectors representing
+        the input verses by Bag-of-Words strategy.
+        Thus, generates a list: [N_GRAM_COUNTS per each verse]
+    """
     wc = 0
     verse_n_grams = []
 
     bag_of_words = _make_empty_bow(vocab)
 
     for verse in verses:
-        wc += len(verse[1])
+        wc += len(verse)
         local_n_gram_counts = count_n_grams(
-            words=verse[1], ngram_formatter=ngram_formatter, span=span
+            words=verse.get_words_in_mode(mode),
+            ngram_formatter=ngram_formatter,
+            span=span
         )
         n_gram_bow = dict.fromkeys(bag_of_words.keys(), 0)
         merge_counts(local_n_gram_counts, n_gram_bow)
@@ -169,50 +289,156 @@ def vectorise(
     return verse_n_grams
 
 
-class BoW_Estimator(BaseEstimator):
-    """Wrapper around the BoW vectorisation to allow seamless fitting and predicting."""
+class PredictorProto(Protocol):
+    """A protocol class to allow static duck-typing for estimators.
 
+    These methods are applicable to many scikit-learn classification
+    algorithms that can output probability.
+    """
+    def fit(self,
+            X: list[Any] | np.ndarray,
+            y: list[int] | np.ndarray
+        ) -> Self:
+        """A protocol method for fitting an algorithm on some dataset ``X``."""
+
+    def predict(self,
+                X: list[Any] | np.ndarray,
+                ) -> np.ndarray:
+        """A protocol method that uses the fitted model to predict on ``X``.
+
+        Returns:
+            Prediction results in a list.
+        """
+
+    def predict_proba(self,
+                      X: list[Any] | np.ndarray
+                      ) -> np.ndarray:
+        """A protocol method that predicts probability of classes for x.
+
+        Returns:
+            A two-dimensional list of flaots, each subarray representing one
+            sample in ``x`` and each coordinate ``xi`` holds a probability of
+            the sample belonging to class ``i``.
+        """
+
+
+class BoWEstimator(BaseEstimator):
+    """Wrapper around the BoW vectorisation to simplify training and testing.
+
+    Attributes:
+        algo: Learning algorithm to use.
+        n: the size of window for n-gram extraction, i.e. *N* of n-grams.
+        n_gram_formatter: string preprocessing function before extracting
+            n-grams. Decides if the model uses word n-grams or character
+            n-grams.
+        vocabs: model vocabulary and verse-level n-gram counts constructed
+            with the :func:`classifier.fitting_utils.make_vocab`
+        train_vector: the vectorised representation of the training data.
+        pred_vector: the vectorised representation of the data to predict.
+
+    .. seealso::
+        :func:`classifier.fitting_utils.count_n_grams`
+            for attrs: ``n``, ``n_gram_formatter``.
+    """
     def __init__(
         self,
-        clf,
-        formatter,
+        clf: PredictorProto,
+        formatter: Callable,
         n: int = 3,
-    ):
-        self.algo = clf
-        self.n = n
-        self.n_gram_formatter = formatter
-        self.vocabs = None
-        self.train_x = None
-        self.pred_x = None
+    ) -> None:
+        # Initialise instance variables
+        self.algo: PredictorProto = clf
+        self.n: int = n
+        self.n_gram_formatter: Callable = formatter
+        self.vocabs: tuple[Counter, list[Counter]] | None = None
+        self.train_vector: list[list[int]] = []
+        self.pred_vector: np.ndarray | list[list[int]] | None = None
 
-    def fit(self, X, y, sample_weight=None):
+    def fit(self,
+            X: list[Verse],
+            y: list[int],
+        ) -> None:
+        """Train the algorithm on train_x to get a classifier.
+
+        Args:
+            X: the samples to train the model.
+            y: a one-dimensional list of labels for each sample.
+
+        Raises:
+            ValueError: if the length of model training input train_x and
+            reference labels y do not match.
+            RuntimeError: if the return value of make_vocab is None.
+        """
         if len(X) != len(y):
             msg = f"Length of X ({len(X)}) and y ({len(y)}) do not match."
             raise ValueError(msg)
-        self.vocabs = make_char_n_gram_vocab(X, span=self.n)
+
+        self.vocabs = make_vocab(X,
+                                 self.n_gram_formatter,
+                                 span=self.n)
+
+        if self.vocabs is None:
+            msg = ("The result of `make_vocab` was None. Cannot construct"
+                   + " vocabulary to fit the model. Aborting.")
+            raise RuntimeError(msg)
+
         print(
             f"Found {len(self.vocabs[0])} independent n-grams "
             + f"from {len(self.vocabs[1])} verses!"
         )
-        n_gram_feat = make_feature(self.vocabs)
-        self.train_x = n_gram_feat
-        self.algo.fit(n_gram_feat, y, sample_weight)
+        self.train_vector = make_feature(self.vocabs)
+        self.algo.fit(self.train_vector, y)
 
-    def predict(self, X):
-        targets = np.array(
-            vectorise(X, self.vocabs[0], self.n_gram_formatter, span=self.n)
-        )
-        self.pred_x = targets
-        return self.algo.predict(targets)
+    def predict(self, X: list[Verse]) -> np.ndarray:
+        """Predict on target_x with the pretrained classifier.
 
-    def predict_proba(self, X):
-        targets = np.array(
-            vectorise(X, self.vocabs[0], self.n_gram_formatter, span=self.n)
+        Args:
+            X: list of inputs to the model
+
+        Returns:
+            list of predicted class labels.
+
+        Raises:
+            ValueError: if ``self.vocabs`` is still empty. This is likely
+                because one forgot to run `.fit` method before running
+                `.predict`.
+        """
+        if self.vocabs is None:
+            msg = ("Cannot fetch the vocabulary of the model. "
+                   + "You must run `.fit` method before making predictions.")
+            raise ValueError(msg)
+
+        self.pred_vector = np.array(
+            vectorise(X, self.vocabs[0],
+                      self.n_gram_formatter, span=self.n)
         )
+        return self.algo.predict(self.pred_vector)
+
+    def predict_proba(self, X: list[Verse]) -> np.ndarray:
+        """Predict probability on target_x with the pretrained classifier.
+
+        Args:
+            X: list of input samples to the model
+
+        Returns:
+            A two-dimensional list of flaots, each subarray representing one
+            sample in ``X`` and each coordinate ``X[i]`` holds a probability of
+            the sample belonging to class ``i``.
+
+        Raises:
+            ValueError: if ``self.vocabs`` is still empty. This is likely
+                because one forgot to run `.fit` method before running
+                `.predict`.
+        """
+        if self.vocabs is None:
+            msg = ("Cannot fetch the vocabulary of the model. "
+                   + "You must run `.fit` method before making predictions.")
+            raise ValueError(msg)
+
+        targets = np.array(
+            vectorise(X, self.vocabs[0],
+                        self.n_gram_formatter, span=self.n
+                      )
+        )
+
         return self.algo.predict_proba(targets)
-
-    def get_metadata_routing(self):
-        return self.algo.get_metadata_routing()
-
-    def get_params(self, deep=True):
-        return self.algo.get_params(deep)
