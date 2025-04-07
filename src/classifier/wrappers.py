@@ -1,0 +1,225 @@
+# BSD 2-Clause License
+#
+# Copyright (c) 2025, Ryosuke Nagata
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""Classes for general pipeline representation."""
+from collections.abc import Callable, Sequence
+from typing import TYPE_CHECKING, Any, Protocol, Self
+
+if TYPE_CHECKING:
+    from collections import Counter
+
+import numpy as np
+from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, PrecisionRecallDisplay, ConfusionMatrixDisplay, PredictionErrorDisplay
+
+from matplotlib import pyplot as plt
+
+from classifier.fitting_utils import make_feature, make_vocab, vectorise
+from classifier.result_utils import Verse
+
+
+class PredictorProto(Protocol):
+    """A protocol class to allow static duck-typing for estimators.
+
+    These methods are applicable to many scikit-learn classification
+    algorithms that can output probability.
+    """
+    def fit(self,
+            X: list[Any] | np.ndarray,
+            y: list[int] | np.ndarray
+        ) -> Self:  # type: ignore[reportReturnType]
+        """A protocol method for fitting an algorithm on some dataset ``X``.
+
+        Returns:
+            The fitted estimator/classifier. This behaviour is adapted from
+            scikit-learn.
+        """
+
+    def predict(self,
+                X: list[Any] | np.ndarray,
+                ) -> np.ndarray:  # type: ignore[reportReturnType]
+        """A protocol method that uses the fitted model to predict on ``X``.
+
+        Returns:
+            Prediction results in a list.
+        """
+
+    def predict_proba(self,
+                      X: list[Any] | np.ndarray
+                      ) -> np.ndarray:  # type: ignore[reportReturnType]
+        """A protocol method that predicts probability of classes for x.
+
+        Returns:
+            A two-dimensional list of flaots, each subarray representing one
+            sample in ``x`` and each coordinate ``xi`` holds a probability of
+            the sample belonging to class ``i``.
+        """
+
+
+class BoWEstimator(ClassifierMixin, BaseEstimator):
+    """Wrapper around the BoW vectorisation to simplify training and testing.
+
+    Attributes:
+        algo: Learning algorithm to use. This class expects a model for
+            binary classification.
+        n: the size of window for n-gram extraction, i.e. *N* of n-grams.
+        n_gram_formatter: string preprocessing function before extracting
+            n-grams. Decides if the model uses word n-grams or character
+            n-grams.
+        vocabs: model vocabulary and verse-level n-gram counts constructed
+            with the :func:`classifier.fitting_utils.make_vocab`
+        train_vector: the vectorised representation of the training data.
+        pred_vector: the vectorised representation of the data to predict.
+
+    .. seealso::
+        :func:`classifier.fitting_utils.count_n_grams`
+            for attrs: ``n``, ``n_gram_formatter``.
+    """
+    def __init__(
+        self,
+        clf: PredictorProto,
+        formatter: Callable,
+        n: int = 3,
+    ) -> None:
+        # Initialise instance variables
+        self.algo: PredictorProto = clf
+        self.n: int = n
+        self.n_gram_formatter: Callable = formatter
+        self.vocabs: tuple[Counter, list[Counter]] | None = None
+        self.train_vector: Sequence[Sequence[int | float]] = []
+        self.train_y: list[int] = []
+        self.pred_vector: np.ndarray | list[list[int]] | None = None
+
+    def fit(self,
+            X: list[Verse],
+            y: list[int],
+        ) -> None:
+        """Train the algorithm on train_x to get a classifier.
+
+        Args:
+            X: the samples to train the model.
+            y: a one-dimensional list of labels for each sample.
+
+        Raises:
+            ValueError: if the length of model training input train_x and
+            reference labels y do not match.
+            RuntimeError: if the return value of make_vocab is None.
+        """
+        if len(X) != len(y):
+            msg = f"Length of X ({len(X)}) and y ({len(y)}) do not match."
+            raise ValueError(msg)
+
+        self.vocabs = make_vocab(X,
+                                 self.n_gram_formatter,
+                                 span=self.n)
+        self.train_y = y
+
+        if self.vocabs is None:
+            msg = ("The result of `make_vocab` was None. Cannot construct"
+                   + " vocabulary to fit the model. Aborting.")
+            raise RuntimeError(msg)
+
+        print(
+            f"Found {len(self.vocabs[0])} independent n-grams "
+            + f"from {len(self.vocabs[1])} verses!"
+        )
+        self.train_vector = make_feature(self.vocabs)
+        self.algo.fit(self.train_vector, y)  # type: ignore[reportArgumentType]
+
+    def predict(self, X: list[Verse]) -> np.ndarray:
+        """Predict on target_x with the pretrained classifier.
+
+        Args:
+            X: list of inputs to the model
+
+        Returns:
+            list of predicted class labels.
+
+        Raises:
+            ValueError: if ``self.vocabs`` is still empty. This is likely
+                because one forgot to run `.fit` method before running
+                `.predict`.
+        """
+        if self.vocabs is None:
+            msg = ("Cannot fetch the vocabulary of the model. "
+                   + "You must run `.fit` method before making predictions.")
+            raise ValueError(msg)
+
+        self.pred_vector = np.array(
+            vectorise(X, self.vocabs[0],
+                      self.n_gram_formatter, span=self.n)
+        )
+        return self.algo.predict(self.pred_vector)
+
+    def predict_proba(self, X: list[Verse]) -> np.ndarray:
+        """Predict probability on target_x with the pretrained classifier.
+
+        Args:
+            X: list of input samples to the model
+
+        Returns:
+            A two-dimensional list of flaots, each subarray representing one
+            sample in ``X`` and each coordinate ``X[i]`` holds a probability of
+            the sample belonging to class ``i``.
+
+        Raises:
+            ValueError: if ``self.vocabs`` is still empty. This is likely
+                because one forgot to run `.fit` method before running
+                `.predict`.
+        """
+        if self.vocabs is None:
+            msg = ("Cannot fetch the vocabulary of the model. "
+                   + "You must run `.fit` method before making predictions.")
+            raise ValueError(msg)
+
+        targets = np.array(
+            vectorise(X, self.vocabs[0],
+                        self.n_gram_formatter, span=self.n
+                      )
+        )
+
+        return self.algo.predict_proba(targets)
+
+    def cross_validate(
+            self,
+            training_x: list[Verse],
+            training_y: list[int],
+            fold: int = 5
+        ) -> None:
+        """Perform cross validation with the provided test set."""
+        skf_splitter = StratifiedKFold(n_splits=fold)
+        splits = skf_splitter.split(training_x, training_y)
+        for train_g, test_g, in splits:
+            train_samples, train_labels = train_g  # convert generator into list
+            # train_samples = train[0]
+            # train_labels = train[1]
+            test_samples, test_labels = test_g  # convert generator into list
+            # test_samples = test[0]
+            # test_labels = test[1]
+
+            self.fit(train_samples, train_labels)
+            predictions = self.predict(test_samples)
+

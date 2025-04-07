@@ -22,6 +22,7 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 """Tools and functions to evaluate classifiers."""
 
 from collections import Counter
@@ -33,20 +34,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
+    PrecisionRecallDisplay,
+    PredictionErrorDisplay,
+    RocCurveDisplay,
     accuracy_score,
-    f1_score,
-    recall_score,
+    log_loss,
+    precision_recall_fscore_support,
+    roc_auc_score,
 )
 
-from classifier.fitting_utils import (
-    BoWEstimator,
-    PredictorProto,
-)
 from classifier.result_utils import (
     Mislabels,
     Predictions,
     ProbaPredictions,
     Verse,
+)
+from classifier.wrappers import (
+    BoWEstimator,
+    PredictorProto,
 )
 
 
@@ -74,11 +79,11 @@ def quick_stats(
             length or does not have a measurable length.
     """
     sample_size = 0
-    try:
+    if hasattr(inputs, "shape") and callable(inputs.shape):  # type: ignore[reportAttributeAccessIssue]
         # AttributeAccessIssue can be ignored since AttributeError is explicitly
         # handled
         sample_size = int(inputs.shape[0])  # type: ignore[reportAttributeAccessIssue]
-    except AttributeError:
+    else:
         # If inputs is not a np.ndarray,
         # use the standard len() function instead.
         sample_size = len(inputs)
@@ -100,11 +105,11 @@ def quick_stats(
 
 
 def find_mislabels(
-    y_correct: list | np.ndarray,
-    y_pred: list | np.ndarray,
-    test_x: list[Verse],
-    probas: np.ndarray
-) -> Mislabels:
+        y_correct: list | np.ndarray,
+        y_pred: list | np.ndarray,
+        test_x: list[Verse],
+        probas: np.ndarray
+    ) -> Mislabels:
     """Find and return mislabelled verses in string format.
 
     Args:
@@ -150,10 +155,10 @@ def find_mislabels(
 
 
 def predict(
-    classifier: PredictorProto,
-    test_samples: np.ndarray | list,
-    test_labels: np.ndarray
-) -> Predictions:
+        classifier: PredictorProto,
+        test_samples: np.ndarray | list,
+        test_labels: np.ndarray
+    ) -> Predictions:
     """Predict on the data with a classifier and get some simple statistics.
 
     Args:
@@ -176,25 +181,30 @@ def predict(
                 test_labels, num_correct, num_mislabels)
 
 
-def _convert(probas: np.ndarray) -> np.ndarray:
-    result = np.empty(0, dtype=int)
+def _convert(probas: np.ndarray, thresh: float) -> np.ndarray:
     """Convert list of probabilities to a list of labels.
 
+    Args:
+        probas: list of predicted probabilities.
+        thresh: threshold to decide if a probability prediction should be
+            labelled as an instance of the class.
+
     Returns:
-        0 if class prediction for label 0 is over 0.5,
-        1 if class prediction for label 1 is over 0.5,
-        -1 if both class labels somehow calculated as 0.5.
+        0 if prediction for label 0 is over the threshold,
+        1 if prediction for label 1 is over the threshold,
+        -1 if probabilities for both labels do not exceed the threshold.
 
     Raises:
-        ValueError: if neither of the classes reach 0.5 probability.
+        ValueError: if neither of the classes score 0.5 probability.
     """
+    result = np.empty(0, dtype=int)
     for i in range(len(probas)):
         probability = probas[i]
-        if probability[0] > 0.5:
+        if probability[0] > thresh:
             result = np.append(result, 0)
-        elif probability[1] > 0.5:
+        elif probability[1] > thresh:
             result = np.append(result, 1)
-        elif probability[0] == probability[1]:
+        elif probability[0] != probability[1]:
             result = np.append(result, -1)
         else:
             msg = f"Something is wrong with the probability at index: {i}!"
@@ -203,10 +213,11 @@ def _convert(probas: np.ndarray) -> np.ndarray:
 
 
 def predict_proba(
-    classifier: PredictorProto,
-    test_x: np.ndarray | list[Verse],
-    test_labels: np.ndarray
-) -> ProbaPredictions:
+        classifier: PredictorProto,
+        test_x: np.ndarray | list[Verse],
+        test_labels: np.ndarray,
+        threshold: float = 0.5,
+    ) -> ProbaPredictions:
     """Predict on the data with the classifier and return some statistics.
 
     Args:
@@ -215,12 +226,15 @@ def predict_proba(
         test_labels: correct labels (gold references) for the inputs. This is
             not used to predict probabilities, but is used to calculate
             prediction accuracy etc.
+        threshold: the threshold for probability to be counted as a label for
+            a particular class.
 
     Returns:
         a :class:`ProbaPredictions` instance.
     """
     y_pred_proba = classifier.predict_proba(test_x)
-    y_pred = _convert(y_pred_proba)  # convert the list of probas to a label
+    # convert the list of probas to a list of labels
+    y_pred = _convert(y_pred_proba, threshold)
 
     num_mislabels, num_correct = quick_stats(test_x, test_labels, y_pred)
 
@@ -231,13 +245,12 @@ def predict_proba(
 
 
 def metricise(
-    y_true: list[int] | np.ndarray,
-    y_pred_pos: list[int] | np.ndarray | None = None,
-    y_pred_neg: list[int] | np.ndarray | None = None,
-    y_all: list[int] | np.ndarray | None = None,
-    *,
-    conf_m: bool = False,
-) -> tuple[float, float, float]:
+        y_true: list[int] | np.ndarray,
+        y_pred_pos: list[int] | np.ndarray | None = None,
+        y_pred_neg: list[int] | np.ndarray | None = None,
+        y_all: list[int] | np.ndarray | None = None,
+        y_probas: list[list[float]] | np.ndarray | None = None
+    ) -> tuple[float, np.ndarray, np.ndarray, np.ndarray]:
     """Calculate performance metrics of a classifier using the outputs.
 
     This function works when::
@@ -255,7 +268,7 @@ def metricise(
         y_pred_pos: predictions for the positive class instances (tp + fn)
         y_pred_neg: predictions for the negative class instances (tn + fp)
         y_all: all predictions in a one-dimensional list.
-        conf_m: if True, then display confusion matrix.
+        y_probas: probabilities predicted for each sample.
 
     Returns:
         accuracy, recall, and f1 scores as floats.
@@ -278,18 +291,49 @@ def metricise(
 
     y_pred = np.array(y_pred)
 
-    accuracy = accuracy_score(y_true, y_pred)
-    recall = float(recall_score(y_true, y_pred))
-    f1_result = float(f1_score(y_true, y_pred))
+    if len(y_pred) != len(y_true):
+        msg = f"y_pred has length of {len(y_pred)}, but y_true {len(y_true)}"
+        raise ValueError(msg)
 
-    if conf_m:
-        ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
-        plt.show()
+    accuracy = accuracy_score(y_true, y_pred)
+    precision, recall, fbeta, support = precision_recall_fscore_support(
+                    y_true, y_pred)
 
     print(f"Overall Accuracy: {accuracy:.02f}")
-    print(f"Overall Recall: {recall:.02f}")
-    print(f"F1 Score: {f1_result:.02f}")
-    return (accuracy, recall, f1_result)
+    print(f"Precisions: {precision}")
+    print(f"Recalls: {recall}")
+    print(f"F1 Score: {fbeta}")
+    print(f"Supports: {support}")
+
+    if y_probas is not None:
+        cel = log_loss(y_true, y_probas)  # cross-entropy loss
+        print("log loss > ")
+        print(cel)
+        y_probas_pos = [proba[1] for proba in y_probas]
+        roc_auc = roc_auc_score(y_true, y_probas_pos)
+        print(f"Roc AUC: {roc_auc}")
+
+    return (accuracy, precision, recall, fbeta)
+
+
+def plot_charts(
+                y_true: list[int] | np.ndarray,
+                y_pred: list[int] | np.ndarray,
+                y_probas: list[list[float]] | np.ndarray,
+            ) -> None:
+    """Plot charts given an estimator and its predictions."""
+    # evaluate with more statistics
+    ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+    plt.show()
+
+    # Precision Recall curve
+    pr_display = PrecisionRecallDisplay.from_predictions(
+                    y_true=y_true, y_pred=y_pred)
+    pr_display.plot()
+    plt.show()
+
+    # Roc curve
+    RocCurveDisplay.from_predictions(y_true=y_true, y_pred=y_probas)
 
 
 def _sort_arrays(
@@ -507,7 +551,7 @@ def evaluate_classifier(
     ot_test_x: list[Verse],
     nt_test_x: list[Verse],
     *,
-    show_confusion_matrix: bool = False,
+    plot: bool = False,
     ) -> tuple[
             ProbaPredictions, ProbaPredictions,
             Mislabels, Mislabels]:
@@ -517,8 +561,8 @@ def evaluate_classifier(
         clf: a BoWEstimator instance.
         ot_test_x: list of OT verses to evaluate on.
         nt_test_x: list of NT verses to evaluate on.
-        show_confusion_matrix: if True, create a confusion matrix
-            and display it with :class:`ConfusionMatrixDisplay`.
+        plot: if True, create charts
+            and display them with :func:`classifier.eval_utils.plot_charts`.
 
     Returns:
         :class:`ProbaPredictions` instances, one for OT and another for NT,
@@ -546,8 +590,14 @@ def evaluate_classifier(
         nt_test_x, np.array(nt_test_y)
     )
     print("All --->")
-    metricise(all_test_y, ot_proba_preds.predictions,
-              nt_proba_preds.predictions, conf_m=show_confusion_matrix)
+    y_all = ot_proba_preds.predictions
+    y_all = np.append(y_all, nt_proba_preds.predictions)
+    probas = ot_proba_preds.get_probas()
+    probas = np.append(probas, nt_proba_preds.get_probas())
+    metricise(all_test_y, y_all=y_all, y_probas=probas)
+
+    if plot:
+        plot_charts(all_test_y, y_all, probas)
 
     # figure out which verses the classifier mislabelled
     # reportArgumentType can be disabled here because ProbaPredictions.samples

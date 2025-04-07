@@ -31,9 +31,9 @@ from classifier import book_data
 from classifier.eval_utils import (
     eval_and_save,
 )
-from classifier.fitting_utils import BoWEstimator
 from classifier.result_utils import Verse
 from classifier.textfabric_utils import get_verses
+from classifier.wrappers import BoWEstimator
 
 
 def csvify_etcbc(

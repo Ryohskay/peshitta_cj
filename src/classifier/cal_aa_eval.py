@@ -34,9 +34,9 @@ from classifier import book_data
 from classifier.eval_utils import (
     eval_and_save,
 )
-from classifier.fitting_utils import BoWEstimator
 from classifier.load_cal import get_book_verses, load_df_json
 from classifier.result_utils import Verse
+from classifier.wrappers import BoWEstimator
 
 
 def csvify_cal(
@@ -156,11 +156,13 @@ if __name__ == "__main__":
     ot_train_verses = get_book_verses(
         df, book_data.ot_train_books, trim_none=True
     )
-    print(f"OT train_verses: {ot_train_verses[0]}")
     print("NT_train")
     nt_train_verses = get_book_verses(
         df, book_data.nt_train_books, trim_none=True
     )
+
+    print("\nPlain Classifier")
+    print("MultinomialNB")
     train_x = ot_train_verses.copy()
     train_x.extend(nt_train_verses)
     train_y = [0 for v in ot_train_verses]
@@ -192,6 +194,7 @@ if __name__ == "__main__":
             )
 
     print("\nRemove underscores marking proclitics, from training set")
+    print("MultinomialNB")
     train_x_no_ub = remove_proclitic_ubs(train_x)
 
     c_mnb_nub = BoWEstimator(MultinomialNB(), " ".join)
@@ -209,6 +212,7 @@ if __name__ == "__main__":
 
     print("\nRemove underscores marking proclitics, "
             + "from both training & test sets")
+    print("MultinomialNB")
     ot_test_verses_no_ub = remove_proclitic_ubs(ot_test_verses)
     nt_test_verses_no_ub = remove_proclitic_ubs(nt_test_verses)
 
@@ -227,6 +231,7 @@ if __name__ == "__main__":
 
     print("\nRemove PN & GN")
     print("> Remove PN & GN from the training set")
+    print("MultinomialNB")
     # Remove personal names and place names from the training data
     # and train new classifiers
     train_x_removed = remove_proper_nouns(train_x)
@@ -246,6 +251,7 @@ if __name__ == "__main__":
 
     print("\nRemove PN & GN")
     print("> Remove PN & GN from both training & test sets")
+    print("MultinomialNB")
     # Remove personal names and place names from
     # both the training and test datasets
     # and train new classifiers
@@ -267,6 +273,7 @@ if __name__ == "__main__":
 
     print("\nRemove PN, GN, underbars")
     print("> Remove PN, GN, underbars from both training & test sets")
+    print("MultinomialNB")
     # Remove personal names and place names from
     # both the training and test datasets
     # and train new classifiers
