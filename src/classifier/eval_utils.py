@@ -35,7 +35,6 @@ import numpy as np
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
     PrecisionRecallDisplay,
-    PredictionErrorDisplay,
     RocCurveDisplay,
     accuracy_score,
     log_loss,
@@ -49,11 +48,7 @@ from classifier.result_utils import (
     ProbaPredictions,
     Verse,
 )
-from classifier.wrappers import (
-    BoWEstimator,
-    Classifier,
-    ProbaClassifier
-)
+from classifier.wrappers import BoWEstimator, Classifier, ProbaClassifier
 
 
 def quick_stats(
@@ -559,7 +554,7 @@ def evaluate_classifier(
     """Evaluate a classifier with provided test sets.
 
     Args:
-        clf: a BoWEstimator instance.
+        clf: a :class:`classifier.wrappers.BoWEstimator` instance.
         ot_test_x: list of OT verses to evaluate on.
         nt_test_x: list of NT verses to evaluate on.
         plot: if True, create charts
@@ -630,13 +625,12 @@ def eval_and_save(  # noqa: PLR0913
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
 
     Args:
-        clf: a classifier wrapped in :class:`BoWEstimator`
+        clf: a classifier wrapped in :class:`classifier.wrappers.BoWEstimator`
         ot_test_samples: inputs to the classifier from OT
         nt_test_samples: inputs to the classifier from NT
         file_formatter: any callable object (function, method, etc.)
             that returns a formatted string which can be directly
             written to a file.
-
         out_dir: Path or string of path to the directory to save result files.
         save_file_prefix: Prefixes to add before/after the default file name
             for each evaluation process. These are used to construct save file

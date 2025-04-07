@@ -180,7 +180,7 @@ class BoWEstimator(ProbaClassifier):
         .. seealso::
             :func:`classifier.fitting_utils.make_vocab`
         """
-        super().__init__(clf: BaseEstimator)
+        super().__init__(clf)
         self.n: int = n
         self.n_gram_formatter: Callable = formatter
         self.vocabs: tuple[Counter, list[Counter]] | None = None

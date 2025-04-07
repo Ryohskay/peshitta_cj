@@ -73,8 +73,9 @@ def remove_proclitic_ubs(verses: list[Verse]) -> list[Verse]:
     """Remove the underscores after proclitics.
 
     Returns:
-        list of tuples, each containing:
-        (verse reference, lemmata in the verse, annotations for each lemma)
+        list of tuples, each containing (
+        verse reference, lemmata in the verse, annotations for each lemma
+        )
     """
     train_x_no_ub = []
     for vrs in verses:
@@ -106,8 +107,8 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
     """Remove proper nouns from the verse.
 
     Returns:
-        Similar to  list of tuples, each containing:
-        (verse reference, lemmata from the verse, annotations for each lemma),
+        Similar to  list of tuples, each containing verse reference,
+        lemmata from the verse, annotations for each lemma,
         but without proper nouns and their annotations.
 
     .. seealso:
