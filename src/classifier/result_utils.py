@@ -311,7 +311,6 @@ class ProbaPredictions(Predictions):
             list of probabilities, of size (numbert of samples,
                 number of prediction classes)
         """
-        print(f"probas: {self._probas}")
         return self._probas
 
     def save_to_file(self,

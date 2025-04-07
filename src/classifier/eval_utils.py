@@ -271,7 +271,7 @@ def metricise(
 
     Raises:
         ValueError: if neither y_all or a pair (y_pred_pos, y_pred_neg) is
-            given since there is nothing to calculate scores from
+            given since this means there is nothing to calculate scores from
     """
     y_pred = []
     if y_all is not None:
@@ -300,6 +300,11 @@ def metricise(
     print(f"Recalls: {recall}")
     print(f"F1 Score: {fbeta}")
     print(f"Supports: {support}")
+
+    if y_probas is not None and len(y_probas) != len(y_true):
+        msg = (f"length of y_probas {len(y_probas)} is not equal to "
+               + f"length of y_true {len(y_true)}")
+        raise ValueError(msg)
 
     if y_probas is not None:
         y_probas_pos = [proba[1] for proba in y_probas]
@@ -590,7 +595,7 @@ def evaluate_classifier(
     y_all = ot_proba_preds.predictions
     y_all = np.append(y_all, nt_proba_preds.predictions)
     probas = ot_proba_preds.get_probas()
-    probas = np.append(probas, nt_proba_preds.get_probas())
+    probas = np.append(probas, nt_proba_preds.get_probas(), axis=0)
     metricise(all_test_y, y_all=y_all, y_probas=probas)
 
     if plot:

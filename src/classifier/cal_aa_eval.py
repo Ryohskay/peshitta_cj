@@ -162,8 +162,6 @@ if __name__ == "__main__":
         df, book_data.nt_train_books, trim_none=True
     )
 
-    print("\nPlain Classifier")
-    print("MultinomialNB")
     train_x = ot_train_verses.copy()
     train_x.extend(nt_train_verses)
     train_y = [0 for v in ot_train_verses]
@@ -181,6 +179,8 @@ if __name__ == "__main__":
     # get the production data
     ot_prod = get_book_verses(df, book_data.ot_prod_books, trim_none=True)
 
+    print("\nPlain Classifier")
+    print("MultinomialNB")
     c_mnb = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb.fit(train_x, train_y)
 
