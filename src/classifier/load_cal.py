@@ -25,8 +25,6 @@
 
 """Load data from CAL scraper results."""
 
-from collections import namedtuple
-from inspect import Attribute
 from pathlib import Path
 from typing import NamedTuple
 
@@ -86,6 +84,10 @@ def verse_in_chapters(verse: NamedTuple, chapters: list[int]) -> bool:
 
     Returns:
         True if the verse's chapter is in the ``chapters`` list.
+
+    Raises:
+        AttributeError: if the provided argument ``verse`` is not a NamedTuple
+            expected by the code.
     """
     try:
         return int(verse.verse_refs.split(" ")[2]) in chapters  # type: ignore[reportAttributeAccessIssue]
@@ -102,9 +104,7 @@ def get_book_verses(
     """Get all books in the dataframe and generate a list of tuples.
 
     Returns:
-        a list representing each verse as a tuple.
-        Each tuple contains: [0] verse reference, [1] list of lemmata in the verse,
-        and [2] list of tuples for each lemma with its annotations (lemma, annots).
+        list of :class:``Verse`` instances
     """
     books = None
     verse_box = []
@@ -139,15 +139,20 @@ def get_book_verses(
                     # Handle lemma
                     if (trim_none and lemma is not None) or not trim_none:
                         lemmata.append(lemma)
-                        lemma_annots.append((lemma, annot_r))
+                        lemma_annots.append(annot_r)
                     else:
                         # in some cases, the scraper records the lemma as None.
                         # we don't need them so skip appending lemma and annots
                         continue
                 verse_box.append(
                         Verse(bk, refs,
-                                    lemmata, words_annotations=lemma_annots)
+                                    lemmata, words_annotations=lemma_annots,
+                                origin="CAL"
+                              )
                         )
+    # print("Loaded CAL")
+    # print(f"{type(verse_box[0])}")
+    # print(f"{verse_box[0]}")
     return verse_box
 
 

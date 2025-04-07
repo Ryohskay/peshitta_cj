@@ -68,6 +68,8 @@ class PeshittaWord:
         # ``hash((translit, syriac))``, ``hash(translit)`` or ``hash(syriac)``
         # do not satisfy the specification; they may not return the same result
         # even when the result of __eq__ is True.
+        t_translit = ""
+        t_syriac = ""
         try:
             t_translit = value.translit
             t_syriac = value.syriac
@@ -80,6 +82,11 @@ class PeshittaWord:
 
 class Verse(Any):
     """Represents a verse in a biblical text.
+
+    Attributes:
+        book: Name of the biblical book the verse belongs to.
+        reference: A verse reference, e.g. "Genesis Chapter 01 Verse 01"
+        words: List of words represented as PeshittaWord objects
 
     .. note:: A *verse* is a exegetical annotation and is not necessarily
     comparable to semantic divisions like sentence, clause, etc.
@@ -95,11 +102,6 @@ class Verse(Any):
             origin: Literal["ETCBC", "CAL"] = "ETCBC",
         ) -> None:
         """Initialise Verse object with PeshittaWord attribute.
-
-        Attributes:
-            book: Name of the biblical book the verse belongs to.
-            reference: A verse reference, e.g. "Genesis Chapter 01 Verse 01"
-            words: List of words represented as PeshittaWord objects
 
         Raises:
             ValueError: if the number of words in transliteration do not match
@@ -157,6 +159,14 @@ class Verse(Any):
                         translit_words[i],
                         ))
 
+    def __eq__(self, value: object, /) -> bool:
+        try:
+            return (self.get_translit_words() == value.get_translit_words()
+                    or self.get_syriac_words() == value.get_syriac_words())
+        except AttributeError:
+            return (value == self.get_translit_words()
+                    or value == self.get_syriac_words())
+
     def __str__(self) -> str:
         """Return string representation of the verse.
 
@@ -164,7 +174,9 @@ class Verse(Any):
             A string where transliterations words are joined with a space,
             creating a string containing the all words in the verse.
         """
-        return " ".join([w.translit for w in self.words])
+        ref = self.reference
+        words = " ".join([w.translit for w in self.words])
+        return ref + words
 
     def __len__(self) -> int:
         """An under-the-hood method defining the result of :func:`len`.
@@ -323,7 +335,7 @@ class ProbaPredictions(Predictions):
         # save all prediction results to files
         # format the data into strings
         data_str = formatter(samples=self.samples,
-                                    probabilities=self.get_probas(),
+                                    probas=self.get_probas(),
                                     correct_labels=self.correct_labels
                              )
 

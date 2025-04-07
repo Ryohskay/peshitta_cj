@@ -427,8 +427,8 @@ def get_top_n_grams(
     top_n_grams = sorted_n_grams[::-1][:top_k]
     top_cnts = sorted_cnts[::-1][:top_k]
 
-    print(top_cnts[:10])
-    print(top_n_grams[:10])
+    # print(top_cnts[:10])
+    # print(top_n_grams[:10])
 
     if syr_vocabs is not None:
         sorted_syr, sorted_syr_cnts = _sort_counter(syr_vocabs)
@@ -570,7 +570,7 @@ def eval_and_save(  # noqa: PLR0913
     nt_test_samples: list,
     file_formatter: Callable,
     *,
-    out_dir: str | Path = Path("./out/"),
+    out_dir: str = "./out/",
     save_file_prefix: str = "",
     save_file_suffix: str = "",
     save_file_ext: str = ".csv",
@@ -609,6 +609,8 @@ def eval_and_save(  # noqa: PLR0913
         :func:`classifier.eval_utils.save_all_preds`
             for param: ``formatter``.
     """
+    # convert the out_dir to Path
+    out_dir_p = Path(out_dir)
     # Remove prepended slash in save_file_prefix
     # since they break Path concatenation
     if save_file_prefix[0] == "/":
@@ -646,10 +648,10 @@ def eval_and_save(  # noqa: PLR0913
     )
 
     # Save the evaluation results to files
-    ot_mislabels.save_to_file(file_formatter, (out_dir / ot_mislabels_file))
-    nt_mislabels.save_to_file(file_formatter, (out_dir / nt_mislabels_file))
+    ot_mislabels.save_to_file(file_formatter, (out_dir_p / ot_mislabels_file))
+    nt_mislabels.save_to_file(file_formatter, (out_dir_p / nt_mislabels_file))
 
-    ot_probas.save_to_file(file_formatter, (out_dir / ot_all_file))
-    nt_probas.save_to_file(file_formatter, (out_dir / nt_all_file))
+    ot_probas.save_to_file(file_formatter, (out_dir_p / ot_all_file))
+    nt_probas.save_to_file(file_formatter, (out_dir_p / nt_all_file))
 
     return (clf, [ot_probas, nt_probas])
