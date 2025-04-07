@@ -376,7 +376,7 @@ class Mislabels:
         # initialise empty variables
         self.verses = []
         if probas is not None:
-            self.probas = np.array(probas)
+            self.probas = probas
 
     def __len__(self) -> int:
         """An under-the-hood method defining the result of :func:`len`.

@@ -305,13 +305,13 @@ def metricise(
     print(f"F1 Score: {fbeta}")
     print(f"Supports: {support}")
 
-    if y_probas is not None:
-        cel = log_loss(y_true, y_probas)  # cross-entropy loss
-        print("log loss > ")
-        print(cel)
-        y_probas_pos = [proba[1] for proba in y_probas]
-        roc_auc = roc_auc_score(y_true, y_probas_pos)
-        print(f"Roc AUC: {roc_auc}")
+    # if y_probas is not None:
+    #     y_probas_pos = [proba[1] for proba in y_probas]
+    #     cel = log_loss(y_true, y_probas_pos)  # cross-entropy loss
+    #     print("log loss > ")
+    #     print(cel)
+    #     roc_auc = roc_auc_score(y_true, y_probas_pos)
+    #     print(f"Roc AUC: {roc_auc}")
 
     return (accuracy, precision, recall, fbeta)
 
@@ -577,6 +577,7 @@ def evaluate_classifier(
     all_test_y.extend(nt_test_y)
     # cast / convert to np.ndarray
     all_test_y = np.array(all_test_y)
+    print(f"test size: {all_test_y.shape}")
 
     # predict probabilities with clf
     print("OT --->")
