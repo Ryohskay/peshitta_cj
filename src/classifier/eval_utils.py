@@ -51,7 +51,8 @@ from classifier.result_utils import (
 )
 from classifier.wrappers import (
     BoWEstimator,
-    PredictorProto,
+    Classifier,
+    ProbaClassifier
 )
 
 
@@ -155,7 +156,7 @@ def find_mislabels(
 
 
 def predict(
-        classifier: PredictorProto,
+        classifier: Classifier,
         test_samples: np.ndarray | list,
         test_labels: np.ndarray
     ) -> Predictions:
@@ -181,7 +182,7 @@ def predict(
                 test_labels, num_correct, num_mislabels)
 
 
-def _convert(probas: np.ndarray, thresh: float) -> np.ndarray:
+def _convert(probas: np.ndarray | list[Any], thresh: float) -> np.ndarray:
     """Convert list of probabilities to a list of labels.
 
     Args:
@@ -213,7 +214,7 @@ def _convert(probas: np.ndarray, thresh: float) -> np.ndarray:
 
 
 def predict_proba(
-        classifier: PredictorProto,
+        classifier: ProbaClassifier,
         test_x: np.ndarray | list[Verse],
         test_labels: np.ndarray,
         threshold: float = 0.5,
@@ -239,8 +240,8 @@ def predict_proba(
     num_mislabels, num_correct = quick_stats(test_x, test_labels, y_pred)
 
     preds = ProbaPredictions(test_x, y_pred, test_labels,
-                     num_correct, num_mislabels)
-    preds.set_probas(y_pred_proba)
+                     num_correct, num_mislabels, probas=y_pred_proba)
+    print(f"Prediction probabilities: {y_pred_proba.shape}")
     return preds
 
 
@@ -305,13 +306,13 @@ def metricise(
     print(f"F1 Score: {fbeta}")
     print(f"Supports: {support}")
 
-    # if y_probas is not None:
-    #     y_probas_pos = [proba[1] for proba in y_probas]
-    #     cel = log_loss(y_true, y_probas_pos)  # cross-entropy loss
-    #     print("log loss > ")
-    #     print(cel)
-    #     roc_auc = roc_auc_score(y_true, y_probas_pos)
-    #     print(f"Roc AUC: {roc_auc}")
+    if y_probas is not None:
+        y_probas_pos = [proba[1] for proba in y_probas]
+        cel = log_loss(y_true, y_probas_pos)  # cross-entropy loss
+        print("log loss > ")
+        print(cel)
+        roc_auc = roc_auc_score(y_true, y_probas_pos)
+        print(f"roc auc: {roc_auc}")
 
     return (accuracy, precision, recall, fbeta)
 
@@ -582,12 +583,12 @@ def evaluate_classifier(
     # predict probabilities with clf
     print("OT --->")
     ot_proba_preds = predict_proba(
-            clf,  # type: ignore[reportArgumentType]
+            clf,
         ot_test_x, np.array(ot_test_y)
     )
     print("NT --->")
     nt_proba_preds = predict_proba(
-        clf,  # type: ignore[reportArgumentType]
+        clf,
         nt_test_x, np.array(nt_test_y)
     )
     print("All --->")

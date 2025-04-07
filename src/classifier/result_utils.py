@@ -161,8 +161,10 @@ class Verse(Any):
 
     def __eq__(self, value: object, /) -> bool:
         try:
-            return (self.get_translit_words() == value.get_translit_words()
-                    or self.get_syriac_words() == value.get_syriac_words())
+            # reportAttributeAccessIssue can be ignored here since
+            # AttributeError is explicitly handled.
+            return (self.get_translit_words() == value.get_translit_words()  # type: ignore[reportAttributeAccessIssue]
+                    or self.get_syriac_words() == value.get_syriac_words())  # type: ignore[reportAttributeAccessIssue]
         except AttributeError:
             return (value == self.get_translit_words()
                     or value == self.get_syriac_words())
@@ -251,7 +253,7 @@ class Verse(Any):
         return [w.annots for w in self.words]
 
 
-class Predictions:
+class Predictions(Any):
     """A dataclass to hold predictions by some classifier.
 
     Attributes:
@@ -289,15 +291,17 @@ class ProbaPredictions(Predictions):
         probas: probability of each sample belonging to each class, predicted
             by the classifier.
     """
-    _probas: list[list[float]] | np.ndarray
-
-    def set_probas(self, probas: list[list[float]] | np.ndarray) -> None:
-        """Set the probabilities predicted by the classifier.
-
-        Args:
-            probas: list of probabilities, of size (numbert of samples,
-                number of prediction classes)
-        """
+    def __init__(
+            self,
+            samples: list[Any] | np.ndarray,
+            predictions: list[int] | np.ndarray,
+            correct_labels: list[int] | np.ndarray,
+            num_correct: int | np.int_,
+            num_mislabelled: int | np.int_,
+            probas: list[list[float]] | np.ndarray
+        ) -> None:
+        super().__init__(samples, predictions,
+                         correct_labels, num_correct, num_mislabelled)
         self._probas = probas
 
     def get_probas(self) -> list[list[float]] | np.ndarray:
@@ -306,16 +310,9 @@ class ProbaPredictions(Predictions):
         Returns:
             list of probabilities, of size (numbert of samples,
                 number of prediction classes)
-
-        Raises:
-            AttributeError: when this method is called before the attribute
-                ``_probas`` is set.
         """
-        try:
-            return self._probas
-        except AttributeError as ae:
-            msg = "self._probas is not set. Please run self.set_probas."
-            raise AttributeError(msg) from ae
+        print(f"probas: {self._probas}")
+        return self._probas
 
     def save_to_file(self,
                      formatter: Callable,
@@ -343,7 +340,7 @@ class ProbaPredictions(Predictions):
         Path(save_file).write_text(data_str, encoding="utf-8")
 
 
-class Mislabels:
+class Mislabels(Any):
     """Wrapper of mislabelled results to facilitate human inspection.
 
     An instance of this class represents a group of mislabelled samples
@@ -358,10 +355,10 @@ class Mislabels:
     """
     def __init__(
             self,
-            indices: list | np.ndarray,
-            incorrect_labels: list | np.ndarray,
-            correct_labels: list | np.ndarray,
-            probas: list | np.ndarray | None = None
+            indices: list[Any] | np.ndarray,
+            incorrect_labels: list[Any] | np.ndarray,
+            correct_labels: list[Any] | np.ndarray,
+            probas: list[Any] | np.ndarray | None = None
         ) -> None:
         self.idcs: np.ndarray = np.array(indices, dtype="int_")
 

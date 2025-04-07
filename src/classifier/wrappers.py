@@ -25,7 +25,8 @@
 
 """Classes for general pipeline representation."""
 from collections.abc import Callable, Sequence
-from typing import TYPE_CHECKING, Any, Protocol, Self
+from typing import TYPE_CHECKING, Any, Self
+
 
 if TYPE_CHECKING:
     from collections import Counter
@@ -33,53 +34,115 @@ if TYPE_CHECKING:
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, PrecisionRecallDisplay, ConfusionMatrixDisplay, PredictionErrorDisplay
-
-from matplotlib import pyplot as plt
 
 from classifier.fitting_utils import make_feature, make_vocab, vectorise
 from classifier.result_utils import Verse
 
 
-class PredictorProto(Protocol):
-    """A protocol class to allow static duck-typing for estimators.
+class Classifier(ClassifierMixin, BaseEstimator):
+    """General representation of a classifier interface.
 
-    These methods are applicable to many scikit-learn classification
-    algorithms that can output probability.
+    Attributes:
+        algo: Learning algorithm to use. This class expects a model for
+            binary classification.
+        train_vector: the vectorised representation of the training data.
+        train_y: the gold reference labels for the training data.
     """
+    def __init__(self, clf: BaseEstimator) -> None:
+        """Initialise a BoWEstimator class instance.
+
+        Args:
+            clf: this can be any :class:`BaseEstimator` object as long as
+            they have ``.fit`` and ``.predict`` methods.
+
+        Raises:
+            ValueError: if ``clf`` does not have methods named ``.fit``
+                and ``.predict``.
+        """
+        # validate that the clf argument has .fit and .predict methods
+        if not (hasattr(clf, "fit")
+                and callable(clf.fit)):  # type: ignore[reportArgumentType]
+            msg = f"clf {clf} does not have a method named `.fit`"
+            raise ValueError(msg)
+        if not (hasattr(clf, "predict")
+                and callable(clf.predict)):  # type: ignore[reportArgumentType]
+            msg: str = f"clf {clf} does not have a method named `.predict`"
+            raise ValueError(msg)
+
+        # Initialise instance variables
+        self.algo: Callable = clf
+        self.train_vector: Sequence[Sequence[int | float]] = []
+        self.train_y: list[int] = []
+
     def fit(self,
             X: list[Any] | np.ndarray,
-            y: list[int] | np.ndarray
-        ) -> Self:  # type: ignore[reportReturnType]
-        """A protocol method for fitting an algorithm on some dataset ``X``.
+            y: list[int] | None = None,
+        ) -> Self:
+        """Fit a model on the provided data.
+
+        Args:
+            X: training samples to fit the model. This naming contradicts
+            the PEP, but it's defined so to comply with the scikit-learn's
+            conventions.
+            y: correct labels (gold reference) of the training samples.
 
         Returns:
-            The fitted estimator/classifier. This behaviour is adapted from
-            scikit-learn.
+            A Classifier class instance after fitting. This behaviour mimics
+            scikit-learn's classifiers.
         """
+        if y is None:
+            return self.algo.fit(X)  # type: ignore[reportArgumentType]
+        return self.algo.fit(X, y)  # type: ignore[reportArgumentType]
 
-    def predict(self,
-                X: list[Any] | np.ndarray,
-                ) -> np.ndarray:  # type: ignore[reportReturnType]
-        """A protocol method that uses the fitted model to predict on ``X``.
+    def predict(self, X: list[Any] | np.ndarray) -> list[Any] | np.ndarray:
+        """Predict on the provided data with the model.
+
+        Args:
+            X: some samples to predict using the model. This naming contradicts
+            the PEP, but it's defined so to comply with the scikit-learn's
+            conventions.
 
         Returns:
-            Prediction results in a list.
+            List of prediction result of each sample.
         """
+        return self.algo.predict(X)  # type: ignore[reportArgumentType]
 
-    def predict_proba(self,
-                      X: list[Any] | np.ndarray
-                      ) -> np.ndarray:  # type: ignore[reportReturnType]
-        """A protocol method that predicts probability of classes for x.
+
+class ProbaClassifier(Classifier):
+    """General representation of a classifier with "predict_proba" method.
+
+    Attributes:
+        algo: Learning algorithm to use. This class expects a model for
+            binary classification.
+        train_vector: the vectorised representation of the training data.
+        train_y: the gold reference labels for the training data.
+    """
+    def __init__(self, clf: BaseEstimator) -> None:
+        # validate that clf has ``.predict_proba`` method
+        if not (hasattr(clf, "predict_proba")
+                and callable(clf.predict_proba)  # type: ignore[reportArgumentType]
+            ):
+            msg = f"clf {clf} does not have a method named `predict_proba`."
+            raise ValueError(msg)
+        super().__init__(clf)
+
+    def predict_proba(self, X: list[Any] | np.ndarray
+                      ) -> list[list[float]] | np.ndarray:
+        """Predict probabilities on the provided samples.
+
+        Args:
+            X: The sample to predict probabilities on.
 
         Returns:
             A two-dimensional list of flaots, each subarray representing one
-            sample in ``x`` and each coordinate ``xi`` holds a probability of
+            sample in ``X`` and each coordinate ``X[i]`` holds a probability of
             the sample belonging to class ``i``.
+
         """
+        return self.algo.predict_proba(X)  # type: ignore[reportArgumentType]
 
 
-class BoWEstimator(ClassifierMixin, BaseEstimator):
+class BoWEstimator(ProbaClassifier):
     """Wrapper around the BoW vectorisation to simplify training and testing.
 
     Attributes:
@@ -92,6 +155,7 @@ class BoWEstimator(ClassifierMixin, BaseEstimator):
         vocabs: model vocabulary and verse-level n-gram counts constructed
             with the :func:`classifier.fitting_utils.make_vocab`
         train_vector: the vectorised representation of the training data.
+        train_y: the gold reference labels for the training data.
         pred_vector: the vectorised representation of the data to predict.
 
     .. seealso::
@@ -100,12 +164,23 @@ class BoWEstimator(ClassifierMixin, BaseEstimator):
     """
     def __init__(
         self,
-        clf: PredictorProto,
+        clf: BaseEstimator,
         formatter: Callable,
         n: int = 3,
     ) -> None:
-        # Initialise instance variables
-        self.algo: PredictorProto = clf
+        """Initialise a BoWEstimator class instance.
+
+        Args:
+            clf: this can be any :class:`BaseEstimator` object as long as they
+            have ``.fit`` and ``.predict`` methods.
+            formatter: a :class:`Callable` object to format the verse string
+                before applying :func:`nltk.util.ngrams` function.
+            n: ``n`` of n-grams.
+
+        .. seealso::
+            :func:`classifier.fitting_utils.make_vocab`
+        """
+        super().__init__(clf: BaseEstimator)
         self.n: int = n
         self.n_gram_formatter: Callable = formatter
         self.vocabs: tuple[Counter, list[Counter]] | None = None
@@ -222,4 +297,3 @@ class BoWEstimator(ClassifierMixin, BaseEstimator):
 
             self.fit(train_samples, train_labels)
             predictions = self.predict(test_samples)
-
