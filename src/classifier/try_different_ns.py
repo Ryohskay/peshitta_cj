@@ -39,9 +39,10 @@ from classifier.result_utils import Verse
 from classifier.wrappers import BoWEstimator
 
 if __name__ == "__main__":
+    cal_ds = load_cal_dataset("./")
+
     for n in range(1,6):
-        print(f" +++++++++++++++++++++++++++++ N={n} ++++++++++++++++++++++++++++")
-        cal_ds = load_cal_dataset("./")
+        print(f"\n +++++++++++++++++++++++++++++ N={n} ++++++++++++++++++++++++++++")
 
         train_x = cal_ds.train.get_samples()
         train_y = cal_ds.train.get_labels()
