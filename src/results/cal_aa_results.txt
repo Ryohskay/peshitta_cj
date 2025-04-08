@@ -1,0 +1,178 @@
+.
+OT_train
+Genesis
+Exodus
+NT_train
+Matthew
+Mark
+Luke
+John
+Deuteronomy
+Acts
+Joshua
+Judges
+Samuel_1
+Samuel_2
+Kings_1
+Kings_2
+Ezra
+Nehemia
+Chronicles_1
+Chronicles_2
+Maccabees_1_A
+Maccabees_1_B
+Ruth
+Esther
+
+Plain Classifier
+MultinomialNB
+Total words parsed: 195234
+Found 3789 independent n-grams from 10917 verses!
+test size: (1564,)
+OT --->
+Parsed 11857 words from 557 verses
+Number of mislabelled points out of the total 557 verses: 143
+Local accuracy: 0.74
+Prediction probabilities: (557, 2)
+NT --->
+Parsed 20828 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 113
+Local accuracy: 0.89
+Prediction probabilities: (1007, 2)
+All --->
+Overall Accuracy: 0.84
+Precisions: [0.78557875 0.86210222]
+Recalls: [0.7432675 0.8877855]
+F1 Score: [0.76383764 0.87475538]
+Supports: [ 557 1007]
+log loss > 
+1.1956171392259491
+roc auc: 0.9077552286597053
+
+Remove underscores marking proclitics, from training set
+MultinomialNB
+Total words parsed: 195234
+Found 3762 independent n-grams from 10917 verses!
+test size: (1564,)
+OT --->
+Parsed 11857 words from 557 verses
+Number of mislabelled points out of the total 557 verses: 163
+Local accuracy: 0.71
+Prediction probabilities: (557, 2)
+NT --->
+Parsed 20828 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 107
+Local accuracy: 0.89
+Prediction probabilities: (1007, 2)
+All --->
+Overall Accuracy: 0.83
+Precisions: [0.78642715 0.8466604 ]
+Recalls: [0.70736086 0.89374379]
+F1 Score: [0.74480151 0.86956522]
+Supports: [ 557 1007]
+log loss > 
+1.1863215397671767
+roc auc: 0.908068119215759
+
+Remove underscores marking proclitics, from both training & test sets
+MultinomialNB
+Total words parsed: 195234
+Found 3762 independent n-grams from 10917 verses!
+test size: (1564,)
+OT --->
+Parsed 11857 words from 557 verses
+Number of mislabelled points out of the total 557 verses: 163
+Local accuracy: 0.71
+Prediction probabilities: (557, 2)
+NT --->
+Parsed 20828 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 107
+Local accuracy: 0.89
+Prediction probabilities: (1007, 2)
+All --->
+Overall Accuracy: 0.83
+Precisions: [0.78642715 0.8466604 ]
+Recalls: [0.70736086 0.89374379]
+F1 Score: [0.74480151 0.86956522]
+Supports: [ 557 1007]
+log loss > 
+1.1863215397671767
+roc auc: 0.908068119215759
+
+Remove PN & GN
+> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 187064
+Found 3369 independent n-grams from 10917 verses!
+test size: (1564,)
+OT --->
+Parsed 11857 words from 557 verses
+Number of mislabelled points out of the total 557 verses: 121
+Local accuracy: 0.78
+Prediction probabilities: (557, 2)
+NT --->
+Parsed 20828 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 154
+Local accuracy: 0.85
+Prediction probabilities: (1007, 2)
+All --->
+Overall Accuracy: 0.82
+Precisions: [0.73898305 0.87577002]
+Recalls: [0.78276481 0.84707051]
+F1 Score: [0.76024412 0.86118122]
+Supports: [ 557 1007]
+log loss > 
+1.1629418503228848
+roc auc: 0.9007290082528225
+
+Remove PN & GN
+> Remove PN & GN from both training & test sets
+MultinomialNB
+Total words parsed: 187064
+Found 3369 independent n-grams from 10917 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Number of mislabelled points out of the total 557 verses: 119
+Local accuracy: 0.79
+Prediction probabilities: (557, 2)
+NT --->
+Parsed 19816 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 135
+Local accuracy: 0.87
+Prediction probabilities: (1007, 2)
+All --->
+Overall Accuracy: 0.84
+Precisions: [0.76439791 0.87991927]
+Recalls: [0.78635548 0.86593843]
+F1 Score: [0.77522124 0.87287287]
+Supports: [ 557 1007]
+log loss > 
+1.0265908902254062
+roc auc: 0.9075314807122137
+
+Remove PN, GN, underbars
+> Remove PN, GN, underbars from both training & test sets
+MultinomialNB
+Total words parsed: 187064
+Found 3342 independent n-grams from 10917 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Number of mislabelled points out of the total 557 verses: 118
+Local accuracy: 0.79
+Prediction probabilities: (557, 2)
+NT --->
+Parsed 19816 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 129
+Local accuracy: 0.87
+Prediction probabilities: (1007, 2)
+All --->
+Overall Accuracy: 0.84
+Precisions: [0.77288732 0.8815261 ]
+Recalls: [0.78815081 0.87189672]
+F1 Score: [0.78044444 0.87668497]
+Supports: [ 557 1007]
+log loss > 
+0.9834398546851566
+roc auc: 0.9105623294033329

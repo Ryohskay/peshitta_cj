@@ -26,6 +26,12 @@
 from classifier.wrappers import BoWEstimator
 from sklearn.naive_bayes import MultinomialNB
 
+from classifier.textfabric_utils import get_verses
+import classifier.book_data
+
 if __name__ == "__main__":
-    BoWEstimator(MultinomialNB, " ".join())
+    mnb = BoWEstimator(MultinomialNB(), " ".join())
+
+    ot_train_x = get_verses(classifier.book_data.ot_train_books)
+    nt_train_x = get_verses(classifier.book_data.nt_train_books)
 

@@ -268,9 +268,9 @@ class Predictions(Any):
             self,
             samples: list[Any] | np.ndarray,
             predictions: list[int] | np.ndarray,
-            correct_labels: list[int] | np.ndarray,
-            num_correct: int | np.int_,
-            num_mislabelled: int | np.int_,
+            correct_labels: list[int] | np.ndarray | None = None,
+            num_correct: int | np.int_ | None = None,
+            num_mislabelled: int | np.int_ | None = None,
         ) -> None:
         self.samples = samples
         self.predictions = predictions
@@ -278,9 +278,14 @@ class Predictions(Any):
         self.num_correct = num_correct
         self.num_mislabelled = num_mislabelled
 
-        if not (len(self.samples) == len(self.predictions)
-                and len(self.samples) == len(self.correct_labels)):
-            msg = "length of provided lists/arrays do not match."
+        if len(self.samples) != len(self.predictions):
+            msg = ("length of provided lists/arrays for samples and predictions"
+            + " do not match.")
+            raise ValueError(msg)
+        if (self.correct_labels is not None
+            and (self.samples) == len(self.correct_labels)):
+            msg = ("length of provided lists/arrays for samples and correct"
+                + " labels do not match.")
             raise ValueError(msg)
 
 
@@ -295,10 +300,10 @@ class ProbaPredictions(Predictions):
             self,
             samples: list[Any] | np.ndarray,
             predictions: list[int] | np.ndarray,
-            correct_labels: list[int] | np.ndarray,
-            num_correct: int | np.int_,
-            num_mislabelled: int | np.int_,
-            probas: list[list[float]] | np.ndarray
+            probas: list[list[float]] | np.ndarray,
+            correct_labels: list[int] | np.ndarray | None = None,
+            num_correct: int | np.int_ | None = None,
+            num_mislabelled: int | np.int_ | None = None,
         ) -> None:
         super().__init__(samples, predictions,
                          correct_labels, num_correct, num_mislabelled)
@@ -330,10 +335,14 @@ class ProbaPredictions(Predictions):
         """
         # save all prediction results to files
         # format the data into strings
-        data_str = formatter(samples=self.samples,
-                                    probas=self.get_probas(),
-                                    correct_labels=self.correct_labels
-                             )
+        if self.correct_labels is not None:
+            data_str = formatter(samples=self.samples,
+                                        probas=self.get_probas(),
+                                        correct_labels=self.correct_labels
+                                 )
+        else:
+            data_str = formatter(samples=self.samples,
+                                        probas=self.get_probas())
 
         # write formatted texts to files
         Path(save_file).write_text(data_str, encoding="utf-8")

@@ -27,13 +27,11 @@
 from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, Any, Self
 
-
 if TYPE_CHECKING:
     from collections import Counter
 
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.model_selection import StratifiedKFold
 
 from classifier.fitting_utils import make_feature, make_vocab, vectorise
 from classifier.result_utils import Verse
@@ -277,23 +275,3 @@ class BoWEstimator(ProbaClassifier):
         )
 
         return self.algo.predict_proba(targets)
-
-    def cross_validate(
-            self,
-            training_x: list[Verse],
-            training_y: list[int],
-            fold: int = 5
-        ) -> None:
-        """Perform cross validation with the provided test set."""
-        skf_splitter = StratifiedKFold(n_splits=fold)
-        splits = skf_splitter.split(training_x, training_y)
-        for train_g, test_g, in splits:
-            train_samples, train_labels = train_g  # convert generator into list
-            # train_samples = train[0]
-            # train_labels = train[1]
-            test_samples, test_labels = test_g  # convert generator into list
-            # test_samples = test[0]
-            # test_labels = test[1]
-
-            self.fit(train_samples, train_labels)
-            predictions = self.predict(test_samples)

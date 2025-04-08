@@ -23,7 +23,18 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Utilities to handle the text-fabric datasets."""
+"""Utilities to handle the text-fabric datasets.
+
+If you use any python linter, formatter, type-checker, etc., this file will
+produce lots of warnings about variables not defined, but **this is expected**.
+
+The underlying library to handle the ETCBC datasets, ``text-fabric``, has
+an idiosyncratic interface designed in a C language style, where a whole
+file will be imported into any scripts using the library regardless of scopes.
+
+Thus, by declaring ``import use``, we automatically load objects such as ``F``,
+along with all of its methods.
+"""
 
 
 from tf.app import use
@@ -37,6 +48,14 @@ def get_verses(
     ver: str = "0.2",
 ) -> list[Verse]:
     """Extract verses from target_fabric.
+
+    Args:
+        target_books: a dictionary containing a book title as the key and
+            list of chapter numbers to obtain.
+        target_fabric: name of the target fabric (corpus), as in the target
+            corpus' github repository name. In this project,
+            "etcbc/peshitta" or "etcbc/syrnt".
+        ver: version string indicating the target fabric (corpus)'s version.
 
     Returns:
         a dict object pairing a book title to list of verses in format:

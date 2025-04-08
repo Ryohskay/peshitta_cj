@@ -32,6 +32,7 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.base import clone
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
     PrecisionRecallDisplay,
@@ -41,6 +42,7 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
     roc_auc_score,
 )
+from sklearn.model_selection import StratifiedKFold
 
 from classifier.result_utils import (
     Mislabels,
@@ -177,7 +179,7 @@ def predict(
                 test_labels, num_correct, num_mislabels)
 
 
-def _convert(probas: np.ndarray | list[Any], thresh: float) -> np.ndarray:
+def convert(probas: np.ndarray | list[Any], thresh: float) -> np.ndarray:
     """Convert list of probabilities to a list of labels.
 
     Args:
@@ -213,6 +215,8 @@ def predict_proba(
         test_x: np.ndarray | list[Verse],
         test_labels: np.ndarray,
         threshold: float = 0.5,
+        *,
+        calc_stats: bool = True
     ) -> ProbaPredictions:
     """Predict on the data with the classifier and return some statistics.
 
@@ -224,20 +228,21 @@ def predict_proba(
             prediction accuracy etc.
         threshold: the threshold for probability to be counted as a label for
             a particular class.
+        calc_stats: Calculates and outputs summary statistics on the prediction.
 
     Returns:
-        a :class:`ProbaPredictions` instance.
+        a :class:`classifier.result_utils.ProbaPredictions` instance.
     """
     y_pred_proba = classifier.predict_proba(test_x)
     # convert the list of probas to a list of labels
-    y_pred = _convert(y_pred_proba, threshold)
+    y_pred = convert(y_pred_proba, threshold)
 
-    num_mislabels, num_correct = quick_stats(test_x, test_labels, y_pred)
-
-    preds = ProbaPredictions(test_x, y_pred, test_labels,
-                     num_correct, num_mislabels, probas=y_pred_proba)
-    print(f"Prediction probabilities: {y_pred_proba.shape}")
-    return preds
+    if calc_stats:
+        num_mislabels, num_correct = quick_stats(test_x, test_labels, y_pred)
+        return ProbaPredictions(test_x, y_pred,
+                     y_pred_proba, test_labels, num_correct, num_mislabels)
+    return ProbaPredictions(test_x, y_pred, y_pred_proba,
+                            test_labels)
 
 
 def metricise(
@@ -603,8 +608,9 @@ def evaluate_classifier(
 
     # figure out which verses the classifier mislabelled
     # reportArgumentType can be disabled here because ProbaPredictions.samples
-    # will always be ``list[Verse]`` since we give predict_proba function
-    # ``{nt/ot}_test_x``, which are both ``list[Verse]`` type.
+    # will always be ``list[Verse]`` since we give ``predict_proba`` function
+    # ``{nt/ot}_test_x``, which are both ``list[Verse]`` type. See the
+    # implementation of ``predict_proba`` function for more details.
     ot_mislabels = find_mislabels(
         ot_test_y, ot_proba_preds.predictions,
         test_x=ot_proba_preds.samples, probas=ot_proba_preds.get_probas()  # type: ignore[reportArgumentType]
@@ -706,3 +712,31 @@ def eval_and_save(  # noqa: PLR0913
     nt_probas.save_to_file(file_formatter, (out_dir_p / nt_all_file))
 
     return (clf, [ot_probas, nt_probas])
+
+
+def cross_validate(
+        clf: Classifier,
+        training_x: list[Verse],
+        training_y: list[int],
+        fold: int = 5
+    ) -> None:
+    """Perform cross validation with the provided test set."""
+    skf_splitter = StratifiedKFold(n_splits=fold)
+    splits = skf_splitter.split(training_x, training_y)
+    for train_g, test_g, in splits:
+        cross_algo = clone(clf.algo)
+        train_samples, train_labels = train_g  # convert generator into list
+        # train_samples = train[0]
+        # train_labels = train[1]
+        test_samples, test_labels = test_g  # convert generator into list
+        # test_samples = test[0]
+        # test_labels = test[1]
+
+        # the reportAttributeAccessIssue can be ignored here because a cloned
+        # object of clf.algo is necessarily a Classifier instance.
+        cross_algo.fit(train_samples, train_labels)  # type: ignore[reportAttributeAccessIssue]
+        predictions = predict_proba(cross_algo,  # type: ignore[reportAttributeAccessIssue]
+                                            test_samples,
+                                            test_labels
+                                    )
+        metricise(test_labels, y_all=predictions)

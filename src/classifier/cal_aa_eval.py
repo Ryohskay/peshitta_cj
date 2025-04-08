@@ -140,16 +140,81 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
     return verses_trimmed
 
 
+def load_cal_dataset(
+        src_dir: str = "./"
+    ) -> dict[str, dict[str, list[Verse]]]:
+    """Load CAL dataset from json files into a dictionary.
+
+    .. attention::
+        To change the books and chapters from which the data is loaded
+
+    Raises:
+        RuntimeError: if the directory for json files exists but could not
+            load data from there.
+    """
+    proj_root = Path(src_dir)
+    target_path = proj_root / "scraper/cal_results/"
+    print(f"Loading dataset(s) from: {target_path}")
+
+    # initilaise the dict to store loaded verses
+    verses_dict = {
+            "train": {
+                "ot": [],
+                "nt": []
+                },
+            "test": {
+                "ot": [],
+                "nt": []
+                },
+            "production": {
+                "ot": [],
+                "nt": []
+                }
+            }
+
+    df = load_df_json(target_path)
+    if df is None:
+        msg = f"Failed to load data from {target_path}"
+        raise RuntimeError(msg)
+
+    # get the training data
+    print("OT_train")
+    ot_train_verses = get_book_verses(
+        df, book_data.ot_train_books, trim_none=True
+    )
+    print("NT_train")
+    nt_train_verses = get_book_verses(
+        df, book_data.nt_train_books, trim_none=True
+    )
+
+    train_x = ot_train_verses.copy()
+    train_x.extend(nt_train_verses)
+    train_y = [0 for v in ot_train_verses]
+    train_y.extend([1 for v in nt_train_verses])
+
+    # get the test data
+    ot_test_verses = get_book_verses(
+        df, book_data.ot_test_books, trim_none=True
+    )
+    nt_test_verses = get_book_verses(
+        df, book_data.nt_test_books, trim_none=True
+    )
+
+    # print(train_x[-1])
+    # get the production data
+    ot_prod = get_book_verses(df, book_data.ot_prod_books, trim_none=True)
+
+
 if __name__ == "__main__":
     # load the CSV data files
     # Make sure you don't add slash at the beginning of the file path
     # since it breaks Path concatenation
-    PROJ_ROOT = Path("./")
-    print(PROJ_ROOT)
-    df = load_df_json(PROJ_ROOT / "scraper/cal_results/")
-
+    proj_root = Path(src_dir)
+    target_path = proj_root / "scraper/cal_results/"
+    print(f"Loading dataset(s) from: {target_path}")
+    df = load_df_json(target_path)
     if df is None:
-        msg = f"Failed to fetch data from {PROJ_ROOT / 'scraper/cal_results/'}"
+        msg = f"Failed to load data from {target_path}"
         raise RuntimeError(msg)
 
     # get the training data
