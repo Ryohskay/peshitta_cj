@@ -1,17 +1,41 @@
+# BSD 2-Clause License
+#
+# Copyright (c) 2025, Ryosuke Nagata
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 """Definition of skeleton dictionary for datasets.
 
 .. attention:: When using this skeleton, always ``.copy()`` them so you don't
     accidentally mess with some other datasets loaded using this format.
 """
 
+from collections.abc import Callable
 
 from classifier.result_utils import Verse
 
 
 class DataSplit:
-    """An abstract representation of a group of data within one dataset.
-
-    This helps splitting the dataset into the train, test, production sets.
+    """An abstract representation of subset of data within one dataset.
 
     .. note::
         internally, this class stores data in a list of lists, where each
@@ -103,6 +127,17 @@ class DataSplit:
             return labels
         # else
         return [target for v in self.verses[target]]
+
+    def map_translit(self, fun: Callable[[str], str]) -> list[Verse]:
+        """Map a Callable object to every translit entry in the verse."""
+        verses = []
+        for vrs in self.get_samples():
+            mapped_translit = list(map(fun, vrs.get_translit_words()))
+            verses.append(Verse(vrs.book, vrs.reference,
+                                mapped_translit, vrs.get_syriac_words(),
+                                vrs.get_annotations(),
+                                origin=vrs.words[0].origin))
+        return verses
 
 
 class LoadedDataset:

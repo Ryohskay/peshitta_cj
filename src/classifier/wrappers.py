@@ -24,6 +24,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """Classes for general pipeline representation."""
+
 from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, Any, Self
 

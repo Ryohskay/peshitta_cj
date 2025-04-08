@@ -39,7 +39,10 @@ along with all of its methods.
 
 from tf.app import use
 
+from classifier.dataset_skeleton import LoadedDataset
 from classifier.result_utils import Verse
+
+import classifier.book_data as book_data
 
 
 def get_verses(
@@ -93,3 +96,22 @@ def get_verses(
                               translit_verse, syriac_verse,
                               origin="ETCBC"))
     return result_verses
+
+
+def load_etcbc_dataset() -> LoadedDataset:
+    """Parse the dataset and get verses."""
+    # extract verses from the ETCBC dataset
+    ot_train_verses = get_verses(book_data.ot_train_books)
+    ot_test_verses = get_verses(book_data.ot_test_books)
+    ot_prod_verses = get_verses(book_data.ot_prod_books)
+
+    nt_train_verses = get_verses(
+        book_data.nt_train_books, target_fabric="etcbc/syrnt", ver="0.1"
+    )
+    nt_test_verses = get_verses(
+        book_data.nt_test_books, target_fabric="etcbc/syrnt", ver="0.1"
+    )
+
+    return LoadedDataset(ot_train_verses, nt_train_verses,
+                  ot_test_verses, nt_test_verses,
+                  ot_prod_verses)

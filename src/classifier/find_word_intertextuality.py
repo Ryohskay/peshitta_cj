@@ -23,3 +23,80 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from collections import Counter
+
+from classifier.load_cal import load_cal_dataset
+from classifier.textfabric_utils import load_etcbc_dataset
+
+if __name__ == "__main__":
+    k = 150
+    etc_load = load_etcbc_dataset()
+    translit_words = []
+    translit_chars = []
+
+    print("ETCBC")
+    for v in etc_load.train.get_samples():
+        v_words = v.get_translit_words()
+        translit_words.extend(v_words)
+        translit_chars.extend([char for w in v_words for char in w])
+
+    print("Most common chars: "
+          + f"{Counter(translit_chars).most_common()}")
+    print(f"Top {k} common words: "
+          + f"{Counter(translit_words).most_common(k)}")
+
+    print("\n>> ETCBC/peshitta_OT")
+    for v in etc_load.train.get_samples(0):
+        v_words = v.get_translit_words()
+        translit_words.extend(v_words)
+        translit_chars.extend([char for w in v_words for char in w])
+
+    print("Most common chars: "
+          + f"{Counter(translit_chars).most_common()}")
+    print(f"Top {k} common words: "
+          + f"{Counter(translit_words).most_common(k)}")
+
+    print("\n>> ETCBC/syrNT")
+    for v in etc_load.train.get_samples(1):
+        v_words = v.get_translit_words()
+        translit_words.extend(v_words)
+        translit_chars.extend([char for w in v_words for char in w])
+
+    print("Most common chars: "
+          + f"{Counter(translit_chars).most_common()}")
+    print(f"Top {k} common words: "
+          + f"{Counter(translit_words).most_common(k)}")
+
+    print("\nCAL")
+    cal_load = load_cal_dataset()
+    for v in cal_load.train.get_samples():
+        v_words = v.get_translit_words()
+        translit_words.extend(v_words)
+        translit_chars.extend([char for w in v_words for char in w])
+
+    print("Most common chars: "
+          + f"{Counter(translit_chars).most_common()}")
+    print(f"Top {k} common words: "
+          + f"{Counter(translit_words).most_common(k)}")
+
+    print("\n>> CAL/OT")
+    for v in cal_load.train.get_samples(0):
+        v_words = v.get_translit_words()
+        translit_words.extend(v_words)
+        translit_chars.extend([char for w in v_words for char in w])
+
+    print("Most common chars: "
+          + f"{Counter(translit_chars).most_common()}")
+    print(f"Top {k} common words: "
+          + f"{Counter(translit_words).most_common(k)}")
+
+    print("\n>> CAL/NT")
+    for v in cal_load.train.get_samples(1):
+        v_words = v.get_translit_words()
+        translit_words.extend(v_words)
+        translit_chars.extend([char for w in v_words for char in w])
+
+    print("Most common chars: "
+          + f"{Counter(translit_chars).most_common()}")
+    print(f"Top {k} common words: "
+          + f"{Counter(translit_words).most_common(k)}")

@@ -51,7 +51,7 @@ from classifier.result_utils import (
     ProbaPredictions,
     Verse,
 )
-from classifier.wrappers import BoWEstimator, Classifier
+from classifier.wrappers import BoWEstimator, Classifier, ProbaClassifier
 
 
 def quick_stats(
@@ -261,8 +261,7 @@ def evaluate_classifier(
     print("OT --->")
     ot_proba_preds = predict_proba(
         clf,
-        ot_test_x,
-        np.array(loaded_ds.test.get_labels(0))
+        ot_test_x
     )
     quick_stats(
                 np.array(ot_test_x),
@@ -272,7 +271,7 @@ def evaluate_classifier(
     print("NT --->")
     nt_proba_preds = predict_proba(
         clf,
-        nt_test_x, np.array(nt_test_y)
+        nt_test_x
     )
     quick_stats(
                 np.array(nt_test_x),
@@ -396,33 +395,37 @@ def eval_and_save(  # noqa: PLR0913
     return (clf, [ot_probas, nt_probas])
 
 
+"""
 def cross_validate(
         clf: Classifier,
         training_x: list[Verse],
         training_y: list[int],
         fold: int = 5
     ) -> None:
-    """Perform cross validation with the provided test set.
-
-    .. attention:: cross validation should be performed with the training set,
-        and you still need to hold out the test set for final evaluation.
-    """
+"""
+# """Perform cross validation with the provided test set.
+#
+# .. attention:: cross validation should be performed with the training set,
+#     and you still need to hold out the test set for final evaluation.
+# """
+"""
     skf_splitter = StratifiedKFold(n_splits=fold)
     splits = skf_splitter.split(training_x, training_y)
     for train_g, test_g, in splits:
-        cross_algo = clone(clf.algo)
-        train_samples, train_labels = train_g  # convert generator into list
+        proba_c = ProbaClassifier(clone(clf.algo))
+        train_samples, train_labels = train_g  # convert generator into lists
         # train_samples = train[0]
         # train_labels = train[1]
-        test_samples, test_labels = test_g  # convert generator into list
+        test_samples, test_labels = test_g  # convert generator into lists
         # test_samples = test[0]
         # test_labels = test[1]
 
         # the reportAttributeAccessIssue can be ignored here because a cloned
         # object of clf.algo is necessarily a Classifier instance.
-        cross_algo.fit(train_samples, train_labels)  # type: ignore[reportAttributeAccessIssue]
+        proba_c.fit(train_samples, train_labels)  # type: ignore[reportAttributeAccessIssue]
         predictions = predict_proba(cross_algo,  # type: ignore[reportAttributeAccessIssue]
                                             test_samples,
                                             test_labels
                                     )
         metricise(test_labels, y_all=predictions)
+"""

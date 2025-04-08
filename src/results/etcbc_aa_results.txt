@@ -1,178 +1,377 @@
-.
-OT_train
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/peshitta/app
+data: ~/text-fabric-data/github/etcbc/peshitta/tf/0.2
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/peshitta/app  v3 => https:/github.com/etcbc/peshitta/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - peshitta 0.2 => https:/github.com/etcbc/peshitta/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/peshitta/blob/master/docs/transcription-0.2.md#
+Node types:
+book                      65  6566.69 =     100
+chapter                 1269   336.36 =     100
+verse                  31341    13.62 =     100
+*word*                426835     1.00 =     100
+
+ Sets: 
+ Features:
+Peshitta (Old Testament)
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	otype                ?
+	trailer              after-word material in syriac script
+	trailer_etcbc        after-word material in ETCBC transcription
+	verse                verse number
+	witness              book witness (A or B)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC transcription
+	oslots               ?
+
 Genesis
 Exodus
-NT_train
-Matthew
-Mark
-Luke
-John
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/peshitta/app
+data: ~/text-fabric-data/github/etcbc/peshitta/tf/0.2
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/peshitta/app  v3 => https:/github.com/etcbc/peshitta/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - peshitta 0.2 => https:/github.com/etcbc/peshitta/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/peshitta/blob/master/docs/transcription-0.2.md#
+Node types:
+book                      65  6566.69 =     100
+chapter                 1269   336.36 =     100
+verse                  31341    13.62 =     100
+*word*                426835     1.00 =     100
+
+ Sets: 
+ Features:
+Peshitta (Old Testament)
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	otype                ?
+	trailer              after-word material in syriac script
+	trailer_etcbc        after-word material in ETCBC transcription
+	verse                verse number
+	witness              book witness (A or B)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC transcription
+	oslots               ?
+
 Deuteronomy
-Acts
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/peshitta/app
+data: ~/text-fabric-data/github/etcbc/peshitta/tf/0.2
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/peshitta/app  v3 => https:/github.com/etcbc/peshitta/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - peshitta 0.2 => https:/github.com/etcbc/peshitta/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/peshitta/blob/master/docs/transcription-0.2.md#
+Node types:
+book                      65  6566.69 =     100
+chapter                 1269   336.36 =     100
+verse                  31341    13.62 =     100
+*word*                426835     1.00 =     100
+
+ Sets: 
+ Features:
+Peshitta (Old Testament)
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	otype                ?
+	trailer              after-word material in syriac script
+	trailer_etcbc        after-word material in ETCBC transcription
+	verse                verse number
+	witness              book witness (A or B)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC transcription
+	oslots               ?
+
 Joshua
 Judges
 Samuel_1
 Samuel_2
 Kings_1
 Kings_2
-Ezra
-Nehemia
-Chronicles_1
-Chronicles_2
-Maccabees_1_A
-Maccabees_1_B
 Ruth
 Esther
+Chronicles_1
+Chronicles_2
+Ezra
+Nehemia
+Maccabees_1_A
+Maccabees_1_B
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/syrnt/app
+data: ~/text-fabric-data/github/etcbc/syrnt/tf/0.1
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/syrnt/app  v3 => https:/github.com/etcbc/syrnt/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - syrnt 0.1 => https:/github.com/etcbc/syrnt/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/syrnt/blob/master/docs/transcription-0.1.md
+Node types:
+book                      27  4060.74 =     100
+chapter                  260   421.69 =     100
+lexeme                  3038    36.09 =     100
+verse                   7957    13.78 =     100
+*word*                109640     1.00 =     100
+
+ Sets: 
+ Features:
+SyrNT
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	demcat               demonstrative category
+	fmhdot               feminine he dot
+	gn                   gender
+	lexeme               lexeme of the word in syriac script
+	lexeme_etcbc         lexeme of the word in ETCBC/Wit transcription
+	lexeme_sedra         lexeme of the word in SEDRA transcription
+	nmtyp                numeral type
+	ntyp                 noun type
+	nu                   number
+	otype                ?
+	prefix               prefix of the word in syriac script
+	prefix_etcbc         prefix of the word in ETCBC/Wit transcription
+	prefix_sedra         prefix of the word in SEDRA transcription
+	prtyp                pronoun_type
+	ps                   person
+	ptctyp               participle type
+	root                 root of the word in syriac script
+	root_etcbc           root of the word in ETCBC/Wit transcription
+	root_sedra           root of the word in SEDRA transcription
+	seyame               seyame
+	sfcontract           suffix contraction
+	sfgn                 suffix gender
+	sfnu                 suffix number
+	sfps                 suffix person
+	sp                   part of speech (grammatical category)
+	st                   state
+	stem                 stem of the word in syriac script
+	stem_etcbc           stem of the word in ETCBC/Wit transcription
+	stem_sedra           stem of the word in SEDRA transcription
+	suffix               suffix of the word in syriac script
+	suffix_etcbc         suffix of the word in ETCBC/Wit transcription
+	suffix_sedra         suffix of the word in SEDRA transcription
+	verse                verse number
+	vs                   verbal conjugation
+	vt                   verbal aspect (tense)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC/Wit transcription
+	word_sedra           full form of the word in SEDRA transcription
+	oslots               ?
+
+Matthew
+Mark
+Luke
+John
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/syrnt/app
+data: ~/text-fabric-data/github/etcbc/syrnt/tf/0.1
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/syrnt/app  v3 => https:/github.com/etcbc/syrnt/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - syrnt 0.1 => https:/github.com/etcbc/syrnt/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/syrnt/blob/master/docs/transcription-0.1.md
+Node types:
+book                      27  4060.74 =     100
+chapter                  260   421.69 =     100
+lexeme                  3038    36.09 =     100
+verse                   7957    13.78 =     100
+*word*                109640     1.00 =     100
+
+ Sets: 
+ Features:
+SyrNT
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	demcat               demonstrative category
+	fmhdot               feminine he dot
+	gn                   gender
+	lexeme               lexeme of the word in syriac script
+	lexeme_etcbc         lexeme of the word in ETCBC/Wit transcription
+	lexeme_sedra         lexeme of the word in SEDRA transcription
+	nmtyp                numeral type
+	ntyp                 noun type
+	nu                   number
+	otype                ?
+	prefix               prefix of the word in syriac script
+	prefix_etcbc         prefix of the word in ETCBC/Wit transcription
+	prefix_sedra         prefix of the word in SEDRA transcription
+	prtyp                pronoun_type
+	ps                   person
+	ptctyp               participle type
+	root                 root of the word in syriac script
+	root_etcbc           root of the word in ETCBC/Wit transcription
+	root_sedra           root of the word in SEDRA transcription
+	seyame               seyame
+	sfcontract           suffix contraction
+	sfgn                 suffix gender
+	sfnu                 suffix number
+	sfps                 suffix person
+	sp                   part of speech (grammatical category)
+	st                   state
+	stem                 stem of the word in syriac script
+	stem_etcbc           stem of the word in ETCBC/Wit transcription
+	stem_sedra           stem of the word in SEDRA transcription
+	suffix               suffix of the word in syriac script
+	suffix_etcbc         suffix of the word in ETCBC/Wit transcription
+	suffix_sedra         suffix of the word in SEDRA transcription
+	verse                verse number
+	vs                   verbal conjugation
+	vt                   verbal aspect (tense)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC/Wit transcription
+	word_sedra           full form of the word in SEDRA transcription
+	oslots               ?
+
+Acts
 
 Plain Classifier
-MultinomialNB
-Total words parsed: 195234
-Found 3789 independent n-grams from 10917 verses!
-test size: (1564,)
+Total words parsed: 78918
+Found 7449 independent n-grams from 5894 verses!
+test size: (1562,)
 OT --->
-Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 143
-Local accuracy: 0.74
-Prediction probabilities: (557, 2)
+Parsed 8348 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 96
+Local accuracy: 0.83
 NT --->
-Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 113
-Local accuracy: 0.89
-Prediction probabilities: (1007, 2)
+Parsed 15383 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 23
+Local accuracy: 0.98
 All --->
-Overall Accuracy: 0.84
-Precisions: [0.78557875 0.86210222]
-Recalls: [0.7432675 0.8877855]
-F1 Score: [0.76383764 0.87475538]
-Supports: [ 557 1007]
+Overall Accuracy: 0.92
+Precisions: [0.95228216 0.91111111]
+Recalls: [0.82702703 0.97715988]
+F1 Score: [0.8852459  0.94298035]
+Supports: [ 555 1007]
 log loss > 
-1.1956171392259491
-roc auc: 0.9077552286597053
+0.6253695699794513
+roc auc: 0.9802606976390492
 
-Remove underscores marking proclitics, from training set
-MultinomialNB
-Total words parsed: 195234
-Found 3762 independent n-grams from 10917 verses!
-test size: (1564,)
+Remove common proper nouns from training verses
+Total words parsed: 77581
+Found 7453 independent n-grams from 5894 verses!
+test size: (1562,)
 OT --->
-Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 163
-Local accuracy: 0.71
-Prediction probabilities: (557, 2)
+Parsed 8348 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 96
+Local accuracy: 0.83
 NT --->
-Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 107
-Local accuracy: 0.89
-Prediction probabilities: (1007, 2)
+Parsed 15383 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 22
+Local accuracy: 0.98
 All --->
-Overall Accuracy: 0.83
-Precisions: [0.78642715 0.8466604 ]
-Recalls: [0.70736086 0.89374379]
-F1 Score: [0.74480151 0.86956522]
-Supports: [ 557 1007]
+Overall Accuracy: 0.92
+Precisions: [0.95426195 0.91119334]
+Recalls: [0.82702703 0.97815293]
+F1 Score: [0.88610039 0.94348659]
+Supports: [ 555 1007]
 log loss > 
-1.1863215397671767
-roc auc: 0.908068119215759
+0.6011768782517515
+roc auc: 0.9811803859470195
 
-Remove underscores marking proclitics, from both training & test sets
-MultinomialNB
-Total words parsed: 195234
-Found 3762 independent n-grams from 10917 verses!
-test size: (1564,)
+Remove common proper nouns from both training & test verses
+test size: (1562,)
 OT --->
-Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 163
-Local accuracy: 0.71
-Prediction probabilities: (557, 2)
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 99
+Local accuracy: 0.82
 NT --->
-Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 107
-Local accuracy: 0.89
-Prediction probabilities: (1007, 2)
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 21
+Local accuracy: 0.98
 All --->
-Overall Accuracy: 0.83
-Precisions: [0.78642715 0.8466604 ]
-Recalls: [0.70736086 0.89374379]
-F1 Score: [0.74480151 0.86956522]
-Supports: [ 557 1007]
+Overall Accuracy: 0.92
+Precisions: [0.95597484 0.90875576]
+Recalls: [0.82162162 0.97914598]
+F1 Score: [0.88372093 0.94263862]
+Supports: [ 555 1007]
 log loss > 
-1.1863215397671767
-roc auc: 0.908068119215759
+0.5987853437086725
+roc auc: 0.9815507662578169
 
-Remove PN & GN
-> Remove PN & GN from the training set
-MultinomialNB
-Total words parsed: 187064
-Found 3369 independent n-grams from 10917 verses!
-test size: (1564,)
-OT --->
-Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 121
-Local accuracy: 0.78
-Prediction probabilities: (557, 2)
-NT --->
-Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 154
-Local accuracy: 0.85
-Prediction probabilities: (1007, 2)
-All --->
-Overall Accuracy: 0.82
-Precisions: [0.73898305 0.87577002]
-Recalls: [0.78276481 0.84707051]
-F1 Score: [0.76024412 0.86118122]
-Supports: [ 557 1007]
-log loss > 
-1.1629418503228848
-roc auc: 0.9007290082528225
+===================WORD N-GRAMS=========================
 
-Remove PN & GN
-> Remove PN & GN from both training & test sets
-MultinomialNB
-Total words parsed: 187064
-Found 3369 independent n-grams from 10917 verses!
-test size: (1564,)
-OT --->
-Parsed 11591 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 119
-Local accuracy: 0.79
-Prediction probabilities: (557, 2)
-NT --->
-Parsed 19816 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 135
-Local accuracy: 0.87
-Prediction probabilities: (1007, 2)
-All --->
-Overall Accuracy: 0.84
-Precisions: [0.76439791 0.87991927]
-Recalls: [0.78635548 0.86593843]
-F1 Score: [0.77522124 0.87287287]
-Supports: [ 557 1007]
-log loss > 
-1.0265908902254062
-roc auc: 0.9075314807122137
 
-Remove PN, GN, underbars
-> Remove PN, GN, underbars from both training & test sets
-MultinomialNB
-Total words parsed: 187064
-Found 3342 independent n-grams from 10917 verses!
-test size: (1564,)
+Plain Classifier
+Total words parsed: 78918
+Found 59442 independent n-grams from 5894 verses!
+test size: (1562,)
 OT --->
-Parsed 11591 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 118
-Local accuracy: 0.79
-Prediction probabilities: (557, 2)
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 459
+Local accuracy: 0.17
 NT --->
-Parsed 19816 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 129
-Local accuracy: 0.87
-Prediction probabilities: (1007, 2)
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 13
+Local accuracy: 0.99
 All --->
-Overall Accuracy: 0.84
-Precisions: [0.77288732 0.8815261 ]
-Recalls: [0.78815081 0.87189672]
-F1 Score: [0.78044444 0.87668497]
-Supports: [ 557 1007]
+Overall Accuracy: 0.70
+Precisions: [0.88073394 0.68410186]
+Recalls: [0.17297297 0.98709037]
+F1 Score: [0.28915663 0.80813008]
+Supports: [ 555 1007]
 log loss > 
-0.9834398546851566
-roc auc: 0.9105623294033329
+0.5908906195472855
+roc auc: 0.6664090107982859
+
+Remove common proper nouns from training verses
+Total words parsed: 77581
+Found 58490 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 459
+Local accuracy: 0.17
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 13
+Local accuracy: 0.99
+All --->
+Overall Accuracy: 0.70
+Precisions: [0.88073394 0.68410186]
+Recalls: [0.17297297 0.98709037]
+F1 Score: [0.28915663 0.80813008]
+Supports: [ 555 1007]
+log loss > 
+0.5909110990549997
+roc auc: 0.6668384372455873
+
+Remove common proper nouns from both training & test verses
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 459
+Local accuracy: 0.17
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 13
+Local accuracy: 0.99
+All --->
+Overall Accuracy: 0.70
+Precisions: [0.88073394 0.68410186]
+Recalls: [0.17297297 0.98709037]
+F1 Score: [0.28915663 0.80813008]
+Supports: [ 555 1007]
+log loss > 
+0.5909110990549997
+roc auc: 0.6668384372455873

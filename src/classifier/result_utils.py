@@ -22,8 +22,9 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 """Utilities to handle data extraction and estimation results."""
-from collections.abc import Callable
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, Protocol
@@ -193,7 +194,7 @@ class Verse(Any):
         """
         ref = self.reference
         words = " ".join([w.translit for w in self.words])
-        return ref + words
+        return ref + " | " + words
 
     def __len__(self) -> int:
         """An under-the-hood method defining the result of :func:`len`.
@@ -393,10 +394,10 @@ class Mislabels(Any):
     """
     def __init__(
             self,
-            indices: list[int],
-            incorrect_labels: list[int],
-            correct_labels: list[int],
-            probas: list[list[float]] | None = None
+            indices: list[int] | NDArray[np.int64],
+            incorrect_labels: list[int] | NDArray[np.int64],
+            correct_labels: list[int] | NDArray[np.int64],
+            probas: list[list[float]] | NDArray[np.float64] | None = None
         ) -> None:
         self.idcs: NDArray[np.int64] = np.array(indices, dtype=np.int64)
 

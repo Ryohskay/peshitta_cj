@@ -23,15 +23,5 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from classifier.wrappers import BoWEstimator
-from sklearn.naive_bayes import MultinomialNB
-
-from classifier.textfabric_utils import get_verses
-import classifier.book_data
 
 if __name__ == "__main__":
-    mnb = BoWEstimator(MultinomialNB(), " ".join())
-
-    ot_train_x = get_verses(classifier.book_data.ot_train_books)
-    nt_train_x = get_verses(classifier.book_data.nt_train_books)
-
