@@ -12,6 +12,26 @@ def pool_init() -> urllib3.PoolManager:
     """Initialise a PoolManager instance and return the object."""
     return urllib3.PoolManager()
 
+def normalise_cset(cset: str) -> str:
+    """Normalise the cset value.
+    
+    cset: ["R", "Roman", "L", "Latin", "S", "Syriac"]
+        Defines the writing system (alphabets) in which to display the content.
+        Corresponds to the `cset` URL query parameter.
+        "R", "L", "Latin" are for Latin Alphabets, "S", "Syriac" for Syriac scripts.
+        Note that "S" option displays Estrangelo in OT but Serto in NT.
+    """
+    cset = cset.strip()
+    if cset in {"S", "Syriac"}:
+        return "S"
+    elif cset in {"R", "Roman", "L", "Latin"}:
+        return "R"
+    else:
+        msg = (f"cset {cset} is invalid. It must be one of: "
+               + "'R', 'Roman', 'L', or 'Latin' for Roman transliteration, "
+               + "and 'S' or 'Syriac' for Syriac scripts.")
+        raise ValueError(msg)
+
 
 def make_url(
     no_parse: bool=False,
@@ -22,6 +42,8 @@ def make_url(
     cset: str="Latin"
     ) -> str:
     """Construct a URL to query the CAL database with given parameters.
+
+    See normalise_cset for param: cset.
     
     no_parse: Boolean
         Defines if the parameter parsing is needed.
@@ -43,12 +65,6 @@ def make_url(
         The URL parameter must be in the form of "01", "02", ... etc. to work correctly.
         Defaults to None, in which case the whole book will be fetched.
 
-    cset: ["R", "L", "Latin", "S", "Syriac"]
-        Defines the writing system (alphabets) in which to display the content.
-        Corresponds to the `cset` URL query parameter.
-        "R", "L", "Latin" are for Latin Alphabets, "S", "Syriac" for Syriac scripts.
-        Note that "S" option displays Estrangelo in OT but Serto in NT.
-
     ERRORS:
         uses urllib.parse.urlencode() without try/catch.
     """
@@ -63,7 +79,7 @@ def make_url(
     # Construct a dictionary of parameters
     params = {
         "file": file,
-        "cset": cset
+        "cset": normalise_cset(cset)
     }
 
     if sub is not None:
@@ -77,14 +93,13 @@ def get_a_chapter(
     pool: urllib3.PoolManager,
     book_id: str="62001",
     section: None | int=None,
-    display_in: str="Latin"
     ) -> str:
     """Query the https://cal.huc.edu/get_a_chapter.php endpoint with given parameters.
 
     If no section is specified, the whole book will be fetched.
     Returns the responded html after decoding in UTF-8.
 
-    See make_url for params: book_id, display_in and section.
+    See make_url for params: book_id, section.
 
     pool: urllib3.PoolManager
         Connection pool for urllib3.
@@ -92,22 +107,65 @@ def get_a_chapter(
     ERRORS:
         uses urllib3.PoolManager.request() without try/catch.
     """
-    res = pool.request("GET", make_url(file=book_id , cset=display_in, sub=section))
+    res = pool.request("GET", make_url(file=book_id, sub=section))
+    return res.data.decode("utf-8")  # return decoded text from response text html
+
+
+def get_a_syriac_chapter(
+    pool: urllib3.PoolManager,
+    book_id: str="62001",
+    section: None | int=None,
+    needs_est: bool=False,
+    ) -> str:
+    """Query the https://cal.huc.edu/get_a_chapter.php endpoint with given parameters.
+
+    If no section is specified, the whole book will be fetched.
+    Returns the responded html after decoding in UTF-8.
+
+    See normalise_cset for param: display_in.
+    See make_url for params: book_id,  and section.
+
+    pool: urllib3.PoolManager
+        Connection pool for urllib3.
+
+    needs_est: bool
+        True if the book/chapter requires a conversion into Estrangelo.
+        If this is set to True, then query get_a_chapterEST.php endpoint.
+
+    ERRORS:
+        uses urllib3.PoolManager.request() without try/catch.
+    """
+    if needs_est:
+        res = pool.request("GET", make_url(
+                                           page="get_a_chapterEST.php",
+                                           file=book_id,
+                                           sub=section,
+                                           cset="Syriac",
+                                           ))
+    else:
+        res = pool.request("GET", make_url(
+                                           file=book_id,
+                                           sub=section,
+                                           cset="Syriac",
+                                           )
+                           )
     return res.data.decode("utf-8")  # return decoded text from response text html
 
 
 def get_and_save(
         fpath: str | Path,
         pool_mgr: urllib3.PoolManager,
-        book_id: str,
-        section: int,
-        display_in: str,
-        allow_overwrite: bool=False
+        book_id: str, 
+        section: int, 
+        display_in: str="Latin",
+        allow_overwrite: bool=False,
+        needs_est: bool=False,
         ):
     """Query using get_a_chapter, save the resulting HTML in a file.
     
-    See make_url function for detailed requirements of:
-        pool_mgr, book_id, section, display_in
+    See normalise_cset for param: display_in
+    See get_a_syriac_chapter for param: needs_est
+    See make_url function for params: pool_mgr, book_id, section, 
 
     If no section is specified, the whole book will be fetched.
 
@@ -121,7 +179,10 @@ def get_and_save(
         raises FileExistsError if the save file specified in fpath param already exists.
         uses pathlib.Path.write_text() without try/catch.
     """
-    qr = get_a_chapter(pool_mgr, book_id, section, display_in)
+    if normalise_cset(display_in) == "S":
+        qr = get_a_syriac_chapter(pool_mgr, book_id, section, needs_est)
+    else:
+        qr = get_a_chapter(pool_mgr, book_id, section, display_in)
     if isinstance(fpath, Path):
         dest = fpath
     else:
@@ -152,10 +213,10 @@ def follow_link(pool: urllib3.PoolManager, link_url: str)  -> str:
     return res.data.decode("utf-8")  # return decoded text from response text html
 
 
-def get_verse_url(url: str):
+def get_verse_url(url: str, cset: str="Latin"):
     """Derive the url to a verse page from given url to the lexicon entry.
     
-    Concretely, this function receives a url to a lexicon entry and extracts
+    This function receives a url to a lexicon entry and extracts
     the coord query parameter in the url.
     """
     verse_ref = ""
@@ -165,7 +226,7 @@ def get_verse_url(url: str):
     for param in query_params:
         if "coord" in param:
             verse_ref = param.split("=")[1]
-    v_url = make_url(file=verse_ref)
+    v_url = make_url(file=verse_ref, cset=cset)  
     print(f"v_url: {v_url}")
     return v_url
 

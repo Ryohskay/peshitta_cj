@@ -1,6 +1,10 @@
 """The main scraping script to get Syriac texts from CAL."""
 
 import json
+from bs4 import BeautifulSoup, Tag
+from cal_handler import (pool_init, get_a_chapter, get_a_syriac_chapter,
+                         follow_link, get_verse_url, normalise_cset)
+from pathlib import Path
 import re
 import time
 from pathlib import Path
@@ -97,40 +101,47 @@ def is_empty_verse(words: list) -> bool:
 
 if __name__ == "__main__":
 
+    OT = False
+    NT = True
+
     target_books = [
-            ("Matthew", "62040"),
-            ("Mark", "62041"),
-            ("Luke", "62042"),
-            ("John", "62043"),
-            ("Genesis", "62001"),
-            ("Exodus", "62002"),
-            ("Acts", "62044"),
-            ("Deuteronomy", "62005"),
-            ("Joshua", "62006"),
-            ("Judges", "62007"),
-            ("1_Samuel", "62008"),
-            ("2_Samuel", "62009"),
-            ("1_Kings", "62010"),
-            ("2_Kings", "62011"),
-            ("Ruth", "62030"),
-            ("Esther", "62034"),
-            ("Ezra", "62036"),
-            ("Nehemiah", "62037"),
-            ("1_Chronicles", "62038"),
-            ("2_Chronicles", "62039"),
-            ("1_Maccabees", "62078"),
+            ("Matthew", "62040", NT),
+            ("Mark", "62041", NT),
+            ("Luke", "62042", NT),
+            ("John", "62043", NT),
+            ("Genesis", "62001", OT),
+            ("Exodus", "62002", OT),
+            ("Acts", "62044", NT),
+            ("Deuteronomy", "62005", OT),
+            ("Joshua", "62006", OT),
+            ("Judges", "62007", OT),
+            ("1_Samuel", "62008", OT),
+            ("2_Samuel", "62009", OT),
+            ("1_Kings", "62010", OT),
+            ("2_Kings", "62011", OT),
+            ("Ruth", "62030", OT),
+            ("Esther", "62034", OT),
+            ("Ezra", "62036", OT),
+            ("Nehemiah", "62037", OT),
+            ("1_Chronicles", "62038", OT),
+            ("2_Chronicles", "62039", OT),
+            ("1_Maccabees", "62078", OT),
             ]
 
     # book_idx = "62006"
 
-    cset = "Latin"
+    cset = "Syriac"
 
     print(time.asctime())
 
     http = pool_init()
     for book in target_books:
+        result = None
         print(f"Book: {book[0]}")
-        result = get_a_chapter(http, book_id=book[1], display_in=cset)
+        if normalise_cset(cset) == "S":
+            result = get_a_syriac_chapter(http, book_id=book[1], needs_est=book[2])
+        else:
+            result = get_a_chapter(http, book_id=book[1], display_in=cset)
     # for i in range(15,16):
         # book_idx = target_books[0]
         # print(f"Chapter: {i}")
@@ -169,11 +180,14 @@ if __name__ == "__main__":
 
         for table_data in soup.find_all("td"):
             if "valign" in table_data.attrs.keys() and table_data["valign"] == "top":
+                stripped = str(table_data.text).strip()
                 # when the scraper reaches a new row on the table.
                 # add the verse identifier (e.g. "01:01")
-                verse_ref = re.match("\\d\\d:\\d\\d", table_data.text)
+                verse_ref = re.match("\\d\\d:\\d\\d", stripped)
                 if verse_ref is not None:
                     vid = verse_ref.group()
+                    if normalise_cset(cset) == "S":
+                        vid = vid[::-1]  # reverse the ref, it's in bdo tag
                     print(vid)
                     v_refs = vid.split(":")
                     reference = (
@@ -239,7 +253,7 @@ if __name__ == "__main__":
 
                 # extract the hyperlink to verse from the lex_url
                 if verse_url != "":
-                    extracted = get_verse_url(verse_url)
+                    extracted = get_verse_url(verse_url, cset=cset)
                     verse_urls.append(extracted)
 
 
