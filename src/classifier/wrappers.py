@@ -68,7 +68,9 @@ class Classifier(ClassifierMixin, BaseEstimator):
             raise ValueError(msg)
 
         # Initialise instance variables
-        self.algo: Callable = clf
+        # AttributeAccessIssue can be ignored here since we explicitly check
+        # for necessary classes above (so this can be duck typed)
+        self.algo: Callable = clf  # type: ignore[reportAttributeAccessIssue]
         self.train_vector: Sequence[Sequence[int | float]] = []
         self.train_y: list[int] = []
 
@@ -186,11 +188,16 @@ class BoWEstimator(ProbaClassifier):
         self.train_y: list[int] = []
         self.pred_vector: np.ndarray | list[list[int]] | None = None
 
-    def fit(self,
+    def fit(self,  # type: ignore[reportIncompatibleMethodOverride]
             X: list[Verse],
             y: list[int],
         ) -> None:
         """Train the algorithm on train_x to get a classifier.
+
+        .. note:: This method is in strict terms incompatible with the super
+            classes' ``.fit`` method because
+            :class:`classifier.result_utils.Verse` is not hashable.
+            Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
 
         Args:
             X: the samples to train the model.
@@ -222,8 +229,13 @@ class BoWEstimator(ProbaClassifier):
         self.train_vector = make_feature(self.vocabs)
         self.algo.fit(self.train_vector, y)  # type: ignore[reportArgumentType]
 
-    def predict(self, X: list[Verse]) -> np.ndarray:
+    def predict(self, X: list[Verse]) -> np.ndarray:  # type: ignore[reportIncompatibleMethodOverride]
         """Predict on target_x with the pretrained classifier.
+
+        .. note:: This method is in strict terms incompatible with the super
+            classes' ``.fit`` method because
+            :class:`classifier.result_utils.Verse` is not hashable.
+            Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
 
         Args:
             X: list of inputs to the model
@@ -245,10 +257,15 @@ class BoWEstimator(ProbaClassifier):
             vectorise(X, self.vocabs[0],
                       self.n_gram_formatter, span=self.n)
         )
-        return self.algo.predict(self.pred_vector)
+        return self.algo.predict(self.pred_vector)  # type: ignore[reportAttributeAccessIssue]
 
-    def predict_proba(self, X: list[Verse]) -> np.ndarray:
+    def predict_proba(self, X: list[Verse]) -> np.ndarray:  # type: ignore[reportIncompatibleMethodOverride]
         """Predict probability on target_x with the pretrained classifier.
+
+        .. note:: This method is in strict terms incompatible with the super
+            classes' ``.fit`` method because
+            :class:`classifier.result_utils.Verse` is not hashable.
+            Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
 
         Args:
             X: list of input samples to the model

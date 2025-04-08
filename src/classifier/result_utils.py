@@ -26,9 +26,10 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, Protocol
 
 import numpy as np
+from numpy.typing import NDArray
 
 
 @dataclass
@@ -64,20 +65,27 @@ class PeshittaWord:
     origin: Literal["ETCBC", "CAL"] = "ETCBC"
 
     def __eq__(self, value: object, /) -> bool:
-        # Since this implementation relies on ``or`` comparison,
-        # ``hash((translit, syriac))``, ``hash(translit)`` or ``hash(syriac)``
-        # do not satisfy the specification; they may not return the same result
-        # even when the result of __eq__ is True.
+        """Equality comparator for Verse objects with any Python object.
+
+        Returns:
+            A Bernoulli (boolean) value indicating if ``self`` and ``value``
+            are considered *equal*.
+
+        .. attention:: Since this implementation relies on ``or`` comparison,
+            ``hash((translit, syriac))``, ``hash(translit)`` or ``hash(syriac)``
+            do not satisfy the specification; they may not return the same
+            result even when the result of __eq__ is True.
+        """
         t_translit = ""
         t_syriac = ""
-        try:
-            t_translit = value.translit
-            t_syriac = value.syriac
-        except AttributeError:
-            return value in {self.translit, self.syriac}
-        # If ``value`` has attributes "translit" and "syriac"
-        return (self.translit == t_translit
-                or self.syriac == t_syriac)
+        if (hasattr(value, "translit") and hasattr(value, "syriac")):
+            # If ``value`` has attributes "translit" and "syriac"
+            t_translit = value.translit  # type: ignore[reportAttributeAccessIssue]
+            t_syriac = value.syriac  # type: ignore[reportAttributeAccessIssue]
+            return (self.translit == t_translit
+                    or self.syriac == t_syriac)
+        # else
+        return value in {self.translit, self.syriac}
 
 
 class Verse(Any):
@@ -87,6 +95,13 @@ class Verse(Any):
         book: Name of the biblical book the verse belongs to.
         reference: A verse reference, e.g. "Genesis Chapter 01 Verse 01"
         words: List of words represented as PeshittaWord objects
+
+    .. caution::
+        This class does not implement __hash__ method, which means that
+        this class is unhashable and thus cannot be used as a key in ``dict``
+        or as a member of ``set``. This is due to the way __eq__ comparator
+        is implemented. Make sure to use one of the attributes as a key when
+        using dict.
 
     .. note:: A *verse* is a exegetical annotation and is not necessarily
     comparable to semantic divisions like sentence, clause, etc.
@@ -253,6 +268,27 @@ class Verse(Any):
         return [w.annots for w in self.words]
 
 
+class FileFormatterProto(Protocol):
+    """A protocol that defines the interface of file formatter functions."""
+    def __call__(self,
+                 samples: list[Verse] | NDArray[Verse],
+                 probas: list[list[float]] | NDArray[np.float64],
+                 correct_labels: list[int] | NDArray[np.int64] | None = None
+                 ) -> str:  # type: ignore[reportReturnType]
+        """Defines the signature for a FileFormatterProto function.
+
+        Args:
+            samples: a list of samples (:class:`classifier.result_utils.Verse`
+                instances) to save.
+            probas: two-dimensional list of probabilities of each verse
+                belonging to each of the classes.
+            correct_labels: gold reference for the samples.
+
+        Returns:
+            string containing the prediction results in a certain file format.
+        """
+
+
 class Predictions(Any):
     """A dataclass to hold predictions by some classifier.
 
@@ -266,17 +302,13 @@ class Predictions(Any):
 
     def __init__(
             self,
-            samples: list[Any] | np.ndarray,
-            predictions: list[int] | np.ndarray,
-            correct_labels: list[int] | np.ndarray | None = None,
-            num_correct: int | np.int_ | None = None,
-            num_mislabelled: int | np.int_ | None = None,
+            samples: list[Verse] | NDArray[Verse],
+            predictions: list[int] | NDArray[np.int64],
+            correct_labels: list[int] | NDArray[np.int64] | None = None,
         ) -> None:
         self.samples = samples
         self.predictions = predictions
         self.correct_labels = correct_labels
-        self.num_correct = num_correct
-        self.num_mislabelled = num_mislabelled
 
         if len(self.samples) != len(self.predictions):
             msg = ("length of provided lists/arrays for samples and predictions"
@@ -298,18 +330,16 @@ class ProbaPredictions(Predictions):
     """
     def __init__(
             self,
-            samples: list[Any] | np.ndarray,
-            predictions: list[int] | np.ndarray,
-            probas: list[list[float]] | np.ndarray,
-            correct_labels: list[int] | np.ndarray | None = None,
-            num_correct: int | np.int_ | None = None,
-            num_mislabelled: int | np.int_ | None = None,
+            samples: list[Verse] | NDArray[Verse],
+            predictions: list[int] | NDArray[np.int64],
+            probas: list[list[float]] | NDArray[np.float64],
+            correct_labels: list[int] | NDArray[np.int64] | None = None,
         ) -> None:
         super().__init__(samples, predictions,
-                         correct_labels, num_correct, num_mislabelled)
+                         correct_labels)
         self._probas = probas
 
-    def get_probas(self) -> list[list[float]] | np.ndarray:
+    def get_probas(self) -> list[list[float]] | NDArray:
         """Get a list of predicted probabilities.
 
         Returns:
@@ -319,7 +349,7 @@ class ProbaPredictions(Predictions):
         return self._probas
 
     def save_to_file(self,
-                     formatter: Callable,
+                     formatter: FileFormatterProto,
                      save_file: str | Path = "./out/prediction_all_ot.csv",
                 ) -> None:
         """Save all verses into a file, along with prediction results.
@@ -363,12 +393,12 @@ class Mislabels(Any):
     """
     def __init__(
             self,
-            indices: list[Any] | np.ndarray,
-            incorrect_labels: list[Any] | np.ndarray,
-            correct_labels: list[Any] | np.ndarray,
-            probas: list[Any] | np.ndarray | None = None
+            indices: list[int],
+            incorrect_labels: list[int],
+            correct_labels: list[int],
+            probas: list[list[float]] | None = None
         ) -> None:
-        self.idcs: np.ndarray = np.array(indices, dtype="int_")
+        self.idcs: NDArray[np.int64] = np.array(indices, dtype=np.int64)
 
         if len(self.idcs) < 1:
             msg = ("indices of mislabelled samples were empty."
@@ -376,10 +406,10 @@ class Mislabels(Any):
                    + "there are one or more mislabelled samples.")
             raise ValueError(msg)
 
-        self.mislabels: np.ndarray = np.array(incorrect_labels, dtype=int)
-        self.correct_labels: np.ndarray = np.array(correct_labels, dtype=int)
+        self.mislabels = incorrect_labels
+        self.correct_labels = correct_labels
         # initialise empty variables
-        self.verses = []
+        self.verses: list[Verse] = []
         if probas is not None:
             self.probas = probas
 
@@ -401,11 +431,11 @@ class Mislabels(Any):
             vrs: a list of Verses which includes some mislabelled verses.
                 The order of verses must correspond to those of self.idcs.
         """
-        self.verses = [vrs[idx] for idx in self.idcs]
+        self.verses = [vrs[int(idx)] for idx in self.idcs]
 
     def save_to_file(
             self,
-            formatter: Callable,
+            formatter: FileFormatterProto,
             save_file: str | Path = "./out/prediction_mislabels.csv",
         ) -> None:
         """Save mislabelled verses into a file.

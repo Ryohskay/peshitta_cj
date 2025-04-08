@@ -25,7 +25,6 @@
 
 """Tools and functions to evaluate classifiers."""
 
-from collections import Counter
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -44,13 +43,15 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import StratifiedKFold
 
+from classifier.dataset_skeleton import LoadedDataset
+from classifier.inspection_utils import find_mislabels
+from classifier.prediction_utils import predict_proba
 from classifier.result_utils import (
     Mislabels,
-    Predictions,
     ProbaPredictions,
     Verse,
 )
-from classifier.wrappers import BoWEstimator, Classifier, ProbaClassifier
+from classifier.wrappers import BoWEstimator, Classifier
 
 
 def quick_stats(
@@ -70,7 +71,8 @@ def quick_stats(
 
     Returns:
         number of mislabelled verses and that of
-        correctly labelled verses.
+        correctly labelled verses, as well as accuracy score calculated
+        from the predictions.
 
     Raises:
         ValueError: If the provided list of inputs to test is either zero
@@ -102,172 +104,15 @@ def quick_stats(
     return (num_mislabels, num_correct)
 
 
-def find_mislabels(
-        y_correct: list | np.ndarray,
-        y_pred: list | np.ndarray,
-        test_x: list[Verse],
-        probas: np.ndarray
-    ) -> Mislabels:
-    """Find and return mislabelled verses in string format.
-
-    Args:
-        y_correct: list of correct labels
-        y_pred: list of predictions
-        test_x: list of verses corresponding to the labels
-        probas: list of probabilities, of size (numbert of samples,
-            number of prediction classes)
-
-    Returns:
-        A :class:`Mislabels` instance.
-    """
-    # initialise storages for mislabelled verse's info
-    mislabel_idcs = np.empty(0, dtype=np.int_)
-    mislabels = np.empty(0, dtype=np.int_)
-    correct_labels = np.empty(0, dtype=np.int_)
-
-    # parse through all the predictions,
-    # find and record occasions where they don't match ``y_correct``
-    for i in range(len(y_correct)):
-        if y_correct[i] != y_pred[i]:
-            mislabel_idcs = np.append(mislabel_idcs, i)
-            mislabels = np.append(mislabels, y_pred[i])
-            correct_labels = np.append(
-                    correct_labels,
-                    y_correct[i]
-                    )
-
-    results = Mislabels(
-                            mislabel_idcs,
-                            mislabels,
-                            correct_labels
-                        )
-
-    if len(results) > 0:
-        # extract list verses at idcs and set results.verses
-        results.extract_verses(test_x)
-
-    if probas is not None:
-        results.probas = probas[results.idcs]
-
-    return results
-
-
-def predict(
-        classifier: Classifier,
-        test_samples: np.ndarray | list,
-        test_labels: np.ndarray
-    ) -> Predictions:
-    """Predict on the data with a classifier and get some simple statistics.
-
-    Args:
-        classifier: any object that has a method `.predict()`.
-        test_samples: inputs to the classifier
-        test_labels: correct labels (gold references) for the inputs. This is
-            not used to predict probabilities, but is used to calculate
-            prediction accuracy etc.
-
-    Returns:
-        A :class:`Prediction` class instance.
-    """
-    y_pred = classifier.predict(test_samples)
-    num_mislabels, num_correct = quick_stats(
-                                            np.array(test_samples),
-                                            np.array(test_labels),
-                                            np.array(y_pred)
-                                        )
-    return Predictions(test_samples, y_pred,
-                test_labels, num_correct, num_mislabels)
-
-
-def convert(probas: np.ndarray | list[Any], thresh: float) -> np.ndarray:
-    """Convert list of probabilities to a list of labels.
-
-    Args:
-        probas: list of predicted probabilities.
-        thresh: threshold to decide if a probability prediction should be
-            labelled as an instance of the class.
-
-    Returns:
-        0 if prediction for label 0 is over the threshold,
-        1 if prediction for label 1 is over the threshold,
-        -1 if probabilities for both labels do not exceed the threshold.
-
-    Raises:
-        ValueError: if neither of the classes score 0.5 probability.
-    """
-    result = np.empty(0, dtype=int)
-    for i in range(len(probas)):
-        probability = probas[i]
-        if probability[0] > thresh:
-            result = np.append(result, 0)
-        elif probability[1] > thresh:
-            result = np.append(result, 1)
-        elif probability[0] != probability[1]:
-            result = np.append(result, -1)
-        else:
-            msg = f"Something is wrong with the probability at index: {i}!"
-            raise ValueError(msg)
-    return result
-
-
-def predict_proba(
-        classifier: ProbaClassifier,
-        test_x: np.ndarray | list[Verse],
-        test_labels: np.ndarray,
-        threshold: float = 0.5,
-        *,
-        calc_stats: bool = True
-    ) -> ProbaPredictions:
-    """Predict on the data with the classifier and return some statistics.
-
-    Args:
-        classifier: any object that has a method `.predict_proba()`.
-        test_x: inputs to the classifier
-        test_labels: correct labels (gold references) for the inputs. This is
-            not used to predict probabilities, but is used to calculate
-            prediction accuracy etc.
-        threshold: the threshold for probability to be counted as a label for
-            a particular class.
-        calc_stats: Calculates and outputs summary statistics on the prediction.
-
-    Returns:
-        a :class:`classifier.result_utils.ProbaPredictions` instance.
-    """
-    y_pred_proba = classifier.predict_proba(test_x)
-    # convert the list of probas to a list of labels
-    y_pred = convert(y_pred_proba, threshold)
-
-    if calc_stats:
-        num_mislabels, num_correct = quick_stats(test_x, test_labels, y_pred)
-        return ProbaPredictions(test_x, y_pred,
-                     y_pred_proba, test_labels, num_correct, num_mislabels)
-    return ProbaPredictions(test_x, y_pred, y_pred_proba,
-                            test_labels)
-
-
 def metricise(
         y_true: list[int] | np.ndarray,
-        y_pred_pos: list[int] | np.ndarray | None = None,
-        y_pred_neg: list[int] | np.ndarray | None = None,
-        y_all: list[int] | np.ndarray | None = None,
+        y_all: list[int] | np.ndarray,
         y_probas: list[list[float]] | np.ndarray | None = None
     ) -> tuple[float, np.ndarray, np.ndarray, np.ndarray]:
     """Calculate performance metrics of a classifier using the outputs.
 
-    This function works when::
-
-        1. ``y_all`` is defined
-        OR
-        2. ``y_pred_pos`` and ``y_pred_neg`` are defined
-
-    .. note::
-        if ``y_all``, ``y_pred_pos``, and ``y_pred_neg`` are set,
-        ``y_all`` takes precedence and only their values will be used.
-
     Args:
         y_true: Correct (gold reference) labels
-        y_pred_pos: predictions for the positive class instances (tp + fn)
-        y_pred_neg: predictions for the negative class instances (tn + fp)
         y_all: all predictions in a one-dimensional list.
         y_probas: probabilities predicted for each sample.
 
@@ -275,22 +120,10 @@ def metricise(
         accuracy, recall, and f1 scores as floats.
 
     Raises:
-        ValueError: if neither y_all or a pair (y_pred_pos, y_pred_neg) is
-            given since this means there is nothing to calculate scores from
+        ValueError: if the length of ``y_all`` after :func:`numpy.array` and
+            the length of ``y_true`` do not match
     """
-    y_pred = []
-    if y_all is not None:
-        y_pred = y_all
-    elif y_pred_pos is not None and y_pred_neg is not None:
-        y_pred.extend(y_pred_pos)
-        y_pred.extend(y_pred_neg)
-    else:
-        msg = (f"Define (y_pred_neg (currently {y_pred_neg}) "
-               + f"and y_pred_pos (currently {y_pred_pos})) "
-               + f"OR y_all (currently {y_all}).")
-        raise ValueError(msg)
-
-    y_pred = np.array(y_pred)
+    y_pred = np.array(y_all)
 
     if len(y_pred) != len(y_true):
         msg = f"y_pred has length of {len(y_pred)}, but y_true {len(y_true)}"
@@ -327,7 +160,11 @@ def plot_charts(
                 y_pred: list[int] | np.ndarray,
                 y_probas: list[list[float]] | np.ndarray,
             ) -> None:
-    """Plot charts given an estimator and its predictions."""
+    """Plot charts from predictions.
+
+    Currently, this function plots charts with :class:`ConfusionMatrixDisplay`,
+    :class:`PrecisionRecallDisplay`, and :class:`RocCurveDisplay`.
+    """
     # evaluate with more statistics
     ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
     plt.show()
@@ -340,167 +177,6 @@ def plot_charts(
 
     # Roc curve
     RocCurveDisplay.from_predictions(y_true=y_true, y_pred=y_probas)
-
-
-def _sort_arrays(
-        objs: np.ndarray, vals: np.ndarray
-    ) -> tuple[np.ndarray, np.ndarray]:
-    """Sort the two arrays into the same order.
-
-    Args:
-        objs: np.ndarray holding any objects.
-        vals: np.ndarray with values that can be sorted.
-
-    Returns:
-        Two np.ndarrays sorted in the same way.
-        They will be ordered in an ascending manner (small -> big).
-    """
-    sort_ids = np.argsort(vals)
-    sorted_objs = objs[sort_ids]
-    sorted_cnts = vals[sort_ids]
-    return (sorted_objs, sorted_cnts)
-
-
-def _sort_counter(cnts: Counter) -> tuple[np.ndarray, np.ndarray]:
-    """Sort the Counter contents by the counts, return them as np array.
-
-    Args:
-        cnts: a :class:`Counter` class object
-
-    Returns:
-        Two sorted np.ndarrays for the Counter keys and values.
-        They will be ordered in an ascending manner (small -> big).
-    """
-    cnt_targets = list(cnts.keys())
-    cnt_vals = list(cnts.values())
-    return _sort_arrays(np.array(cnt_targets), np.array(cnt_vals))
-
-
-def find_top_k_words(
-    verses: list[Verse],
-    top_k: int = 150,
-    save_file: str | None = None,
-) -> tuple[np.ndarray | None, np.ndarray, np.ndarray]:
-    """Find the top k words from the verses.
-
-    Args:
-        verses: list of Verse objects
-        top_k: number of top k n_grams to discover
-        save_file: Name of the file to save.
-            Only works when syr_vocabs is provided.
-
-    Returns:
-        A tuple of (top k n_grams in Syriac script,
-                    top k transliterated n_grams,
-                    counts of the top k n_grams.
-                    )
-
-    Raises:
-        ValueError: if Syriac version is provided but word counts
-            do not match up with the transliterated version
-    """
-    syr_words = []
-    translit_words = []
-
-    for vrs in verses:
-        translit_words.extend(vrs.get_translit_words())
-        if len(vrs.get_syriac_words()) > 0:
-            translit_words.extend(vrs.get_syriac_words())
-
-    sorted_translits, sorted_tl_cnts = _sort_counter(Counter(translit_words))
-
-    # revert the order of the sorted arrays
-    top_cnts = sorted_tl_cnts[::-1][:top_k]
-    top_translits = sorted_translits[::-1][:top_k]
-
-    # validate Syriac script version is available
-    if len(syr_words) > 0:
-        sorted_syr_words, sorted_syr_cnts = _sort_counter(Counter(syr_words))
-        # If Syriac version is provided but word counts do not match up
-        # with the transliterated version, raise an exception
-        if sorted_syr_cnts.all() != sorted_tl_cnts.all():
-            msg = ("Syriac data for words were provided, but the counts of "
-                   + "each word from Syriac and Transliterated data "
-                   + "do not match!")
-            raise ValueError(msg)
-        # revert the order of the sorted array
-        top_syr_words = sorted_syr_words[::-1][:top_k]
-    else:
-        top_syr_words = None
-
-    # print(top_cnts[:10])
-    # print(top_syr_words[:10])
-    # print(top_translits[:10])
-
-    # Save the words to a file
-    if save_file is not None and top_syr_words is not None:
-        csv_data = "Syriac,Transliteration,Counts"
-        for i in range(top_k):
-            csv_data += (f"'{top_syr_words[i]}',"
-                        f"{top_translits[i]!s},{int(top_cnts[i])}")
-    elif save_file is not None:
-        # Format the data without Syriac script
-        csv_data = "Transliteration,Counts"
-        for i in range(top_k):
-            csv_data += (f"{top_translits[i]!s},{int(top_cnts[i])}")
-
-        Path(save_file).write_text(csv_data, encoding="utf-8")
-    return (top_syr_words, top_translits, top_cnts)
-
-
-def get_top_n_grams(
-        translit_vocabs: Counter,
-        syr_vocabs: Counter | None = None,
-        top_k: int = 150,
-        save_file: str | None = None,
-    ) -> tuple[np.ndarray | None, np.ndarray, np.ndarray]:
-    """Get top k n-grams, based on the counts stored in translit_vocabs.
-
-    Args:
-        translit_vocabs: Counter object for top k vocabs
-        syr_vocabs: Couner object for top k Syriac vocabs
-        top_k: number of top k n_grams to discover
-        save_file: Name of the file to save.
-            Only works when syr_vocabs is provided.
-
-    Returns:
-        A tuple of (top k n_grams in Syriac script,
-                    top k transliterated n_grams,
-                    counts of the top k n_grams.
-                    )
-
-    Raises:
-        ValueError: if cnts of Syriac and transliterated n_grams do not match
-    """
-    sorted_n_grams, sorted_cnts = _sort_counter(translit_vocabs)
-
-    top_n_grams = sorted_n_grams[::-1][:top_k]
-    top_cnts = sorted_cnts[::-1][:top_k]
-
-    # print(top_cnts[:10])
-    # print(top_n_grams[:10])
-
-    if syr_vocabs is not None:
-        sorted_syr, sorted_syr_cnts = _sort_counter(syr_vocabs)
-
-        if sorted_syr_cnts.all() != sorted_cnts.all():
-            msg = (
-                "The numbers of counted objects found in"
-                + " translit_vocabs and syr_vocabs do not match."
-            )
-            raise ValueError(msg)
-
-        top_targets_syr = sorted_syr[::-1][:top_k]
-
-        if save_file is not None:
-            csv_data = "Syriac,Transliteration,Counts"
-            for i in range(top_k):
-                csv_data += f"'{''.join(top_targets_syr[i])}',"
-                csv_data += f"'{top_n_grams[i]!s}',{int(top_cnts[i])}"
-            # print(csv_data.split("")[1])
-            Path(save_file).write_text(csv_data, encoding="utf-8")
-        return (top_targets_syr, top_n_grams, top_cnts)
-    return (None, top_n_grams, top_cnts)
 
 
 def split_list(lis: list, parts: int = 5) -> list[list]:
@@ -554,8 +230,7 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
 
 def evaluate_classifier(
     clf: BoWEstimator,
-    ot_test_x: list[Verse],
-    nt_test_x: list[Verse],
+    loaded_ds: LoadedDataset,
     *,
     plot: bool = False,
     ) -> tuple[
@@ -565,8 +240,8 @@ def evaluate_classifier(
 
     Args:
         clf: a :class:`classifier.wrappers.BoWEstimator` instance.
-        ot_test_x: list of OT verses to evaluate on.
-        nt_test_x: list of NT verses to evaluate on.
+        loaded_ds: a :class:`classifier.dataset_skeleton.LoadedDataset` instance
+            for the dataset to train and evaluate the classifier with.
         plot: if True, create charts
             and display them with :func:`classifier.eval_utils.plot_charts`.
 
@@ -574,37 +249,45 @@ def evaluate_classifier(
         :class:`ProbaPredictions` instances, one for OT and another for NT,
         along with :class:`Mislabels` instances for OT and NT.
     """
-    # Generate gold reference labels
-    ot_test_y = [0 for x in ot_test_x]
-    nt_test_y = [1 for x in nt_test_x]
-    # concatenate gold references for metricise function
-    all_test_y = []
-    all_test_y.extend(ot_test_y)
-    all_test_y.extend(nt_test_y)
-    # cast / convert to np.ndarray
-    all_test_y = np.array(all_test_y)
+    ot_test_x = loaded_ds.test.get_samples(0)
+    nt_test_x = loaded_ds.test.get_samples(1)
+    # cast / convert lists from the dataset to np.ndarray
+    ot_test_y = np.array(loaded_ds.test.get_labels(0), dtype=np.int16)
+    nt_test_y = np.array(loaded_ds.test.get_labels(1), dtype=np.int16)
+    all_test_y = np.array(loaded_ds.test.get_labels(), dtype=np.int16)
     print(f"test size: {all_test_y.shape}")
 
     # predict probabilities with clf
     print("OT --->")
     ot_proba_preds = predict_proba(
-            clf,
-        ot_test_x, np.array(ot_test_y)
+        clf,
+        ot_test_x,
+        np.array(loaded_ds.test.get_labels(0))
     )
+    quick_stats(
+                np.array(ot_test_x),
+                np.array(ot_test_y),
+                np.array(ot_proba_preds.predictions)
+            )
     print("NT --->")
     nt_proba_preds = predict_proba(
         clf,
         nt_test_x, np.array(nt_test_y)
     )
+    quick_stats(
+                np.array(nt_test_x),
+                np.array(nt_test_y),
+                np.array(nt_proba_preds.predictions)
+            )
     print("All --->")
-    y_all = ot_proba_preds.predictions
-    y_all = np.append(y_all, nt_proba_preds.predictions)
+    pred_y_all = ot_proba_preds.predictions
+    pred_y_all = np.append(pred_y_all, nt_proba_preds.predictions)
     probas = ot_proba_preds.get_probas()
     probas = np.append(probas, nt_proba_preds.get_probas(), axis=0)
-    metricise(all_test_y, y_all=y_all, y_probas=probas)
+    metricise(all_test_y, y_all=pred_y_all, y_probas=probas)
 
     if plot:
-        plot_charts(all_test_y, y_all, probas)
+        plot_charts(all_test_y, pred_y_all, probas)
 
     # figure out which verses the classifier mislabelled
     # reportArgumentType can be disabled here because ProbaPredictions.samples
@@ -624,8 +307,7 @@ def evaluate_classifier(
 
 def eval_and_save(  # noqa: PLR0913
     clf: BoWEstimator,
-    ot_test_samples: list,
-    nt_test_samples: list,
+    loaded: LoadedDataset,
     file_formatter: Callable,
     *,
     out_dir: str = "./out/",
@@ -637,8 +319,8 @@ def eval_and_save(  # noqa: PLR0913
 
     Args:
         clf: a classifier wrapped in :class:`classifier.wrappers.BoWEstimator`
-        ot_test_samples: inputs to the classifier from OT
-        nt_test_samples: inputs to the classifier from NT
+        loaded: a dataset loaded from files as a
+            :class:`classifier.dataset_skeleton.LoadedDataset` instance.
         file_formatter: any callable object (function, method, etc.)
             that returns a formatted string which can be directly
             written to a file.
@@ -675,7 +357,7 @@ def eval_and_save(  # noqa: PLR0913
 
     # evaluate the classifier with the provided samples
     (ot_probas, nt_probas, ot_mislabels, nt_mislabels) = evaluate_classifier(
-        clf, ot_test_samples, nt_test_samples
+        clf, loaded
     )
 
     # Construct save files' paths
@@ -720,7 +402,11 @@ def cross_validate(
         training_y: list[int],
         fold: int = 5
     ) -> None:
-    """Perform cross validation with the provided test set."""
+    """Perform cross validation with the provided test set.
+
+    .. attention:: cross validation should be performed with the training set,
+        and you still need to hold out the test set for final evaluation.
+    """
     skf_splitter = StratifiedKFold(n_splits=fold)
     splits = skf_splitter.split(training_x, training_y)
     for train_g, test_g, in splits:

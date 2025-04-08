@@ -31,6 +31,7 @@ from typing import NamedTuple
 import pandas as pd
 
 from classifier import book_data
+from classifier.dataset_skeleton import LoadedDataset
 from classifier.result_utils import Verse
 
 
@@ -156,19 +157,66 @@ def get_book_verses(
     return verse_box
 
 
+def load_cal_dataset(
+        src_dir: str = "./"
+    ) -> LoadedDataset:
+    """Load CAL dataset from json files into a dictionary.
+
+    .. note::
+        To change the books and chapters from which the data is loaded, update
+        :mod:`classifier.book_data`.
+
+    Args:
+        src_dir: string containing path to the ``src`` directory, or where
+            ``scraper/cal_results/`` is located.
+
+    Returns:
+        a :class:`classifier.dataset_skeleton.LoadedDataset` instance.
+
+    Raises:
+        RuntimeError: if the directory for json files exists but could not
+            load data from there.
+    """
+    # load the CSV data files
+    proj_root = Path(src_dir)
+    # Make sure you don't add slash at the beginning of the second file path
+    target_path = proj_root / "scraper/cal_results/"
+    print(f"Loading dataset(s) from: {target_path}")
+
+    # Load the data into Pandas' DataFrame for easier control
+    df = load_df_json(target_path)
+    if df is None:
+        msg = f"Failed to load data from {target_path}"
+        raise RuntimeError(msg)
+
+    # get the training data
+    print("OT_train")
+    ot_train_verses = get_book_verses(
+        df, book_data.ot_train_books, trim_none=True
+    )
+    print("NT_train")
+    nt_train_verses = get_book_verses(
+        df, book_data.nt_train_books, trim_none=True
+    )
+
+    # get the test data
+    ot_test_verses = get_book_verses(
+        df, book_data.ot_test_books, trim_none=True
+    )
+    nt_test_verses = get_book_verses(
+        df, book_data.nt_test_books, trim_none=True
+    )
+
+    # get the production data
+    prod_verses = get_book_verses(
+                    df, book_data.ot_prod_books, trim_none=True
+                    )
+    return LoadedDataset(ot_train_verses, nt_train_verses,
+                                ot_test_verses, nt_test_verses, prod_verses)
+
+
+
 if __name__ == "__main__":
-    df = load_df_json("../scraper/cal_results/")
-    if df is not None:
-        print(df.columns)
-
-        # Parse the DF
-        print(get_book(df, "Acts"))
-
-        ot_train = get_book_verses(df, book_data.ot_train_books)
-        ot_test = get_book_verses(df, book_data.ot_test_books)
-        ot_prod = get_book_verses(df, book_data.ot_prod_books)
-        nt_train = get_book_verses(df, book_data.nt_train_books)
-        nt_test = get_book_verses(df, book_data.nt_test_books)
-        print(ot_train)
-        print(ot_test)
-        print(nt_train)
+    d = load_cal_dataset("./")
+    print(d.test.get_samples())
+    print(d.test.get_labels())
