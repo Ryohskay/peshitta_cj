@@ -51,7 +51,7 @@ from classifier.result_utils import (
     ProbaPredictions,
     Verse,
 )
-from classifier.wrappers import BoWEstimator, Classifier, ProbaClassifier
+from classifier.wrappers import BoWEstimator
 
 
 def quick_stats(
@@ -117,7 +117,8 @@ def metricise(
         y_probas: probabilities predicted for each sample.
 
     Returns:
-        accuracy, recall, and f1 scores as floats.
+        accuracy (value), precision (1D array), recall (1D array),
+        and f1 scores (1D array) as floats.
 
     Raises:
         ValueError: if the length of ``y_all`` after :func:`numpy.array` and
@@ -395,37 +396,51 @@ def eval_and_save(  # noqa: PLR0913
     return (clf, [ot_probas, nt_probas])
 
 
-"""
 def cross_validate(
-        clf: Classifier,
+        clf: BoWEstimator,
         training_x: list[Verse],
         training_y: list[int],
-        fold: int = 5
+        fold: int = 5,
+        threshold: float = 0.5
     ) -> None:
-"""
-# """Perform cross validation with the provided test set.
-#
-# .. attention:: cross validation should be performed with the training set,
-#     and you still need to hold out the test set for final evaluation.
-# """
-"""
+    """Perform cross validation with the provided test set.
+
+    .. attention:: cross validation should be performed with the training set,
+        and you still need to hold out the test set for final evaluation.
+    """
+    print("> Cross-Validation <")
     skf_splitter = StratifiedKFold(n_splits=fold)
     splits = skf_splitter.split(training_x, training_y)
+    accs = []
+    precs = []
+    recs = []
+    fones = []
+
     for train_g, test_g, in splits:
-        proba_c = ProbaClassifier(clone(clf.algo))
-        train_samples, train_labels = train_g  # convert generator into lists
+        proba_c = BoWEstimator(clone(clf.algo), clf.n_gram_formatter, clf.n)
+        train_ids = list(train_g)
+        test_ids = list(test_g)
         # train_samples = train[0]
         # train_labels = train[1]
-        test_samples, test_labels = test_g  # convert generator into lists
+        train_verses = [training_x[int(idx)] for idx in train_ids]
+        train_labels = [training_y[int(idx)] for idx in train_ids]
+        test_verses = [training_x[int(idx)] for idx in test_ids]
+        test_labels = [training_y[int(idx)] for idx in test_ids]
         # test_samples = test[0]
         # test_labels = test[1]
 
-        # the reportAttributeAccessIssue can be ignored here because a cloned
-        # object of clf.algo is necessarily a Classifier instance.
-        proba_c.fit(train_samples, train_labels)  # type: ignore[reportAttributeAccessIssue]
-        predictions = predict_proba(cross_algo,  # type: ignore[reportAttributeAccessIssue]
-                                            test_samples,
-                                            test_labels
+        proba_c.fit(train_verses, train_labels)
+        predictions = predict_proba(proba_c,
+                                            test_verses,
+                                            threshold=threshold
                                     )
-        metricise(test_labels, y_all=predictions)
-"""
+        acc, prec, rec, fone = metricise(test_labels,
+                                         y_all=predictions.predictions)
+        accs.append(acc)
+        precs.append(prec)
+        recs.append(rec)
+        fones.append(fone)
+    print(f"Accuracy > avg: {np.average(accs)}, std: {np.std(accs)}")
+    print(f"Precision > avg: {np.average(precs)}, std: {np.std(precs)}")
+    print(f"Recall > avg: {np.average(recs)}, std: {np.std(recs)}")
+    print(f"F1 score > avg: {np.average(fones)}, std: {np.std(fones)}")
