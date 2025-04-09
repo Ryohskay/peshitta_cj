@@ -86,45 +86,11 @@ def find_mislabels(
     return results
 
 
-def _sort_arrays(
-        objs: NDArray, vals: NDArray
-    ) -> tuple[NDArray, NDArray]:
-    """Sort the two arrays into the same order.
-
-    Args:
-        objs: NDArray holding any objects.
-        vals: NDArray with values that can be sorted.
-
-    Returns:
-        Two NDArrays sorted in the same way.
-        They will be ordered in an ascending manner (small -> big).
-    """
-    sort_ids = np.argsort(vals)
-    sorted_objs = objs[sort_ids]
-    sorted_cnts = vals[sort_ids]
-    return (sorted_objs, sorted_cnts)
-
-
-def _sort_counter(cnts: Counter) -> tuple[NDArray, NDArray]:
-    """Sort the Counter contents by the counts, return them as np array.
-
-    Args:
-        cnts: a :class:`Counter` class object
-
-    Returns:
-        Two sorted NDArrays for the Counter keys and values.
-        They will be ordered in an ascending manner (small -> big).
-    """
-    cnt_targets = list(cnts.keys())
-    cnt_vals = list(cnts.values())
-    return _sort_arrays(np.array(cnt_targets), np.array(cnt_vals))
-
-
 def find_top_k_words(
-    verses: list[Verse],
-    top_k: int = 150,
-    save_file: str | None = None,
-) -> tuple[NDArray | None, NDArray, NDArray]:
+        verses: list[Verse],
+        top_k: int = 150,
+        save_file: str | None = None,
+    ) -> tuple[list[tuple[str, int]], list[tuple[str, int]] | None]:
     """Find the top k words from the verses.
 
     Args:
@@ -134,10 +100,10 @@ def find_top_k_words(
             Only works when syr_vocabs is provided.
 
     Returns:
-        A tuple of (top k n_grams in Syriac script,
-                    top k transliterated n_grams,
-                    counts of the top k n_grams.
-                    )
+        A tuple of (
+            list of tuples containing transliterated word and its count
+            list of tuples containing syriac word and its count
+            )
 
     Raises:
         ValueError: if Syriac version is provided but word counts
@@ -151,45 +117,38 @@ def find_top_k_words(
         if len(vrs.get_syriac_words()) > 0:
             translit_words.extend(vrs.get_syriac_words())
 
-    sorted_translits, sorted_tl_cnts = _sort_counter(Counter(translit_words))
-
-    # revert the order of the sorted arrays
-    top_cnts = sorted_tl_cnts[::-1][:top_k]
-    top_translits = sorted_translits[::-1][:top_k]
+    sorted_translits = Counter(translit_words).most_common(top_k)
 
     # validate Syriac script version is available
     if len(syr_words) > 0:
-        sorted_syr_words, sorted_syr_cnts = _sort_counter(Counter(syr_words))
+        sorted_syrs = Counter(syr_words).most_common(top_k)
         # If Syriac version is provided but word counts do not match up
         # with the transliterated version, raise an exception
-        if sorted_syr_cnts.all() != sorted_tl_cnts.all():
+        if [w[1] for w in sorted_syrs] != [w[1] for w in sorted_translits]:
             msg = ("Syriac data for words were provided, but the counts of "
-                   + "each word from Syriac and Transliterated data "
+                   + f"each word from Syriac {len(sorted_syrs)} and "
+                   + "Transliterated data {len(sorted_translits)} "
                    + "do not match!")
             raise ValueError(msg)
-        # revert the order of the sorted array
-        top_syr_words = sorted_syr_words[::-1][:top_k]
     else:
-        top_syr_words = None
-
-    # print(top_cnts[:10])
-    # print(top_syr_words[:10])
-    # print(top_translits[:10])
+        sorted_syrs = None
 
     # Save the words to a file
-    if save_file is not None and top_syr_words is not None:
+    if save_file is not None and sorted_syrs is not None:
         csv_data = "Syriac,Transliteration,Counts"
         for i in range(top_k):
-            csv_data += (f"'{top_syr_words[i]}',"
-                        f"{top_translits[i]!s},{int(top_cnts[i])}")
+            csv_data += (f"'{sorted_syrs[i][0]}',"
+                        + f"{sorted_translits[i][0]},"
+                        + f"{int(sorted_translits[i][1])}")
     elif save_file is not None:
         # Format the data without Syriac script
         csv_data = "Transliteration,Counts"
         for i in range(top_k):
-            csv_data += (f"{top_translits[i]!s},{int(top_cnts[i])}")
+            csv_data += (f"{sorted_translits[i][0]},"
+                         + f"{int(sorted_translits[i][1])}")
 
         Path(save_file).write_text(csv_data, encoding="utf-8")
-    return (top_syr_words, top_translits, top_cnts)
+    return (sorted_translits, sorted_syrs)
 
 
 def get_top_n_grams(
@@ -197,7 +156,7 @@ def get_top_n_grams(
         syr_vocabs: Counter | None = None,
         top_k: int = 150,
         save_file: str | None = None,
-    ) -> tuple[NDArray | None, NDArray, NDArray]:
+    ) -> tuple[list[tuple[str, int]], list[tuple[str, int]] | None]:
     """Get top k n-grams, based on the counts stored in translit_vocabs.
 
     Args:
@@ -208,40 +167,33 @@ def get_top_n_grams(
             Only works when syr_vocabs is provided.
 
     Returns:
-        A tuple of (top k n_grams in Syriac script,
-                    top k transliterated n_grams,
-                    counts of the top k n_grams.
-                    )
+        A tuple of (
+            list of tuples containing transliterated char n-grams and its count
+            list of tuples containing syriac char n-grams and its count
+            )
 
     Raises:
         ValueError: if cnts of Syriac and transliterated n_grams do not match
     """
-    sorted_n_grams, sorted_cnts = _sort_counter(translit_vocabs)
-
-    top_n_grams = sorted_n_grams[::-1][:top_k]
-    top_cnts = sorted_cnts[::-1][:top_k]
-
-    # print(top_cnts[:10])
-    # print(top_n_grams[:10])
+    top_n_grams = translit_vocabs.most_common(top_k)
 
     if syr_vocabs is not None:
-        sorted_syr, sorted_syr_cnts = _sort_counter(syr_vocabs)
+        top_syr_vocabs = syr_vocabs.most_common(top_k)
 
-        if sorted_syr_cnts.all() != sorted_cnts.all():
+        if top_n_grams != top_syr_vocabs:
             msg = (
                 "The numbers of counted objects found in"
                 + " translit_vocabs and syr_vocabs do not match."
             )
             raise ValueError(msg)
 
-        top_targets_syr = sorted_syr[::-1][:top_k]
-
         if save_file is not None:
             csv_data = "Syriac,Transliteration,Counts"
             for i in range(top_k):
-                csv_data += f"'{''.join(top_targets_syr[i])}',"
-                csv_data += f"'{top_n_grams[i]!s}',{int(top_cnts[i])}"
+                csv_data += f"'{''.join(top_syr_vocabs[i][0])}',"
+                csv_data += f"'{''.join(top_n_grams[i][0])}',{int(top_n_grams[i][1])}"
             # print(csv_data.split("")[1])
             Path(save_file).write_text(csv_data, encoding="utf-8")
-        return (top_targets_syr, top_n_grams, top_cnts)
-    return (None, top_n_grams, top_cnts)
+    else:
+        top_syr_vocabs = None
+    return (top_n_grams, top_syr_vocabs)

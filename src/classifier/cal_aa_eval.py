@@ -35,7 +35,6 @@ from classifier.dataset_skeleton import DataSplit
 from classifier.eval_utils import (
     eval_and_save,
 )
-from classifier.fitting_utils import identity
 from classifier.load_cal import load_cal_dataset
 from classifier.result_utils import Verse
 from classifier.wrappers import BoWEstimator
@@ -65,7 +64,7 @@ def csvify_cal(
             csv_data += (
                 f"{samples[i].reference},{probas[i][0]:.04f},"
                 + f"{probas[i][1]:.04f},{correct_labels[i]},"
-                + f"{samples[i].get_translit_words()}\n"
+                + f"{' '.join(samples[i].get_translit_words())}\n"
             )
     else:
         csv_data = ("Reference,Probability for OT,Probability for NT,"
@@ -75,43 +74,65 @@ def csvify_cal(
             csv_data += (
                 f"{samples[i].reference},{probas[i][0]:.04f},"
                 + f"{probas[i][1]:.04f},"
-                + f"{samples[i].get_translit_words()}\n"
+                + f"{' '.join(samples[i].get_translit_words())}\n"
             )
 
     # print(csv_data.split("\n")[1])
     return csv_data
 
 
-def remove_proclitic_ubs(verses: list[Verse]) -> list[Verse]:
+def remove_underscores(verses: list[Verse]) -> list[Verse]:
     """Remove the underscores after proclitics.
 
     Returns:
         list of tuples, each containing (
         verse reference, lemmata in the verse, annotations for each lemma
-        )
+        ) where underscores are removed.
     """
     train_x_no_ub = []
     for vrs in verses:
         vrs_lemmata = []
+
         for i in range(len(vrs.words)):
-            # print(vrs.words[i])
-            # print(vrs.words[i].annots)
-            # if vrs.words[i].annots == "c":
             w = vrs.words[i].translit
-            # print(w)
             vrs_lemmata.append(w.replace("_", ""))
-            # else:
-            #     vrs_lemmata.append(vrs.words[i].translit)
+
         updated_verse = Verse(vrs.book,
                                    vrs.reference,
                                    vrs_lemmata,
                                    words_annotations=vrs.get_annotations(),
                                    origin="CAL"
                                    )
-        # if updated_verse != vrs:
-        #     print(f"vrs {vrs}")
-        # print(f"updated vrs {updated_verse}")
-        #     exit()
+        train_x_no_ub.append(updated_verse)
+    return train_x_no_ub
+
+
+def remove_enclitics(verses: list[Verse]) -> list[Verse]:
+    """Remove enclitic prepositions from the text.
+
+    Returns:
+        list of tuples, each containing (
+        verse reference, lemmata in the verse, annotations for each lemma
+        ) where enclitic prepositions are removed.
+    """
+    train_x_no_ub = []
+    for vrs in verses:
+        vrs_lemmata = []
+        vrs_annots = []
+
+        for i in range(len(vrs.words)):
+            matches = re.search(r"p\d\d", vrs.words[i].annots)
+            if matches is not None:
+                vrs_lemmata.append(vrs.words[i].translit)
+                vrs_annots.append(vrs.words[i].annots)
+        updated_verse = Verse(vrs.book,
+                                   vrs.reference,
+                                   vrs_lemmata,
+                                   words_annotations=vrs_annots,
+                                   origin="CAL"
+                                   )
+        if updated_verse != vrs:
+            print(f"vrs {vrs}")
         train_x_no_ub.append(updated_verse)
     return train_x_no_ub
 
@@ -161,7 +182,7 @@ if __name__ == "__main__":
 
     print("\nPlain Classifier")
     print("MultinomialNB")
-    c_mnb = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb = BoWEstimator(MultinomialNB(), "".join)
     c_mnb.fit(train_x, train_y)
 
     # train and evaluate
@@ -175,9 +196,9 @@ if __name__ == "__main__":
 
     print("\nRemove underscores marking proclitics, from training set")
     print("MultinomialNB")
-    train_x_no_ub = remove_proclitic_ubs(train_x)
+    train_x_no_ub = remove_underscores(train_x)
 
-    c_mnb_nub = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb_nub = BoWEstimator(MultinomialNB(), "".join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
 
     c_mnb_nub, probas_pair_nub = eval_and_save(
@@ -196,7 +217,7 @@ if __name__ == "__main__":
     # and train new classifiers
     train_x_removed = remove_proper_nouns(train_x)
 
-    c_mnb_r = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb_r = BoWEstimator(MultinomialNB(), "".join)
     c_mnb_r.fit(train_x_removed, train_y)
 
     c_mnb_r, probas_pair_r = eval_and_save(
@@ -218,7 +239,7 @@ if __name__ == "__main__":
 
     # for j in range(10):
     #     print(train_x_removed_nub[j])
-    c_mnb_rnub = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb_rnub = BoWEstimator(MultinomialNB(), "".join)
     c_mnb_rnub.fit(train_x_removed_nub, train_y)
 
     c_mnb_rnub, probas_pair_rnub = eval_and_save(
@@ -236,12 +257,12 @@ if __name__ == "__main__":
     print("\nRemove underscores marking proclitics, "
             + "from both training & test sets")
     print("MultinomialNB")
-    ot_test_verses_no_ub = remove_proclitic_ubs(ot_test_verses)
-    nt_test_verses_no_ub = remove_proclitic_ubs(nt_test_verses)
+    ot_test_verses_no_ub = remove_underscores(ot_test_verses)
+    nt_test_verses_no_ub = remove_underscores(nt_test_verses)
 
     cal_ds.test = DataSplit(ot_test_verses_no_ub, nt_test_verses_no_ub)
 
-    c_mnb_nub_both = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb_nub_both = BoWEstimator(MultinomialNB(), "".join)
     c_mnb_nub_both.fit(train_x_no_ub, train_y)
 
     c_mnb_nub_both, probas_pair_nub_both = eval_and_save(
@@ -264,7 +285,7 @@ if __name__ == "__main__":
 
     cal_ds.test = DataSplit(ot_test_verses_r, nt_test_verses_r)
 
-    c_mnb_rboth = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb_rboth = BoWEstimator(MultinomialNB(), "".join)
     c_mnb_rboth.fit(train_x_removed, train_y)
 
     c_mnb_rboth, probas_pair_rboth = eval_and_save(
@@ -289,7 +310,7 @@ if __name__ == "__main__":
     cal_ds.test = DataSplit(ot_test_verses_rboth_nub, nt_test_verses_rboth_nub)
     # print(list(map(str, cal_ds.test.get_samples()[:10])))
 
-    c_mnb_rboth_nub = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb_rboth_nub = BoWEstimator(MultinomialNB(), "".join)
     c_mnb_rboth_nub.fit(train_x_removed_both_nub, train_y)
 
     c_mnb_rboth_nub, probas_pair_rboth_nub = eval_and_save(
@@ -299,61 +320,4 @@ if __name__ == "__main__":
                                 out_dir="./classifier/out/",
                                 save_file_prefix="cal_mnb_char_",
                                 save_file_suffix="_removed_both_nub"
-                            )
-
-    print("\n===================WORD N-GRAMS=========================\n")
-    print("\nPlain Classifier")
-    print("MultinomialNB")
-    c_mnb = BoWEstimator(MultinomialNB(), identity)
-    c_mnb.fit(train_x, train_y)
-
-    # train and evaluate
-    eval_and_save(
-                c_mnb,
-                cal_ds,
-                csvify_cal,
-                out_dir="./classifier/out/",
-                save_file_prefix="cal_mnb_word_n_gram",
-            )
-
-    print("\nRemove PN & GN")
-    print("> Remove PN & GN from the training set")
-    print("MultinomialNB")
-    # Remove personal names and place names from the training data
-    # and train new classifiers
-    train_x_removed = remove_proper_nouns(train_x)
-
-    c_mnb_r = BoWEstimator(MultinomialNB(), identity)
-    c_mnb_r.fit(train_x_removed, train_y)
-
-    c_mnb_r, probas_pair_r = eval_and_save(
-                                c_mnb_r,
-                                cal_ds,
-                                csvify_cal,
-                                out_dir="./classifier/out/",
-                                save_file_prefix="cal_mnb_word_n_gram",
-                                save_file_suffix="_removed"
-                            )
-
-    print("\nRemove PN & GN")
-    print("> Remove PN & GN from both training & test sets")
-    print("MultinomialNB")
-    # Remove personal names and place names from
-    # both the training and test datasets
-    # and train new classifiers
-    ot_test_verses_r = remove_proper_nouns(ot_test_verses)
-    nt_test_verses_r = remove_proper_nouns(nt_test_verses)
-
-    cal_ds.test = DataSplit(ot_test_verses_r, nt_test_verses_r)
-
-    c_mnb_rboth = BoWEstimator(MultinomialNB(), identity)
-    c_mnb_rboth.fit(train_x_removed, train_y)
-
-    c_mnb_rboth, probas_pair_rboth = eval_and_save(
-                                c_mnb_rboth,
-                                cal_ds,
-                                csvify_cal,
-                                out_dir="./classifier/out/",
-                                save_file_prefix="cal_mnb_word_n_gram",
-                                save_file_suffix="_removed_both"
                             )

@@ -68,8 +68,8 @@ def csvify_etcbc(
             result += (
                 f'"{samples[i].reference}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
                 + f"{correct_labels[i]}, {len(samples[i])},"
-                + f'{" ".join(samples[i].get_syriac_words())},'
-                + f'{" ".join(samples[i].get_translit_words())}\n'
+                + f"{' '.join(samples[i].get_syriac_words())},"
+                + f"{' '.join(samples[i].get_translit_words())}\n"
             )
     else:
         # Set header line

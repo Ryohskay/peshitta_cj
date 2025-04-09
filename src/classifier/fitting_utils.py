@@ -164,13 +164,14 @@ def make_word_n_gram_vocab(
 
 
 def make_char_n_gram_vocab(
-    verses: list[Verse], span: int = 3, mode: int = 1
+        verses: list[Verse], span: int = 3, mode: int = 1,
+        ngram_formatter: Callable = " ".join
 ) -> tuple[Counter, list[Counter]]:
     """Wraps the ``make_vocab`` function with a formatter for character n-grams.
 
     .. seealso:
         See :func:`classifier.fitting_utils.make_vocab`
-            for params: ``verses``, ``span``, ``mode``.
+            for params: ``verses``, ``span``, ``mode``, ``ngram_formatter``.
 
     Returns:
         A tuple in the format of::
@@ -178,7 +179,7 @@ def make_char_n_gram_vocab(
             tuple[(Global character n-gram counts),
                     (character n-gram counts for each verse)]
     """
-    return make_vocab(verses, " ".join, span, mode)
+    return make_vocab(verses, ngram_formatter, span, mode)
 
 
 def make_feature(

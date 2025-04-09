@@ -27,26 +27,66 @@ from pathlib import Path
 
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.cal_aa_eval import csvify_cal, remove_proper_nouns
+from classifier.cal_aa_eval import csvify_cal, remove_proper_nouns, remove_underscores
+from classifier.etcbc_aa_eval import csvify_etcbc
 from classifier.eval_utils import eval_and_save
 from classifier.load_cal import load_cal_dataset
 from classifier.prediction_utils import predict_proba
+from classifier.textfabric_utils import load_etcbc_dataset
 from classifier.wrappers import BoWEstimator
 
 if __name__ == "__main__":
-    cal_loaded = load_cal_dataset("./")
-
-    train_x = cal_loaded.train.get_samples()
-    train_y = cal_loaded.train.get_labels()
-
-    print("CAL --->")
+    # LOAD ETCBC DATA
+    etcbc_loaded = load_etcbc_dataset()
+    train_x_etc = etcbc_loaded.train.get_samples()
+    train_y_etc = etcbc_loaded.train.get_labels()
+    print("ETCBC --->")
     print("MultinomialNB")
     print("> Plain Classifier")
     print(">> Training")
     c_mnb = BoWEstimator(MultinomialNB(), " ".join)
-    c_mnb.fit(train_x, train_y)
+    c_mnb.fit(train_x_etc, train_y_etc)
     print(">> Quick Evaluation")
-    eval_and_save(c_mnb, cal_loaded, csvify_cal, out_dir="./out/",
+    eval_and_save(c_mnb, etcbc_loaded, csvify_cal, out_dir="./classifier/out/",
+                  save_file_prefix="just_to_check_")
+
+    print("Production Data")
+    ot_prod = etcbc_loaded.production
+
+    preds = predict_proba(c_mnb, etcbc_loaded.production)
+
+    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbc_prediction_proba_all.csv")
+    preds.save_to_file(csvify_etcbc, save_file)
+
+    print("> Character unigram classifier")
+    print(">> Training")
+    c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=1)
+    c_mnb.fit(train_x_etc, train_y_etc)
+    print(">> Quick Evaluation")
+    eval_and_save(c_mnb, etcbc_loaded, csvify_cal, out_dir="./classifier/out/",
+                  save_file_prefix="just_to_check_")
+
+    print("Production Data")
+    ot_prod = etcbc_loaded.production
+
+    preds = predict_proba(c_mnb, etcbc_loaded.production)
+
+    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbc_prediction_proba_all_char_unigram.csv")
+    preds.save_to_file(csvify_etcbc, save_file)
+
+    print("CAL --->")
+    # LOAD CAL DATA
+    cal_loaded = load_cal_dataset("./")
+
+    train_x_cal = cal_loaded.train.get_samples()
+    train_y_cal = cal_loaded.train.get_labels()
+    print("MultinomialNB")
+    print("> Plain Classifier")
+    print(">> Training")
+    c_mnb = BoWEstimator(MultinomialNB(), " ".join)
+    c_mnb.fit(train_x_cal, train_y_cal)
+    print(">> Quick Evaluation")
+    eval_and_save(c_mnb, cal_loaded, csvify_cal, out_dir="./classifier/out/",
                   save_file_prefix="just_to_check_")
 
     print("Production Data")
@@ -54,47 +94,26 @@ if __name__ == "__main__":
 
     preds = predict_proba(c_mnb, cal_loaded.production)
 
-    save_file = Path("PRODUCTION_mnb_cal_prediction_proba_all.csv")
+    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_prediction_proba_all.csv")
     preds.save_to_file(csvify_cal, save_file)
 
-    print("> Remove PN, GN & underscores from the training set")
+    print("> Remove PN, GN & underscores from the training & test set")
     print(">> Training")
     # Remove personal names and place names from the training data
     # and train new classifiers
-    train_x_removed = remove_proper_nouns(train_x)
+    train_x_removed = remove_proper_nouns(remove_underscores(train_x_cal))
 
     c_mnb_r = BoWEstimator(MultinomialNB(), " ".join)
-    c_mnb_r.fit(train_x_removed, train_y)
+    c_mnb_r.fit(train_x_removed, train_y_cal)
 
     print(">> Quick Evaluation")
-    eval_and_save(c_mnb_r, cal_loaded, csvify_cal, out_dir="./out/",
+    eval_and_save(c_mnb_r, cal_loaded, csvify_cal, out_dir="./classifier/out/",
                   save_file_prefix="just_to_check_")
 
     print("Production Data")
-    ot_prod = cal_loaded.production
+    ot_prod = remove_proper_nouns(remove_underscores(cal_loaded.production))
 
-    preds = predict_proba(c_mnb, cal_loaded.production)
+    preds = predict_proba(c_mnb, ot_prod)
 
-    save_file = Path("PRODUCTION_mnb_cal_prediction_proba_all.csv")
+    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_prediction_proba_all_both_removed.csv")
     preds.save_to_file(csvify_cal, save_file)
-
-
-
-    print("CAL --->")
-    print("MultinomialNB")
-    print("> Plain Classifier")
-    print(">> Training")
-    c_mnb = BoWEstimator(MultinomialNB(), " ".join)
-    c_mnb.fit(train_x, train_y)
-    print(">> Quick Evaluation")
-    eval_and_save(c_mnb, cal_loaded, csvify_cal, out_dir="./out/",
-                  save_file_prefix="just_to_check_")
-
-    print("Production Data")
-    ot_prod = cal_loaded.production
-
-    preds = predict_proba(c_mnb, cal_loaded.production)
-
-    save_file = Path("PRODUCTION_mnb_cal_prediction_proba_all.csv")
-    preds.save_to_file(csvify_cal, save_file)
-

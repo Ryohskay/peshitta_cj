@@ -92,7 +92,10 @@ def quick_stats(
         msg = "Cannot measure the size of model input array X!"
         raise ValueError(msg)
 
-    num_mislabels = (y_correct != prediction).sum()
+    num_mislabels = 0
+    for i in range(len(prediction)):
+        if y_correct[i] != prediction[i]:
+            num_mislabels += 1
     num_correct = sample_size - num_mislabels
 
     print(
