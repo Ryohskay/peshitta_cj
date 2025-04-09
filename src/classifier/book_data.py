@@ -45,7 +45,7 @@ ot_prod_books = {
     "Nehemia": list(range(1, 13 + 1)),
     "Chronicles_1": list(range(1, 29 + 1)),
     "Chronicles_2": list(range(1, 36 + 1)),
-    # "Maccabees_1_A": list(range(1, 16 + 1)),
+    "Maccabees_1_A": list(range(1, 16 + 1)),
     "Maccabees_1_B": list(range(1, 16 + 1)),
     "Ruth": list(range(1, 4 + 1)),
     "Esther": list(range(1, 10 + 1)),

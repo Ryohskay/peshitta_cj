@@ -26,7 +26,6 @@
 """Load data from CAL scraper results."""
 
 import json
-from collections.abc import Iterable
 from pathlib import Path
 from typing import TypedDict
 
@@ -150,7 +149,7 @@ def get_book_verses(
         # one book
         book["book_title"] = normalise_title(book["book_title"])
         if book["book_title"] in target_books:
-            print(book["book_title"])
+            # print(book["book_title"])
             for i in range(len(book["lemmatised_verses"])):
                 # one verse
                 if (verse_in_chapters(
@@ -160,9 +159,6 @@ def get_book_verses(
                     verse_box.append(  # noqa: PERF401
                             extract_verse(book, i, trim_none=trim_none)
                             )
-    # print("Loaded CAL")
-    # print(f"{type(verse_box[0])}")
-    # print(f"{verse_box[0]}")
     return verse_box
 
 
@@ -192,11 +188,9 @@ def load_cal_dataset(
     loaded_data = load_json(target_path)
 
     # get the training data
-    print("OT_train")
     ot_train_verses = get_book_verses(
         loaded_data, book_data.ot_train_books, trim_none=True
     )
-    print("NT_train")
     nt_train_verses = get_book_verses(
         loaded_data, book_data.nt_train_books, trim_none=True
     )

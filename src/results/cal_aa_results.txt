@@ -1,266 +1,168 @@
-Loading dataset(s) from: scraper/cal_results
-OT_train
-Genesis
-Exodus
-NT_train
-Matthew
-Mark
-Luke
-John
-Deuteronomy
-Acts
-Joshua
-Judges
-Samuel_1
-Samuel_2
-Kings_1
-Kings_2
-Ezra
-Nehemia
-Chronicles_1
-Chronicles_2
-Maccabees_1_A
-Maccabees_1_B
-Ruth
-Esther
+Loading dataset(s) from: /Users/ryohskay/Documents/uni/peshitta_cj/src/scraper/cal_results
 
 Plain Classifier
 MultinomialNB
-Total words parsed: 195234
-Found 3789 independent n-grams from 10917 verses!
+Total words parsed: 107178
+Found 3789 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 143
-Local accuracy: 0.74
+Number of mislabelled points out of the total 557 verses: 127
+Local accuracy: 0.77
 NT --->
 Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 113
-Local accuracy: 0.89
+Number of mislabelled points out of the total 1007 verses: 131
+Local accuracy: 0.87
 All --->
 Overall Accuracy: 0.84
-Precisions: [0.78557875 0.86210222]
-Recalls: [0.7432675 0.8877855]
-F1 Score: [0.76383764 0.87475538]
+Precisions: [0.76648841 0.87337986]
+Recalls: [0.77199282 0.86991063]
+F1 Score: [0.76923077 0.87164179]
 Supports: [ 557 1007]
 log loss > 
-1.1956171392259491
-roc auc: 0.9077552286597053
+1.1512857154860867
+roc auc: 0.911579446567029
 
 Remove underscores marking proclitics, from training set
 MultinomialNB
-Total words parsed: 195234
-Found 3762 independent n-grams from 10917 verses!
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 163
-Local accuracy: 0.71
+Number of mislabelled points out of the total 557 verses: 140
+Local accuracy: 0.75
 NT --->
 Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 107
+Number of mislabelled points out of the total 1007 verses: 108
 Local accuracy: 0.89
 All --->
-Overall Accuracy: 0.83
-Precisions: [0.78642715 0.8466604 ]
-Recalls: [0.70736086 0.89374379]
-F1 Score: [0.74480151 0.86956522]
+Overall Accuracy: 0.84
+Precisions: [0.79428571 0.86525505]
+Recalls: [0.7486535  0.89275074]
+F1 Score: [0.77079482 0.87878788]
 Supports: [ 557 1007]
 log loss > 
-1.1863215397671767
-roc auc: 0.908068119215759
+1.122481948159965
+roc auc: 0.912303284548555
 
 Remove PN & GN
 > Remove PN & GN from the training set
 MultinomialNB
-Total words parsed: 187064
-Found 3369 independent n-grams from 10917 verses!
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 121
-Local accuracy: 0.78
+Number of mislabelled points out of the total 557 verses: 105
+Local accuracy: 0.81
 NT --->
 Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 154
-Local accuracy: 0.85
+Number of mislabelled points out of the total 1007 verses: 168
+Local accuracy: 0.83
 All --->
-Overall Accuracy: 0.82
-Precisions: [0.73898305 0.87577002]
-Recalls: [0.78276481 0.84707051]
-F1 Score: [0.76024412 0.86118122]
+Overall Accuracy: 0.83
+Precisions: [0.72903226 0.88877119]
+Recalls: [0.81149013 0.83316783]
+F1 Score: [0.76805438 0.86007176]
 Supports: [ 557 1007]
 log loss > 
-1.1629418503228848
-roc auc: 0.9007290082528225
+1.0877856977626281
+roc auc: 0.908143890433037
 
 Remove PN, GN, underscores
 > Remove PN, GN, underscores from training set
 MultinomialNB
-Total words parsed: 187064
-Found 3342 independent n-grams from 10917 verses!
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 139
-Local accuracy: 0.75
+Number of mislabelled points out of the total 557 verses: 122
+Local accuracy: 0.78
 NT --->
 Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 127
-Local accuracy: 0.87
+Number of mislabelled points out of the total 1007 verses: 137
+Local accuracy: 0.86
 All --->
 Overall Accuracy: 0.83
-Precisions: [0.76697248 0.86359176]
-Recalls: [0.75044883 0.87388282]
-F1 Score: [0.75862069 0.86870681]
+Precisions: [0.76048951 0.87701613]
+Recalls: [0.78096948 0.86395233]
+F1 Score: [0.77059345 0.87043522]
 Supports: [ 557 1007]
 log loss > 
-1.098268944286742
-roc auc: 0.9018887535902187
+0.9952801854018275
+roc auc: 0.9107388317682863
 
 !!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!
 
 Remove underscores marking proclitics, from both training & test sets
 MultinomialNB
-Total words parsed: 195234
-Found 3762 independent n-grams from 10917 verses!
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11857 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 148
-Local accuracy: 0.73
+Number of mislabelled points out of the total 557 verses: 127
+Local accuracy: 0.77
 NT --->
 Parsed 20828 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 117
-Local accuracy: 0.88
+Number of mislabelled points out of the total 1007 verses: 127
+Local accuracy: 0.87
 All --->
-Overall Accuracy: 0.83
-Precisions: [0.77756654 0.85741811]
-Recalls: [0.73429084 0.88381331]
-F1 Score: [0.75530933 0.87041565]
+Overall Accuracy: 0.84
+Precisions: [0.77199282 0.87388282]
+Recalls: [0.77199282 0.87388282]
+F1 Score: [0.77199282 0.87388282]
 Supports: [ 557 1007]
 log loss > 
-1.1826401562565996
-roc auc: 0.9087028145887226
+1.1377436871520696
+roc auc: 0.9124049071223161
 
 Remove PN & GN
 > Remove PN & GN from both training & test sets
 MultinomialNB
-Total words parsed: 187064
-Found 3369 independent n-grams from 10917 verses!
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11591 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 119
-Local accuracy: 0.79
+Number of mislabelled points out of the total 557 verses: 103
+Local accuracy: 0.82
 NT --->
 Parsed 19816 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 135
-Local accuracy: 0.87
+Number of mislabelled points out of the total 1007 verses: 151
+Local accuracy: 0.85
 All --->
 Overall Accuracy: 0.84
-Precisions: [0.76439791 0.87991927]
-Recalls: [0.78635548 0.86593843]
-F1 Score: [0.77522124 0.87287287]
+Precisions: [0.75041322 0.89259645]
+Recalls: [0.81508079 0.85004965]
+F1 Score: [0.78141136 0.87080366]
 Supports: [ 557 1007]
 log loss > 
-1.0265908902254062
-roc auc: 0.9075314807122137
+0.9675548017065514
+roc auc: 0.9133533844774192
 
 Remove PN, GN, underscores
 > Remove PN, GN, underscores from both training & test sets
 MultinomialNB
-Total words parsed: 187064
-Found 3342 independent n-grams from 10917 verses!
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11591 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 118
-Local accuracy: 0.79
+Number of mislabelled points out of the total 557 verses: 100
+Local accuracy: 0.82
 NT --->
 Parsed 19816 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 129
-Local accuracy: 0.87
+Number of mislabelled points out of the total 1007 verses: 152
+Local accuracy: 0.85
 All --->
 Overall Accuracy: 0.84
-Precisions: [0.77288732 0.8815261 ]
-Recalls: [0.78815081 0.87189672]
-F1 Score: [0.78044444 0.87668497]
+Precisions: [0.75041051 0.89528796]
+Recalls: [0.82046679 0.8490566 ]
+F1 Score: [0.7838765  0.87155963]
 Supports: [ 557 1007]
 log loss > 
-0.9834398546851566
-roc auc: 0.9105623294033329
-
-===================WORD N-GRAMS=========================
-
-
-Plain Classifier
-MultinomialNB
-Total words parsed: 195234
-Found 62249 independent n-grams from 10917 verses!
-test size: (1564,)
-OT --->
-Parsed 11591 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 393
-Local accuracy: 0.29
-NT --->
-Parsed 19816 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 53
-Local accuracy: 0.95
-All --->
-Overall Accuracy: 0.71
-Precisions: [0.75576037 0.70824053]
-Recalls: [0.29443447 0.94736842]
-F1 Score: [0.42377261 0.81053526]
-Supports: [ 557 1007]
-log loss > 
-0.6023183001658023
-roc auc: 0.6830543466827361
-
-Remove PN & GN
-> Remove PN & GN from the training set
-MultinomialNB
-Total words parsed: 187064
-Found 56778 independent n-grams from 10917 verses!
-test size: (1564,)
-OT --->
-Parsed 11591 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 393
-Local accuracy: 0.29
-NT --->
-Parsed 19816 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 57
-Local accuracy: 0.94
-All --->
-Overall Accuracy: 0.71
-Precisions: [0.74208145 0.70737156]
-Recalls: [0.29443447 0.94339623]
-F1 Score: [0.42159383 0.80851064]
-Supports: [ 557 1007]
-log loss > 
-0.6045014528420545
-roc auc: 0.682243148944819
-
-Remove PN & GN
-> Remove PN & GN from both training & test sets
-MultinomialNB
-Total words parsed: 187064
-Found 56778 independent n-grams from 10917 verses!
-test size: (1564,)
-OT --->
-Parsed 11591 words from 557 verses
-Number of mislabelled points out of the total 557 verses: 154
-Local accuracy: 0.72
-NT --->
-Parsed 19816 words from 1007 verses
-Number of mislabelled points out of the total 1007 verses: 157
-Local accuracy: 0.84
-All --->
-Overall Accuracy: 0.80
-Precisions: [0.71964286 0.84661355]
-Recalls: [0.72351885 0.84409136]
-F1 Score: [0.72157565 0.84535057]
-Supports: [ 557 1007]
-log loss > 
-0.6179647628338956
-roc auc: 0.8639594650730344
+0.921406102107071
+roc auc: 0.9167916148896682

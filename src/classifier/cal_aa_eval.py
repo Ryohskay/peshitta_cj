@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
     print("\nPlain Classifier")
     print("MultinomialNB")
-    c_mnb = BoWEstimator(MultinomialNB(), "".join)
+    c_mnb = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb.fit(train_x, train_y)
 
     # train and evaluate
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     print("MultinomialNB")
     train_x_no_ub = remove_underscores(train_x)
 
-    c_mnb_nub = BoWEstimator(MultinomialNB(), "".join)
+    c_mnb_nub = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
 
     c_mnb_nub, probas_pair_nub = eval_and_save(
@@ -217,7 +217,7 @@ if __name__ == "__main__":
     # and train new classifiers
     train_x_removed = remove_proper_nouns(train_x)
 
-    c_mnb_r = BoWEstimator(MultinomialNB(), "".join)
+    c_mnb_r = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_r.fit(train_x_removed, train_y)
 
     c_mnb_r, probas_pair_r = eval_and_save(
@@ -239,7 +239,7 @@ if __name__ == "__main__":
 
     # for j in range(10):
     #     print(train_x_removed_nub[j])
-    c_mnb_rnub = BoWEstimator(MultinomialNB(), "".join)
+    c_mnb_rnub = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_rnub.fit(train_x_removed_nub, train_y)
 
     c_mnb_rnub, probas_pair_rnub = eval_and_save(
@@ -262,7 +262,7 @@ if __name__ == "__main__":
 
     cal_ds.test = DataSplit(ot_test_verses_no_ub, nt_test_verses_no_ub)
 
-    c_mnb_nub_both = BoWEstimator(MultinomialNB(), "".join)
+    c_mnb_nub_both = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_nub_both.fit(train_x_no_ub, train_y)
 
     c_mnb_nub_both, probas_pair_nub_both = eval_and_save(
@@ -285,7 +285,7 @@ if __name__ == "__main__":
 
     cal_ds.test = DataSplit(ot_test_verses_r, nt_test_verses_r)
 
-    c_mnb_rboth = BoWEstimator(MultinomialNB(), "".join)
+    c_mnb_rboth = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_rboth.fit(train_x_removed, train_y)
 
     c_mnb_rboth, probas_pair_rboth = eval_and_save(
@@ -310,7 +310,7 @@ if __name__ == "__main__":
     cal_ds.test = DataSplit(ot_test_verses_rboth_nub, nt_test_verses_rboth_nub)
     # print(list(map(str, cal_ds.test.get_samples()[:10])))
 
-    c_mnb_rboth_nub = BoWEstimator(MultinomialNB(), "".join)
+    c_mnb_rboth_nub = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_rboth_nub.fit(train_x_removed_both_nub, train_y)
 
     c_mnb_rboth_nub, probas_pair_rboth_nub = eval_and_save(

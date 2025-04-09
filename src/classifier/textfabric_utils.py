@@ -39,10 +39,9 @@ along with all of its methods.
 
 from tf.app import use
 
+from classifier import book_data
 from classifier.dataset_skeleton import LoadedDataset
 from classifier.result_utils import Verse
-
-import classifier.book_data as book_data
 
 
 def get_verses(
@@ -65,32 +64,33 @@ def get_verses(
         {"BOOK_TITLE": [list of ("VERSE_REF", [list of words])]}
     """
     # Load text-fabric library
-    use(target_fabric, hoist=globals(), version=ver)
+    handler = use(target_fabric, version=ver)
+    api = handler.api
     result_verses = []
 
-    for book in Fs("book@en").items():
+    for book in api.Fs("book@en").items():
         if book[1] in target_books:
             # extract all books with names found in ``target_books``
             print(book[1])
-            chapters = L.d(book[0], otype="chapter")
+            chapters = api.L.d(book[0], otype="chapter")
             for chapter in chapters:
-                if int(F.chapter.v(chapter)) in target_books[book[1]]:
+                if int(api.F.chapter.v(chapter)) in target_books[book[1]]:
                     # walk through all chapters with chapter numbers found in
                     # ``target_books``
-                    for verse in L.d(chapter, otype="verse"):
+                    for verse in api.L.d(chapter, otype="verse"):
                         verse_ref = (
-                                        f"{book[1]} Chapter "
-                                        + f"{int(F.chapter.v(chapter)):02} "
-                                        + f"Verse {int(F.verse.v(verse)):02}"
-                                     )
+                                    f"{book[1]} Chapter "
+                                    + f"{int(api.F.chapter.v(chapter)):02} "
+                                    + f"Verse {int(api.F.verse.v(verse)):02}"
+                                 )
                         # get all words in this verse
-                        words = L.d(verse, otype="word")
+                        words = api.L.d(verse, otype="word")
                         # transliteration of this verse as a list of words
                         translit_verse = [
-                            F.word_etcbc.v(w_id) for w_id in words
+                            api.F.word_etcbc.v(w_id) for w_id in words
                         ]
                         # original Syriac text of this verse, as a list of words
-                        syriac_verse = [F.word.v(w_id) for w_id in words]
+                        syriac_verse = [api.F.word.v(w_id) for w_id in words]
                         # append this verse's info to the results list
                         result_verses.append(Verse(book[1], verse_ref,
                               translit_verse, syriac_verse,
@@ -99,7 +99,12 @@ def get_verses(
 
 
 def load_etcbc_dataset() -> LoadedDataset:
-    """Parse the dataset and get verses."""
+    """Parse the dataset and get verses.
+
+    Returns:
+        a :class:`classifier.dataset_skeleton.LoadedDataset` object containing
+        the verses from ETCBC.
+    """
     # extract verses from the ETCBC dataset
     ot_train_verses = get_verses(book_data.ot_train_books)
     ot_test_verses = get_verses(book_data.ot_test_books)

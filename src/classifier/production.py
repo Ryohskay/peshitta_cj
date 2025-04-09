@@ -27,7 +27,11 @@ from pathlib import Path
 
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.cal_aa_eval import csvify_cal, remove_proper_nouns, remove_underscores
+from classifier.cal_aa_eval import (
+    csvify_cal,
+    remove_proper_nouns,
+    remove_underscores,
+)
 from classifier.etcbc_aa_eval import csvify_etcbc
 from classifier.eval_utils import eval_and_save
 from classifier.load_cal import load_cal_dataset
