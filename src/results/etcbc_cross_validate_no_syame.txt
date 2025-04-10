@@ -1,0 +1,1891 @@
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/peshitta/app
+data: ~/text-fabric-data/github/etcbc/peshitta/tf/0.2
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/peshitta/app  v3 => https:/github.com/etcbc/peshitta/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - peshitta 0.2 => https:/github.com/etcbc/peshitta/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/peshitta/blob/master/docs/transcription-0.2.md#
+Node types:
+book                      65  6566.69 =     100
+chapter                 1269   336.36 =     100
+verse                  31341    13.62 =     100
+*word*                426835     1.00 =     100
+
+ Sets: 
+ Features:
+Peshitta (Old Testament)
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	otype                ?
+	trailer              after-word material in syriac script
+	trailer_etcbc        after-word material in ETCBC transcription
+	verse                verse number
+	witness              book witness (A or B)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC transcription
+	oslots               ?
+
+Genesis
+Exodus
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/peshitta/app
+data: ~/text-fabric-data/github/etcbc/peshitta/tf/0.2
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/peshitta/app  v3 => https:/github.com/etcbc/peshitta/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - peshitta 0.2 => https:/github.com/etcbc/peshitta/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/peshitta/blob/master/docs/transcription-0.2.md#
+Node types:
+book                      65  6566.69 =     100
+chapter                 1269   336.36 =     100
+verse                  31341    13.62 =     100
+*word*                426835     1.00 =     100
+
+ Sets: 
+ Features:
+Peshitta (Old Testament)
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	otype                ?
+	trailer              after-word material in syriac script
+	trailer_etcbc        after-word material in ETCBC transcription
+	verse                verse number
+	witness              book witness (A or B)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC transcription
+	oslots               ?
+
+Deuteronomy
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/peshitta/app
+data: ~/text-fabric-data/github/etcbc/peshitta/tf/0.2
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/peshitta/app  v3 => https:/github.com/etcbc/peshitta/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - peshitta 0.2 => https:/github.com/etcbc/peshitta/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/peshitta/blob/master/docs/transcription-0.2.md#
+Node types:
+book                      65  6566.69 =     100
+chapter                 1269   336.36 =     100
+verse                  31341    13.62 =     100
+*word*                426835     1.00 =     100
+
+ Sets: 
+ Features:
+Peshitta (Old Testament)
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	otype                ?
+	trailer              after-word material in syriac script
+	trailer_etcbc        after-word material in ETCBC transcription
+	verse                verse number
+	witness              book witness (A or B)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC transcription
+	oslots               ?
+
+Joshua
+Judges
+Samuel_1
+Samuel_2
+Kings_1
+Kings_2
+Ruth
+Esther
+Chronicles_1
+Chronicles_2
+Ezra
+Nehemia
+Maccabees_1_A
+Maccabees_1_B
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/syrnt/app
+data: ~/text-fabric-data/github/etcbc/syrnt/tf/0.1
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/syrnt/app  v3 => https:/github.com/etcbc/syrnt/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - syrnt 0.1 => https:/github.com/etcbc/syrnt/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/syrnt/blob/master/docs/transcription-0.1.md
+Node types:
+book                      27  4060.74 =     100
+chapter                  260   421.69 =     100
+lexeme                  3038    36.09 =     100
+verse                   7957    13.78 =     100
+*word*                109640     1.00 =     100
+
+ Sets: 
+ Features:
+SyrNT
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	demcat               demonstrative category
+	fmhdot               feminine he dot
+	gn                   gender
+	lexeme               lexeme of the word in syriac script
+	lexeme_etcbc         lexeme of the word in ETCBC/Wit transcription
+	lexeme_sedra         lexeme of the word in SEDRA transcription
+	nmtyp                numeral type
+	ntyp                 noun type
+	nu                   number
+	otype                ?
+	prefix               prefix of the word in syriac script
+	prefix_etcbc         prefix of the word in ETCBC/Wit transcription
+	prefix_sedra         prefix of the word in SEDRA transcription
+	prtyp                pronoun_type
+	ps                   person
+	ptctyp               participle type
+	root                 root of the word in syriac script
+	root_etcbc           root of the word in ETCBC/Wit transcription
+	root_sedra           root of the word in SEDRA transcription
+	seyame               seyame
+	sfcontract           suffix contraction
+	sfgn                 suffix gender
+	sfnu                 suffix number
+	sfps                 suffix person
+	sp                   part of speech (grammatical category)
+	st                   state
+	stem                 stem of the word in syriac script
+	stem_etcbc           stem of the word in ETCBC/Wit transcription
+	stem_sedra           stem of the word in SEDRA transcription
+	suffix               suffix of the word in syriac script
+	suffix_etcbc         suffix of the word in ETCBC/Wit transcription
+	suffix_sedra         suffix of the word in SEDRA transcription
+	verse                verse number
+	vs                   verbal conjugation
+	vt                   verbal aspect (tense)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC/Wit transcription
+	word_sedra           full form of the word in SEDRA transcription
+	oslots               ?
+
+Matthew
+Mark
+Luke
+John
+**Locating corpus resources ...**
+app: ~/text-fabric-data/github/etcbc/syrnt/app
+data: ~/text-fabric-data/github/etcbc/syrnt/tf/0.1
+TF:
+	TF API 12.6.4 => https:/annotation.github.io/text-fabric/tf/cheatsheet.html
+	etcbc/syrnt/app  v3 => https:/github.com/etcbc/syrnt/blob/master/app
+	Search Reference => https:/annotation.github.io/text-fabric/tf/about/searchusage.html
+Data:
+	etcbc - syrnt 0.1 => https:/github.com/etcbc/syrnt/blob/master/docs/transcription.md
+	Character table => https:/annotation.github.io/text-fabric/tf/writing/syriac.html
+	Feature docs => https:/github.com/etcbc/syrnt/blob/master/docs/transcription-0.1.md
+Node types:
+book                      27  4060.74 =     100
+chapter                  260   421.69 =     100
+lexeme                  3038    36.09 =     100
+verse                   7957    13.78 =     100
+*word*                109640     1.00 =     100
+
+ Sets: 
+ Features:
+SyrNT
+	book                 book name
+	book@ll              ?
+	chapter              chapter number
+	demcat               demonstrative category
+	fmhdot               feminine he dot
+	gn                   gender
+	lexeme               lexeme of the word in syriac script
+	lexeme_etcbc         lexeme of the word in ETCBC/Wit transcription
+	lexeme_sedra         lexeme of the word in SEDRA transcription
+	nmtyp                numeral type
+	ntyp                 noun type
+	nu                   number
+	otype                ?
+	prefix               prefix of the word in syriac script
+	prefix_etcbc         prefix of the word in ETCBC/Wit transcription
+	prefix_sedra         prefix of the word in SEDRA transcription
+	prtyp                pronoun_type
+	ps                   person
+	ptctyp               participle type
+	root                 root of the word in syriac script
+	root_etcbc           root of the word in ETCBC/Wit transcription
+	root_sedra           root of the word in SEDRA transcription
+	seyame               seyame
+	sfcontract           suffix contraction
+	sfgn                 suffix gender
+	sfnu                 suffix number
+	sfps                 suffix person
+	sp                   part of speech (grammatical category)
+	st                   state
+	stem                 stem of the word in syriac script
+	stem_etcbc           stem of the word in ETCBC/Wit transcription
+	stem_sedra           stem of the word in SEDRA transcription
+	suffix               suffix of the word in syriac script
+	suffix_etcbc         suffix of the word in ETCBC/Wit transcription
+	suffix_sedra         suffix of the word in SEDRA transcription
+	verse                verse number
+	vs                   verbal conjugation
+	vt                   verbal aspect (tense)
+	word                 full form of the word in syriac script
+	word_etcbc           full form of the word in ETCBC/Wit transcription
+	word_sedra           full form of the word in SEDRA transcription
+	oslots               ?
+
+Acts
+
+ +++++++++++++++++++++++++++++ N=1 ++++++++++++++++++++++++++++
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 25 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.86
+Precisions: [0.89570552 0.84642438]
+Recalls: [0.69030733 0.95502646]
+F1 Score: [0.77970628 0.89745183]
+Supports: [423 756]
+Total words parsed: 63637
+Found 25 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.90
+Precisions: [0.9021164  0.89762797]
+Recalls: [0.80614657 0.9510582 ]
+F1 Score: [0.85143571 0.92357097]
+Supports: [423 756]
+Total words parsed: 63312
+Found 25 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.86
+Precisions: [0.84823848 0.86419753]
+Recalls: [0.73995272 0.92592593]
+F1 Score: [0.79040404 0.89399745]
+Supports: [423 756]
+Total words parsed: 63171
+Found 25 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.89
+Precisions: [0.93154762 0.86951364]
+Recalls: [0.73995272 0.96957672]
+F1 Score: [0.82476943 0.91682301]
+Supports: [423 756]
+Total words parsed: 61942
+Found 25 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.97413793 0.89879518]
+Recalls: [0.80141844 0.98807947]
+F1 Score: [0.87937743 0.94132492]
+Supports: [423 755]
+Accuracy > avg: 0.8853131556626938, std: 0.023621802635892936
+Precision > avg: 0.8928304658967345, std: 0.0371059278966158
+Recall > avg: 0.8567444549563754, std: 0.10673498320669259
+F1 score > avg: 0.8698861070669291, std: 0.05333449696749406
+Total words parsed: 78918
+Found 25 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8348 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 475
+Local accuracy: 0.14
+NT --->
+Parsed 15383 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 43
+Local accuracy: 0.96
+All --->
+Overall Accuracy: 0.67
+Precisions: [0.6504065  0.66990966]
+Recalls: [0.14414414 0.95729891]
+F1 Score: [0.2359882  0.78822567]
+Supports: [ 555 1007]
+log loss > 
+0.8363369868927693
+roc auc: 0.6623724021936533
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 25 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.86
+Precisions: [0.90153846 0.84777518]
+Recalls: [0.69267139 0.95767196]
+F1 Score: [0.78342246 0.89937888]
+Supports: [423 756]
+Total words parsed: 62523
+Found 25 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.90
+Precisions: [0.91803279 0.89298893]
+Recalls: [0.79432624 0.96031746]
+F1 Score: [0.85171103 0.92543021]
+Supports: [423 756]
+Total words parsed: 62245
+Found 25 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.86
+Precisions: [0.84408602 0.86493185]
+Recalls: [0.74231678 0.92328042]
+F1 Score: [0.78993711 0.89315419]
+Supports: [423 756]
+Total words parsed: 62138
+Found 25 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.89
+Precisions: [0.94011976 0.87100592]
+Recalls: [0.74231678 0.97354497]
+F1 Score: [0.82959049 0.91942536]
+Supports: [423 756]
+Total words parsed: 60979
+Found 25 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.96875    0.90072639]
+Recalls: [0.80614657 0.98543046]
+F1 Score: [0.88       0.94117647]
+Supports: [423 755]
+Accuracy > avg: 0.8866702379358063, std: 0.023568911921372133
+Precision > avg: 0.8949955291697517, std: 0.037930434910774406
+Recall > avg: 0.8578023056168753, std: 0.10728259616527805
+F1 score > avg: 0.8713226194909103, std: 0.05285485671415117
+Total words parsed: 77578
+Found 25 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8348 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 474
+Local accuracy: 0.15
+NT --->
+Parsed 15383 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 35
+Local accuracy: 0.97
+All --->
+Overall Accuracy: 0.67
+Precisions: [0.69827586 0.67219917]
+Recalls: [0.14594595 0.9652433 ]
+F1 Score: [0.2414307  0.79249898]
+Supports: [ 555 1007]
+log loss > 
+0.8283880403096594
+roc auc: 0.6646590980255329
+
+!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 25 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 473
+Local accuracy: 0.15
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 34
+Local accuracy: 0.97
+All --->
+Overall Accuracy: 0.68
+Precisions: [0.70689655 0.67289073]
+Recalls: [0.14774775 0.96623635]
+F1 Score: [0.24441133 0.79331431]
+Supports: [ 555 1007]
+log loss > 
+0.8264828747268254
+roc auc: 0.6669422153036849
+
+===================WORD N-GRAMS=========================
+
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 11512 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.94044665 0.94329897]
+Recalls: [0.89598109 0.96825397]
+F1 Score: [0.91767554 0.95561358]
+Supports: [423 756]
+Total words parsed: 63637
+Found 11736 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.96891192 0.93820933]
+Recalls: [0.88416076 0.98412698]
+F1 Score: [0.92459827 0.96061975]
+Supports: [423 756]
+Total words parsed: 63312
+Found 11457 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.91
+Precisions: [0.89578164 0.92010309]
+Recalls: [0.8534279  0.94444444]
+F1 Score: [0.87409201 0.93211488]
+Supports: [423 756]
+Total words parsed: 63171
+Found 11362 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.93
+Precisions: [0.95989305 0.92049689]
+Recalls: [0.84869976 0.98015873]
+F1 Score: [0.90087829 0.94939142]
+Supports: [423 756]
+Total words parsed: 61942
+Found 11329 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.91
+Precisions: [0.98466258 0.88028169]
+Recalls: [0.75886525 0.99337748]
+F1 Score: [0.85714286 0.9334163 ]
+Supports: [423 755]
+Accuracy > avg: 0.9289074076474121, std: 0.015836256506767236
+Precision > avg: 0.9352085807813504, std: 0.03051047101479425
+Recall > avg: 0.9111496362200885, std: 0.07252559645940647
+F1 score > avg: 0.9205542908332791, std: 0.03249091053006759
+Total words parsed: 78918
+Found 13106 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 199
+Local accuracy: 0.64
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 58
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.84
+Precisions: [0.85990338 0.82665505]
+Recalls: [0.64144144 0.94240318]
+F1 Score: [0.73477812 0.88074246]
+Supports: [ 555 1007]
+log loss > 
+0.5438027105720389
+roc auc: 0.9291124292117342
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 11505 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.94278607 0.94337194]
+Recalls: [0.89598109 0.96957672]
+F1 Score: [0.91878788 0.95629485]
+Supports: [423 756]
+Total words parsed: 62523
+Found 11729 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.96883117 0.93702771]
+Recalls: [0.88179669 0.98412698]
+F1 Score: [0.92326733 0.96      ]
+Supports: [423 756]
+Total words parsed: 62245
+Found 11450 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.91
+Precisions: [0.8925     0.91527599]
+Recalls: [0.84397163 0.94312169]
+F1 Score: [0.86755772 0.92899023]
+Supports: [423 756]
+Total words parsed: 62138
+Found 11355 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.93
+Precisions: [0.95978552 0.91935484]
+Recalls: [0.8463357  0.98015873]
+F1 Score: [0.89949749 0.94878361]
+Supports: [423 756]
+Total words parsed: 60979
+Found 11322 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.90
+Precisions: [0.98432602 0.87310827]
+Recalls: [0.74231678 0.99337748]
+F1 Score: [0.84636119 0.92936803]
+Supports: [423 755]
+Accuracy > avg: 0.9267011409340885, std: 0.018153945472440466
+Precision > avg: 0.9336367530260201, std: 0.03252508263977657
+Recall > avg: 0.9080763501680791, std: 0.07713675897805378
+F1 score > avg: 0.9178908309829982, std: 0.03532035699879922
+Total words parsed: 77578
+Found 13099 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 198
+Local accuracy: 0.64
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 59
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.84
+Precisions: [0.85817308 0.82722513]
+Recalls: [0.64324324 0.94141013]
+F1 Score: [0.73532441 0.88063168]
+Supports: [ 555 1007]
+log loss > 
+0.5429716684519259
+roc auc: 0.9291052721042791
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 13099 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 198
+Local accuracy: 0.64
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 59
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.84
+Precisions: [0.85817308 0.82722513]
+Recalls: [0.64324324 0.94141013]
+F1 Score: [0.73532441 0.88063168]
+Supports: [ 555 1007]
+log loss > 
+0.5429716684519259
+roc auc: 0.9291052721042791
+
+ +++++++++++++++++++++++++++++ N=2 ++++++++++++++++++++++++++++
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 549 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.91
+Precisions: [0.88292683 0.9206762 ]
+Recalls: [0.85579196 0.93650794]
+F1 Score: [0.86914766 0.92852459]
+Supports: [423 756]
+Total words parsed: 63637
+Found 547 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.93
+Precisions: [0.89351852 0.95046854]
+Recalls: [0.91252955 0.93915344]
+F1 Score: [0.90292398 0.94477711]
+Supports: [423 756]
+Total words parsed: 63312
+Found 547 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.88
+Precisions: [0.83894231 0.90301442]
+Recalls: [0.8250591  0.91137566]
+F1 Score: [0.83194279 0.90717577]
+Supports: [423 756]
+Total words parsed: 63171
+Found 549 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.91
+Precisions: [0.88305489 0.93026316]
+Recalls: [0.87470449 0.93518519]
+F1 Score: [0.87885986 0.93271768]
+Supports: [423 756]
+Total words parsed: 61942
+Found 544 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.94179894 0.91625   ]
+Recalls: [0.84160757 0.97086093]
+F1 Score: [0.88888889 0.94276527]
+Supports: [423 755]
+Accuracy > avg: 0.9110982948629885, std: 0.01720948548892353
+Precision > avg: 0.9060913808240958, std: 0.031445779462910814
+Recall > avg: 0.9002775820769339, std: 0.04585928731719327
+F1 score > avg: 0.9027723598630552, std: 0.034431311329565215
+Total words parsed: 78918
+Found 550 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 314
+Local accuracy: 0.43
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 70
+Local accuracy: 0.93
+All --->
+Overall Accuracy: 0.75
+Precisions: [0.77491961 0.7490008 ]
+Recalls: [0.43423423 0.93048659]
+F1 Score: [0.55658199 0.829938  ]
+Supports: [ 555 1007]
+log loss > 
+1.168102019305086
+roc auc: 0.8309974323877005
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 549 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.90
+Precisions: [0.87560976 0.91677503]
+Recalls: [0.84869976 0.93253968]
+F1 Score: [0.86194478 0.92459016]
+Supports: [423 756]
+Total words parsed: 62523
+Found 547 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.93
+Precisions: [0.89411765 0.94297082]
+Recalls: [0.89834515 0.94047619]
+F1 Score: [0.89622642 0.94172185]
+Supports: [423 756]
+Total words parsed: 62245
+Found 547 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.88
+Precisions: [0.83855422 0.90183246]
+Recalls: [0.82269504 0.91137566]
+F1 Score: [0.83054893 0.90657895]
+Supports: [423 756]
+Total words parsed: 62138
+Found 549 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.91
+Precisions: [0.875      0.92267366]
+Recalls: [0.86052009 0.93121693]
+F1 Score: [0.86769964 0.92692561]
+Supports: [423 756]
+Total words parsed: 60979
+Found 544 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.92746114 0.91792929]
+Recalls: [0.8463357  0.96291391]
+F1 Score: [0.88504326 0.93988365]
+Supports: [423 755]
+Accuracy > avg: 0.9068568367483593, std: 0.016182852049668024
+Precision > avg: 0.9012924024992035, std: 0.02955382707144298
+Recall > avg: 0.8955118117574085, std: 0.04539472151637885
+F1 score > avg: 0.8981163245066041, std: 0.03495967926343879
+Total words parsed: 77578
+Found 550 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 317
+Local accuracy: 0.43
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 59
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.76
+Precisions: [0.8013468  0.74940711]
+Recalls: [0.42882883 0.94141013]
+F1 Score: [0.55868545 0.83450704]
+Supports: [ 555 1007]
+log loss > 
+1.1414190511998605
+roc auc: 0.8362757991357793
+
+!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 550 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 317
+Local accuracy: 0.43
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 59
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.76
+Precisions: [0.8013468  0.74940711]
+Recalls: [0.42882883 0.94141013]
+F1 Score: [0.55868545 0.83450704]
+Supports: [ 555 1007]
+log loss > 
+1.1414190511998605
+roc auc: 0.8362757991357793
+
+===================WORD N-GRAMS=========================
+
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 41686 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.85
+Precisions: [0.95864662 0.81599124]
+Recalls: [0.60283688 0.98544974]
+F1 Score: [0.74020319 0.89275015]
+Supports: [423 756]
+Total words parsed: 63637
+Found 41610 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.86
+Precisions: [0.95438596 0.8310962 ]
+Recalls: [0.643026   0.98280423]
+F1 Score: [0.76836158 0.90060606]
+Supports: [423 756]
+Total words parsed: 63312
+Found 40906 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.83
+Precisions: [0.90875912 0.80773481]
+Recalls: [0.58865248 0.96693122]
+F1 Score: [0.71449067 0.88019266]
+Supports: [423 756]
+Total words parsed: 63171
+Found 40626 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.86
+Precisions: [0.94482759 0.83239595]
+Recalls: [0.64775414 0.97883598]
+F1 Score: [0.76858345 0.89969605]
+Supports: [423 756]
+Total words parsed: 61942
+Found 39762 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.84
+Precisions: [0.90068493 0.81941309]
+Recalls: [0.62174941 0.9615894 ]
+F1 Score: [0.73566434 0.88482633]
+Supports: [423 755]
+Accuracy > avg: 0.8479795688844536, std: 0.01152999212105896
+Precision > avg: 0.8773935507487776, std: 0.058954284412201685
+Recall > avg: 0.7979629480524225, std: 0.1780058849053692
+F1 score > avg: 0.8185374474614507, std: 0.07474492581810657
+Total words parsed: 78918
+Found 49510 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 246
+Local accuracy: 0.56
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 90
+Local accuracy: 0.91
+All --->
+Overall Accuracy: 0.78
+Precisions: [0.77443609 0.78847807]
+Recalls: [0.55675676 0.91062562]
+F1 Score: [0.64779874 0.84516129]
+Supports: [ 555 1007]
+log loss > 
+0.4607176035235325
+roc auc: 0.864959696538644
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 41217 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.85
+Precisions: [0.96226415 0.81619256]
+Recalls: [0.60283688 0.98677249]
+F1 Score: [0.74127907 0.89341317]
+Supports: [423 756]
+Total words parsed: 62523
+Found 41204 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.86
+Precisions: [0.95454545 0.83202688]
+Recalls: [0.64539007 0.98280423]
+F1 Score: [0.77009873 0.90115221]
+Supports: [423 756]
+Total words parsed: 62245
+Found 40504 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.82
+Precisions: [0.90298507 0.80131723]
+Recalls: [0.57210402 0.96560847]
+F1 Score: [0.70043415 0.87582484]
+Supports: [423 756]
+Total words parsed: 62138
+Found 40216 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.84
+Precisions: [0.93090909 0.81526549]
+Recalls: [0.60520095 0.97486772]
+F1 Score: [0.73352436 0.88795181]
+Supports: [423 756]
+Total words parsed: 60979
+Found 39330 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.83
+Precisions: [0.89323843 0.80824972]
+Recalls: [0.59338061 0.9602649 ]
+F1 Score: [0.71306818 0.87772397]
+Supports: [423 755]
+Accuracy > avg: 0.841192285482647, std: 0.013612633033344953
+Precision > avg: 0.8716994082891315, std: 0.060690336841365794
+Recall > avg: 0.788923034026599, std: 0.18604204565686103
+F1 score > avg: 0.8094470491215457, std: 0.07988930423371716
+Total words parsed: 77578
+Found 49011 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 246
+Local accuracy: 0.56
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 89
+Local accuracy: 0.91
+All --->
+Overall Accuracy: 0.79
+Precisions: [0.77638191 0.78865979]
+Recalls: [0.55675676 0.91161867]
+F1 Score: [0.64847849 0.84569323]
+Supports: [ 555 1007]
+log loss > 
+0.4622900604346937
+roc auc: 0.8641357345428845
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 49011 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 246
+Local accuracy: 0.56
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 89
+Local accuracy: 0.91
+All --->
+Overall Accuracy: 0.79
+Precisions: [0.77638191 0.78865979]
+Recalls: [0.55675676 0.91161867]
+F1 Score: [0.64847849 0.84569323]
+Supports: [ 555 1007]
+log loss > 
+0.4622900604346937
+roc auc: 0.8641357345428845
+
+ +++++++++++++++++++++++++++++ N=3 ++++++++++++++++++++++++++++
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 6068 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.91211401 0.94854881]
+Recalls: [0.90780142 0.9510582 ]
+F1 Score: [0.90995261 0.94980185]
+Supports: [423 756]
+Total words parsed: 63637
+Found 6093 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.92575406 0.96791444]
+Recalls: [0.94326241 0.95767196]
+F1 Score: [0.93442623 0.96276596]
+Supports: [423 756]
+Total words parsed: 63312
+Found 6044 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.92
+Precisions: [0.87214612 0.94466937]
+Recalls: [0.90307329 0.92592593]
+F1 Score: [0.8873403  0.93520374]
+Supports: [423 756]
+Total words parsed: 63171
+Found 6028 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.91686461 0.95118734]
+Recalls: [0.91252955 0.9537037 ]
+F1 Score: [0.91469194 0.95244386]
+Supports: [423 756]
+Total words parsed: 61942
+Found 5961 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.95833333 0.90464548]
+Recalls: [0.81560284 0.98013245]
+F1 Score: [0.88122605 0.9408773 ]
+Supports: [423 755]
+Accuracy > avg: 0.9331503057899202, std: 0.012632118362070316
+Precision > avg: 0.9302177563461955, std: 0.02783587360718803
+Recall > avg: 0.9250761742237014, std: 0.04340980847906516
+F1 score > avg: 0.9268729844398085, std: 0.026213801938637125
+Total words parsed: 78918
+Found 6275 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 207
+Local accuracy: 0.63
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 63
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.83
+Precisions: [0.84671533 0.82015639]
+Recalls: [0.62702703 0.93743793]
+F1 Score: [0.72049689 0.87488415]
+Supports: [ 555 1007]
+log loss > 
+1.3010799001595177
+roc auc: 0.9182694114173757
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 6069 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.93
+Precisions: [0.9009434  0.94569536]
+Recalls: [0.90307329 0.94444444]
+F1 Score: [0.90200708 0.94506949]
+Supports: [423 756]
+Total words parsed: 62523
+Found 6092 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.92974239 0.96542553]
+Recalls: [0.93853428 0.96031746]
+F1 Score: [0.93411765 0.96286472]
+Supports: [423 756]
+Total words parsed: 62245
+Found 6045 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.92
+Precisions: [0.87731481 0.94109772]
+Recalls: [0.89598109 0.92989418]
+F1 Score: [0.88654971 0.93546241]
+Supports: [423 756]
+Total words parsed: 62138
+Found 6028 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.92307692 0.94888598]
+Recalls: [0.90780142 0.95767196]
+F1 Score: [0.91537545 0.95325872]
+Supports: [423 756]
+Total words parsed: 60979
+Found 5957 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.96056338 0.90036452]
+Recalls: [0.80614657 0.98145695]
+F1 Score: [0.87660668 0.9391635 ]
+Supports: [423 755]
+Accuracy > avg: 0.9316231562243045, std: 0.013203877726772558
+Precision > avg: 0.92931100199997, std: 0.02730713712617551
+Recall > avg: 0.9225321638996432, std: 0.04665971282445587
+F1 score > avg: 0.9250475410599976, std: 0.027331111951409644
+Total words parsed: 77578
+Found 6275 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 203
+Local accuracy: 0.63
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 65
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.83
+Precisions: [0.8441247  0.82270742]
+Recalls: [0.63423423 0.93545184]
+F1 Score: [0.72427984 0.87546468]
+Supports: [ 555 1007]
+log loss > 
+1.2685029366427258
+roc auc: 0.9198654463798456
+
+!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 6275 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 203
+Local accuracy: 0.63
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 65
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.83
+Precisions: [0.8441247  0.82270742]
+Recalls: [0.63423423 0.93545184]
+F1 Score: [0.72427984 0.87546468]
+Supports: [ 555 1007]
+log loss > 
+1.2685029366427258
+roc auc: 0.9198654463798456
+
+===================WORD N-GRAMS=========================
+
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 49010 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.70
+Precisions: [0.94736842 0.68177697]
+Recalls: [0.17021277 0.99470899]
+F1 Score: [0.28857715 0.80903712]
+Supports: [423 756]
+Total words parsed: 63637
+Found 48808 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.73
+Precisions: [0.97196262 0.70242537]
+Recalls: [0.24586288 0.99603175]
+F1 Score: [0.39245283 0.8238512 ]
+Supports: [423 756]
+Total words parsed: 63312
+Found 48236 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.72
+Precisions: [0.92523364 0.69776119]
+Recalls: [0.23404255 0.98941799]
+F1 Score: [0.37358491 0.81838074]
+Supports: [423 756]
+Total words parsed: 63171
+Found 47761 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.75
+Precisions: [0.95138889 0.7236715 ]
+Recalls: [0.32387707 0.99074074]
+F1 Score: [0.48324515 0.83640424]
+Supports: [423 756]
+Total words parsed: 61942
+Found 46321 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.74
+Precisions: [0.8943662  0.71428571]
+Recalls: [0.30023641 0.98013245]
+F1 Score: [0.44955752 0.82635399]
+Supports: [423 755]
+Accuracy > avg: 0.7263335018165952, std: 0.01756004125348902
+Precision > avg: 0.8210240519736128, std: 0.11895325587548514
+Recall > avg: 0.6225263599717594, std: 0.3696680191205617
+F1 score > avg: 0.6101444862028954, std: 0.21798588544688693
+Total words parsed: 78918
+Found 59189 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 467
+Local accuracy: 0.16
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 37
+Local accuracy: 0.96
+All --->
+Overall Accuracy: 0.68
+Precisions: [0.704     0.6750174]
+Recalls: [0.15855856 0.9632572 ]
+F1 Score: [0.25882353 0.79378069]
+Supports: [ 555 1007]
+log loss > 
+0.611299215139464
+roc auc: 0.6405575386707463
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 48137 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.70
+Precisions: [0.96052632 0.68268359]
+Recalls: [0.17257683 0.99603175]
+F1 Score: [0.29258517 0.81011296]
+Supports: [423 756]
+Total words parsed: 62523
+Found 48020 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.72
+Precisions: [0.96226415 0.70083877]
+Recalls: [0.24113475 0.99470899]
+F1 Score: [0.38563327 0.82230727]
+Supports: [423 756]
+Total words parsed: 62245
+Found 47485 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.72
+Precisions: [0.92307692 0.69581395]
+Recalls: [0.22695035 0.98941799]
+F1 Score: [0.36432638 0.81703987]
+Supports: [423 756]
+Total words parsed: 62138
+Found 47031 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.74
+Precisions: [0.9469697  0.71537727]
+Recalls: [0.29550827 0.99074074]
+F1 Score: [0.45045045 0.83083749]
+Supports: [423 756]
+Total words parsed: 60979
+Found 45587 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.73
+Precisions: [0.87943262 0.71166827]
+Recalls: [0.29314421 0.97748344]
+F1 Score: [0.43971631 0.82366071]
+Supports: [423 755]
+Accuracy > avg: 0.7227704408357346, std: 0.013901108724082515
+Precision > avg: 0.8178651566646934, std: 0.11890273315878057
+Recall > avg: 0.6177697335411863, std: 0.3733381448694393
+F1 score > avg: 0.603666989085002, std: 0.22088568049706672
+Total words parsed: 77578
+Found 58235 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 467
+Local accuracy: 0.16
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 38
+Local accuracy: 0.96
+All --->
+Overall Accuracy: 0.68
+Precisions: [0.6984127  0.67479109]
+Recalls: [0.15855856 0.96226415]
+F1 Score: [0.25844347 0.79328694]
+Supports: [ 555 1007]
+log loss > 
+0.6113597465326015
+roc auc: 0.6406112169766589
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 58235 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 467
+Local accuracy: 0.16
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 38
+Local accuracy: 0.96
+All --->
+Overall Accuracy: 0.68
+Precisions: [0.6984127  0.67479109]
+Recalls: [0.15855856 0.96226415]
+F1 Score: [0.25844347 0.79328694]
+Supports: [ 555 1007]
+log loss > 
+0.6113597465326015
+roc auc: 0.6406112169766589
+
+ +++++++++++++++++++++++++++++ N=4 ++++++++++++++++++++++++++++
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 24670 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.9245283 0.9589404]
+Recalls: [0.92671395 0.95767196]
+F1 Score: [0.92561983 0.95830576]
+Supports: [423 756]
+Total words parsed: 63637
+Found 24841 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.96
+Precisions: [0.94988067 0.96710526]
+Recalls: [0.94089835 0.97222222]
+F1 Score: [0.94536817 0.96965699]
+Supports: [423 756]
+Total words parsed: 63312
+Found 24635 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.92
+Precisions: [0.88732394 0.94023904]
+Recalls: [0.89361702 0.93650794]
+F1 Score: [0.89045936 0.93836978]
+Supports: [423 756]
+Total words parsed: 63171
+Found 24564 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.93414634 0.9479844 ]
+Recalls: [0.90543735 0.96428571]
+F1 Score: [0.91956783 0.95606557]
+Supports: [423 756]
+Total words parsed: 61942
+Found 24241 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.93
+Precisions: [0.97183099 0.90522479]
+Recalls: [0.81560284 0.98675497]
+F1 Score: [0.88688946 0.94423321]
+Supports: [423 755]
+Accuracy > avg: 0.9394275313170063, std: 0.014591023929211631
+Precision > avg: 0.9387204128200921, std: 0.025513581824808344
+Recall > avg: 0.9299712301121346, std: 0.047043344398750096
+F1 score > avg: 0.9334535968508793, std: 0.026443994556697673
+Total words parsed: 78918
+Found 26563 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 162
+Local accuracy: 0.71
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 62
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.86
+Precisions: [0.86373626 0.85365854]
+Recalls: [0.70810811 0.93843098]
+F1 Score: [0.77821782 0.89403974]
+Supports: [ 555 1007]
+log loss > 
+1.4557043969807915
+roc auc: 0.9354187355180403
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 24530 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.92671395 0.95899471]
+Recalls: [0.92671395 0.95899471]
+F1 Score: [0.92671395 0.95899471]
+Supports: [423 756]
+Total words parsed: 62523
+Found 24711 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.96
+Precisions: [0.95192308 0.96461337]
+Recalls: [0.93617021 0.97354497]
+F1 Score: [0.94398093 0.96905859]
+Supports: [423 756]
+Total words parsed: 62245
+Found 24501 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.92
+Precisions: [0.89688249 0.93569554]
+Recalls: [0.88416076 0.94312169]
+F1 Score: [0.89047619 0.93939394]
+Supports: [423 756]
+Total words parsed: 62138
+Found 24445 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.93366093 0.94430052]
+Recalls: [0.89834515 0.96428571]
+F1 Score: [0.91566265 0.95418848]
+Supports: [423 756]
+Total words parsed: 60979
+Found 24098 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.96883853 0.90181818]
+Recalls: [0.80851064 0.98543046]
+F1 Score: [0.8814433  0.94177215]
+Supports: [423 755]
+Accuracy > avg: 0.9384091436010202, std: 0.014838167609294042
+Precision > avg: 0.9383441294779974, std: 0.023417332353961595
+Recall > avg: 0.9279278262743107, std: 0.05002593764159981
+F1 score > avg: 0.9321684890857587, std: 0.027318243727057386
+Total words parsed: 77578
+Found 26428 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 160
+Local accuracy: 0.71
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 59
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.86
+Precisions: [0.87004405 0.85559567]
+Recalls: [0.71171171 0.94141013]
+F1 Score: [0.78295342 0.8964539 ]
+Supports: [ 555 1007]
+log loss > 
+1.4358941848864841
+roc auc: 0.9361693371623857
+
+!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 26428 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 160
+Local accuracy: 0.71
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 59
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.86
+Precisions: [0.87004405 0.85559567]
+Recalls: [0.71171171 0.94141013]
+F1 Score: [0.78295342 0.8964539 ]
+Supports: [ 555 1007]
+log loss > 
+1.4358941848864841
+roc auc: 0.9361693371623857
+
+===================WORD N-GRAMS=========================
+
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 47364 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.66
+Precisions: [1.         0.65172414]
+Recalls: [0.04491726 1.        ]
+F1 Score: [0.08597285 0.78914405]
+Supports: [423 756]
+Total words parsed: 63637
+Found 47220 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.66
+Precisions: [0.95833333 0.65367965]
+Recalls: [0.05437352 0.99867725]
+F1 Score: [0.10290828 0.79016222]
+Supports: [423 756]
+Total words parsed: 63312
+Found 46766 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.67
+Precisions: [0.97058824 0.65938865]
+Recalls: [0.07801418 0.99867725]
+F1 Score: [0.14442013 0.79431878]
+Supports: [423 756]
+Total words parsed: 63171
+Found 46318 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.68
+Precisions: [0.97777778 0.66578483]
+Recalls: [0.10401891 0.99867725]
+F1 Score: [0.18803419 0.7989418 ]
+Supports: [423 756]
+Total words parsed: 61942
+Found 44812 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.67
+Precisions: [1.         0.66344464]
+Recalls: [0.09456265 1.        ]
+F1 Score: [0.17278618 0.79767565]
+Supports: [423 755]
+Accuracy > avg: 0.6676293253037379, std: 0.00800313962529178
+Precision > avg: 0.820072125647443, std: 0.16173244321737232
+Recall > avg: 0.5371918270854441, std: 0.4622921621297833
+F1 score > avg: 0.4664364119005195, std: 0.328795179067594
+Total words parsed: 78918
+Found 57649 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 536
+Local accuracy: 0.03
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 11
+Local accuracy: 0.99
+All --->
+Overall Accuracy: 0.65
+Precisions: [0.63333333 0.65013055]
+Recalls: [0.03423423 0.98907646]
+F1 Score: [0.06495726 0.78456085]
+Supports: [ 555 1007]
+log loss > 
+0.6474251779683331
+roc auc: 0.5259615126546606
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 46305 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.66
+Precisions: [1.         0.65172414]
+Recalls: [0.04491726 1.        ]
+F1 Score: [0.08597285 0.78914405]
+Supports: [423 756]
+Total words parsed: 62523
+Found 46234 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.66
+Precisions: [0.96428571 0.65595135]
+Recalls: [0.06382979 0.99867725]
+F1 Score: [0.11973392 0.79181961]
+Supports: [423 756]
+Total words parsed: 62245
+Found 45820 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.67
+Precisions: [0.97142857 0.65996503]
+Recalls: [0.08037825 0.99867725]
+F1 Score: [0.14847162 0.79473684]
+Supports: [423 756]
+Total words parsed: 62138
+Found 45414 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.67
+Precisions: [0.975      0.66286216]
+Recalls: [0.09219858 0.99867725]
+F1 Score: [0.16846652 0.79683377]
+Supports: [423 756]
+Total words parsed: 60979
+Found 43936 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.67
+Precisions: [1.         0.65996503]
+Recalls: [0.08037825 1.        ]
+F1 Score: [0.1487965  0.79515534]
+Supports: [423 755]
+Accuracy > avg: 0.666610649582176, std: 0.005670051072913493
+Precision > avg: 0.8201182000019761, std: 0.16239373362058598
+Recall > avg: 0.535773387369132, std: 0.4635786040684723
+F1 score > avg: 0.4639131034766373, std: 0.33025572188612784
+Total words parsed: 77578
+Found 56466 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 536
+Local accuracy: 0.03
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 11
+Local accuracy: 0.99
+All --->
+Overall Accuracy: 0.65
+Precisions: [0.63333333 0.65013055]
+Recalls: [0.03423423 0.98907646]
+F1 Score: [0.06495726 0.78456085]
+Supports: [ 555 1007]
+log loss > 
+0.6474312940840592
+roc auc: 0.5269098293924511
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 56466 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 536
+Local accuracy: 0.03
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 11
+Local accuracy: 0.99
+All --->
+Overall Accuracy: 0.65
+Precisions: [0.63333333 0.65013055]
+Recalls: [0.03423423 0.98907646]
+F1 Score: [0.06495726 0.78456085]
+Supports: [ 555 1007]
+log loss > 
+0.6474312940840592
+roc auc: 0.5269098293924511
+
+ +++++++++++++++++++++++++++++ N=5 ++++++++++++++++++++++++++++
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 62005 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.93333333 0.95915679]
+Recalls: [0.92671395 0.96296296]
+F1 Score: [0.93001186 0.96105611]
+Supports: [423 756]
+Total words parsed: 63637
+Found 62395 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.96
+Precisions: [0.9608802  0.96103896]
+Recalls: [0.92907801 0.97883598]
+F1 Score: [0.94471154 0.96985583]
+Supports: [423 756]
+Total words parsed: 63312
+Found 61523 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.92
+Precisions: [0.8957346  0.94055482]
+Recalls: [0.89361702 0.94179894]
+F1 Score: [0.89467456 0.94117647]
+Supports: [423 756]
+Total words parsed: 63171
+Found 61443 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.95454545 0.94252874]
+Recalls: [0.89361702 0.97619048]
+F1 Score: [0.92307692 0.95906433]
+Supports: [423 756]
+Total words parsed: 61942
+Found 60779 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.92
+Precisions: [0.96857143 0.89855072]
+Recalls: [0.80141844 0.98543046]
+F1 Score: [0.8771022  0.93998737]
+Supports: [423 755]
+Accuracy > avg: 0.9402746997181864, std: 0.015800563531515335
+Precision > avg: 0.9414895037422669, std: 0.024453892384812707
+Recall > avg: 0.9289663267808963, std: 0.052913556378010186
+F1 score > avg: 0.9340717181058029, std: 0.02786933634345002
+Total words parsed: 78918
+Found 69024 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 156
+Local accuracy: 0.72
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 63
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.86
+Precisions: [0.86363636 0.85818182]
+Recalls: [0.71891892 0.93743793]
+F1 Score: [0.78466077 0.89606075]
+Supports: [ 555 1007]
+log loss > 
+1.6037517515781028
+roc auc: 0.9360941875341082
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 61465 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.95
+Precisions: [0.9354067  0.95795007]
+Recalls: [0.92434988 0.96428571]
+F1 Score: [0.92984542 0.96110745]
+Supports: [423 756]
+Total words parsed: 62523
+Found 61928 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.96
+Precisions: [0.96305419 0.95860285]
+Recalls: [0.92434988 0.98015873]
+F1 Score: [0.94330519 0.96926095]
+Supports: [423 756]
+Total words parsed: 62245
+Found 61065 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.92
+Precisions: [0.90291262 0.93350717]
+Recalls: [0.87943262 0.94708995]
+F1 Score: [0.89101796 0.94024951]
+Supports: [423 756]
+Total words parsed: 62138
+Found 61015 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.94
+Precisions: [0.96124031 0.93560606]
+Recalls: [0.87943262 0.98015873]
+F1 Score: [0.91851852 0.95736434]
+Supports: [423 756]
+Total words parsed: 60979
+Found 60294 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.91
+Precisions: [0.96501458 0.88982036]
+Recalls: [0.78250591 0.98410596]
+F1 Score: [0.86422977 0.93459119]
+Supports: [423 755]
+Accuracy > avg: 0.9377288744310089, std: 0.017834346010011742
+Precision > avg: 0.940311489689309, std: 0.025003415419080438
+Recall > avg: 0.9245870003943837, std: 0.06005522077422364
+F1 score > avg: 0.9309490304081717, std: 0.03086944647142204
+Total words parsed: 77578
+Found 68496 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 156
+Local accuracy: 0.72
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 64
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.86
+Precisions: [0.86177106 0.85805278]
+Recalls: [0.71891892 0.93644489]
+F1 Score: [0.78388998 0.89553656]
+Supports: [ 555 1007]
+log loss > 
+1.5853273121085294
+roc auc: 0.9371731214829527
+
+!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 68496 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 156
+Local accuracy: 0.72
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 64
+Local accuracy: 0.94
+All --->
+Overall Accuracy: 0.86
+Precisions: [0.86177106 0.85805278]
+Recalls: [0.71891892 0.93644489]
+F1 Score: [0.78388998 0.89553656]
+Supports: [ 555 1007]
+log loss > 
+1.5853273121085294
+roc auc: 0.9371731214829527
+
+===================WORD N-GRAMS=========================
+
+
+Plain Classifier
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 63610
+Found 43751 independent n-grams from 4715 verses!
+Parsed 15308 words from 1179 verses
+Overall Accuracy: 0.64
+Precisions: [1.         0.64340426]
+Recalls: [0.00945626 1.        ]
+F1 Score: [0.01873536 0.78301398]
+Supports: [423 756]
+Total words parsed: 63637
+Found 43676 independent n-grams from 4715 verses!
+Parsed 15281 words from 1179 verses
+Overall Accuracy: 0.65
+Precisions: [0.90909091 0.64640411]
+Recalls: [0.02364066 0.99867725]
+F1 Score: [0.04608295 0.78482328]
+Supports: [423 756]
+Total words parsed: 63312
+Found 43281 independent n-grams from 4715 verses!
+Parsed 15606 words from 1179 verses
+Overall Accuracy: 0.65
+Precisions: [1.         0.64726027]
+Recalls: [0.02600473 1.        ]
+F1 Score: [0.05069124 0.78586279]
+Supports: [423 756]
+Total words parsed: 63171
+Found 42905 independent n-grams from 4715 verses!
+Parsed 15747 words from 1179 verses
+Overall Accuracy: 0.65
+Precisions: [1.         0.64948454]
+Recalls: [0.03546099 1.        ]
+F1 Score: [0.06849315 0.7875    ]
+Supports: [423 756]
+Total words parsed: 61942
+Found 41465 independent n-grams from 4716 verses!
+Parsed 16976 words from 1178 verses
+Overall Accuracy: 0.65
+Precisions: [1.         0.64474808]
+Recalls: [0.01654846 1.        ]
+F1 Score: [0.03255814 0.78400831]
+Supports: [423 755]
+Accuracy > avg: 0.6489646919564362, std: 0.0031838510859027655
+Precision > avg: 0.8140392162619504, std: 0.16974429098248286
+Recall > avg: 0.510978835978836, std: 0.4887963195673446
+F1 score > avg: 0.41417692072172674, std: 0.3710572005901822
+Total words parsed: 78918
+Found 53476 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 545
+Local accuracy: 0.02
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 5
+Local accuracy: 1.00
+All --->
+Overall Accuracy: 0.65
+Precisions: [0.66666667 0.64770524]
+Recalls: [0.01801802 0.99503476]
+F1 Score: [0.03508772 0.78465153]
+Supports: [ 555 1007]
+log loss > 
+0.6487168779307166
+roc auc: 0.5072832514739168
+
+Remove Proper nouns
+> Remove common proper nouns from the training set
+MultinomialNB
+> Cross-Validation <
+Total words parsed: 62427
+Found 42609 independent n-grams from 4715 verses!
+Parsed 15151 words from 1179 verses
+Overall Accuracy: 0.64
+Precisions: [1.         0.64340426]
+Recalls: [0.00945626 1.        ]
+F1 Score: [0.01873536 0.78301398]
+Supports: [423 756]
+Total words parsed: 62523
+Found 42603 independent n-grams from 4715 verses!
+Parsed 15055 words from 1179 verses
+Overall Accuracy: 0.65
+Precisions: [0.90909091 0.64640411]
+Recalls: [0.02364066 0.99867725]
+F1 Score: [0.04608295 0.78482328]
+Supports: [423 756]
+Total words parsed: 62245
+Found 42248 independent n-grams from 4715 verses!
+Parsed 15333 words from 1179 verses
+Overall Accuracy: 0.65
+Precisions: [1.         0.64781491]
+Recalls: [0.02836879 1.        ]
+F1 Score: [0.05517241 0.78627145]
+Supports: [423 756]
+Total words parsed: 62138
+Found 41917 independent n-grams from 4715 verses!
+Parsed 15440 words from 1179 verses
+Overall Accuracy: 0.65
+Precisions: [1.         0.64948454]
+Recalls: [0.03546099 1.        ]
+F1 Score: [0.06849315 0.7875    ]
+Supports: [423 756]
+Total words parsed: 60979
+Found 40530 independent n-grams from 4716 verses!
+Parsed 16599 words from 1178 verses
+Overall Accuracy: 0.65
+Precisions: [1.         0.64474808]
+Recalls: [0.01654846 1.        ]
+F1 Score: [0.03255814 0.78400831]
+Supports: [423 755]
+Accuracy > avg: 0.6491343272405754, std: 0.0032848602172009
+Precision > avg: 0.8140946798672608, std: 0.16968986912656567
+Recall > avg: 0.5112152425982213, std: 0.48856222002600447
+F1 score > avg: 0.41466590417659877, std: 0.37066135839188247
+Total words parsed: 77578
+Found 52187 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 545
+Local accuracy: 0.02
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 5
+Local accuracy: 1.00
+All --->
+Overall Accuracy: 0.65
+Precisions: [0.66666667 0.64770524]
+Recalls: [0.01801802 0.99503476]
+F1 Score: [0.03508772 0.78465153]
+Supports: [ 555 1007]
+log loss > 
+0.6489701379812837
+roc auc: 0.5072814621970532
+
+Remove Proper nouns
+> Remove common proper nouns from both training & test sets
+MultinomialNB
+Total words parsed: 77578
+Found 52187 independent n-grams from 5894 verses!
+test size: (1562,)
+OT --->
+Parsed 8319 words from 555 verses
+Number of mislabelled points out of the total 555 verses: 545
+Local accuracy: 0.02
+NT --->
+Parsed 15252 words from 1007 verses
+Number of mislabelled points out of the total 1007 verses: 5
+Local accuracy: 1.00
+All --->
+Overall Accuracy: 0.65
+Precisions: [0.66666667 0.64770524]
+Recalls: [0.01801802 0.99503476]
+F1 Score: [0.03508772 0.78465153]
+Supports: [ 555 1007]
+log loss > 
+0.6489701379812837
+roc auc: 0.5072814621970532

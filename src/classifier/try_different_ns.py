@@ -23,28 +23,38 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import numpy as np
-from numpy.typing import NDArray
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.etcbc_aa_eval import csvify_etcbc, remove_proper_nouns
 from classifier.dataset_skeleton import DataSplit
+from classifier.etcbc_aa_eval import csvify_etcbc, remove_proper_nouns
 from classifier.eval_utils import (
     cross_validate,
     eval_and_save,
 )
 from classifier.fitting_utils import identity
-from classifier.textfabric_utils import load_etcbc_dataset
 from classifier.result_utils import Verse
+from classifier.textfabric_utils import load_etcbc_dataset
 from classifier.wrappers import BoWEstimator
+
+
+def remove_non_chars(verses: list[Verse]) -> list[Verse]:
+    new_verses = []
+    for v in verses:
+        syriac = [sw.replace("\u0308", "").replace("\u0307", "") for sw in v.get_syriac_words()]
+        translit = [tw.replace('"', "").replace("^", "") for tw in v.get_translit_words()]
+        new_verses.append(Verse(v.book, v.reference, translit, syriac,
+                                v.get_annotations(), origin="ETCBC"))
+    return new_verses
+
 
 if __name__ == "__main__":
     etcbc_ds = load_etcbc_dataset()
 
-    for n in range(1,6):
+    for n in range(1, 6):
         print(f"\n +++++++++++++++++++++++++++++ N={n} ++++++++++++++++++++++++++++")
 
-        train_x = etcbc_ds.train.get_samples()
+        train_x = remove_non_chars(etcbc_ds.train.get_samples())
+        etcbc_ds.train.verses = remove_non_chars(etcbc_ds.train.get_samples())
         train_y = etcbc_ds.train.get_labels()
 
         print("\nPlain Classifier")

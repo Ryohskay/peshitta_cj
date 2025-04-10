@@ -29,13 +29,31 @@
     accidentally mess with some other datasets loaded using this format.
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Generator
+from typing import TypedDict
 
 from classifier.result_utils import Verse
+from pathlib import Path
+import json
+
+
+class DatasetDict(TypedDict):
+    """An entry in a dataset format for Huggingface."""
+    label: int | str
+    text: str
 
 
 class DataSplit:
     """An abstract representation of subset of data within one dataset.
+
+    Attributes:
+        num_classes: the number of target categories you want this system to
+            classify.
+        verses: a list containing ``num_classes`` lists of verses for each
+            class. In this project, ``num_classes = 2``, so there are 2 lists.
+            The list at the index 0 represents the verses from OT, and the one
+            at the index 1 represents verses from NT. These indices must match
+            the labels assigned for each of the classes.
 
     .. note::
         internally, this class stores data in a list of lists, where each
@@ -128,8 +146,42 @@ class DataSplit:
         # else
         return [target for v in self.verses[target]]
 
+    def generate_hf(self, target: int) -> Generator[DatasetDict]:
+        """Generate the text of verses in Huggingface datasets format.
+
+        Args:
+            target: integer designating the label for the target class to
+                extract.
+
+        .. seealso::
+            :meth:`classifier.dataset_skeleton.DataSplit.get_labels` for a
+            more thorough description of the argument `target`.
+
+        Yields:
+            A :class:`classifier.dataset_skeleton.DatasetDict` instance,
+            representing one entry in a dataset. For Huggingface datasets
+            library, write this as a line of a file and give it a ``.json``
+            file extension.
+        """
+        for i in range(self.num_classes):
+            verses = self.get_samples(target)
+            for v in verses:
+                yield {"label": i,
+                        "text": " ".join(v.get_syriac_words())}
+
     def map_translit(self, fun: Callable[[str], str]) -> list[Verse]:
-        """Map a Callable object to every translit entry in the verse."""
+        """Map a Callable object to every translit entry in the verse.
+
+        This function applies a function and applies that function on every
+        word in the transliterated verse.
+
+        Args:
+            fun: a callable object that takes a ``str`` and returns a ``str``.
+
+        Returns:
+            a list of :class:`classifier.result_utils.Verse` object containing
+            the verse's text to which the function was applied.
+        """
         verses = []
         for vrs in self.get_samples():
             mapped_translit = list(map(fun, vrs.get_translit_words()))
@@ -139,9 +191,43 @@ class DataSplit:
                                 origin=vrs.words[0].origin))
         return verses
 
+    def map_syriac(self, fun: Callable[[str], str]) -> list[Verse]:
+        """Map a Callable object to every translit entry in the verse.
+
+        This function applies a function and applies that function on every
+        word in the Syriac verse.
+
+        Args:
+            fun: a callable object that takes a ``str`` and returns a ``str``.
+
+        Returns:
+            a list of :class:`classifier.result_utils.Verse` object containing
+            the verse's text to which the function was applied.
+        """
+        verses = []
+        for vrs in self.get_samples():
+            mapped_syr = list(map(fun, vrs.get_syriac_words()))
+            verses.append(Verse(vrs.book, vrs.reference,
+                                mapped_syr, vrs.get_syriac_words(),
+                                vrs.get_annotations(),
+                                origin=vrs.words[0].origin))
+        return verses
+
 
 class LoadedDataset:
-    """A wrapper around datasets loaded from files."""
+    """A wrapper around datasets loaded from files.
+
+    Attributes:
+        train: a :class:`classifier.dataset_skeleton.DataSplit` instance
+            containing the train split (training data).
+        test: a :class:`classifier.dataset_skeleton.DataSplit` instance
+            containing the test split (test data).
+
+        .. note::
+            Use the cross-validation technique or create a child class
+            inheriting this ``LoadedDataset`` class if you want a separate
+            evaluation data split.
+    """
     def __init__(
             self,
             ot_train_verses: list[Verse],
@@ -154,3 +240,54 @@ class LoadedDataset:
         self.test = DataSplit(ot_test_verses, nt_test_verses)
         if production_verses is not None:
             self.production = production_verses
+
+    def save_as_json(
+            self,
+            save_dir: str | Path,
+        ) -> None:
+        """Save the given data in json compatible with Huggingface datasets.
+
+        Args:
+            save_dir: a string or :class:`python:pathlib.Path` object for
+                the path to save the dataset files.
+
+        Raises:
+            FileNotFoundError: when the directory for saving the dataset files
+                could not be found.
+        """
+        save_dir_p = Path(save_dir)
+        if not save_dir_p.exists():
+            raise FileNotFoundError
+
+        # save train dataset
+        for i in range(self.train.num_classes):
+            verse_data = list(self.train.generate_hf(i))
+
+            save_file = save_dir_p / f"etcbc_train_data_{i}.json"
+            with save_file.open("w", encoding="utf-8") as fp:
+                json.dump(verse_data, fp)
+
+            print(f"Saved: {save_file.resolve()}")
+
+        # save test dataset
+        for i in range(self.test.num_classes):
+            verse_data = list(self.test.generate_hf(i))
+
+            save_file = save_dir_p / f"etcbc_test_data_{i}.json"
+            with save_file.open("w", encoding="utf-8") as fp:
+                json.dump(verse_data, fp)
+
+            print(f"Saved: {save_file.resolve()}")
+
+        # save production dataset
+        prod_verses = []
+        for verse in self.production:
+            prod_verses.append(
+                    {"text": f"{verse.get_syriac_words()}"}
+                    )
+
+        save_file = save_dir_p / "etcbc_production_data.json"
+        with save_file.open("w", encoding="utf-8") as fp:
+            json.dump(prod_verses, fp)
+
+        print(f"Saved: {save_file.resolve()}")

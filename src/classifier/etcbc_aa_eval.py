@@ -144,13 +144,23 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
     return result_verses
 
 
+def remove_non_chars(verses: list[Verse]) -> list[Verse]:
+    new_verses = []
+    for v in verses:
+        syriac = [sw.replace("\u0308", "").replace("\u0307", "") for sw in v.get_syriac_words()]
+        translit = [tw.replace('"', "").replace("^", "") for tw in v.get_translit_words()]
+        new_verses.append(Verse(v.book, v.reference, translit, syriac,
+                                v.get_annotations(), origin="ETCBC"))
+    return new_verses
+
+
 if __name__ == "__main__":
 
     etcbc_ds = load_etcbc_dataset()
-    train_verses = etcbc_ds.train.get_samples()
+    train_verses = remove_non_chars(etcbc_ds.train.get_samples())
     train_verse_labels = etcbc_ds.train.get_labels()
-    ot_test_verses = etcbc_ds.test.get_samples(0)
-    nt_test_verses = etcbc_ds.test.get_samples(1)
+    ot_test_verses = remove_non_chars(etcbc_ds.test.get_samples(0))
+    nt_test_verses = remove_non_chars(etcbc_ds.test.get_samples(1))
 
     # train classifier
     print("\nPlain Classifier")
