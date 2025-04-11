@@ -27,63 +27,9 @@
 from collections import Counter
 from pathlib import Path
 
-import numpy as np
-from numpy.typing import NDArray
-
 from classifier.result_utils import (
-    Mislabels,
     Verse,
 )
-
-
-def find_mislabels(
-        y_correct: list[int] | NDArray[np.int16],
-        y_pred: list[int] | NDArray[np.int16],
-        test_x: list[Verse],
-        probas: NDArray[np.float64]
-    ) -> Mislabels:
-    """Find and return mislabelled verses in string format.
-
-    Args:
-        y_correct: list of correct labels
-        y_pred: list of predictions
-        test_x: list of verses corresponding to the labels
-        probas: list of probabilities, of size (numbert of samples,
-            number of prediction classes)
-
-    Returns:
-        A :class:`Mislabels` instance.
-    """
-    # initialise storages for mislabelled verse's info
-    mislabel_idcs = np.empty(0, dtype=np.int16)
-    mislabels = np.empty(0, dtype=np.int16)
-    correct_labels = np.empty(0, dtype=np.int16)
-
-    # parse through all the predictions,
-    # find and record occasions where they don't match ``y_correct``
-    for i in range(len(y_correct)):
-        if y_correct[i] != y_pred[i]:
-            mislabel_idcs = np.append(mislabel_idcs, i)
-            mislabels = np.append(mislabels, y_pred[i])
-            correct_labels = np.append(
-                    correct_labels,
-                    y_correct[i]
-                    )
-
-    results = Mislabels(
-                            mislabel_idcs,
-                            mislabels,
-                            correct_labels
-                        )
-
-    if len(results) > 0:
-        # extract list verses at idcs and set results.verses
-        results.extract_verses(test_x)
-
-    if probas is not None:
-        results.probas = probas[results.idcs]
-
-    return results
 
 
 def find_top_k_words(

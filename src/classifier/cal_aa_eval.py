@@ -149,10 +149,8 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
         :func:`classifier.aa_cal_consistent.remove_proclitic_ubs`
             Removes underscores after proclitics.
     """
-    # print(f"Target: {verses[0]}")
     verses_trimmed = []
     for vrs in verses:
-        # print(vrs)
         vrs_lemmata = []
         vrs_annots = []
         # for each word in the verse
@@ -308,7 +306,6 @@ if __name__ == "__main__":
     nt_test_verses_rboth_nub = remove_proper_nouns(nt_test_verses_no_ub)
 
     cal_ds.test = DataSplit(ot_test_verses_rboth_nub, nt_test_verses_rboth_nub)
-    # print(list(map(str, cal_ds.test.get_samples()[:10])))
 
     c_mnb_rboth_nub = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_rboth_nub.fit(train_x_removed_both_nub, train_y)

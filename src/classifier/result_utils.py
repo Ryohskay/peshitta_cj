@@ -328,6 +328,10 @@ class ProbaPredictions(Predictions):
     Attributes:
         probas: probability of each sample belonging to each class, predicted
             by the classifier.
+
+    .. seealso::
+        See :class:`classifier.result_utils.Predictions` for
+            other arguments.
     """
     def __init__(
             self,
@@ -336,6 +340,16 @@ class ProbaPredictions(Predictions):
             probas: list[list[float]] | NDArray[np.float64],
             correct_labels: list[int] | NDArray[np.int64] | None = None,
         ) -> None:
+        """Initilaises an instance.
+
+        Raises:
+            ValueError: if the lengths of provided arguments samples and probas
+                do not matcf
+        """
+        if len(probas) != len(samples):
+            msg = (f"lengths of probas {len(probas)} and samples {len(samples)}"
+                   + " do not match!")
+            raise ValueError(msg)
         super().__init__(samples, predictions,
                          correct_labels)
         self._probas = probas
@@ -348,6 +362,35 @@ class ProbaPredictions(Predictions):
                 number of prediction classes)
         """
         return self._probas
+
+    def get_total_probas(self) -> dict[str, list[float]]:
+        """Get the total probabilities for the book being Christian or Jewish.
+
+        Returns:
+            a dict of book name as the key and lists as the associated value,
+            where each sub-list contains [
+            probability of the book being of Jewish authorship (label == 0),
+            probability of the book being of Christian authorship (label == 1)
+            ]
+        """
+        current_book = ""
+        aj = 1.0  # total probability of the book's Jewish authorship
+        ac = 1.0  # total probability of the book's Christian authorship
+        total_probas = {}
+        for i in range(len(self.samples)):
+            if current_book and self.samples[i].book != current_book:
+                # if we finish walking through the verses from one book
+                if current_book not in total_probas:
+                    total_probas.update({current_book: [aj, ac]})
+                else:
+                    total_probas[current_book].append([aj, ac])
+            if self.samples[i].book != current_book:
+                current_book = self.samples[i].book
+                aj = 1.0
+                ac = 1.0
+            aj *= self._probas[i][0]
+            ac *= self._probas[i][1]
+        return total_probas
 
     def save_to_file(self,
                      formatter: FileFormatterProto,
@@ -380,28 +423,31 @@ class ProbaPredictions(Predictions):
 
 
 class Mislabels(Any):
-    """Wrapper of mislabelled results to facilitate human inspection.
+    """Wrapper of mislabelled results summary to facilitate human inspection.
 
     An instance of this class represents a group of mislabelled samples
-    from a particular attribution class, or one of the two testaments.
+    from a particular attribution class, or in this case,
+    one of the two testaments.
 
     Attributes:
-        idcs: indices of mislabelled samples
         mislabels: incorrect labels the classifier assigned
         correct_labels: gold references for the verses
-        verses: mislabelled verses corresponding to idcs
-        probas: probabilities of the mislabelled verses
+        verses: mislabelled verses corresponding
+        book_mislabels: mislabelled verses per each book
+        probas: probabilities of the mislabelled verses belonging to each class,
+            predicted by the classifier
     """
     def __init__(
             self,
-            indices: list[int] | NDArray[np.int64],
             incorrect_labels: list[int] | NDArray[np.int64],
             correct_labels: list[int] | NDArray[np.int64],
+            mislabelled_verses: list[Verse],
             probas: list[list[float]] | NDArray[np.float64] | None = None
         ) -> None:
-        self.idcs: NDArray[np.int64] = np.array(indices, dtype=np.int64)
 
-        if len(self.idcs) < 1:
+        if (len(mislabelled_verses) < 1
+            or len(incorrect_labels) < 1
+            or len(correct_labels) < 1):
             msg = ("indices of mislabelled samples were empty."
                    + "Make sure to instanciate this only when "
                    + "there are one or more mislabelled samples.")
@@ -409,8 +455,7 @@ class Mislabels(Any):
 
         self.mislabels = incorrect_labels
         self.correct_labels = correct_labels
-        # initialise empty variables
-        self.verses: list[Verse] = []
+        self.verses: list[Verse] = mislabelled_verses
         if probas is not None:
             self.probas = probas
 
@@ -420,19 +465,19 @@ class Mislabels(Any):
         Returns:
             An integer indicating number of mislabelled verses.
         """
-        return len(self.idcs)
+        return len(self.mislabels)
 
-    def extract_verses(
-            self,
-            vrs: list[Verse],
-        ) -> None:
-        """Set self.verses by extracting verses at self.idcs.
-
-        Args:
-            vrs: a list of Verses which includes some mislabelled verses.
-                The order of verses must correspond to those of self.idcs.
-        """
-        self.verses = [vrs[int(idx)] for idx in self.idcs]
+    # def extract_verses(
+    #         self,
+    #         vrs: list[Verse],
+    #     ) -> None:
+    #     """Extract verses at ``idcs`` into ``verses`` and ``book_mislabels`` .
+    #
+    #     Args:
+    #         vrs: a list of Verses which includes some mislabelled verses.
+    #             The order of verses must correspond to those of self.idcs.
+    #     """
+    #     self.verses = [vrs[int(idx)] for idx in self.idcs]
 
     def save_to_file(
             self,

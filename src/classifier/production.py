@@ -59,7 +59,8 @@ if __name__ == "__main__":
 
     preds = predict_proba(c_mnb, etcbc_loaded.production)
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbc_prediction_proba_all.csv")
+    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbca_"
+                     + "prediction_proba_all.csv")
     preds.save_to_file(csvify_etcbc, save_file)
 
     print("> Character unigram classifier")
@@ -75,7 +76,8 @@ if __name__ == "__main__":
 
     preds = predict_proba(c_mnb, etcbc_loaded.production)
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbc_prediction_proba_all_char_unigram.csv")
+    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbc_"
+                     + "prediction_proba_all_char_unigram.csv")
     preds.save_to_file(csvify_etcbc, save_file)
 
     print("CAL --->")
@@ -98,7 +100,8 @@ if __name__ == "__main__":
 
     preds = predict_proba(c_mnb, cal_loaded.production)
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_prediction_proba_all.csv")
+    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_"
+                     + "prediction_proba_all.csv")
     preds.save_to_file(csvify_cal, save_file)
 
     print("> Remove PN, GN & underscores from the training & test set")
@@ -119,5 +122,6 @@ if __name__ == "__main__":
 
     preds = predict_proba(c_mnb, ot_prod)
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_prediction_proba_all_both_removed.csv")
+    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_"
+                     + "prediction_proba_all_both_removed.csv")
     preds.save_to_file(csvify_cal, save_file)

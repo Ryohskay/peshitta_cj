@@ -31,6 +31,7 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+from numpy.typing import NDArray
 from sklearn.base import clone
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
@@ -44,21 +45,21 @@ from sklearn.metrics import (
 from sklearn.model_selection import StratifiedKFold
 
 from classifier.dataset_skeleton import LoadedDataset
-from classifier.inspection_utils import find_mislabels
 from classifier.prediction_utils import predict_proba
 from classifier.result_utils import (
     Mislabels,
+    Predictions,
     ProbaPredictions,
     Verse,
 )
 from classifier.wrappers import BoWEstimator
 
 
-def quick_stats(
-    inputs: np.ndarray | list[Any],
-    y_correct: np.ndarray,
-    prediction: np.ndarray,
-) -> tuple[int, int]:
+def mislabel_stats(
+        inputs: np.ndarray | list[Any],
+        y_correct: np.ndarray,
+        preds: Predictions,
+    ) -> Mislabels:
     """Calculate and print some basic statistics on model inputs & outputs.
 
     Args:
@@ -66,52 +67,106 @@ def quick_stats(
             produced the predictions.
         y_correct: Correct (gold-standard) labels
             for the input verses.
-        prediction: Labels for the input verses
-            predicted by the classifier.
+        preds: a :class:`classifier.result_utils.Predictions` instance for
+            the results of predictions on the input. When a
+            :class:`classifier.result_utils.ProbaPredictions` instance is
+            passed, the returned ``Mislabels`` class instance will have
+            the ``probas`` attribute set.
 
     Returns:
-        number of mislabelled verses and that of
-        correctly labelled verses, as well as accuracy score calculated
-        from the predictions.
+        A :class:`classifier.result_utils.Mislabels` instance.
 
     Raises:
         ValueError: If the provided list of inputs to test is either zero
             length or does not have a measurable length.
     """
     sample_size = 0
-    if hasattr(inputs, "shape") and callable(inputs.shape):  # type: ignore[reportAttributeAccessIssue]
-        # AttributeAccessIssue can be ignored since AttributeError is explicitly
-        # handled
+    if hasattr(inputs, "shape"):  # type: ignore[reportAttributeAccessIssue]
+        # AttributeAccessIssue can be ignored since AttributeError is
+        # implicitly handled by hasattr
         sample_size = int(inputs.shape[0])  # type: ignore[reportAttributeAccessIssue]
     else:
-        # If inputs is not a np.ndarray,
+        # If the argument ``inputs`` is not a np.ndarray,
         # use the standard len() function instead.
         sample_size = len(inputs)
 
     if sample_size == 0:
-        msg = "Cannot measure the size of model input array X!"
+        msg = ("Cannot measure the size of `inputs`! "
+               + " It seems like the argument `inputs` is empty.")
         raise ValueError(msg)
 
-    num_mislabels = 0
-    for i in range(len(prediction)):
-        if y_correct[i] != prediction[i]:
-            num_mislabels += 1
-    num_correct = sample_size - num_mislabels
+    mislabel_books = {}
+    current_book = ""
+    num_book_verses = 0  # number of verses in the current book
+    incorrect_labels = []
+    correct_labels = []
+    num_book_unk = 0  # number of verses labelled as unknown (-1)
 
+    # define pred_probas
+    pred_probas: list[list[float]] | None = None
+    if isinstance(preds, ProbaPredictions):
+        pred_probas = preds.get_probas()
+
+    # count the number of mislabels per verse while counting the number of
+    # verses in each book
+    for i in range(len(preds.predictions)):
+        num_book_verses += 1
+        if (y_correct[i] != preds.predictions[i]
+            and current_book != preds.samples[i].book):
+            # if current_book is not empty,
+            # calculate some statistics and print
+            if current_book:
+                num_mislabels = len(mislabel_books[current_book])
+                print(f"\n> {current_book}: {num_mislabels} "
+                      + "mislabelled verses, accounting for "
+                      + f"{num_mislabels / num_book_verses:.02f}% out of "
+                      + f"{num_book_verses} verses ({num_book_unk} verses "
+                      + "labelled unknown)")
+            # update the book-level variables
+            current_book = preds.samples[i].book
+            num_book_verses = 0
+
+        # the following section is triggered both when the above `if` section
+        # is triggered and when it is not triggered but the verse's mislabelled
+        if y_correct[i] != preds.predictions[i]:
+            # update variables other than book-level ones
+            incorrect_labels.append(preds.predictions[i])
+            correct_labels.append(y_correct[i])
+
+            # after updating the variables,
+            # add the mislabelled verse to the mislabel_books dict
+            if preds not in mislabel_books:
+                mislabel_books.update({
+                        current_book: [preds.samples[i]]
+                   })
+            else:
+                mislabel_books[current_book].append(preds.samples[i])
+            if preds.predictions[i] == -1:
+                num_book_unk += 1
+
+    # Collate the collected mislabelling results into a Mislabels class instance
+    mislabs = Mislabels(incorrect_labels, correct_labels,
+    [mislab for book in mislabel_books
+                                for mislab in mislabel_books[book]],
+              pred_probas)
+
+    # Print some stats
     print(
         f"Number of mislabelled points out of the total {sample_size} "
-                + f"verses: {num_mislabels}"
+                + f"verses: {len(mislabs)} "
+                + f"({incorrect_labels.count(-1)} labelled as unknown)"
     )
-    print(f"Local accuracy: {accuracy_score(y_correct, prediction):.02f}")
+    print("Local accuracy: "
+          + f"{accuracy_score(y_correct, preds.predictions):.02f}")
 
-    return (num_mislabels, num_correct)
+    return mislabs
 
 
 def metricise(
-        y_true: list[int] | np.ndarray,
-        y_all: list[int] | np.ndarray,
-        y_probas: list[list[float]] | np.ndarray | None = None
-    ) -> tuple[float, np.ndarray, np.ndarray, np.ndarray]:
+        y_true: list[int] | NDArray,
+        y_all: list[int] | NDArray,
+        y_probas: list[list[float]] | NDArray | None = None
+    ) -> tuple[float, NDArray, NDArray, NDArray]:
     """Calculate performance metrics of a classifier using the outputs.
 
     Args:
@@ -149,6 +204,7 @@ def metricise(
         raise ValueError(msg)
 
     if y_probas is not None:
+        # calculate stats that use probabilities
         y_probas_pos = [proba[1] for proba in y_probas]
         cel = log_loss(y_true, y_probas_pos)  # cross-entropy loss
         print("log loss > ")
@@ -237,6 +293,7 @@ def evaluate_classifier(
     loaded_ds: LoadedDataset,
     *,
     plot: bool = False,
+    threshold: float = 0.5
     ) -> tuple[
             ProbaPredictions, ProbaPredictions,
             Mislabels, Mislabels]:
@@ -248,6 +305,9 @@ def evaluate_classifier(
             for the dataset to train and evaluate the classifier with.
         plot: if True, create charts
             and display them with :func:`classifier.eval_utils.plot_charts`.
+        threshold: the threshold of predicted probability at which to decide
+            that a sample should be classified as belonging to
+            a particular class.
 
     Returns:
         :class:`ProbaPredictions` instances, one for OT and another for NT,
@@ -256,31 +316,33 @@ def evaluate_classifier(
     ot_test_x = loaded_ds.test.get_samples(0)
     nt_test_x = loaded_ds.test.get_samples(1)
     # cast / convert lists from the dataset to np.ndarray
-    ot_test_y = np.array(loaded_ds.test.get_labels(0), dtype=np.int16)
-    nt_test_y = np.array(loaded_ds.test.get_labels(1), dtype=np.int16)
-    all_test_y = np.array(loaded_ds.test.get_labels(), dtype=np.int16)
+    ot_test_y = np.array(loaded_ds.test.get_labels(0), dtype=np.int64)
+    nt_test_y = np.array(loaded_ds.test.get_labels(1), dtype=np.int64)
+    all_test_y = np.array(loaded_ds.test.get_labels(), dtype=np.int64)
     print(f"test size: {all_test_y.shape}")
 
     # predict probabilities with clf
     print("OT --->")
     ot_proba_preds = predict_proba(
         clf,
-        ot_test_x
+        ot_test_x,
+        threshold=threshold
     )
-    quick_stats(
+    ot_mislabels = mislabel_stats(
                 np.array(ot_test_x),
                 np.array(ot_test_y),
-                np.array(ot_proba_preds.predictions)
+                ot_proba_preds
             )
     print("NT --->")
     nt_proba_preds = predict_proba(
         clf,
-        nt_test_x
+        nt_test_x,
+        threshold=threshold
     )
-    quick_stats(
+    nt_mislabels = mislabel_stats(
                 np.array(nt_test_x),
                 np.array(nt_test_y),
-                np.array(nt_proba_preds.predictions)
+                nt_proba_preds
             )
     print("All --->")
     pred_y_all = ot_proba_preds.predictions
@@ -292,19 +354,6 @@ def evaluate_classifier(
     if plot:
         plot_charts(all_test_y, pred_y_all, probas)
 
-    # figure out which verses the classifier mislabelled
-    # reportArgumentType can be disabled here because ProbaPredictions.samples
-    # will always be ``list[Verse]`` since we give ``predict_proba`` function
-    # ``{nt/ot}_test_x``, which are both ``list[Verse]`` type. See the
-    # implementation of ``predict_proba`` function for more details.
-    ot_mislabels = find_mislabels(
-        ot_test_y, ot_proba_preds.predictions,
-        test_x=ot_proba_preds.samples, probas=ot_proba_preds.get_probas()  # type: ignore[reportArgumentType]
-        )
-    nt_mislabels = find_mislabels(
-        nt_test_y, nt_proba_preds.predictions,
-        test_x=nt_proba_preds.samples, probas=nt_proba_preds.get_probas()  # type: ignore[reportArgumentType]
-        )
     return (ot_proba_preds, nt_proba_preds, ot_mislabels, nt_mislabels)
 
 

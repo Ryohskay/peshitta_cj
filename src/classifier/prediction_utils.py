@@ -96,7 +96,7 @@ def predict_proba(
         test_x: NDArray | list[Verse],
         threshold: float = 0.5,
     ) -> ProbaPredictions:
-    """Predict on the data with the classifier and return some statistics.
+    """Predict on the data with the classifier and return the probabilities.
 
     Args:
         classifier: any object that has a method `.predict_proba()`.
