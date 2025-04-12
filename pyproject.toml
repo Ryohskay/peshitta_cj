@@ -39,7 +39,7 @@ build-backend = "poetry.core.masonry.api"
 
 # pytest configurations
 [tool.pytest.ini_options]
-pythonpath = [".", "src", "src.classifier"]
+pythonpath = [".", "src"]
 addopts = [
     "--import-mode=importlib",
 ]
