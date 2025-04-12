@@ -1,8 +1,17 @@
 """Test classes and their methods in result_utils.py."""
+import re
+
 import pytest
 
-import re
-from classifier.result_utils import PeshittaWord, Verse
+from pathlib import Path
+
+from src.classifier.result_utils import (
+    Mislabels,
+    PeshittaWord,
+    Predictions,
+    ProbaPredictions,
+    Verse,
+)
 
 
 class TestPeshittaWord:
@@ -106,6 +115,20 @@ class TestVerse:
         for i in range(len(vrs.words)):
             assert (vrs.get_translit_words()[i] == [cal_word.translit][i])
 
+    def test_get_translit_words(self,
+                                cal_one_word_verse: Verse,
+                                cal_word: PeshittaWord,
+                                etcbc_verse: Verse,
+                                etcbc_words: list[PeshittaWord]) -> None:
+        assert (cal_one_word_verse.get_translit_words() == [cal_word.translit])
+        assert (etcbc_verse.get_translit_words() ==
+                    [w.translit for w in etcbc_words])
+
+    def test_get_syriac_words(self,
+                              cal_syriacs: list[str],
+                              full_data_verse: Verse) -> None:
+        assert (full_data_verse.get_syriac_words() == cal_syriacs)
+
     def test_eq(self,
                 cal_verse: Verse,
                 cal_one_word_verse: Verse,
@@ -114,7 +137,7 @@ class TestVerse:
                 cal_word: PeshittaWord,
                 cal_syriacs: list[str],
                 genesis_1_1: str
-                ):
+                ) -> None:
         # test equality comparator
         # totally different stuff
         assert (etcbc_verse != cal_one_word_verse)
@@ -155,44 +178,112 @@ class TestVerse:
         assert (len(cal_one_word_verse) == 1)
         assert (len(etcbc_chr_verse) == 11)
 
-    def test_get_translit_words(self):
-        pass
+    def test_get_words_in_mode(self,
+                               full_data_verse: Verse,
+                               cal_translits: list[str],
+                               cal_syriacs: list[str]) -> None:
+        # it should return a list of transliteration by default
+        assert (full_data_verse.get_words_in_mode() == cal_translits)
+        # mode=1 for transliteration
+        assert (full_data_verse.get_words_in_mode(mode=1) == cal_translits)
+        # mode=2 for syriac
+        assert (full_data_verse.get_words_in_mode(mode=2) == cal_syriacs)
+        # check it raises exception for other undefined modes
+        with pytest.raises(ValueError,
+                           match=r"Argument `mode` must be 1 or 2, but \d"
+                           + " was found."):
+            assert (full_data_verse.get_words_in_mode(mode=0) == cal_translits)
+        with pytest.raises(ValueError,
+                           match=r"Argument `mode` must be 1 or 2, but \d"
+                           + " was found."):
+            assert (full_data_verse.get_words_in_mode(mode=0) == cal_translits)
 
-    def test_get_syriac_words(self):
-        pass
-
-    def test_get_words_in_mode(self):
-        pass
-
-    def test_get_annotations(self):
-        pass
+    def test_get_annotations(self,
+                             full_data_verse: Verse,
+                             cal_annots: list[str]) -> None:
+        assert (full_data_verse.get_annotations() == cal_annots)
 
 
 class TestPredictions:
-    def test_init(self):
-        pass
+    def test_init(self,
+                  cal_verse,
+                  etcbc_verse,
+                  full_data_verse,
+                  ) -> None:
+        # Check exception is raised when lengths of arguemnt lists don't match
+        with pytest.raises(ValueError, match=(re.escape(
+            "length of provided lists/arrays for samples and predictions "
+            + "do not match."))):
+            assert Predictions([full_data_verse], [1, 0])
+
+        with pytest.raises(ValueError, match=(re.escape(
+            "length of provided lists/arrays for samples and correct"
+              + " labels do not match."))):
+            assert Predictions([full_data_verse], [1], [0, 0])
+
+        # Check that normal initialisation works
+        preds = Predictions([full_data_verse], [1], [0])
+        assert (preds.samples == [full_data_verse])
+        assert (preds.predictions == [1])
+        assert (preds.correct_labels == [0])
+        n_preds = Predictions([cal_verse, etcbc_verse, full_data_verse],
+                              [1, 1, 0],
+                              [0, 0, 0])
+        assert (n_preds.samples == [cal_verse, etcbc_verse, full_data_verse])
+        assert (n_preds.predictions == [1, 1, 0])
+        assert (n_preds.correct_labels == [0, 0, 0])
 
 
 class TestProbaPredictions:
-    def test_init(self):
-        pass
+    def test_init(self,
+                  cal_verse: Verse,
+                  etcbc_verse: Verse,
+                  full_data_verse: Verse,
+                  ) -> None:
+        with pytest.raises(ValueError, match=(re.escape(
+            r"lengths of probas 2 and samples 3 do not match!"))):
+            ProbaPredictions([cal_verse, etcbc_verse, full_data_verse],
+                              [0, 0, 1],
+                              [[0.8, 0.2], [0.7, 0.3]],
+                             [0, 0, 0])
+        probas = ProbaPredictions([cal_verse, etcbc_verse, full_data_verse],
+                          [0, 0, 1],
+                          [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]],
+                         [0, 0, 0])
+        assert (probas.samples == [cal_verse, etcbc_verse, full_data_verse])
+        assert (probas.predictions == [0, 0, 1])
+        assert (probas._probas[0] == [0.8, 0.2])
+        assert (probas._probas[1] == [0.7, 0.3])
+        assert (probas._probas[2] == [0.4, 0.6])
+        assert (probas.correct_labels == [0, 0, 0])
 
-    def test_get_probas(self):
-        pass
+    def test_get_probas(self, proba_preds: ProbaPredictions) -> None:
+        assert (proba_preds.get_probas() ==
+                [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]])
 
-    def test_get_total_probas(self):
-        pass
-
-    def test_save_to_file(self):
-        pass
+    def test_get_total_probas(self,
+                              proba_preds: ProbaPredictions,
+                              proba_multi_preds: ProbaPredictions,
+                              ) -> None:
+        # Check for the case with one book
+        aj = 0.8 * 0.7 * 0.4
+        ac = 0.2 * 0.3 * 0.6
+        assert (proba_preds.get_total_probas() == {"Genesis": [aj, ac]})
+        # Check for the case with multiple books
+        assert (proba_multi_preds.get_total_probas() ==
+                {"Genesis": [0.8, 0.2], "Chronicles_1": [3.2e-10, 0.9]})
 
 
 class TestMislabels:
-    def test_init(self):
-        pass
+    def test_init(self,
+                  etcbc_chr_verses: list[Verse],
+                  misls: Mislabels) -> None:
+        no_probas_misl = Mislabels([1,1,1],[0,0,0],
+                  etcbc_chr_verses)
+        assert (no_probas_misl.mislabels == [1,1,1])
+        assert (no_probas_misl.correct_labels == [0,0,0])
+        assert (no_probas_misl.verses == etcbc_chr_verses)
+        assert (no_probas_misl.probas == None)
 
     def test_len(self):
-        pass
-
-    def test_save_to_file(self):
         pass

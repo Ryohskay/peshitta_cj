@@ -1,9 +1,15 @@
 """pytest.fixture objects to reuse among tests"""
 import pytest
 
-from classifier.result_utils import PeshittaWord, Verse
+from src.classifier.result_utils import (
+    Mislabels,
+    PeshittaWord,
+    ProbaPredictions,
+    Verse,
+)
 
 
+# Verse & PeshittaWord
 @pytest.fixture
 def genesis_1_1() -> str:
     return "Genesis Chapter 01 Verse 01"
@@ -106,12 +112,14 @@ def cal_words() -> list[PeshittaWord]:
 
 @pytest.fixture
 def cal_translits() -> list[str]:
+    """Return the transliteration of Genesis 01:01 as list of str."""
     return (["br$yt", "br)", ")lh)", "yt", "$my)", "w_",
                               "yt", ")r()"])
 
 
 @pytest.fixture
 def cal_annots() -> list[str]:
+    """Return the word annotations of Genesis 01:01 as list of str."""
     return ["noun sg. abs. or construct", "verb G",
                  "noun sg. emphatic", "p01", "noun pl. emphatic",
                  "c", "p01", "noun sg. emphatic"
@@ -120,6 +128,7 @@ def cal_annots() -> list[str]:
 
 @pytest.fixture
 def cal_syriacs() -> list[str]:
+    """Return the syriac script of Genesis 01:01 as list of str."""
     return ["ܒܪܫܝܬ", "ܒܪܐ", "ܐܠܗܐ", "ܝܬ", "ܫܡܝܐ", "ܘ", "ܝܬ", "ܐܪܥܐ"]
 
 
@@ -130,11 +139,13 @@ def full_data_verse(
         cal_syriacs: list[str],
         genesis_1_1: str,
         ) -> Verse:
+    """Returns a verse obj populated with CAL data for Genesis 01:01."""
     return Verse(book_name="Genesis",
                  verse_ref=genesis_1_1,
                  translit_words=cal_translits,
                  syriac_words=cal_syriacs,
-                 words_annotations=cal_annots
+                 words_annotations=cal_annots,
+                 origin="CAL"
                )
 
 
@@ -143,6 +154,7 @@ def full_data_words(cal_translits: list[str],
                     cal_annots: list[str],
                     cal_syriacs: list[str]
                     ) -> list[PeshittaWord]:
+    """Returns a list of CAL style PeshittaWord objs for Genesis 01:01."""
     result = []
     for i in range(len(cal_translits)):
         result.append(PeshittaWord(
@@ -155,13 +167,93 @@ def full_data_words(cal_translits: list[str],
 
 
 @pytest.fixture
+def cal_romans_verse() -> Verse:
+    """Returns a CAL style NT Romans verse."""
+    return Verse("Romans", "Romans Chapter 01 Verse 01",
+                 ["p.awlAws", "(ab_d.A)", "d", "ye$w_(", "m$yixA)", "qaryA)",
+                  "w", "a$lyixA)", "d", "e)t_p.re$", "l", "e)wang.elyiAwn", "d",
+                  "a)lAhA)"],
+                 syriac_words=["ܦܿܰܘܠܳܘܣ", "ܥܰܒܼܕܿܳܐ", "ܕ", "ܝܶܫܽܘܥ", "ܡܫܺܝܚܳܐ", "ܩܰܪܝܳܐ", "ܘܰ", "ܫܠܺܝܚܳܐ", "ܕܶ", "ܐܬܼܦܿܪܶܫ", "ܠܶ", "ܐܘܰܢܓܿܶܠܺܝܳܘܢ", "ܕܰ", "ܐܠܳܗܳܐ"],
+                 words_annotations=["PN Personal Name", "noun sg. emphatic",
+                                    "p", "PN Personal Name", "noun sg. emphatic",
+                                    "verb G", "c", "noun sg. emphatic", "c",
+                                    "Verb Gt", "p03",
+                                    "noun sg. abs. or construct", "p",
+                                    "noun sg. emphatic"],
+                 origin="CAL"
+                 )
+
+
+@pytest.fixture
+def etcbc_chr_verses(etcbc_chr_verse: Verse) -> list[Verse]:
+    """Returns a list of three ETCBC style Verses from 1 Chronicles."""
+    res = [etcbc_chr_verse]
+    res.append(Verse(
+        "Chronicles_1",
+        "1 Chronicles Chapter 01 Verse 34",
+["W>WLD", ">BRHM", "L>JSXQ", 'BN"WHJ', "D>JSXQ", "<SW", "W>JSRJL"],
+        ["ܘܐܘܠܕ", "ܐܒܪܗܡ", "ܠܐܝܣܚܩ", "ܒܢ̈ܘܗܝ", "ܕܐܝܣܚܩ", "ܥܣܘ", "ܘܐܝܣܪܝܠ"],
+        origin="ETCBC"
+        ))
+    res.append(Verse(
+        "Chronicles_1",
+        "1 Chronicles Chapter 01 Verse 35",
+    ['BN"WHJ', "D<SW", ">LJPZ", "WR<W>JL", "WJ<WC", "WJ<LJM", "WQWRX"],
+        ["ܒܢ̈ܘܗܝ", "ܕܥܣܘ", "ܐܠܝܦܙ", "ܘܪܥܘܐܝܠ", "ܘܝܥܘܫ", "ܘܝܥܠܝܡ", "ܘܩܘܪܚ"],
+        origin="ETCBC"
+        ))
+    return res
+
+
+@pytest.fixture
 def cal_one_word_verse(
         cal_word: PeshittaWord,
         genesis_1_1: str
         ) -> Verse:
+    """Returns a CAL style Verse containing only the word God.
+
+    The reference for this verse is pointed at Genesis 01:01.
+    """
     return Verse("Genesis",
           genesis_1_1,
           translit_words=[cal_word.translit],
           words_annotations=[cal_word.annots],
           origin="CAL"
           )
+
+
+# Predictions & ProbaPredictions
+@pytest.fixture
+def proba_preds(cal_verse: Verse,
+                etcbc_verse: Verse,
+                full_data_verse: Verse
+                ) -> ProbaPredictions:
+    return ProbaPredictions([cal_verse, etcbc_verse, full_data_verse],
+                              [0, 0, 1],
+                              [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]],
+                             [0, 0, 0])
+
+
+@pytest.fixture
+def proba_multi_preds(
+        cal_verse: Verse,
+        etcbc_chr_verse: Verse
+                      ) -> ProbaPredictions:
+    """Return a ProbaPredictions instance with verses of multiple books."""
+    return ProbaPredictions([cal_verse, etcbc_chr_verse],
+                            [0, 1],
+                            [[0.8, 0.2], [3.2e-10, 0.9]],
+                            [0, 0])
+
+
+# Mislabels
+@pytest.fixture
+def misls(
+        etcbc_chr_verses: list[Verse]
+        ) -> Mislabels:
+    return Mislabels(
+                [1, 1, 1],
+                [0, 0, 0],
+                etcbc_chr_verses,
+                [[1.8e-10, 0.9], [0.667, 0.333], [0.401, 0.60]]
+                )

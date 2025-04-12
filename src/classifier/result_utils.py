@@ -36,6 +36,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def append_to_dict(key: str, values: list, target: dict[str, list]) -> dict:
+    """A utility function to append a list to a dictionary.
+
+    If a ``key`` doesn't yet exist in the ``target`` dictionary, then update
+    the dictionary as usual.
+
+    If ``key`` already exists, instead of replacing the value, append the list
+    at the end of the existing list value.
+    """
+    if key not in target:
+        target.update({key: values})
+    else:
+        target[key].append(values)
+    return target
+
+
 @dataclass
 class PeshittaWord:
     """A dataclass to represent a word in the Peshitta texts.
@@ -326,7 +342,7 @@ class Predictions(Any):
             + " do not match.")
             raise ValueError(msg)
         if (self.correct_labels is not None
-            and (self.samples) == len(self.correct_labels)):
+            and len(self.samples) != len(self.correct_labels)):
             msg = ("length of provided lists/arrays for samples and correct"
                 + " labels do not match.")
             raise ValueError(msg)
@@ -390,16 +406,14 @@ class ProbaPredictions(Predictions):
         for i in range(len(self.samples)):
             if current_book and self.samples[i].book != current_book:
                 # if we finish walking through the verses from one book
-                if current_book not in total_probas:
-                    total_probas.update({current_book: [aj, ac]})
-                else:
-                    total_probas[current_book].append([aj, ac])
+                append_to_dict(current_book, [aj, ac], total_probas)
             if self.samples[i].book != current_book:
                 current_book = self.samples[i].book
                 aj = 1.0
                 ac = 1.0
             aj *= self._probas[i][0]
             ac *= self._probas[i][1]
+        append_to_dict(current_book, [aj, ac], total_probas)
         return total_probas
 
     def save_to_file(self,
@@ -440,12 +454,12 @@ class Mislabels(Any):
     one of the two testaments.
 
     Attributes:
-        mislabels: incorrect labels the classifier assigned
+        incorrect_labels: incorrect labels the classifier assigned
         correct_labels: gold references for the verses
-        verses: mislabelled verses corresponding
-        book_mislabels: mislabelled verses per each book
+        mislabelled_verses: mislabelled verses corresponding
         probas: probabilities of the mislabelled verses belonging to each class,
-            predicted by the classifier
+            predicted by the classifier. Defaults to None if not provided upon
+            initialisation.
     """
     def __init__(
             self,
@@ -466,8 +480,7 @@ class Mislabels(Any):
         self.mislabels = incorrect_labels
         self.correct_labels = correct_labels
         self.verses: list[Verse] = mislabelled_verses
-        if probas is not None:
-            self.probas = probas
+        self.probas = probas
 
     def __len__(self) -> int:
         """An under-the-hood method defining the result of :func:`len`.
