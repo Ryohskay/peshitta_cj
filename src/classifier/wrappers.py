@@ -34,8 +34,8 @@ if TYPE_CHECKING:
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 
-from classifier.fitting_utils import make_feature, make_vocab, vectorise
-from classifier.result_utils import Verse
+from src.classifier.fitting_utils import make_feature, make_vocab, vectorise
+from src.classifier.result_utils import Verse
 
 
 class Classifier(ClassifierMixin, BaseEstimator):
@@ -154,13 +154,13 @@ class BoWEstimator(ProbaClassifier):
             n-grams. Decides if the model uses word n-grams or character
             n-grams.
         vocabs: model vocabulary and verse-level n-gram counts constructed
-            with the :func:`classifier.fitting_utils.make_vocab`
+            with the :func:`src.classifier.fitting_utils.make_vocab`
         train_vector: the vectorised representation of the training data.
         train_y: the gold reference labels for the training data.
         pred_vector: the vectorised representation of the data to predict.
 
     .. seealso::
-        :func:`classifier.fitting_utils.count_n_grams`
+        :func:`src.classifier.fitting_utils.count_n_grams`
             for attrs: ``n``, ``n_gram_formatter``.
     """
     def __init__(
@@ -179,7 +179,7 @@ class BoWEstimator(ProbaClassifier):
             n: ``n`` of n-grams.
 
         .. seealso::
-            :func:`classifier.fitting_utils.make_vocab`
+            :func:`src.classifier.fitting_utils.make_vocab`
         """
         super().__init__(clf)
         self.n: int = n
@@ -197,7 +197,7 @@ class BoWEstimator(ProbaClassifier):
 
         .. note:: This method is in strict terms incompatible with the super
             classes' ``.fit`` method because
-            :class:`classifier.result_utils.Verse` is not hashable.
+            :class:`src.classifier.result_utils.Verse` is not hashable.
             Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
 
         Args:
@@ -235,7 +235,7 @@ class BoWEstimator(ProbaClassifier):
 
         .. note:: This method is in strict terms incompatible with the super
             classes' ``.fit`` method because
-            :class:`classifier.result_utils.Verse` is not hashable.
+            :class:`src.classifier.result_utils.Verse` is not hashable.
             Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
 
         Args:
@@ -265,7 +265,7 @@ class BoWEstimator(ProbaClassifier):
 
         .. note:: This method is in strict terms incompatible with the super
             classes' ``.fit`` method because
-            :class:`classifier.result_utils.Verse` is not hashable.
+            :class:`src.classifier.result_utils.Verse` is not hashable.
             Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
 
         Args:

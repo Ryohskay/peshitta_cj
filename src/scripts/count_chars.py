@@ -1,7 +1,7 @@
 from collections import Counter
 
-from classifier.textfabric_utils import load_etcbc_dataset
-from classifier.result_utils import Verse
+from src.classifier.textfabric_utils import load_etcbc_dataset
+from src.classifier.result_utils import Verse
 
 
 def find_top_k_chars(verses: list[Verse]) -> None:

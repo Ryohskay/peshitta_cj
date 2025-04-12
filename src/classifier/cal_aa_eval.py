@@ -31,13 +31,13 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.dataset_skeleton import DataSplit
-from classifier.eval_utils import (
+from src.classifier.dataset_skeleton import DataSplit
+from src.classifier.eval_utils import (
     eval_and_save,
 )
-from classifier.load_cal import load_cal_dataset
-from classifier.result_utils import Verse
-from classifier.wrappers import BoWEstimator
+from src.classifier.load_cal import load_cal_dataset
+from src.classifier.result_utils import Verse
+from src.classifier.wrappers import BoWEstimator
 
 
 def csvify_cal(
@@ -146,7 +146,7 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
         but without proper nouns and their annotations.
 
     .. seealso:
-        :func:`classifier.aa_cal_consistent.remove_proclitic_ubs`
+        :func:`src.classifier.aa_cal_consistent.remove_proclitic_ubs`
             Removes underscores after proclitics.
     """
     verses_trimmed = []

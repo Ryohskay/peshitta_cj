@@ -44,15 +44,15 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import StratifiedKFold
 
-from classifier.dataset_skeleton import LoadedDataset
-from classifier.prediction_utils import predict_proba
-from classifier.result_utils import (
+from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.prediction_utils import predict_proba
+from src.classifier.result_utils import (
     Mislabels,
     Predictions,
     ProbaPredictions,
     Verse,
 )
-from classifier.wrappers import BoWEstimator
+from src.classifier.wrappers import BoWEstimator
 
 
 def mislabel_stats(
@@ -67,14 +67,14 @@ def mislabel_stats(
             produced the predictions.
         y_correct: Correct (gold-standard) labels
             for the input verses.
-        preds: a :class:`classifier.result_utils.Predictions` instance for
+        preds: a :class:`src.classifier.result_utils.Predictions` instance for
             the results of predictions on the input. When a
-            :class:`classifier.result_utils.ProbaPredictions` instance is
+            :class:`src.classifier.result_utils.ProbaPredictions` instance is
             passed, the returned ``Mislabels`` class instance will have
             the ``probas`` attribute set.
 
     Returns:
-        A :class:`classifier.result_utils.Mislabels` instance.
+        A :class:`src.classifier.result_utils.Mislabels` instance.
 
     Raises:
         ValueError: If the provided list of inputs to test is either zero
@@ -300,11 +300,11 @@ def evaluate_classifier(
     """Evaluate a classifier with provided test sets.
 
     Args:
-        clf: a :class:`classifier.wrappers.BoWEstimator` instance.
-        loaded_ds: a :class:`classifier.dataset_skeleton.LoadedDataset` instance
+        clf: a :class:`src.classifier.wrappers.BoWEstimator` instance.
+        loaded_ds: a :class:`src.classifier.dataset_skeleton.LoadedDataset` instance
             for the dataset to train and evaluate the classifier with.
         plot: if True, create charts
-            and display them with :func:`classifier.eval_utils.plot_charts`.
+            and display them with :func:`src.classifier.eval_utils.plot_charts`.
         threshold: the threshold of predicted probability at which to decide
             that a sample should be classified as belonging to
             a particular class.
@@ -370,9 +370,9 @@ def eval_and_save(  # noqa: PLR0913
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
 
     Args:
-        clf: a classifier wrapped in :class:`classifier.wrappers.BoWEstimator`
+        clf: a classifier wrapped in :class:`src.classifier.wrappers.BoWEstimator`
         loaded: a dataset loaded from files as a
-            :class:`classifier.dataset_skeleton.LoadedDataset` instance.
+            :class:`src.classifier.dataset_skeleton.LoadedDataset` instance.
         file_formatter: any callable object (function, method, etc.)
             that returns a formatted string which can be directly
             written to a file.
@@ -393,11 +393,11 @@ def eval_and_save(  # noqa: PLR0913
         Error descriptions in this documentation are not thorough.
 
     .. seealso::
-        :func:`classifier.eval_utils.evaluate_classifier`
+        :func:`src.classifier.eval_utils.evaluate_classifier`
             for params: ``clf``, ``ot_test_X``, ``ot_test_y``,
             ``nt_test_X``, ``nt_test_y``
-        :func:`classifier.eval_utils.save_mislabels`
-        :func:`classifier.eval_utils.save_all_preds`
+        :func:`src.classifier.eval_utils.save_mislabels`
+        :func:`src.classifier.eval_utils.save_all_preds`
             for param: ``formatter``.
     """
     # convert the out_dir to Path

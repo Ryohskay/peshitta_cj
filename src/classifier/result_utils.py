@@ -240,7 +240,7 @@ class Verse(Any):
             a list of transliterated words in the verse.
 
         .. seealso::
-            :class:`classifier.result_utils.PeshittaWord`
+            :class:`src.classifier.result_utils.PeshittaWord`
                 Refer to ``translit`` attribute there for details of
                 transliterations.
         """
@@ -257,7 +257,7 @@ class Verse(Any):
             upon instantiating the Verse.
 
         .. seealso::
-            :class:`classifier.result_utils.PeshittaWord`
+            :class:`src.classifier.result_utils.PeshittaWord`
                 Refer to ``translit`` attribute there for details of
                 Syriac script words.
         """
@@ -305,7 +305,7 @@ class FileFormatterProto(Protocol):
         """Defines the signature for a FileFormatterProto function.
 
         Args:
-            samples: a list of samples (:class:`classifier.result_utils.Verse`
+            samples: a list of samples (:class:`src.classifier.result_utils.Verse`
                 instances) to save.
             probas: two-dimensional list of probabilities of each verse
                 belonging to each of the classes.
@@ -356,7 +356,7 @@ class ProbaPredictions(Predictions):
             by the classifier.
 
     .. seealso::
-        See :class:`classifier.result_utils.Predictions` for
+        See :class:`src.classifier.result_utils.Predictions` for
             other arguments.
     """
     def __init__(
@@ -458,7 +458,7 @@ class Mislabels(Any):
         correct_labels: gold references for the verses
         mislabelled_verses: mislabelled verses corresponding
         probas: probabilities of the mislabelled verses belonging to each class,
-            predicted by the classifier. Defaults to None if not provided upon
+            predicted by the src.classifier. Defaults to None if not provided upon
             initialisation.
     """
     def __init__(

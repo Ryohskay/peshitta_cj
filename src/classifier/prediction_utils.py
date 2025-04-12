@@ -23,19 +23,19 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Utility functions to make predictions with a classifier."""
+"""Utility functions to make predictions with a src.classifier."""
 
 from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
 
-from classifier.result_utils import (
+from src.classifier.result_utils import (
     Predictions,
     ProbaPredictions,
     Verse,
 )
-from classifier.wrappers import Classifier, ProbaClassifier
+from src.classifier.wrappers import Classifier, ProbaClassifier
 
 
 def predict(
@@ -55,7 +55,7 @@ def predict(
     Returns:
         A :class:`Prediction` class instance.
     """
-    y_pred = classifier.predict(test_samples)
+    y_pred = src.classifier.predict(test_samples)
     return Predictions(test_samples, y_pred,
                 test_labels)
 
@@ -108,9 +108,9 @@ def predict_proba(
             a particular class.
 
     Returns:
-        a :class:`classifier.result_utils.ProbaPredictions` instance.
+        a :class:`src.classifier.result_utils.ProbaPredictions` instance.
     """
-    y_pred_proba = classifier.predict_proba(test_x)
+    y_pred_proba = src.classifier.predict_proba(test_x)
     # convert the list of probas to a list of labels
     y_pred = convert(y_pred_proba, threshold)
 

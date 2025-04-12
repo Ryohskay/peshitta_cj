@@ -29,14 +29,14 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.dataset_skeleton import DataSplit
-from classifier.eval_utils import (
+from src.classifier.dataset_skeleton import DataSplit
+from src.classifier.eval_utils import (
     eval_and_save,
 )
-from classifier.fitting_utils import identity
-from classifier.result_utils import Verse
-from classifier.textfabric_utils import load_etcbc_dataset
-from classifier.wrappers import BoWEstimator
+from src.classifier.fitting_utils import identity
+from src.classifier.result_utils import Verse
+from src.classifier.textfabric_utils import load_etcbc_dataset
+from src.classifier.wrappers import BoWEstimator
 
 
 def csvify_etcbc(
@@ -145,6 +145,15 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
 
 
 def remove_non_chars(verses: list[Verse]) -> list[Verse]:
+    """Remove non-character unicode codepoints from the text.
+
+    Specifically, this function removes ``\u0308`` (Combining Diaeresis)
+    used in place of Syriac diacritic Seyame (ܣܝ̈ܡܐ) a and ``\u0307``
+    (Combining Dot Above).
+
+    Returns:
+        a list of Verse instances without non-character unicode codepoints.
+    """
     new_verses = []
     for v in verses:
         syriac = [sw.replace("\u0308", "").replace("\u0307", "") for sw in v.get_syriac_words()]

@@ -30,8 +30,8 @@ from pathlib import Path
 from typing import TypedDict
 
 from classifier import book_data
-from classifier.dataset_skeleton import LoadedDataset
-from classifier.result_utils import Verse
+from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.result_utils import Verse
 
 
 class BookData(TypedDict):
@@ -138,11 +138,11 @@ def get_book_verses(
     """Get all books in the dict format and return a list of ``Verse``.
 
     This function checks if each verse in the listed books is target for
-    extraction, and if so, calls :func:`classifier.load_cal.extract_verse`
-    to get a :class:`classifier.result_utils.Verse` object.
+    extraction, and if so, calls :func:`src.classifier.load_cal.extract_verse`
+    to get a :class:`src.classifier.result_utils.Verse` object.
 
     Returns:
-        list of :class:`classifier.result_utils.Verse` instances
+        list of :class:`src.classifier.result_utils.Verse` instances
     """
     verse_box: list[Verse] = []
     for book in jso_lis:
@@ -169,14 +169,14 @@ def load_cal_dataset(
 
     .. note::
         To change the books and chapters from which the data is loaded, update
-        :mod:`classifier.book_data`.
+        :mod:`src.classifier.book_data`.
 
     Args:
         src_dir: string containing path to the ``src`` directory, or where
             ``scraper/cal_results/`` is located.
 
     Returns:
-        a :class:`classifier.dataset_skeleton.LoadedDataset` instance.
+        a :class:`src.classifier.dataset_skeleton.LoadedDataset` instance.
     """
     # load the CSV data files
     proj_root = Path(src_dir)

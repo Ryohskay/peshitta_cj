@@ -27,11 +27,11 @@
 
 from collections import Counter
 
-from classifier.dataset_skeleton import DataSplit, LoadedDataset
-from classifier.fitting_utils import make_vocab
-from classifier.inspection_utils import find_top_k_words
-from classifier.load_cal import load_cal_dataset
-from classifier.textfabric_utils import load_etcbc_dataset
+from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
+from src.classifier.fitting_utils import make_vocab
+from src.classifier.inspection_utils import find_top_k_words
+from src.classifier.load_cal import load_cal_dataset
+from src.classifier.textfabric_utils import load_etcbc_dataset
 
 
 def print_common_chars(
@@ -41,7 +41,7 @@ def print_common_chars(
     """Find and print common characters in the given dataset.
 
     Args:
-        dataset: the :class:`classifier.dataset_skeleton.DataSplit` object
+        dataset: the :class:`src.classifier.dataset_skeleton.DataSplit` object
             for the subset of data to search the characters.
         target: the label for the target data. ``0`` for OT, ``1`` for NT, and
             ``None`` for both (defaults to ``None``).

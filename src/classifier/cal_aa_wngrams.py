@@ -28,18 +28,18 @@
 from sklearn.naive_bayes import MultinomialNB
 
 from classifier import cal_aa_eval
-from classifier.cal_aa_eval import (
+from src.classifier.cal_aa_eval import (
     csvify_cal,
     remove_enclitics,
     remove_proper_nouns,
 )
-from classifier.dataset_skeleton import DataSplit
-from classifier.eval_utils import (
+from src.classifier.dataset_skeleton import DataSplit
+from src.classifier.eval_utils import (
     eval_and_save,
 )
-from classifier.fitting_utils import identity
-from classifier.load_cal import load_cal_dataset
-from classifier.wrappers import BoWEstimator
+from src.classifier.fitting_utils import identity
+from src.classifier.load_cal import load_cal_dataset
+from src.classifier.wrappers import BoWEstimator
 
 if __name__ == "__main__":
     cal_ds = load_cal_dataset("./")

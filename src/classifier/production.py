@@ -27,17 +27,17 @@ from pathlib import Path
 
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.cal_aa_eval import (
+from src.classifier.cal_aa_eval import (
     csvify_cal,
     remove_proper_nouns,
     remove_underscores,
 )
-from classifier.etcbc_aa_eval import csvify_etcbc
-from classifier.eval_utils import eval_and_save
-from classifier.load_cal import load_cal_dataset
-from classifier.prediction_utils import predict_proba
-from classifier.textfabric_utils import load_etcbc_dataset
-from classifier.wrappers import BoWEstimator
+from src.classifier.etcbc_aa_eval import csvify_etcbc
+from src.classifier.eval_utils import eval_and_save
+from src.classifier.load_cal import load_cal_dataset
+from src.classifier.prediction_utils import predict_proba
+from src.classifier.textfabric_utils import load_etcbc_dataset
+from src.classifier.wrappers import BoWEstimator
 
 if __name__ == "__main__":
     # LOAD ETCBC DATA

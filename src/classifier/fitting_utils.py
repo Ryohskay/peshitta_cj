@@ -30,7 +30,7 @@ from collections.abc import Callable, Sequence
 
 from nltk.util import ngrams
 
-from classifier.result_utils import Verse
+from src.classifier.result_utils import Verse
 
 
 def count_n_grams(
@@ -75,12 +75,12 @@ def make_vocab(
         verses: list of verses to find n-grams.
         ngram_formatter: This is a pre-processing function or method to apply
             to the text on each verse.
-            See :func:`classifier.fitting_utils.count_n_grams` for more details.
+            See :func:`src.classifier.fitting_utils.count_n_grams` for more details.
         span: the size of window for n-gram extraction, i.e. *N* of n-grams.
         mode: type of script to find the n-grams in.
 
     .. seealso::
-        :meth:`classifier.result_utils.Verse.get_words_in_mode`
+        :meth:`src.classifier.result_utils.Verse.get_words_in_mode`
             for param: ``mode``.
 
     Returns:
@@ -149,9 +149,9 @@ def make_word_n_gram_vocab(
     """Wraps the ``make_vocab`` function with a formatter for word n-grams.
 
     .. seealso:
-        See :func:`classifier.fitting_utils.make_vocab`
+        See :func:`src.classifier.fitting_utils.make_vocab`
             for params: ``verses``, ``span``, ``mode``.
-        See :meth:`classifier.result_utils.Verse.get_words_in_mode`
+        See :meth:`src.classifier.result_utils.Verse.get_words_in_mode`
             for param: ``mode``.
 
     Returns:
@@ -170,7 +170,7 @@ def make_char_n_gram_vocab(
     """Wraps the ``make_vocab`` function with a formatter for character n-grams.
 
     .. seealso:
-        See :func:`classifier.fitting_utils.make_vocab`
+        See :func:`src.classifier.fitting_utils.make_vocab`
             for params: ``verses``, ``span``, ``mode``, ``ngram_formatter``.
 
     Returns:
@@ -189,11 +189,11 @@ def make_feature(
 
     This function leverages the :class:`Counter` objects generated when
     constructing the model n-gram vocabulary in
-    :func:``classifier.fitting_utils.make_vocab``
+    :func:``src.classifier.fitting_utils.make_vocab``
 
     Args:
         n_gram_vocabs: return values of
-            :func:``classifier.fitting_utils.make_vocab``
+            :func:``src.classifier.fitting_utils.make_vocab``
 
     Returns:
         A two-dimensional list containing feature vectors representing
@@ -255,12 +255,12 @@ def vectorise(
             counts.
         ngram_formatter: This is a pre-processing function or method to apply
             to the text on each verse.
-            See :func:`classifier.fitting_utils.count_n_grams` for more details.
+            See :func:`src.classifier.fitting_utils.count_n_grams` for more details.
         span: the size of window for n-gram extraction, i.e. *N* of n-grams.
         mode: type of script to find the n-grams in.
 
     .. seealso::
-        :meth:`classifier.result_utils.Verse.get_words_in_mode`
+        :meth:`src.classifier.result_utils.Verse.get_words_in_mode`
             for param: ``mode``.
 
     Returns:

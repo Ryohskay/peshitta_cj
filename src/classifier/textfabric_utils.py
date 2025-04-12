@@ -40,8 +40,8 @@ along with all of its methods.
 from tf.app import use
 
 from classifier import book_data
-from classifier.dataset_skeleton import LoadedDataset
-from classifier.result_utils import Verse
+from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.result_utils import Verse
 
 
 def get_verses(
@@ -102,7 +102,7 @@ def load_etcbc_dataset() -> LoadedDataset:
     """Parse the dataset and get verses.
 
     Returns:
-        a :class:`classifier.dataset_skeleton.LoadedDataset` object containing
+        a :class:`src.classifier.dataset_skeleton.LoadedDataset` object containing
         the verses from ETCBC.
     """
     # extract verses from the ETCBC dataset

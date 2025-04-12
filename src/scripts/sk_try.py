@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.wrappers import BoWEstimator
+from src.classifier.wrappers import BoWEstimator
 
 if __name__ == "__main__":
     mnb = BoWEstimator(MultinomialNB(), formatter=" ".join)

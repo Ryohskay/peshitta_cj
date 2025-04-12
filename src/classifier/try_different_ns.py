@@ -25,16 +25,16 @@
 
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier.dataset_skeleton import DataSplit
-from classifier.etcbc_aa_eval import csvify_etcbc, remove_proper_nouns
-from classifier.eval_utils import (
+from src.classifier.dataset_skeleton import DataSplit
+from src.classifier.etcbc_aa_eval import csvify_etcbc, remove_proper_nouns
+from src.classifier.eval_utils import (
     cross_validate,
     eval_and_save,
 )
-from classifier.fitting_utils import identity
-from classifier.result_utils import Verse
-from classifier.textfabric_utils import load_etcbc_dataset
-from classifier.wrappers import BoWEstimator
+from src.classifier.fitting_utils import identity
+from src.classifier.result_utils import Verse
+from src.classifier.textfabric_utils import load_etcbc_dataset
+from src.classifier.wrappers import BoWEstimator
 
 
 def remove_non_chars(verses: list[Verse]) -> list[Verse]:

@@ -27,7 +27,7 @@
 from collections import Counter
 from pathlib import Path
 
-from classifier.result_utils import (
+from src.classifier.result_utils import (
     Verse,
 )
 

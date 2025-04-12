@@ -29,12 +29,12 @@
     accidentally mess with some other datasets loaded using this format.
 """
 
+import json
 from collections.abc import Callable, Generator
+from pathlib import Path
 from typing import TypedDict
 
-from classifier.result_utils import Verse
-from pathlib import Path
-import json
+from src.classifier.result_utils import Verse
 
 
 class DatasetDict(TypedDict):
@@ -154,11 +154,11 @@ class DataSplit:
                 extract.
 
         .. seealso::
-            :meth:`classifier.dataset_skeleton.DataSplit.get_labels` for a
+            :meth:`src.classifier.dataset_skeleton.DataSplit.get_labels` for a
             more thorough description of the argument `target`.
 
         Yields:
-            A :class:`classifier.dataset_skeleton.DatasetDict` instance,
+            A :class:`src.classifier.dataset_skeleton.DatasetDict` instance,
             representing one entry in a dataset. For Huggingface datasets
             library, write this as a line of a file and give it a ``.json``
             file extension.
@@ -179,7 +179,7 @@ class DataSplit:
             fun: a callable object that takes a ``str`` and returns a ``str``.
 
         Returns:
-            a list of :class:`classifier.result_utils.Verse` object containing
+            a list of :class:`src.classifier.result_utils.Verse` object containing
             the verse's text to which the function was applied.
         """
         verses = []
@@ -201,7 +201,7 @@ class DataSplit:
             fun: a callable object that takes a ``str`` and returns a ``str``.
 
         Returns:
-            a list of :class:`classifier.result_utils.Verse` object containing
+            a list of :class:`src.classifier.result_utils.Verse` object containing
             the verse's text to which the function was applied.
         """
         verses = []
@@ -218,9 +218,9 @@ class LoadedDataset:
     """A wrapper around datasets loaded from files.
 
     Attributes:
-        train: a :class:`classifier.dataset_skeleton.DataSplit` instance
+        train: a :class:`src.classifier.dataset_skeleton.DataSplit` instance
             containing the train split (training data).
-        test: a :class:`classifier.dataset_skeleton.DataSplit` instance
+        test: a :class:`src.classifier.dataset_skeleton.DataSplit` instance
             containing the test split (test data).
 
         .. note::
