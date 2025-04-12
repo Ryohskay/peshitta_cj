@@ -37,6 +37,13 @@ interrogate = "^1.7.0"
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+# pytest configurations
+[tool.pytest.ini_options]
+pythonpath = "src/classifier"
+addopts = [
+    "--import-mode=importlib",
+]
+
 # Ruff configurations
 [tool.ruff]
 line-length = 80
@@ -85,17 +92,12 @@ unfixable = []
 convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
-"**/tests/*" = [
-    "E402",  # module-import-not-at-top-of-file
-    "ANN001",
-    "ANN201",
-    "D100",
-    "D103",
-    "D205",
-    "D400",
-    "D401",
-    "S101"
+"test/*" = [
+    "CPY001", # missing-copyright-notice
+    "E402",   # module-import-not-at-top-of-file
+    "D101",   # undocumented-public-class
+    "D102",   # undocumented-public-method
+    "D103",   # undocumented-public-function
+    "PLR6301",# no-self-use
+    "S101"    # assert
     ]
-"src/classifier/textfabric_utils.py" = [
-    "F821", # undefined-name
-]

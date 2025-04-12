@@ -32,6 +32,9 @@ from typing import Any, Literal, Protocol
 import numpy as np
 from numpy.typing import NDArray
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class PeshittaWord:
@@ -128,6 +131,13 @@ class Verse(Any):
         self.reference: str = verse_ref
         self.words: list[PeshittaWord] = []
 
+        # Check for invalid arguments
+        if (book_name is None or verse_ref is None or translit_words is None):
+            msg = (f"book_name ({book_name}), verse_ref ({verse_ref}), and"
+                   + f" translit_words ({translit_words}) given: "
+                   + "they cannot be None!")
+            raise ValueError(msg)
+
         if (
                 syriac_words is not None
                 and len(translit_words) != len(syriac_words)
@@ -156,7 +166,7 @@ class Verse(Any):
                         translit_words[i],
                         syriac_words[i],
                         words_annotations[i],
-                        origin,
+                        origin=origin,
                         ))
             elif syriac_words is not None and words_annotations is None:
                 self.words.append(PeshittaWord(
@@ -171,6 +181,7 @@ class Verse(Any):
                         origin=origin,
                         ))
             else:
+                logger.warning("No origin provided to Verse.__init__")
                 self.words.append(PeshittaWord(
                         translit_words[i],
                         ))
@@ -192,9 +203,8 @@ class Verse(Any):
             A string where transliterations words are joined with a space,
             creating a string containing the all words in the verse.
         """
-        ref = self.reference
         words = " ".join([w.translit for w in self.words])
-        return ref + " | " + words
+        return self.reference + " | " + words
 
     def __len__(self) -> int:
         """An under-the-hood method defining the result of :func:`len`.
@@ -466,18 +476,6 @@ class Mislabels(Any):
             An integer indicating number of mislabelled verses.
         """
         return len(self.mislabels)
-
-    # def extract_verses(
-    #         self,
-    #         vrs: list[Verse],
-    #     ) -> None:
-    #     """Extract verses at ``idcs`` into ``verses`` and ``book_mislabels`` .
-    #
-    #     Args:
-    #         vrs: a list of Verses which includes some mislabelled verses.
-    #             The order of verses must correspond to those of self.idcs.
-    #     """
-    #     self.verses = [vrs[int(idx)] for idx in self.idcs]
 
     def save_to_file(
             self,
