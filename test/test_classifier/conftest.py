@@ -1,6 +1,7 @@
 """pytest.fixture objects to reuse among tests"""
 import pytest
 
+from src.classifier.dataset_skeleton import DataSplit
 from src.classifier.result_utils import (
     Mislabels,
     PeshittaWord,
@@ -175,7 +176,8 @@ def cal_romans_verse() -> Verse:
                   "a)lAhA)"],
                  syriac_words=["ܦܿܰܘܠܳܘܣ", "ܥܰܒܼܕܿܳܐ", "ܕ", "ܝܶܫܽܘܥ", "ܡܫܺܝܚܳܐ", "ܩܰܪܝܳܐ", "ܘܰ", "ܫܠܺܝܚܳܐ", "ܕܶ", "ܐܬܼܦܿܪܶܫ", "ܠܶ", "ܐܘܰܢܓܿܶܠܺܝܳܘܢ", "ܕܰ", "ܐܠܳܗܳܐ"],
                  words_annotations=["PN Personal Name", "noun sg. emphatic",
-                                    "p", "PN Personal Name", "noun sg. emphatic",
+                                    "p", "PN Personal Name",
+                                    "noun sg. emphatic",
                                     "verb G", "c", "noun sg. emphatic", "c",
                                     "Verb Gt", "p03",
                                     "noun sg. abs. or construct", "p",
@@ -188,7 +190,7 @@ def cal_romans_verse() -> Verse:
 def etcbc_chr_verses(etcbc_chr_verse: Verse) -> list[Verse]:
     """Returns a list of three ETCBC style Verses from 1 Chronicles."""
     res = [etcbc_chr_verse]
-    res.append(Verse(
+    res.append(Verse(  # noqa: FURB113
         "Chronicles_1",
         "1 Chronicles Chapter 01 Verse 34",
 ["W>WLD", ">BRHM", "L>JSXQ", 'BN"WHJ', "D>JSXQ", "<SW", "W>JSRJL"],
@@ -203,6 +205,28 @@ def etcbc_chr_verses(etcbc_chr_verse: Verse) -> list[Verse]:
         origin="ETCBC"
         ))
     return res
+
+
+@pytest.fixture
+def etcbc_acts_verse() -> Verse:
+    """Returns an ETCBC style Verse containing Acts 01:06."""
+    return Verse("Acts", "Acts Chapter 01 Verse 06",
+                 translit_words=["HNWN", "DJN", "KD", "KNJCJN", "C>LWHJ",
+                                 "W>MRJN", "LH", "MRN", ">N", "BHN>", "ZBN>",
+                                 "MPN>", ">NT", "MLKWT>", "L>JSRJL"],
+                 syriac_words=["ܗܢܘܢ", "ܕܝܢ", "ܟܕ", "ܟܢܝܫܝܢ", "ܫܐܠܘܗܝ", "ܘܐܡܪܝܢ", "ܠܗ", "ܡܪܢ", "ܐܢ", "ܒܗܢܐ", "ܙܒܢܐ", "ܡܦܢܐ", "ܐܢܬ", "ܡܠܟܘܬܐ", "ܠܐܝܣܪܝܠ"]
+                 )
+
+
+@pytest.fixture
+def etcbc_cor1_verse() -> Verse:
+    """Returns an ETCBC style Verse containing 1 Corinthians 02:07."""
+    return Verse("1_Corinthians", "1_Corinthians Chapter 02 Verse 07",
+                 [">L>", "MMLLJNN", "XKMT>", "D>LH>", "B>RZ",
+                "HJ", "DMKSJ>", "HWT", "WQDM", "HW>", "PRCH", ">LH>", "MN",
+                "QDM", "<LM>", "LCWBX>", "DJLN"],
+                ["ܐܠܐ", "ܡܡܠܠܝܢܢ", "ܚܟܡܬܐ", "ܕܐܠܗܐ", "ܒܐܪܙ", "ܗܝ", "ܕܡܟܣܝܐ", "ܗܘܬ", "ܘܩܕܡ", "ܗܘܐ", "ܦܪܫܗ", "ܐܠܗܐ", "ܡܢ", "ܩܕܡ", "ܥܠܡܐ", "ܠܫܘܒܚܐ", "ܕܝܠܢ"]
+)
 
 
 @pytest.fixture
@@ -257,3 +281,21 @@ def misls(
                 etcbc_chr_verses,
                 [[1.8e-10, 0.9], [0.667, 0.333], [0.401, 0.60]]
                 )
+
+
+# DataSplit
+@pytest.fixture
+def cal_ds(cal_verse: Verse,
+           cal_one_word_verse: Verse,
+           cal_romans_verse: Verse) -> DataSplit:
+    return DataSplit([cal_verse, cal_one_word_verse],
+                       [cal_romans_verse])
+
+
+@pytest.fixture
+def etcbc_ds(etcbc_chr_verses: list[Verse],
+             etcbc_acts_verse: Verse,
+             etcbc_cor1_verse: Verse
+             ) -> DataSplit:
+    return DataSplit(etcbc_chr_verses,
+                     [etcbc_acts_verse, etcbc_cor1_verse])

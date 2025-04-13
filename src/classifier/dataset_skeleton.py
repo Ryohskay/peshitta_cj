@@ -32,7 +32,7 @@
 import json
 from collections.abc import Callable, Generator
 from pathlib import Path
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 from src.classifier.result_utils import Verse
 
@@ -146,8 +146,10 @@ class DataSplit:
         # else
         return [target for v in self.verses[target]]
 
-    def generate_hf(self, target: int) -> Generator[DatasetDict]:
-        """Generate the text of verses in Huggingface datasets format.
+    def generate_syriac_hf(self, target: int | None = None) -> Generator[DatasetDict]:
+        """Generate the syriac text of verses in Huggingface datasets format.
+
+        Each yielded item is a JSONL (JSON Lines) line.
 
         Args:
             target: integer designating the label for the target class to
@@ -160,58 +162,50 @@ class DataSplit:
         Yields:
             A :class:`src.classifier.dataset_skeleton.DatasetDict` instance,
             representing one entry in a dataset. For Huggingface datasets
-            library, write this as a line of a file and give it a ``.json``
+            library, write this to a file as a line and give it a ``.json``
             file extension.
         """
-        for i in range(self.num_classes):
+        if target is None:
+            for i in range(self.num_classes):
+                verses = self.get_samples(i)
+                for v in verses:
+                    yield {"label": i,
+                            "text": " ".join(v.get_syriac_words())}
+        else:
+            label: int = self._validate_target(target)  # type: ignore[reportAssignmentType]
+            verses = self.get_samples(label)
+            for v in verses:
+                yield {"label": label,
+                        "text": " ".join(v.get_syriac_words())}
+
+    def generate_translit_hf(self, target: int | None = None
+                             ) -> Generator[DatasetDict]:
+        """Generate the transliterated verses in Huggingface datasets format.
+
+        Each yielded item is a JSONL (JSON Lines) line.
+
+        Args:
+            target: integer designating the label for the target class to
+                extract.
+
+        .. seealso::
+            :meth:`src.classifier.dataset_skeleton.DataSplit.get_labels` for a
+            more thorough description of the argument `target`.
+
+        Yields:
+            A :class:`src.classifier.dataset_skeleton.DatasetDict` instance,
+            representing one entry in a dataset. For Huggingface datasets
+            library, write this to a file as a line and give it a ``.json``
+            file extension.
+        """
+        stop = self.num_classes
+        if target is not None:
+            stop: int = self._validate_target(target) + 1  # type: ignore[reportAssignmentType]
+        for i in range(stop):
             verses = self.get_samples(target)
             for v in verses:
                 yield {"label": i,
                         "text": " ".join(v.get_syriac_words())}
-
-    def map_translit(self, fun: Callable[[str], str]) -> list[Verse]:
-        """Map a Callable object to every translit entry in the verse.
-
-        This function applies a function and applies that function on every
-        word in the transliterated verse.
-
-        Args:
-            fun: a callable object that takes a ``str`` and returns a ``str``.
-
-        Returns:
-            a list of :class:`src.classifier.result_utils.Verse` object containing
-            the verse's text to which the function was applied.
-        """
-        verses = []
-        for vrs in self.get_samples():
-            mapped_translit = list(map(fun, vrs.get_translit_words()))
-            verses.append(Verse(vrs.book, vrs.reference,
-                                mapped_translit, vrs.get_syriac_words(),
-                                vrs.get_annotations(),
-                                origin=vrs.words[0].origin))
-        return verses
-
-    def map_syriac(self, fun: Callable[[str], str]) -> list[Verse]:
-        """Map a Callable object to every translit entry in the verse.
-
-        This function applies a function and applies that function on every
-        word in the Syriac verse.
-
-        Args:
-            fun: a callable object that takes a ``str`` and returns a ``str``.
-
-        Returns:
-            a list of :class:`src.classifier.result_utils.Verse` object containing
-            the verse's text to which the function was applied.
-        """
-        verses = []
-        for vrs in self.get_samples():
-            mapped_syr = list(map(fun, vrs.get_syriac_words()))
-            verses.append(Verse(vrs.book, vrs.reference,
-                                mapped_syr, vrs.get_syriac_words(),
-                                vrs.get_annotations(),
-                                origin=vrs.words[0].origin))
-        return verses
 
 
 class LoadedDataset:
@@ -244,12 +238,14 @@ class LoadedDataset:
     def save_as_json(
             self,
             save_dir: str | Path,
+            mode: Literal["syriac", "translit"] = "syriac",
         ) -> None:
         """Save the given data in json compatible with Huggingface datasets.
 
         Args:
             save_dir: a string or :class:`python:pathlib.Path` object for
                 the path to save the dataset files.
+            mode: integer indicating the label for the class. 
 
         Raises:
             FileNotFoundError: when the directory for saving the dataset files
@@ -271,7 +267,7 @@ class LoadedDataset:
 
         # save test dataset
         for i in range(self.test.num_classes):
-            verse_data = list(self.test.generate_hf(i))
+            verse_data = list(self.test.generate__hf(i))
 
             save_file = save_dir_p / f"etcbc_test_data_{i}.json"
             with save_file.open("w", encoding="utf-8") as fp:

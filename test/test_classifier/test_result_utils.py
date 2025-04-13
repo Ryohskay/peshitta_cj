@@ -276,8 +276,7 @@ class TestProbaPredictions:
 
 class TestMislabels:
     def test_init(self,
-                  etcbc_chr_verses: list[Verse],
-                  misls: Mislabels) -> None:
+                  etcbc_chr_verses: list[Verse]) -> None:
         no_probas_misl = Mislabels([1,1,1],[0,0,0],
                   etcbc_chr_verses)
         assert (no_probas_misl.mislabels == [1,1,1])
@@ -285,5 +284,5 @@ class TestMislabels:
         assert (no_probas_misl.verses == etcbc_chr_verses)
         assert (no_probas_misl.probas == None)
 
-    def test_len(self):
-        pass
+    def test_len(self, misls: Mislabels) -> None:
+        assert (len(misls) == 3)

@@ -32,33 +32,15 @@ from typing import TypedDict
 from classifier import book_data
 from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.result_utils import Verse
+from src.classifier.sanitisation_utils import sanitise_str, normalise_book_title
 
 
 class BookData(TypedDict):
+    """A dictionary representing the data structure in scrapers' CSV files."""
     book_title: str
     verse_refs: list[str]
     lemmatised_verses: list[list[str]]
     lemma_annotations: list[list[str]]
-
-
-def normalise_title(book_title: str) -> str:
-    # Mapping of book titles where ETCBC and CAL diverge.
-    etcbc_cal_map = {
-                "1_Chronicles": "Chronicles_1",
-                "1_Samuel": "Samuel_1",
-                "2_Samuel": "Samuel_2",
-                "1_Kings": "Kings_1",
-                "2_Kings": "Kings_2",
-                "Nehemiah": "Nehemia",
-                "2_Chronicles": "Chronicles_2",
-                # "Maccabees_1_A": list(range(1, 16 + 1)),
-                "1_Maccabees": "Maccabees_1_B",
-            }
-
-    if book_title in etcbc_cal_map:
-        return etcbc_cal_map[book_title]
-    # else
-    return book_title
 
 
 def load_json(data_dir: str | Path) -> list[BookData]:
@@ -106,6 +88,7 @@ def extract_verse(
         book_dict: BookData, verse_idx: int,
         *, trim_none: bool = False
     ) -> Verse:
+    """Extract """
     refs = book_dict["verse_refs"][verse_idx]
     lemmata = []  # list[lemma]
     lemma_annots = []  # list[annotations]
@@ -147,7 +130,7 @@ def get_book_verses(
     verse_box: list[Verse] = []
     for book in jso_lis:
         # one book
-        book["book_title"] = normalise_title(book["book_title"])
+        book["book_title"] = normalise_book_title(book["book_title"])
         if book["book_title"] in target_books:
             # print(book["book_title"])
             for i in range(len(book["lemmatised_verses"])):
@@ -156,7 +139,7 @@ def get_book_verses(
                         book["verse_refs"][i],
                         target_books[book["book_title"]]
                     )):
-                    verse_box.append(  # noqa: PERF401
+                    verse_box.append(
                             extract_verse(book, i, trim_none=trim_none)
                             )
     return verse_box

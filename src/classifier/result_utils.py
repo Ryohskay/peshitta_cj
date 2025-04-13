@@ -25,6 +25,7 @@
 
 """Utilities to handle data extraction and estimation results."""
 
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, Protocol
@@ -32,7 +33,6 @@ from typing import Any, Literal, Protocol
 import numpy as np
 from numpy.typing import NDArray
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -44,6 +44,9 @@ def append_to_dict(key: str, values: list, target: dict[str, list]) -> dict:
 
     If ``key`` already exists, instead of replacing the value, append the list
     at the end of the existing list value.
+
+    Returns:
+        an updated dict with the given values appended.
     """
     if key not in target:
         target.update({key: values})
