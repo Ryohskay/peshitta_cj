@@ -28,6 +28,8 @@
 from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, Any, Self
 
+from numpy.typing import NDArray
+
 if TYPE_CHECKING:
     from collections import Counter
 
@@ -292,3 +294,11 @@ class BoWEstimator(ProbaClassifier):
         )
 
         return self.algo.predict_proba(targets)  # type: ignore[reportFunctionMemberAccess]
+
+    def predict_proba_translit(self, strings: list[str]) -> NDArray:
+        """Take transliterated strings and return probabilities."""
+        vs = []
+        for i in range(len(strings)):
+            vs.append(Verse("Unknown", "Unknown", strings[i].split(" ")))
+        return self.predict_proba(vs)
+

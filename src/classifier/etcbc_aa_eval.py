@@ -181,7 +181,7 @@ if __name__ == "__main__":
             mnb,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./classifier/out/",
+            out_dir="./src/classifier/out/",
             save_file_prefix="etcbc_"
             )
 
@@ -198,7 +198,7 @@ if __name__ == "__main__":
             mnb_r,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./classifier/out/",
+            out_dir="./src/classifier/out/",
             save_file_prefix="etcbc_",
             save_file_suffix="_removed"
             )
@@ -218,7 +218,7 @@ if __name__ == "__main__":
             mnb_r,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./classifier/out/",
+            out_dir="./src/classifier/out/",
             save_file_prefix="etcbc_",
             save_file_suffix="_removed_both"
             )
@@ -233,7 +233,7 @@ if __name__ == "__main__":
             mnb,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./classifier/out/",
+            out_dir="./src/classifier/out/",
             save_file_prefix="etcbc_"
             )
 
@@ -250,7 +250,7 @@ if __name__ == "__main__":
             mnb_r,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./classifier/out/",
+            out_dir="./src/classifier/out/",
             save_file_prefix="etcbc_",
             save_file_suffix="_removed"
             )
@@ -270,7 +270,7 @@ if __name__ == "__main__":
             mnb_r,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./classifier/out/",
+            out_dir="./src/classifier/out/",
             save_file_prefix="etcbc_",
             save_file_suffix="_removed_both"
             )
