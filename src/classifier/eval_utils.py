@@ -58,7 +58,7 @@ from src.classifier.wrappers import BoWEstimator
 def mislabel_stats(
         inputs: np.ndarray | list[Any],
         y_correct: np.ndarray,
-        preds: Predictions,
+        preds: ProbaPredictions,
     ) -> Mislabels:
     """Calculate and print some basic statistics on model inputs & outputs.
 
@@ -81,7 +81,7 @@ def mislabel_stats(
             length or does not have a measurable length.
     """
     sample_size = 0
-    if hasattr(inputs, "shape"):  # type: ignore[reportAttributeAccessIssue]
+    if hasattr(inputs, "shape"):
         # AttributeAccessIssue can be ignored since AttributeError is
         # implicitly handled by hasattr
         sample_size = int(inputs.shape[0])  # type: ignore[reportAttributeAccessIssue]
@@ -101,23 +101,19 @@ def mislabel_stats(
     incorrect_labels = []
     correct_labels = []
     num_book_unk = 0  # number of verses labelled as unknown (-1)
-
-    # define pred_probas
-    pred_probas: list[list[float]] | None = None
-    if isinstance(preds, ProbaPredictions):
-        pred_probas = preds.get_probas()
+    pred_probas = preds.get_probas()
+    mislab_probas = []
 
     # count the number of mislabels per verse while counting the number of
     # verses in each book
     for i in range(len(preds.predictions)):
         num_book_verses += 1
-        if (y_correct[i] != preds.predictions[i]
-            and current_book != preds.samples[i].book):
+        if (current_book != preds.samples[i].book):
             # if current_book is not empty,
             # calculate some statistics and print
             if current_book:
                 num_mislabels = len(mislabel_books[current_book])
-                print(f"\n> {current_book}: {num_mislabels} "
+                print(f">> {current_book}: {num_mislabels} "
                       + "mislabelled verses, accounting for "
                       + f"{num_mislabels / num_book_verses:.02f}% out of "
                       + f"{num_book_verses} verses ({num_book_unk} verses "
@@ -125,17 +121,20 @@ def mislabel_stats(
             # update the book-level variables
             current_book = preds.samples[i].book
             num_book_verses = 0
+            num_book_unk = 0
 
         # the following section is triggered both when the above `if` section
         # is triggered and when it is not triggered but the verse's mislabelled
         if y_correct[i] != preds.predictions[i]:
+            # print(preds.samples[i].book)
             # update variables other than book-level ones
             incorrect_labels.append(preds.predictions[i])
             correct_labels.append(y_correct[i])
+            mislab_probas.append(pred_probas[i])
 
             # after updating the variables,
             # add the mislabelled verse to the mislabel_books dict
-            if preds not in mislabel_books:
+            if preds.samples[i].book not in mislabel_books:
                 mislabel_books.update({
                         current_book: [preds.samples[i]]
                    })
@@ -144,11 +143,20 @@ def mislabel_stats(
             if preds.predictions[i] == -1:
                 num_book_unk += 1
 
+    if current_book:
+        num_mislabels = len(mislabel_books[current_book])
+        print(f">> {current_book}: {num_mislabels} "
+              + "mislabelled verses, accounting for "
+              + f"{(num_mislabels / num_book_verses) * 100:.02f}% out of "
+              + f"{num_book_verses} verses ({num_book_unk} verses "
+              + "labelled unknown)")
+
     # Collate the collected mislabelling results into a Mislabels class instance
     mislabs = Mislabels(incorrect_labels, correct_labels,
     [mislab for book in mislabel_books
                                 for mislab in mislabel_books[book]],
-              pred_probas)
+                        mislab_probas
+              )
 
     # Print some stats
     print(
@@ -207,8 +215,7 @@ def metricise(
         # calculate stats that use probabilities
         y_probas_pos = [proba[1] for proba in y_probas]
         cel = log_loss(y_true, y_probas_pos)  # cross-entropy loss
-        print("log loss > ")
-        print(cel)
+        print(f"log loss: {cel}")
         roc_auc = roc_auc_score(y_true, y_probas_pos)
         print(f"roc auc: {roc_auc}")
 
@@ -329,10 +336,11 @@ def evaluate_classifier(
         threshold=threshold
     )
     ot_mislabels = mislabel_stats(
-                np.array(ot_test_x),
+                ot_test_x,
                 np.array(ot_test_y),
                 ot_proba_preds
             )
+    print(f"Total probas: {ot_proba_preds.get_total_probas()}")
     print("NT --->")
     nt_proba_preds = predict_proba(
         clf,
@@ -340,15 +348,18 @@ def evaluate_classifier(
         threshold=threshold
     )
     nt_mislabels = mislabel_stats(
-                np.array(nt_test_x),
+                nt_test_x,
                 np.array(nt_test_y),
                 nt_proba_preds
             )
+    print(f"Total probas: {nt_proba_preds.get_total_probas()}")
     print("All --->")
     pred_y_all = ot_proba_preds.predictions
-    pred_y_all = np.append(pred_y_all, nt_proba_preds.predictions)
+    pred_y_all = np.append(pred_y_all, nt_proba_preds.predictions, axis=0)
+    # print(f"len y all: {len(pred_y_all)} ~ len ot {len(ot_proba_preds.predictions)} len nt {len(nt_proba_preds.predictions)}")
     probas = ot_proba_preds.get_probas()
     probas = np.append(probas, nt_proba_preds.get_probas(), axis=0)
+    assert (len(ot_proba_preds.predictions) == len(ot_test_x))
     metricise(all_test_y, y_all=pred_y_all, y_probas=probas)
 
     if plot:
@@ -358,15 +369,16 @@ def evaluate_classifier(
 
 
 def eval_and_save(  # noqa: PLR0913
-    clf: BoWEstimator,
-    loaded: LoadedDataset,
-    file_formatter: Callable,
-    *,
-    out_dir: str = "./out/",
-    save_file_prefix: str = "",
-    save_file_suffix: str = "",
-    save_file_ext: str = ".csv",
-) -> tuple[BoWEstimator, list[ProbaPredictions]]:
+        clf: BoWEstimator,
+        loaded: LoadedDataset,
+        file_formatter: Callable,
+        *,
+        out_dir: str = "./out/",
+        save_file_prefix: str = "",
+        save_file_suffix: str = "",
+        save_file_ext: str = ".csv",
+        threshold: float = 0.5,
+    ) -> tuple[BoWEstimator, list[ProbaPredictions]]:
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
 
     Args:
@@ -384,6 +396,8 @@ def eval_and_save(  # noqa: PLR0913
             from the *file extension* defined with param ``save_file_ext``.
             See also the param ``save_file_prefix``.
         save_file_ext: File extension for the save file. By default, it's CSV.
+        threshold: the threshold of probability to classify a certain sample
+            as belonging to a particular class.
 
     Returns:
         A BoWEstimator instance and two ProbaPredictions, each for OT and NT.
@@ -398,7 +412,7 @@ def eval_and_save(  # noqa: PLR0913
             ``nt_test_X``, ``nt_test_y``
         :func:`src.classifier.eval_utils.save_mislabels`
         :func:`src.classifier.eval_utils.save_all_preds`
-            for param: ``formatter``.
+            for param: ``file_formatter``.
     """
     # convert the out_dir to Path
     out_dir_p = Path(out_dir)
@@ -409,7 +423,7 @@ def eval_and_save(  # noqa: PLR0913
 
     # evaluate the classifier with the provided samples
     (ot_probas, nt_probas, ot_mislabels, nt_mislabels) = evaluate_classifier(
-        clf, loaded
+        clf, loaded, threshold=threshold
     )
 
     # Construct save files' paths

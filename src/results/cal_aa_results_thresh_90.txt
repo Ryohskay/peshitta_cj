@@ -254,22 +254,22 @@ Found 6275 independent n-grams from 5894 verses!
 test size: (1562,)
 OT --->
 Parsed 8348 words from 555 verses
->> Deuteronomy: 201 mislabelled verses, accounting for 36.28% out of 554 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 555 verses: 201 (0 labelled as unknown)
-Local accuracy: 0.64
+>> Deuteronomy: 237 mislabelled verses, accounting for 42.78% out of 554 verses (80 verses labelled unknown)
+Number of mislabelled points out of the total 555 verses: 237 (80 labelled as unknown)
+Local accuracy: 0.57
 Total probas: {'Deuteronomy': [np.float64(1.0), np.float64(4.353760975248131e-49)]}
 NT --->
 Parsed 15383 words from 1007 verses
->> Acts: 72 mislabelled verses, accounting for 7.16% out of 1006 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 1007 verses: 72 (0 labelled as unknown)
-Local accuracy: 0.93
+>> Acts: 90 mislabelled verses, accounting for 8.95% out of 1006 verses (40 verses labelled unknown)
+Number of mislabelled points out of the total 1007 verses: 90 (40 labelled as unknown)
+Local accuracy: 0.91
 Total probas: {'Acts': [np.float64(1.9395937065108246e-260), np.float64(1.0)]}
 All --->
-Overall Accuracy: 0.83
-Precisions: [0.83098592 0.82306338]
-Recalls: [0.63783784 0.9285005 ]
-F1 Score: [0.72171254 0.87260849]
-Supports: [ 555 1007]
+Overall Accuracy: 0.79
+Precisions: [0.         0.86413043 0.8538175 ]
+Recalls: [0.         0.57297297 0.91062562]
+F1 Score: [0.         0.68905742 0.88130706]
+Supports: [   0  555 1007]
 log loss: 1.3333893189850905
 roc auc: 0.9174060853306136
 Production Data
@@ -296,22 +296,22 @@ Found 25 independent n-grams from 5894 verses!
 test size: (1562,)
 OT --->
 Parsed 8348 words from 555 verses
->> Deuteronomy: 475 mislabelled verses, accounting for 85.74% out of 554 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 555 verses: 475 (0 labelled as unknown)
-Local accuracy: 0.14
+>> Deuteronomy: 532 mislabelled verses, accounting for 96.03% out of 554 verses (318 verses labelled unknown)
+Number of mislabelled points out of the total 555 verses: 532 (318 labelled as unknown)
+Local accuracy: 0.04
 Total probas: {'Deuteronomy': [np.float64(2.2764725331338348e-85), np.float64(1.0)]}
 NT --->
 Parsed 15383 words from 1007 verses
->> Acts: 43 mislabelled verses, accounting for 4.27% out of 1006 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 1007 verses: 43 (0 labelled as unknown)
-Local accuracy: 0.96
+>> Acts: 385 mislabelled verses, accounting for 38.27% out of 1006 verses (385 verses labelled unknown)
+Number of mislabelled points out of the total 1007 verses: 385 (385 labelled as unknown)
+Local accuracy: 0.62
 Total probas: {'Acts': [np.float64(3.106453990050426e-223), np.float64(1.0)]}
 All --->
-Overall Accuracy: 0.67
-Precisions: [0.6504065  0.66990966]
-Recalls: [0.14414414 0.95729891]
-F1 Score: [0.2359882  0.78822567]
-Supports: [ 555 1007]
+Overall Accuracy: 0.41
+Precisions: [0.         1.         0.74401914]
+Recalls: [0.         0.04144144 0.61767627]
+F1 Score: [0.         0.07958478 0.67498644]
+Supports: [   0  555 1007]
 log loss: 0.8363369868927693
 roc auc: 0.6623724021936533
 Production Data
@@ -341,22 +341,22 @@ Found 3789 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11857 words from 557 verses
->> Deuteronomy: 127 mislabelled verses, accounting for 22.84% out of 556 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 557 verses: 127 (0 labelled as unknown)
-Local accuracy: 0.77
+>> Deuteronomy: 166 mislabelled verses, accounting for 29.86% out of 556 verses (73 verses labelled unknown)
+Number of mislabelled points out of the total 557 verses: 166 (73 labelled as unknown)
+Local accuracy: 0.70
 Total probas: {'Deuteronomy': [np.float64(1.0), np.float64(5.621240341779208e-91)]}
 NT --->
 Parsed 20828 words from 1007 verses
->> Acts: 131 mislabelled verses, accounting for 13.02% out of 1006 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 1007 verses: 131 (0 labelled as unknown)
-Local accuracy: 0.87
+>> Acts: 163 mislabelled verses, accounting for 16.20% out of 1006 verses (69 verses labelled unknown)
+Number of mislabelled points out of the total 1007 verses: 163 (69 labelled as unknown)
+Local accuracy: 0.84
 Total probas: {'Acts': [np.float64(3.6016408971181304e-225), np.float64(1.0)]}
 All --->
-Overall Accuracy: 0.84
-Precisions: [0.76648841 0.87337986]
-Recalls: [0.77199282 0.86991063]
-F1 Score: [0.76923077 0.87164179]
-Supports: [ 557 1007]
+Overall Accuracy: 0.79
+Precisions: [0.         0.80618557 0.90074707]
+Recalls: [0.         0.70197487 0.83813307]
+F1 Score: [0.         0.75047985 0.86831276]
+Supports: [   0  557 1007]
 log loss: 1.1512857154860867
 roc auc: 0.911579446567029
 Production Data
@@ -382,22 +382,22 @@ Found 3342 independent n-grams from 5894 verses!
 test size: (1564,)
 OT --->
 Parsed 11857 words from 557 verses
->> Deuteronomy: 122 mislabelled verses, accounting for 21.94% out of 556 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 557 verses: 122 (0 labelled as unknown)
-Local accuracy: 0.78
+>> Deuteronomy: 162 mislabelled verses, accounting for 29.14% out of 556 verses (72 verses labelled unknown)
+Number of mislabelled points out of the total 557 verses: 162 (72 labelled as unknown)
+Local accuracy: 0.71
 Total probas: {'Deuteronomy': [np.float64(1.0), np.float64(2.009939895661886e-93)]}
 NT --->
 Parsed 20828 words from 1007 verses
->> Acts: 137 mislabelled verses, accounting for 13.62% out of 1006 verses (0 verses labelled unknown)
-Number of mislabelled points out of the total 1007 verses: 137 (0 labelled as unknown)
-Local accuracy: 0.86
+>> Acts: 185 mislabelled verses, accounting for 18.39% out of 1006 verses (90 verses labelled unknown)
+Number of mislabelled points out of the total 1007 verses: 185 (90 labelled as unknown)
+Local accuracy: 0.82
 Total probas: {'Acts': [np.float64(5.1810707384739205e-222), np.float64(1.0)]}
 All --->
-Overall Accuracy: 0.83
-Precisions: [0.76048951 0.87701613]
-Recalls: [0.78096948 0.86395233]
-F1 Score: [0.77059345 0.87043522]
-Supports: [ 557 1007]
+Overall Accuracy: 0.78
+Precisions: [0.         0.80612245 0.90131579]
+Recalls: [0.         0.70915619 0.816286  ]
+F1 Score: [0.         0.75453677 0.8566962 ]
+Supports: [   0  557 1007]
 log loss: 0.9952801854018275
 roc auc: 0.9107388317682863
 Production Data

@@ -23,7 +23,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Utility functions to make predictions with a src.classifier."""
+"""Utility functions to make predictions with a classifier."""
 
 from typing import Any
 
@@ -39,14 +39,14 @@ from src.classifier.wrappers import Classifier, ProbaClassifier
 
 
 def predict(
-        classifier: Classifier,
+        clf: Classifier,
         test_samples: NDArray | list,
         test_labels: NDArray
     ) -> Predictions:
     """Predict on the data with a classifier and get some simple statistics.
 
     Args:
-        classifier: any object that has a method `.predict()`.
+        clf: any object that has a method `.predict()`.
         test_samples: inputs to the classifier
         test_labels: correct labels (gold references) for the inputs. This is
             not used to predict probabilities, but is used to calculate
@@ -55,7 +55,7 @@ def predict(
     Returns:
         A :class:`Prediction` class instance.
     """
-    y_pred = src.classifier.predict(test_samples)
+    y_pred = clf.predict(test_samples)
     return Predictions(test_samples, y_pred,
                 test_labels)
 
@@ -92,14 +92,14 @@ def convert(probas: NDArray | list[Any], thresh: float) -> NDArray:
 
 
 def predict_proba(
-        classifier: ProbaClassifier,
+        clf: ProbaClassifier,
         test_x: NDArray | list[Verse],
         threshold: float = 0.5,
     ) -> ProbaPredictions:
     """Predict on the data with the classifier and return the probabilities.
 
     Args:
-        classifier: any object that has a method `.predict_proba()`.
+        clf: any object that has a method `.predict_proba()`.
         test_x: inputs to the classifier
         test_labels: correct labels (gold references) for the inputs. This is
             not used to predict probabilities, but is used to calculate
@@ -110,7 +110,7 @@ def predict_proba(
     Returns:
         a :class:`src.classifier.result_utils.ProbaPredictions` instance.
     """
-    y_pred_proba = src.classifier.predict_proba(test_x)
+    y_pred_proba = clf.predict_proba(test_x)
     # convert the list of probas to a list of labels
     y_pred = convert(y_pred_proba, threshold)
 

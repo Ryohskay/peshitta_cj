@@ -56,6 +56,7 @@ def csvify_cal(
     Returns:
         string containing the prediction results in CSV format.
     """
+    assert (len(samples) == len(probas))
     if correct_labels is not None:
         csv_data = ("Reference,Probability for OT,Probability for NT,"
                     + "Correct Label,Leammatised Verse\n")
@@ -121,7 +122,7 @@ def remove_enclitics(verses: list[Verse]) -> list[Verse]:
         vrs_annots = []
 
         for i in range(len(vrs.words)):
-            matches = re.search(r"p\d\d", vrs.words[i].annots)
+            matches = re.search(r"p\d\d|c", vrs.words[i].annots)
             if matches is not None:
                 vrs_lemmata.append(vrs.words[i].translit)
                 vrs_annots.append(vrs.words[i].annots)
@@ -173,7 +174,7 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
 
 
 if __name__ == "__main__":
-    cal_ds = load_cal_dataset("./")
+    cal_ds = load_cal_dataset("./src/")
 
     train_x = cal_ds.train.get_samples()
     train_y = cal_ds.train.get_labels()
@@ -188,7 +189,7 @@ if __name__ == "__main__":
                 c_mnb,
                 cal_ds,
                 csvify_cal,
-                out_dir="./classifier/out/",
+                out_dir="./src/classifier/out/",
                 save_file_prefix="cal_mnb_char_",
             )
 
@@ -203,7 +204,7 @@ if __name__ == "__main__":
                                 c_mnb_nub,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./classifier/out/",
+                                out_dir="./src/classifier/out/",
                                 save_file_prefix="cal_mnb_char_",
                                 save_file_suffix="_nub"
                             )
@@ -222,7 +223,7 @@ if __name__ == "__main__":
                                 c_mnb_r,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./classifier/out/",
+                                out_dir="./src/classifier/out/",
                                 save_file_prefix="cal_mnb_char_",
                                 save_file_suffix="_removed"
                             )
@@ -244,7 +245,7 @@ if __name__ == "__main__":
                                 c_mnb_rnub,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./classifier/out/",
+                                out_dir="./src/classifier/out/",
                                 save_file_prefix="cal_mnb_char_",
                                 save_file_suffix="_removed_nub"
                             )
@@ -267,7 +268,7 @@ if __name__ == "__main__":
                                 c_mnb_nub_both,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./classifier/out/",
+                                out_dir="./src/classifier/out/",
                                 save_file_prefix="cal_mnb_char_",
                                 save_file_suffix="_nub"
                             )
@@ -290,7 +291,7 @@ if __name__ == "__main__":
                                 c_mnb_rboth,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./classifier/out/",
+                                out_dir="./src/classifier/out/",
                                 save_file_prefix="cal_mnb_char_",
                                 save_file_suffix="_removed_both"
                             )
@@ -314,7 +315,7 @@ if __name__ == "__main__":
                                 c_mnb_rboth_nub,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./classifier/out/",
+                                out_dir="./src/classifier/out/",
                                 save_file_prefix="cal_mnb_char_",
                                 save_file_suffix="_removed_both_nub"
                             )

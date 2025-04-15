@@ -1,13 +1,16 @@
 """pytest.fixture objects to reuse among tests"""
 import pytest
+from sklearn.linear_model import LinearRegression
+from sklearn.naive_bayes import MultinomialNB
 
-from src.classifier.dataset_skeleton import DataSplit
+from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.result_utils import (
     Mislabels,
     PeshittaWord,
     ProbaPredictions,
     Verse,
 )
+from src.classifier.wrappers import BoWEstimator, Classifier, ProbaClassifier
 
 
 # Verse & PeshittaWord
@@ -124,7 +127,7 @@ def cal_annots() -> list[str]:
     return ["noun sg. abs. or construct", "verb G",
                  "noun sg. emphatic", "p01", "noun pl. emphatic",
                  "c", "p01", "noun sg. emphatic"
-                 ]
+            ]
 
 
 @pytest.fixture
@@ -299,3 +302,29 @@ def etcbc_ds(etcbc_chr_verses: list[Verse],
              ) -> DataSplit:
     return DataSplit(etcbc_chr_verses,
                      [etcbc_acts_verse, etcbc_cor1_verse])
+
+
+@pytest.fixture
+def loaded_etcbc(etcbc_chr_verses: list[Verse],
+                 etcbc_cor1_verse: Verse,
+                 etcbc_verse: Verse,
+                 etcbc_acts_verse: Verse,
+                 full_data_verse: Verse
+                 ) -> LoadedDataset:
+    return LoadedDataset(etcbc_chr_verses, [etcbc_cor1_verse],
+                      [etcbc_verse], [etcbc_acts_verse],
+                      [full_data_verse]
+                      )
+
+
+# Classifier
+@pytest.fixture
+def lr_classifier() -> Classifier:
+    # ArgumentType can be ignored here since LinearRegression inherits from the
+    # BaseEstimator class
+    return Classifier(LinearRegression)  # type: ignore[reportArgumentType]
+
+
+@pytest.fixture
+def mnb_classifier() -> BoWEstimator:
+    return BoWEstimator(MultinomialNB)  # type: ignore[reportArgumentType]

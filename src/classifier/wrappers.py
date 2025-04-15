@@ -138,7 +138,6 @@ class ProbaClassifier(Classifier):
             A two-dimensional list of flaots, each subarray representing one
             sample in ``X`` and each coordinate ``X[i]`` holds a probability of
             the sample belonging to class ``i``.
-
         """
         return self.algo.predict_proba(X)  # type: ignore[reportArgumentType]
 
@@ -292,4 +291,4 @@ class BoWEstimator(ProbaClassifier):
                       )
         )
 
-        return self.algo.predict_proba(targets)
+        return self.algo.predict_proba(targets)  # type: ignore[reportFunctionMemberAccess]

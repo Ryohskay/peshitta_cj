@@ -30,11 +30,12 @@
 """
 
 import json
-from collections.abc import Callable, Generator
+from collections.abc import Generator
 from pathlib import Path
 from typing import Literal, TypedDict
 
 from src.classifier.result_utils import Verse
+from src.classifier.sanitisation_utils import clean_path_str, sanitise_str
 
 
 class DatasetDict(TypedDict):
@@ -146,7 +147,8 @@ class DataSplit:
         # else
         return [target for v in self.verses[target]]
 
-    def generate_syriac_hf(self, target: int | None = None) -> Generator[DatasetDict]:
+    def generate_syriac_hf(self, target: int | None = None
+                           ) -> Generator[DatasetDict]:
         """Generate the syriac text of verses in Huggingface datasets format.
 
         Each yielded item is a JSONL (JSON Lines) line.
@@ -164,19 +166,34 @@ class DataSplit:
             representing one entry in a dataset. For Huggingface datasets
             library, write this to a file as a line and give it a ``.json``
             file extension.
+
+        Raises:
+            ValueError: if there is a Verse where every word's ``.syriac``
+                attribute is empty.
         """
+        err_msg = ("Syriac text of Verse (%s) is empty! "
+                        + "Use generate_translit_hf() instead to get the "
+                        + "transliterated text of the verses "
+                        + "in the Huggingface datasets format.")
+
         if target is None:
             for i in range(self.num_classes):
                 verses = self.get_samples(i)
                 for v in verses:
+                    syriac_text = " ".join(v.get_syriac_words())
+                    if not syriac_text.strip():  # if the syriac text is empty
+                        raise ValueError(err_msg % v.reference)
                     yield {"label": i,
-                            "text": " ".join(v.get_syriac_words())}
+                            "text": syriac_text}
         else:
             label: int = self._validate_target(target)  # type: ignore[reportAssignmentType]
             verses = self.get_samples(label)
             for v in verses:
+                syriac_text = " ".join(v.get_syriac_words())
+                if not syriac_text.strip():  # if the syriac text is empty
+                    raise ValueError(err_msg % v.reference)
                 yield {"label": label,
-                        "text": " ".join(v.get_syriac_words())}
+                        "text": syriac_text}
 
     def generate_translit_hf(self, target: int | None = None
                              ) -> Generator[DatasetDict]:
@@ -198,14 +215,20 @@ class DataSplit:
             library, write this to a file as a line and give it a ``.json``
             file extension.
         """
-        stop = self.num_classes
-        if target is not None:
-            stop: int = self._validate_target(target) + 1  # type: ignore[reportAssignmentType]
-        for i in range(stop):
-            verses = self.get_samples(target)
+        if target is None:
+            for i in range(self.num_classes):
+                verses = self.get_samples(i)
+                for v in verses:
+                    text = " ".join(v.get_translit_words())
+                    yield {"label": i,
+                            "text": text}
+        else:
+            label: int = self._validate_target(target)  # type: ignore[reportAssignmentType]
+            verses = self.get_samples(label)
             for v in verses:
-                yield {"label": i,
-                        "text": " ".join(v.get_syriac_words())}
+                text = " ".join(v.get_translit_words())
+                yield {"label": label,
+                        "text": text}
 
 
 class LoadedDataset:
@@ -245,19 +268,27 @@ class LoadedDataset:
         Args:
             save_dir: a string or :class:`python:pathlib.Path` object for
                 the path to save the dataset files.
-            mode: integer indicating the label for the class. 
+            mode: integer indicating the label for the class.
 
         Raises:
             FileNotFoundError: when the directory for saving the dataset files
                 could not be found.
         """
-        save_dir_p = Path(save_dir)
+        mode_s = sanitise_str(mode)
+
+        if isinstance(save_dir, str):
+            save_dir_p = Path(clean_path_str(save_dir))
+        else:
+            save_dir_p = save_dir
         if not save_dir_p.exists():
             raise FileNotFoundError
 
         # save train dataset
         for i in range(self.train.num_classes):
-            verse_data = list(self.train.generate_hf(i))
+            if mode_s == "syriac":
+                verse_data = list(self.train.generate_syriac_hf(i))
+            else:
+                verse_data = list(self.train.generate_translit_hf(i))
 
             save_file = save_dir_p / f"etcbc_train_data_{i}.json"
             with save_file.open("w", encoding="utf-8") as fp:
@@ -267,7 +298,10 @@ class LoadedDataset:
 
         # save test dataset
         for i in range(self.test.num_classes):
-            verse_data = list(self.test.generate__hf(i))
+            if mode_s == "syriac":
+                verse_data = list(self.train.generate_syriac_hf(i))
+            else:
+                verse_data = list(self.train.generate_translit_hf(i))
 
             save_file = save_dir_p / f"etcbc_test_data_{i}.json"
             with save_file.open("w", encoding="utf-8") as fp:

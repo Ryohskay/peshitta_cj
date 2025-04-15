@@ -33,6 +33,8 @@ from typing import Any, Literal, Protocol
 import numpy as np
 from numpy.typing import NDArray
 
+from src.classifier.sanitisation_utils import clean_path_str
+
 logger = logging.getLogger(__name__)
 
 
@@ -259,12 +261,17 @@ class Verse(Any):
             simply because the Syriac script version was not provided
             upon instantiating the Verse.
 
+        .. note::
+            If the verse's syriac text is not registered upon initialisation,
+            this function returns a list of empty strings with the length
+            same as the number of words.
+
         .. seealso::
             :class:`src.classifier.result_utils.PeshittaWord`
                 Refer to ``translit`` attribute there for details of
                 Syriac script words.
         """
-        return [w.syriac for w in self.words if w.syriac]
+        return [w.syriac for w in self.words]
 
     def get_words_in_mode(self, mode: int = 1) -> list[str]:
         """Get the list of words in the script defined by ``mode``.
@@ -276,6 +283,12 @@ class Verse(Any):
 
         Returns:
             list of words in the verse in Syriac script(s).
+
+
+        .. note::
+            If the verse's syriac text is not registered upon initialisation,
+            this function returns a list of empty strings with
+            the length same as the number of words when ``mode = syriac``.
 
         Raises:
             ValueError: if ``mode`` is not 1 or 2.
@@ -294,6 +307,11 @@ class Verse(Any):
 
         Returns:
             list of annotations for each word in the verse.
+
+        .. note::
+            If annotations for words in the verse are not registered upon
+            initialisation, this function returns a list of empty strings with
+            the length same as the number of words.
         """
         return [w.annots for w in self.words]
 
@@ -308,8 +326,8 @@ class FileFormatterProto(Protocol):
         """Defines the signature for a FileFormatterProto function.
 
         Args:
-            samples: a list of samples (:class:`src.classifier.result_utils.Verse`
-                instances) to save.
+            samples: a list of samples (
+                :class:`src.classifier.result_utils.Verse` instances) to save.
             probas: two-dimensional list of probabilities of each verse
                 belonging to each of the classes.
             correct_labels: gold reference for the samples.
@@ -405,18 +423,26 @@ class ProbaPredictions(Predictions):
         current_book = ""
         aj = 1.0  # total probability of the book's Jewish authorship
         ac = 1.0  # total probability of the book's Christian authorship
+        smoothing_term = 1
         total_probas = {}
         for i in range(len(self.samples)):
             if current_book and self.samples[i].book != current_book:
                 # if we finish walking through the verses from one book
-                append_to_dict(current_book, [aj, ac], total_probas)
+                # calculate percentage of the "probabilities"
+                pj = aj / (aj + ac)
+                pc = ac / (aj + ac)
+                append_to_dict(current_book, [pj, pc], total_probas)
             if self.samples[i].book != current_book:
                 current_book = self.samples[i].book
                 aj = 1.0
                 ac = 1.0
-            aj *= self._probas[i][0]
-            ac *= self._probas[i][1]
-        append_to_dict(current_book, [aj, ac], total_probas)
+            # perform smoothing to avoid 0.0 probas
+            aj *= (self._probas[i][0] + smoothing_term)
+            ac *= (self._probas[i][1] + smoothing_term)
+        # calculate percentage of the "probabilities"
+        pj = aj / (aj + ac)
+        pc = ac / (aj + ac)
+        append_to_dict(current_book, [pj, pc], total_probas)
         return total_probas
 
     def save_to_file(self,
@@ -461,15 +487,15 @@ class Mislabels(Any):
         correct_labels: gold references for the verses
         mislabelled_verses: mislabelled verses corresponding
         probas: probabilities of the mislabelled verses belonging to each class,
-            predicted by the src.classifier. Defaults to None if not provided upon
-            initialisation.
+            predicted by the src.classifier. Defaults to None if not provided
+            upon initialisation.
     """
     def __init__(
             self,
             incorrect_labels: list[int] | NDArray[np.int64],
             correct_labels: list[int] | NDArray[np.int64],
             mislabelled_verses: list[Verse],
-            probas: list[list[float]] | NDArray[np.float64] | None = None
+            probas: list[list[float]] | NDArray[np.float64]
         ) -> None:
 
         if (len(mislabelled_verses) < 1
@@ -508,6 +534,7 @@ class Mislabels(Any):
             save_file: :class:`pathlib.Path` obj or string containing
                 a path to save the mislabelled verses' data.
         """
+        assert (len(self.verses) == len(self.probas))
         save_data = formatter(
             samples=self.verses,
             probas=self.probas,
@@ -515,4 +542,8 @@ class Mislabels(Any):
         )
 
         # write formatted texts to files
-        Path(save_file).write_text(save_data, encoding="utf-8")
+        if isinstance(save_file, str):
+            save_file_p = Path(clean_path_str(save_file))
+        else:
+            save_file_p = save_file
+        save_file_p.write_text(save_data, encoding="utf-8")

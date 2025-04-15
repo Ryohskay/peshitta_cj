@@ -39,7 +39,7 @@ along with all of its methods.
 
 from tf.app import use
 
-from classifier import book_data
+from src.classifier import book_data
 from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.result_utils import Verse
 

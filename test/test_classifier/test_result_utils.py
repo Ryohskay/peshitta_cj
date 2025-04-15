@@ -3,8 +3,6 @@ import re
 
 import pytest
 
-from pathlib import Path
-
 from src.classifier.result_utils import (
     Mislabels,
     PeshittaWord,
@@ -89,6 +87,8 @@ class TestVerse:
         assert (etcbc_verse.reference == genesis_1_1)
         for i in range(len(etcbc_words)):
             assert (etcbc_verse.words[i] == etcbc_words[i])
+            # check that the attrs not provided are initialised with empty strs
+            assert (not etcbc_verse.words[i].annots)
 
     def test_cal_verse_init(self,
                             cal_verse: Verse,
@@ -100,6 +100,8 @@ class TestVerse:
         assert (cal_verse.reference == genesis_1_1)
         for i in range(len(cal_words)):
             assert (cal_verse.words[i] == cal_words[i])
+            # check that the attrs not provided are initialised with empty strs
+            assert (not cal_verse.words[i].syriac)
 
     def test_translit_init(self,
                            cal_word: PeshittaWord,
@@ -126,8 +128,15 @@ class TestVerse:
 
     def test_get_syriac_words(self,
                               cal_syriacs: list[str],
+                              cal_verse: Verse,
                               full_data_verse: Verse) -> None:
         assert (full_data_verse.get_syriac_words() == cal_syriacs)
+        # Check that this returns an empty string if word.syriac not given
+        empty_str_cnts = 0
+        for syriac in cal_verse.get_syriac_words():
+            if not syriac:  # if the string is empty
+                empty_str_cnts += 1
+        assert (len(cal_verse) == empty_str_cnts)
 
     def test_eq(self,
                 cal_verse: Verse,
@@ -181,6 +190,7 @@ class TestVerse:
     def test_get_words_in_mode(self,
                                full_data_verse: Verse,
                                cal_translits: list[str],
+                               cal_verse: Verse,
                                cal_syriacs: list[str]) -> None:
         # it should return a list of transliteration by default
         assert (full_data_verse.get_words_in_mode() == cal_translits)
@@ -188,6 +198,12 @@ class TestVerse:
         assert (full_data_verse.get_words_in_mode(mode=1) == cal_translits)
         # mode=2 for syriac
         assert (full_data_verse.get_words_in_mode(mode=2) == cal_syriacs)
+        # Check that this returns an empty string if word.syriac not given
+        empty_str_cnts = 0
+        for syriac in cal_verse.get_syriac_words():
+            if not syriac:  # if the string is empty
+                empty_str_cnts += 1
+        assert (len(cal_verse) == empty_str_cnts)
         # check it raises exception for other undefined modes
         with pytest.raises(ValueError,
                            match=r"Argument `mode` must be 1 or 2, but \d"
@@ -200,15 +216,22 @@ class TestVerse:
 
     def test_get_annotations(self,
                              full_data_verse: Verse,
+                             etcbc_verse: Verse,
                              cal_annots: list[str]) -> None:
         assert (full_data_verse.get_annotations() == cal_annots)
+        # Check that this returns an empty string if word.annots not given
+        empty_str_cnts = 0
+        for annot in etcbc_verse.get_annotations():
+            if not annot:  # if the string is empty
+                empty_str_cnts += 1
+        assert (len(etcbc_verse) == empty_str_cnts)
 
 
 class TestPredictions:
     def test_init(self,
-                  cal_verse,
-                  etcbc_verse,
-                  full_data_verse,
+                  cal_verse: Verse,
+                  etcbc_verse: Verse,
+                  full_data_verse: Verse,
                   ) -> None:
         # Check exception is raised when lengths of arguemnt lists don't match
         with pytest.raises(ValueError, match=(re.escape(
@@ -277,12 +300,15 @@ class TestProbaPredictions:
 class TestMislabels:
     def test_init(self,
                   etcbc_chr_verses: list[Verse]) -> None:
-        no_probas_misl = Mislabels([1,1,1],[0,0,0],
-                  etcbc_chr_verses)
-        assert (no_probas_misl.mislabels == [1,1,1])
-        assert (no_probas_misl.correct_labels == [0,0,0])
-        assert (no_probas_misl.verses == etcbc_chr_verses)
-        assert (no_probas_misl.probas == None)
+        probas_misl = Mislabels([1, 1, 1], [0, 0, 0],
+                etcbc_chr_verses,
+                                   probas=[[0.1, 0.9], [0.7, 0.3],
+                                           [0.33, 0.67]],
+                            )
+        assert (probas_misl.mislabels == [1, 1, 1])
+        assert (probas_misl.correct_labels == [0, 0, 0])
+        assert (probas_misl.verses == etcbc_chr_verses)
+        assert (probas_misl.probas == [[0.1, 0.9], [0.7, 0.3], [0.33, 0.67]])
 
     def test_len(self, misls: Mislabels) -> None:
         assert (len(misls) == 3)

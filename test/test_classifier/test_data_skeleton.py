@@ -1,6 +1,8 @@
+import re
+
 import pytest
 
-from src.classifier.dataset_skeleton import DataSplit
+from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.result_utils import Verse
 
 
@@ -47,20 +49,24 @@ class TestDataSplit:
         assert (cal_ds.get_labels(0) == [0, 0])
         assert (cal_ds.get_labels(1) == [1])
 
-    def test_generate_syriac_hf(self,
+    def test_generate_syriac_hf_raises(self,
                                 cal_ds: DataSplit,
-                                cal_romans_verse: Verse,
+                                       ) -> None:
+        # Check that generate_syriac_hf correctly raises exception
+        with pytest.raises(ValueError, match=(
+                        re.escape("Syriac text of Verse ") + "\\(.+\\)"
+                        + re.escape(" is empty!")
+                        + re.escape(" Use generate_translit_hf() instead to get"
+                                    + " the transliterated text of the verses "
+                                    + "in the Huggingface datasets format."))):
+            list(cal_ds.generate_syriac_hf())
+
+    def test_generate_syriac_hf(self,
                                 etcbc_ds: DataSplit,
                                 etcbc_chr_verses: list[Verse],
                                 etcbc_acts_verse: Verse,
                                 etcbc_cor1_verse: Verse
                                 ) -> None:
-        # check it works with no params
-        hf_lines = list(cal_ds.generate_syriac_hf())
-        assert (hf_lines[0] == {"label": 0, "text": ""})
-        assert (hf_lines[1] == {"label": 0, "text": ""})
-        assert (hf_lines[2] == {"label": 1, "text": " ".join(
-            cal_romans_verse.get_syriac_words())})
         # check it works for specific labels
         # for OT
         hf_lines_0 = list(etcbc_ds.generate_syriac_hf(0))
@@ -76,3 +82,64 @@ class TestDataSplit:
             etcbc_acts_verse.get_syriac_words())})
         assert (hf_lines_1[1] == {"label": 1, "text": " ".join(
             etcbc_cor1_verse.get_syriac_words())})
+        # check it works with no params with the expected output order
+        hf_lines = list(etcbc_ds.generate_syriac_hf())
+        assert (hf_lines[0] == {"label": 0, "text": " ".join(
+            etcbc_chr_verses[0].get_syriac_words())})
+        assert (hf_lines[1] == {"label": 0, "text": " ".join(
+            etcbc_chr_verses[1].get_syriac_words())})
+        assert (hf_lines[2] == {"label": 0, "text": " ".join(
+            etcbc_chr_verses[2].get_syriac_words())})
+        assert (hf_lines[3] == {"label": 1, "text": " ".join(
+            etcbc_acts_verse.get_syriac_words())})
+        assert (hf_lines[4] == {"label": 1, "text": " ".join(
+            etcbc_cor1_verse.get_syriac_words())})
+
+    def test_generate_translit_hf(self,
+                                  cal_ds: DataSplit,
+                                  cal_verse: Verse,
+                                  cal_one_word_verse: Verse,
+                                  cal_romans_verse: Verse
+                                  ) -> None:
+        translits = list(cal_ds.generate_translit_hf())
+        # for OT
+        hf_lines_1 = list(cal_ds.generate_translit_hf(0))
+        assert (hf_lines_1[0] == {"label": 0, "text": " ".join(
+            cal_verse.get_translit_words())})
+        assert (hf_lines_1[1] == {"label": 0, "text": " ".join(
+            cal_one_word_verse.get_translit_words())})
+        # for NT
+        hf_lines = list(cal_ds.generate_translit_hf(1))
+        assert (hf_lines[0] == {"label": 1, "text": " ".join(
+            cal_romans_verse.get_translit_words())})
+        # Check it works with no params for both labels
+        assert (translits[0] == {"label": 0, "text": ("br$yt br) )lh) yt $my)"
+                                 + " w_ yt )r()")
+                                 })
+        assert (translits[1] == {"label": 0, "text": ")lh"})
+        assert (translits[2] == {"label": 1, "text": " ".join(
+            cal_romans_verse.get_translit_words())
+            })
+
+
+class TestLoadedDataset:
+    def test_init(
+            self,
+            etcbc_loaded: LoadedDataset,
+            etcbc_chr_verses: list[Verse],
+            etcbc_verse: Verse,
+            etcbc_cor1_verse: Verse,
+            etcbc_acts_verse: Verse,
+            full_data_verse: Verse
+            ) -> None:
+        assert (etcbc_loaded.train.get_samples(0) == etcbc_chr_verses)
+        assert (etcbc_loaded.train.get_samples(1) == [etcbc_cor1_verse])
+        assert (etcbc_loaded.test.get_samples(0) == [etcbc_verse])
+        assert (etcbc_loaded.test.get_samples(1) == [etcbc_acts_verse])
+        assert (etcbc_loaded.production == [full_data_verse])
+
+    def save_json(self,
+                  etcbc_loaded: LoadedDataset
+                  ) -> None:
+        with pytest.raises(FileNotFoundError):
+            etcbc_loaded.save_as_json("/User/abracadabra/Documents/notexists/")

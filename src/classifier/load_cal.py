@@ -29,10 +29,10 @@ import json
 from pathlib import Path
 from typing import TypedDict
 
-from classifier import book_data
+from src.classifier import book_data
 from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.result_utils import Verse
-from src.classifier.sanitisation_utils import sanitise_str, normalise_book_title
+from src.classifier.sanitisation_utils import normalise_book_title
 
 
 class BookData(TypedDict):
@@ -88,7 +88,12 @@ def extract_verse(
         book_dict: BookData, verse_idx: int,
         *, trim_none: bool = False
     ) -> Verse:
-    """Extract """
+    """Extract Verse objects from the book_dict dictionaries.
+
+    Returns:
+        A :class:`src.classifier.result_utils.Verse` instance containing the
+        verse represented in the ``book_dict``.
+    """
     refs = book_dict["verse_refs"][verse_idx]
     lemmata = []  # list[lemma]
     lemma_annots = []  # list[annotations]
@@ -106,6 +111,7 @@ def extract_verse(
                 lemma_annots.append(annot_r)
             else:
                 # in some cases, the scraper records the lemma as None.
+                # if trim_none option is set to True,
                 # we don't need them so skip appending lemma and annots
                 continue
 

@@ -32,7 +32,7 @@ from src.classifier.cal_aa_eval import (
     remove_proper_nouns,
     remove_underscores,
 )
-from src.classifier.etcbc_aa_eval import csvify_etcbc
+from src.classifier.etcbc_aa_eval import csvify_etcbc, remove_non_chars
 from src.classifier.eval_utils import eval_and_save
 from src.classifier.load_cal import load_cal_dataset
 from src.classifier.prediction_utils import predict_proba
@@ -40,9 +40,12 @@ from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 
 if __name__ == "__main__":
+    # probability threshold
+    thresh = 0.9
+
     # LOAD ETCBC DATA
     etcbc_loaded = load_etcbc_dataset()
-    train_x_etc = etcbc_loaded.train.get_samples()
+    train_x_etc = remove_non_chars(etcbc_loaded.train.get_samples())
     train_y_etc = etcbc_loaded.train.get_labels()
     print("ETCBC --->")
     print("MultinomialNB")
@@ -51,16 +54,20 @@ if __name__ == "__main__":
     c_mnb = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb.fit(train_x_etc, train_y_etc)
     print(">> Quick Evaluation")
-    eval_and_save(c_mnb, etcbc_loaded, csvify_cal, out_dir="./classifier/out/",
-                  save_file_prefix="just_to_check_")
+    eval_and_save(c_mnb, etcbc_loaded, csvify_cal, out_dir="./src/classifier/out/",
+                  save_file_prefix="just_to_check_", threshold=thresh)
 
     print("Production Data")
-    ot_prod = etcbc_loaded.production
+    ot_prod = remove_non_chars(etcbc_loaded.production)
 
-    preds = predict_proba(c_mnb, etcbc_loaded.production)
+    preds = predict_proba(c_mnb, etcbc_loaded.production,
+                          threshold=thresh)
+    total_proba_dict = preds.get_total_probas()
+    for prod_book in total_proba_dict:
+        print(f"{prod_book}: (OT) {total_proba_dict[prod_book][0]}, (NT) {total_proba_dict[prod_book][1]}")
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbca_"
-                     + "prediction_proba_all.csv")
+    save_file = Path("./src/classifier/out/PRODUCTION_mnb_etcbc_"
+                     + "prediction_proba_all_remove_nonchar.csv")
     preds.save_to_file(csvify_etcbc, save_file)
 
     print("> Character unigram classifier")
@@ -68,21 +75,24 @@ if __name__ == "__main__":
     c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=1)
     c_mnb.fit(train_x_etc, train_y_etc)
     print(">> Quick Evaluation")
-    eval_and_save(c_mnb, etcbc_loaded, csvify_cal, out_dir="./classifier/out/",
-                  save_file_prefix="just_to_check_")
+    eval_and_save(c_mnb, etcbc_loaded, csvify_cal, out_dir="./src/classifier/out/",
+                  save_file_prefix="just_to_check_", threshold=thresh)
 
     print("Production Data")
-    ot_prod = etcbc_loaded.production
+    ot_prod = remove_non_chars(etcbc_loaded.production)
 
-    preds = predict_proba(c_mnb, etcbc_loaded.production)
+    preds = predict_proba(c_mnb, etcbc_loaded.production, threshold=thresh)
+    total_proba_dict = preds.get_total_probas()
+    for prod_book in total_proba_dict:
+        print(f"{prod_book}: (OT) {total_proba_dict[prod_book][0]}, (NT) {total_proba_dict[prod_book][1]}")
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_etcbc_"
+    save_file = Path("./src/classifier/out/PRODUCTION_mnb_etcbc_"
                      + "prediction_proba_all_char_unigram.csv")
     preds.save_to_file(csvify_etcbc, save_file)
 
     print("CAL --->")
     # LOAD CAL DATA
-    cal_loaded = load_cal_dataset("./")
+    cal_loaded = load_cal_dataset("./src")
 
     train_x_cal = cal_loaded.train.get_samples()
     train_y_cal = cal_loaded.train.get_labels()
@@ -92,15 +102,18 @@ if __name__ == "__main__":
     c_mnb = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb.fit(train_x_cal, train_y_cal)
     print(">> Quick Evaluation")
-    eval_and_save(c_mnb, cal_loaded, csvify_cal, out_dir="./classifier/out/",
-                  save_file_prefix="just_to_check_")
+    eval_and_save(c_mnb, cal_loaded, csvify_cal, out_dir="./src/classifier/out/",
+                  save_file_prefix="just_to_check_", threshold=thresh)
 
     print("Production Data")
     ot_prod = cal_loaded.production
 
-    preds = predict_proba(c_mnb, cal_loaded.production)
+    preds = predict_proba(c_mnb, cal_loaded.production, threshold=thresh)
+    total_proba_dict = preds.get_total_probas()
+    for prod_book in total_proba_dict:
+        print(f"{prod_book}: (OT) {total_proba_dict[prod_book][0]}, (NT) {total_proba_dict[prod_book][1]}")
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_"
+    save_file = Path("./src/classifier/out/PRODUCTION_mnb_cal_"
                      + "prediction_proba_all.csv")
     preds.save_to_file(csvify_cal, save_file)
 
@@ -114,14 +127,17 @@ if __name__ == "__main__":
     c_mnb_r.fit(train_x_removed, train_y_cal)
 
     print(">> Quick Evaluation")
-    eval_and_save(c_mnb_r, cal_loaded, csvify_cal, out_dir="./classifier/out/",
-                  save_file_prefix="just_to_check_")
+    eval_and_save(c_mnb_r, cal_loaded, csvify_cal, out_dir="./src/classifier/out/",
+                  save_file_prefix="just_to_check_", threshold=thresh)
 
     print("Production Data")
     ot_prod = remove_proper_nouns(remove_underscores(cal_loaded.production))
 
-    preds = predict_proba(c_mnb, ot_prod)
+    preds = predict_proba(c_mnb, ot_prod, threshold=thresh)
+    total_proba_dict = preds.get_total_probas()
+    for prod_book in total_proba_dict:
+        print(f"{prod_book}: (OT) {total_proba_dict[prod_book][0]}, (NT) {total_proba_dict[prod_book][1]}")
 
-    save_file = Path("./classifier/out/PRODUCTION_mnb_cal_"
+    save_file = Path("./src/classifier/out/PRODUCTION_mnb_cal_"
                      + "prediction_proba_all_both_removed.csv")
     preds.save_to_file(csvify_cal, save_file)
