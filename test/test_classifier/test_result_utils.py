@@ -280,21 +280,40 @@ class TestProbaPredictions:
         assert (probas._probas[2] == [0.4, 0.6])
         assert (probas.correct_labels == [0, 0, 0])
 
+    def helper_get_probas(self, probas: list[list[float]],
+                          smoothing: float = 1.0
+                          ) -> list[float]:
+        aj = 1.0
+        ac = 1.0
+        for i in range(len(probas)):
+            aj *= (probas[i][0] + smoothing)
+            ac *= (probas[i][1] + smoothing)
+        pj = aj / (aj + ac)
+        pc = ac / (aj + ac)
+        return [pj, pc]
+
     def test_get_probas(self, proba_preds: ProbaPredictions) -> None:
         assert (proba_preds.get_probas() ==
-                [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]])
+            [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]])
 
     def test_get_total_probas(self,
                               proba_preds: ProbaPredictions,
                               proba_multi_preds: ProbaPredictions,
+                              proba_pred_zero: ProbaPredictions
                               ) -> None:
         # Check for the case with one book
-        aj = 0.8 * 0.7 * 0.4
-        ac = 0.2 * 0.3 * 0.6
-        assert (proba_preds.get_total_probas() == {"Genesis": [aj, ac]})
-        # Check for the case with multiple books
+        smoothing = 1.0
+        pj, pc = self.helper_get_probas(proba_preds.get_probas(),
+                                        smoothing=smoothing)
+        assert (proba_preds.get_total_probas() == {"Genesis": [pj, pc]})
+        # Check for the case with multiple books, one verse each
         assert (proba_multi_preds.get_total_probas() ==
-                {"Genesis": [0.8, 0.2], "Chronicles_1": [3.2e-10, 0.9]})
+                {"Genesis": self.helper_get_probas(
+                    [[0.8, 0.2]], smoothing=smoothing),
+                 "Chronicles_1": self.helper_get_probas([[3.2e-10, 0.9]],
+                                                        smoothing=smoothing)})
+        # Check it does not return zero probas
+        assert (proba_pred_zero.get_total_probas()["1_Corinthians"][1] != 0.0)
 
 
 class TestMislabels:

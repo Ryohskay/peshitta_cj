@@ -3,6 +3,9 @@ import pytest
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import MultinomialNB
 
+from numpy.typing import NDArray
+import numpy as np
+
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.result_utils import (
     Mislabels,
@@ -255,6 +258,7 @@ def proba_preds(cal_verse: Verse,
                 etcbc_verse: Verse,
                 full_data_verse: Verse
                 ) -> ProbaPredictions:
+    """Return a ProbaPredictions instance with verses from Genesis."""
     return ProbaPredictions([cal_verse, etcbc_verse, full_data_verse],
                               [0, 0, 1],
                               [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]],
@@ -266,18 +270,28 @@ def proba_multi_preds(
         cal_verse: Verse,
         etcbc_chr_verse: Verse
                       ) -> ProbaPredictions:
-    """Return a ProbaPredictions instance with verses of multiple books."""
+    """Return a ProbaPredictions instance with verses of Gen and 1 Chr."""
     return ProbaPredictions([cal_verse, etcbc_chr_verse],
                             [0, 1],
                             [[0.8, 0.2], [3.2e-10, 0.9]],
                             [0, 0])
 
+@pytest.fixture
+def proba_pred_zero(etcbc_verse: Verse,
+                           etcbc_acts_verse: Verse,
+                           etcbc_cor1_verse: Verse,
+                           ) -> ProbaPredictions:
+    """Mock ProbaPredictions object containing zero proba for a verse."""
+    return ProbaPredictions([etcbc_verse, etcbc_acts_verse, etcbc_cor1_verse],
+                            [0, 1, 0], [[0.7, 0.3], [0.4, 0.6], [1.0, 0.0]],
+                            [0, 1, 1])
 
 # Mislabels
 @pytest.fixture
 def misls(
         etcbc_chr_verses: list[Verse]
         ) -> Mislabels:
+    """Return a Mislabels instance with multiple verses."""
     return Mislabels(
                 [1, 1, 1],
                 [0, 0, 0],
@@ -286,11 +300,21 @@ def misls(
                 )
 
 
+@pytest.fixture
+def mislabels_both(etcbc_verse: Verse,
+              etcbc_cor1_verse: Verse,
+              ) -> Mislabels:
+    """Mock Mislabels with OT and NT verses."""
+    return Mislabels([1, 0], [0, 1], [etcbc_verse, etcbc_cor1_verse],
+                     [[0.3, 0.7], [0.6, 0.4]])
+
+
 # DataSplit
 @pytest.fixture
 def cal_ds(cal_verse: Verse,
            cal_one_word_verse: Verse,
            cal_romans_verse: Verse) -> DataSplit:
+    """Return a DataSplit object with CAL data."""
     return DataSplit([cal_verse, cal_one_word_verse],
                        [cal_romans_verse])
 
@@ -300,6 +324,7 @@ def etcbc_ds(etcbc_chr_verses: list[Verse],
              etcbc_acts_verse: Verse,
              etcbc_cor1_verse: Verse
              ) -> DataSplit:
+    """Return a DataSplit object with ETCBC data."""
     return DataSplit(etcbc_chr_verses,
                      [etcbc_acts_verse, etcbc_cor1_verse])
 
@@ -311,6 +336,7 @@ def loaded_etcbc(etcbc_chr_verses: list[Verse],
                  etcbc_acts_verse: Verse,
                  full_data_verse: Verse
                  ) -> LoadedDataset:
+    """Return a LoadedDataset object with ETCBC data."""
     return LoadedDataset(etcbc_chr_verses, [etcbc_cor1_verse],
                       [etcbc_verse], [etcbc_acts_verse],
                       [full_data_verse]
@@ -320,6 +346,7 @@ def loaded_etcbc(etcbc_chr_verses: list[Verse],
 # Classifier
 @pytest.fixture
 def lr_classifier() -> Classifier:
+    """Mock LinearRegression classifier."""
     # ArgumentType can be ignored here since LinearRegression inherits from the
     # BaseEstimator class
     return Classifier(LinearRegression)  # type: ignore[reportArgumentType]
@@ -327,4 +354,18 @@ def lr_classifier() -> Classifier:
 
 @pytest.fixture
 def mnb_classifier() -> BoWEstimator:
+    """Mock MultinomialNB classifier."""
     return BoWEstimator(MultinomialNB)  # type: ignore[reportArgumentType]
+
+
+@pytest.fixture
+def mock_formatter(
+         samples: list[Verse] | NDArray[Verse],
+         probas: list[list[float]] | NDArray[np.float64],
+         correct_labels: list[int] | NDArray[np.int64] | None = None
+    ) -> str:
+    """Mock formatter implementing FileFormatterProto."""
+    if correct_labels is not None:
+        return "A,B,C,D,E"
+    # else
+    return "A,B,C,D"

@@ -125,21 +125,21 @@ class TestDataSplit:
 class TestLoadedDataset:
     def test_init(
             self,
-            etcbc_loaded: LoadedDataset,
+            loaded_etcbc: LoadedDataset,
             etcbc_chr_verses: list[Verse],
             etcbc_verse: Verse,
             etcbc_cor1_verse: Verse,
             etcbc_acts_verse: Verse,
             full_data_verse: Verse
             ) -> None:
-        assert (etcbc_loaded.train.get_samples(0) == etcbc_chr_verses)
-        assert (etcbc_loaded.train.get_samples(1) == [etcbc_cor1_verse])
-        assert (etcbc_loaded.test.get_samples(0) == [etcbc_verse])
-        assert (etcbc_loaded.test.get_samples(1) == [etcbc_acts_verse])
-        assert (etcbc_loaded.production == [full_data_verse])
+        assert (loaded_etcbc.train.get_samples(0) == etcbc_chr_verses)
+        assert (loaded_etcbc.train.get_samples(1) == [etcbc_cor1_verse])
+        assert (loaded_etcbc.test.get_samples(0) == [etcbc_verse])
+        assert (loaded_etcbc.test.get_samples(1) == [etcbc_acts_verse])
+        assert (loaded_etcbc.production == [full_data_verse])
 
     def save_json(self,
-                  etcbc_loaded: LoadedDataset
+                  loaded_etcbc: LoadedDataset
                   ) -> None:
         with pytest.raises(FileNotFoundError):
-            etcbc_loaded.save_as_json("/User/abracadabra/Documents/notexists/")
+            loaded_etcbc.save_as_json("/User/abracadabra/Documents/notexists/")
