@@ -129,7 +129,7 @@ class Verse(Any):
         using dict.
 
     .. note:: A *verse* is a exegetical annotation and is not necessarily
-    comparable to semantic divisions like sentence, clause, etc.
+        comparable to semantic divisions like sentence, clause, etc.
     """
     def __init__(  # noqa: PLR0913
             self,
@@ -155,8 +155,8 @@ class Verse(Any):
         # Check for invalid arguments
         if (book_name is None or verse_ref is None or translit_words is None):
             msg = (f"book_name ({book_name}), verse_ref ({verse_ref}), and"
-                   + f" translit_words ({translit_words}) given: "
-                   + "they cannot be None!")
+                    + f" translit_words ({translit_words}) given: "
+                    + "they cannot be None!")
             raise ValueError(msg)
 
         if (
@@ -319,10 +319,10 @@ class Verse(Any):
 class FileFormatterProto(Protocol):
     """A protocol that defines the interface of file formatter functions."""
     def __call__(self,
-                 samples: list[Verse] | NDArray[Verse],
-                 probas: list[list[float]] | NDArray[np.float64],
-                 correct_labels: list[int] | NDArray[np.int64] | None = None
-                 ) -> str:  # type: ignore[reportReturnType]
+                samples: list[Verse] | NDArray[Verse],
+                probas: list[list[float]] | NDArray[np.float64],
+                correct_labels: list[int] | NDArray[np.int64] | None = None
+                ) -> str:  # type: ignore[reportReturnType]
         """Defines the signature for a FileFormatterProto function.
 
         Args:
@@ -387,25 +387,25 @@ class ProbaPredictions(Predictions):
             probas: list[list[float]] | NDArray[np.float64],
             correct_labels: list[int] | NDArray[np.int64] | None = None,
         ) -> None:
-        """Initilaises an instance.
+        """Initialises an instance.
 
         Raises:
             ValueError: if the lengths of provided arguments samples and probas
-                do not matcf
+                do not match
         """
         if len(probas) != len(samples):
             msg = (f"lengths of probas {len(probas)} and samples {len(samples)}"
-                   + " do not match!")
+                    + " do not match!")
             raise ValueError(msg)
         super().__init__(samples, predictions,
-                         correct_labels)
+                        correct_labels)
         self._probas = probas
 
     def get_probas(self) -> list[list[float]] | NDArray:
         """Get a list of predicted probabilities.
 
         Returns:
-            list of probabilities, of size (numbert of samples,
+            list of probabilities, of size (number of samples,
                 number of prediction classes)
         """
         return self._probas
