@@ -1,10 +1,9 @@
 """pytest.fixture objects to reuse among tests"""
+import numpy as np
 import pytest
+from numpy.typing import NDArray
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import MultinomialNB
-
-from numpy.typing import NDArray
-import numpy as np
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.result_utils import (
@@ -13,7 +12,7 @@ from src.classifier.result_utils import (
     ProbaPredictions,
     Verse,
 )
-from src.classifier.wrappers import BoWEstimator, Classifier, ProbaClassifier
+from src.classifier.wrappers import BoWEstimator, Classifier
 
 
 # Verse & PeshittaWord
@@ -196,7 +195,7 @@ def cal_romans_verse() -> Verse:
 def etcbc_chr_verses(etcbc_chr_verse: Verse) -> list[Verse]:
     """Returns a list of three ETCBC style Verses from 1 Chronicles."""
     res = [etcbc_chr_verse]
-    res.append(Verse(  # noqa: FURB113
+    res.append(Verse(
         "Chronicles_1",
         "1 Chronicles Chapter 01 Verse 34",
 ["W>WLD", ">BRHM", "L>JSXQ", 'BN"WHJ', "D>JSXQ", "<SW", "W>JSRJL"],
