@@ -91,7 +91,7 @@ def mislabel_stats(
         sample_size = len(inputs)
 
     if sample_size == 0:
-        msg = ("Cannot measure the size of `inputs`! "
+        msg = ("Cannot measure the size of `inputs`!"
                + " It seems like the argument `inputs` is empty.")
         raise ValueError(msg)
 
@@ -469,7 +469,7 @@ def cross_validate(
         fold: int = 5,
         threshold: float = 0.5
     ) -> None:
-    """Perform cross validation with the provided test set.
+    """Perform cross validation with the provided training set.
 
     .. attention:: cross validation should be performed with the training set,
         and you still need to hold out the test set for final evaluation.

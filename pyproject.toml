@@ -19,13 +19,16 @@ dependencies = [
     "tokenizers (>=0.21.1,<0.22.0)",
     "transformers (>=4.51.1,<5.0.0)",
     "datasets (>=3.5.0,<4.0.0)",
+    "torch (>=2.6.0,<3.0.0)",
+    "torchvision (>=0.21.0,<0.22.0)",
+    "torchaudio (>=2.6.0,<3.0.0)"
+    "datasets (>=3.5.0,<4.0.0)",
     "lime (>=0.2.0.1,<0.3.0.0)"
 ]
 
 [tool.poetry]
 packages = [
-    { include = "classifier" },
-    { include = "scraper" }
+    { include = "src" }
 ]
 
 [tool.poetry.group.dev.dependencies]
