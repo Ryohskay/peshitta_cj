@@ -1,0 +1,8 @@
+{
+  "name": "ui",
+  "packageManager": "yarn@4.2.2",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.4",
+    "tailwindcss": "^4.1.4"
+  }
+}

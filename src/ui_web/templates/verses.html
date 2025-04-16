@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for verse in verses %}
+        <div class="border-3">
+            <p lang="syc-Syre" translate="no">
+                <!-- Classical Syriac text in Estrangelo script. -->
+                {{ " ".join(verse.get_syriac_words()) }}
+            </p>
+            <p>
+                {{ verse.reference }}
+            </p>
+        </div>
+    {% endfor %}
+{% endblock %}
