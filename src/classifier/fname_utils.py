@@ -1,0 +1,221 @@
+"""Utilities to construct file names."""
+
+import re
+from enum import Enum
+from typing import Any, Literal, Self
+
+from src.shared import label_data
+from copy import copy
+
+
+class FnameExtraOpts(Enum):
+    """An Enum of possible extra file name options."""
+
+    REMOVE_DIACRITICS = "_no_diacritics"
+    REMOVE_PROPN = "_no_propn"
+    REMOVE_FROM_BOTH = "_both_removed"  # removed from both train and test sets
+    REMOVE_UNDERSCORES = "_no_uscore"
+
+def _sanitise(s: str) -> str:
+    """Return a str where special path characters are removed from s."""
+    s = s.strip().lower()
+    # replace every non-alnum char except underscore with an underscore
+    return re.sub(r"\W", "_", s)
+
+
+class SavefileName(Any):
+    """A class to handle and construct a save file's name."""
+
+    def __init__(
+        self,
+        origin: Literal["CAL", "ETCBC"],
+        classifier_alias: str,
+        file_ext: str = "csv",
+    ) -> None:
+        """Initialise the skeleton for the savefile name.
+
+        Args:
+            origin: the origin of the samples.
+            classifier_alias: an alias to the classifier. E.g. 'mnb' for
+                ``MultinomialNB``.
+            extra_suffix: any suffix to add at the end of the file name,
+                before the file extension.
+            file_ext: file extension to append at the end of the file name.
+
+        Raises:
+            ValueError: if any of data origin, file extension, or classifier alias
+                is given but empty,
+        """
+        # check for erroneous options or such combinations
+        if not origin:
+            msg = "Data origin is empty!"
+            raise ValueError(msg)
+        if not classifier_alias:
+            msg = "Classifier alias is empty!"
+            raise ValueError(msg)
+        if not file_ext:
+            msg = "File extension is empty!"
+            raise ValueError(msg)
+
+        self.origin = _sanitise(origin)
+        self.classifier = _sanitise(classifier_alias)
+        self.ext = _sanitise(file_ext)
+
+        # initialise empty attributes
+        self.n = 0
+        self.is_char_level = False
+        self.is_n_gram = False
+        self.is_bow = False
+        self.scope = ""
+        self.extra_opts = ""
+
+    def set_ngram_opts(
+        self,
+        n: int = 3,
+        *,
+        is_char_level: bool = True,
+        is_n_gram: bool = True,
+        is_bow: bool = True,
+    ) -> None:
+        """Set the options related to classifiers based on n-gram models.
+
+        Args:
+            n: the ``n`` of n-grams. this value is only used if the arg
+                ``is_n_gram`` is set to ``True``.
+            is_char_level: a boolean indicating if the classifier is a character-
+                level model. ``False`` indicates a word-level model.
+            is_n_gram: a boolean indicating if the classifier uses an n-gram
+                in tokenisation.
+            is_bow: a boolean indicating if the classifier uses a Bag-of-Words
+                approach.
+        """
+        self.n = int(n)
+        self.is_char_level = is_char_level
+        self.is_n_gram = is_n_gram
+        self.is_bow = is_bow
+
+    def set_scope(
+            self,
+            scope: str
+    ) -> None:
+        """Set the scope of the results stored in the file.
+
+        Args:
+        scope: a str designating the scope. This must be a valid name
+            associated with a label in :mod:`src.shared.label_data`.
+        """
+        if scope not in label_data.LabelToVal:
+            msg = f"Invalid scope or label name: {scope}"
+            raise ValueError(msg)
+        self.scope = _sanitise(scope)
+
+    def add_extra_opts(
+        self, extra_opts: list[FnameExtraOpts] | None = None
+    ) -> None:
+        """Append extra optional element(s) to the file name.
+
+        Args:
+            extra_opts: any value from the ``FnameExtraOpts`` enum.
+
+        Raises:
+            ValueError: if no option is given, or if any of the given options
+                is invalid.
+        """
+        if extra_opts is None or len(extra_opts) == 0:
+            msg = "No option provided!"
+            raise ValueError(msg)
+
+        for opt in extra_opts:
+            if opt not in FnameExtraOpts or not isinstance(opt, str):
+                msg = f"Invalid option: {opt}"
+                raise ValueError(msg)
+
+            self.extra_opts += opt
+
+    def copy(self) -> Self:
+        """Returns a shallow copy of self."""
+        return copy(self)
+
+    def mark_special_file(
+            self,
+            *,
+            is_mislabel: bool = False,
+            is_prod: bool = False,
+            is_total_proba: bool = False,
+        ) -> None:
+        """Mark the file as a special type of data save file.
+
+        Args:
+            is_mislabel: a boolean indicating if the file stores the mislabelled
+                verses, written by the method
+                :meth:`src.classifier.result_utils.Mislabels.save_to_file`.
+            is_prod: a boolean indicating if the file is for the predictions
+                on the production dataset.
+            is_total_proba: a boolean indicating if the file is for the
+                total probability of classification per book.
+        """
+        if is_mislabel and is_prod:
+            msg = (
+                "Mislabelled verse is undefined for production data"
+                + " because you don't know the correct labels!"
+            )
+            raise ValueError(msg)
+        if is_mislabel and is_total_proba:
+            msg = (
+                "The file cannot be a mislabelling inspection data AND per-book"
+                + " total probability data at the same time!"
+            )
+            raise ValueError(msg)
+        self.is_prod = is_prod
+        self.is_mislabel = is_mislabel
+        self.is_total_proba = is_total_proba
+
+
+    def get_fname(
+            self,
+        ) -> str:
+        """Get a file name to save the classifier prediction results.
+
+        Returns:
+            a str of the constructed file name.
+
+        Raises:
+            ValueError: if the combination of options are impossible
+                by definition.
+        """
+        # construct the file name
+        fname = self.origin
+        fname += "_" + self.classifier_alias
+
+        # append options related to n-gram models
+        if self.is_n_gram:
+            if self.is_char_level:
+                fname += f"_char_{self.n}gram"
+            else:
+                fname += f"_word_{self.n}gram"
+
+        if self.is_bow:
+            fname += "_bow"
+
+        if self.scope:
+            fname += "_" + self.scope
+
+        # append extra options if defined
+        if self.extra_opts:
+            fname += self.extra_opts
+
+        # add more suffixes based if the file contains a special kind of data
+        if self.is_prod:
+            fname = "PRODUCTION_" + fname
+
+        if self.is_mislabel:
+            fname += "_mislabels"  # contains only the mislabelled ones
+        elif self.is_total_proba:
+            # special file for the per-book total probas
+            fname += "_total_proba"
+        else:
+            fname += "_prediction_all"  # contains all predictions
+
+        # add file extension
+        fname += "." + self.ext
+        return fname
