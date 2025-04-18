@@ -50,6 +50,9 @@ class SavefileName(Any):
         if not origin:
             msg = "Data origin is empty!"
             raise ValueError(msg)
+        if origin not in {"ETCBC", "CAL"}:
+            msg = f"Unknown data origin: {origin}"
+            raise ValueError(msg)
         if not classifier_alias:
             msg = "Classifier alias is empty!"
             raise ValueError(msg)
@@ -68,6 +71,9 @@ class SavefileName(Any):
         self.is_bow = False
         self.scope = ""
         self.extra_opts = ""
+        self.is_prod = False
+        self.is_mislabel = False
+        self.is_total_proba = False
 
     def set_ngram_opts(
         self,
@@ -126,11 +132,11 @@ class SavefileName(Any):
             raise ValueError(msg)
 
         for opt in extra_opts:
-            if opt not in FnameExtraOpts or not isinstance(opt, str):
+            if opt not in FnameExtraOpts or not isinstance(opt.value, str):
                 msg = f"Invalid option: {opt}"
                 raise ValueError(msg)
 
-            self.extra_opts += opt
+            self.extra_opts += opt.value
 
     def copy(self) -> Self:
         """Returns a shallow copy of self."""
@@ -185,7 +191,7 @@ class SavefileName(Any):
         """
         # construct the file name
         fname = self.origin
-        fname += "_" + self.classifier_alias
+        fname += "_" + self.classifier
 
         # append options related to n-gram models
         if self.is_n_gram:

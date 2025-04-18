@@ -46,7 +46,7 @@ explainer = LimeTextExplainer(class_names=class_names, char_level=True)
 idx = 83
 exp = explainer.explain_instance(
         " ".join(loaded_etc.test.get_samples()[idx].get_translit_words()),
-                     mnb.predict_proba_translit, num_features=10)
+                    mnb.predict_proba_translit, num_features=10)
 print("Document id: %d" % idx)
 print("Probability(christian) =", mnb.predict_proba([loaded_etc.test.get_samples()[idx]])[1])
 print("True class: %s" % class_names[loaded_etc.test.get_labels()[idx]])

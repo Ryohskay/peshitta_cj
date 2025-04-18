@@ -147,22 +147,26 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
     return result_verses
 
 
-def remove_non_chars(verses: list[Verse]) -> list[Verse]:
+def _replace_diacritics(s: str) -> str:
+    # replace Syriac diacritics
+    s = s.replace("\u0308", "").replace("\u0307", "")
+    # replace transliteration of above diacritics
+    return s.replace('"', "").replace("^", "")
+
+
+def remove_non_chars(verses: list[list[str]]) -> list[list[str]]:
     """Remove non-character unicode codepoints from the text.
 
-    Specifically, this function removes ``\u0308`` (Combining Diaeresis)
-    used in place of Syriac diacritic Seyame (ܣܝ̈ܡܐ) a and ``\u0307``
-    (Combining Dot Above).
+    Specifically, this preprocessing function removes ``\u0308``
+    (Combining Diaeresis) used in place of Syriac diacritic Seyame (ܣܝ̈ܡܐ)
+    and ``\u0307`` (Combining Dot Above).
 
     Returns:
-        a list of Verse instances without non-character unicode codepoints.
+        a list of str without non-character unicode codepoints.
     """
     new_verses = []
     for v in verses:
-        syriac = [sw.replace("\u0308", "").replace("\u0307", "") for sw in v.get_syriac_words()]
-        translit = [tw.replace('"', "").replace("^", "") for tw in v.get_translit_words()]
-        new_verses.append(Verse(v.book, v.reference, translit, syriac,
-                                v.get_annotations(), origin="ETCBC"))
+        new_verses.append([_replace_diacritics(word) for word in v])
     return new_verses
 
 

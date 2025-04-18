@@ -202,6 +202,14 @@ class BoWEstimator(ProbaClassifier):
         Args:
             preprocessor: a callable object to preprocess all string before
                 training and testing (prediction).
+
+        .. note:
+            Since a preprocessor function takes
+            a list of plain str objects, it should only deal with sub-word-level
+            features (i.e. specific characters). Higher-level text manipulation,
+            such as removing words of a particular POS, must be performed before
+            the samples are passed to ``.fit``, ``.predict``, or
+            ``.predict_proba`` methods.
         """
         self.preprocessor = preprocessor
 
@@ -249,7 +257,7 @@ class BoWEstimator(ProbaClassifier):
         self.train_y = y
 
         if self.vocabs is None:
-            msg = ("The result of `make_vocab` was None. Cannot construct"
+            msg = ("The result of `make_vocab` was None. Failed to construct"
                     + " vocabulary to fit the model. Aborting.")
             raise RuntimeError(msg)
 

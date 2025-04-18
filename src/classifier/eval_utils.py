@@ -44,7 +44,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import StratifiedKFold
 
-from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.dataset_skeleton import LoadedDataset, DataSplit
 from src.classifier.prediction_utils import predict_proba
 from src.classifier.result_utils import (
     Mislabels,
@@ -299,7 +299,7 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
 
 def evaluate_classifier(
     clf: BoWEstimator,
-    loaded_ds: LoadedDataset,
+    test_ds: DataSplit,
     *,
     plot: bool = False,
     threshold: float = 0.5
@@ -309,7 +309,8 @@ def evaluate_classifier(
     """Evaluate a classifier with provided test sets.
 
     Args:
-        clf: a :class:`src.classifier.wrappers.BoWEstimator` instance.
+        clf: a :class:`src.classifier.wrappers.BoWEstimator` instance, which has
+            already been fit.
         loaded_ds: a :class:`src.classifier.dataset_skeleton.LoadedDataset` instance
             for the dataset to train and evaluate the classifier with.
         plot: if True, create charts
@@ -322,12 +323,12 @@ def evaluate_classifier(
         :class:`ProbaPredictions` instances, one for OT and another for NT,
         along with :class:`Mislabels` instances for OT and NT.
     """
-    ot_test_x = loaded_ds.test.get_samples(0)
-    nt_test_x = loaded_ds.test.get_samples(1)
+    ot_test_x = test_ds.get_samples(0)
+    nt_test_x = test_ds.get_samples(1)
     # cast / convert lists from the dataset to np.ndarray
-    ot_test_y = np.array(loaded_ds.test.get_labels(0), dtype=np.int64)
-    nt_test_y = np.array(loaded_ds.test.get_labels(1), dtype=np.int64)
-    all_test_y = np.array(loaded_ds.test.get_labels(), dtype=np.int64)
+    ot_test_y = np.array(test_ds.get_labels(0), dtype=np.int64)
+    nt_test_y = np.array(test_ds.get_labels(1), dtype=np.int64)
+    all_test_y = np.array(test_ds.get_labels(), dtype=np.int64)
     print(f"test size: {all_test_y.shape}")
 
     # predict probabilities with clf
@@ -384,7 +385,9 @@ def eval_and_save(  # noqa: PLR0913
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
 
     Args:
-        clf: a classifier wrapped in :class:`src.classifier.wrappers.BoWEstimator`
+        clf: a classifier wrapped in
+            :class:`src.classifier.wrappers.BoWEstimator`, which has already
+            been fit.
         loaded: a dataset loaded from files as a
             :class:`src.classifier.dataset_skeleton.LoadedDataset` instance.
         file_formatter: any callable object (function, method, etc.)
@@ -416,7 +419,7 @@ def eval_and_save(  # noqa: PLR0913
 
     # evaluate the classifier with the provided samples
     (ot_probas, nt_probas, ot_mislabels, nt_mislabels) = evaluate_classifier(
-        clf, loaded, threshold=threshold
+        clf, loaded.test, threshold=threshold
     )
 
     # Configure and prepare save files' names
@@ -462,7 +465,7 @@ def cross_validate(
     accs = []
     precs = []
     recs = []
-    fones = []
+    f_ones = []
 
     for train_g, test_g, in splits:
         proba_c = BoWEstimator(clone(clf.algo), clf.n_gram_formatter, clf.n)
@@ -488,8 +491,8 @@ def cross_validate(
         accs.append(acc)
         precs.append(prec)
         recs.append(rec)
-        fones.append(fone)
+        f_ones.append(fone)
     print(f"Accuracy > avg: {np.average(accs)}, std: {np.std(accs)}")
     print(f"Precision > avg: {np.average(precs)}, std: {np.std(precs)}")
     print(f"Recall > avg: {np.average(recs)}, std: {np.std(recs)}")
-    print(f"F1 score > avg: {np.average(fones)}, std: {np.std(fones)}")
+    print(f"F1 score > avg: {np.average(f_ones)}, std: {np.std(f_ones)}")

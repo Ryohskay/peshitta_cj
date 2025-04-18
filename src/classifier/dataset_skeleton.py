@@ -30,12 +30,13 @@
 """
 
 import json
-from collections.abc import Generator
+from collections.abc import Generator, Callable
 from pathlib import Path
-from typing import Literal, TypedDict
+from typing import Literal, TypedDict, Self
 
 from src.classifier.result_utils import Verse
 from src.classifier.sanitisation_utils import clean_path_str, sanitise_str
+from copy import deepcopy
 
 
 class DatasetDict(TypedDict):
@@ -61,9 +62,9 @@ class DataSplit:
         sub-list at index ``i`` contains the instances of class ``i``.
     """
     def __init__(self,
-                 ot_verses: list[Verse],
-                 nt_verses: list[Verse]
-             ) -> None:
+                ot_verses: list[Verse],
+                nt_verses: list[Verse]
+            ) -> None:
         self.num_classes: int = 2  # this is a binary classification problem
         self.verses: list[list[Verse]] = []
         self.verses.append(ot_verses)
@@ -85,14 +86,16 @@ class DataSplit:
         """
         if t is not None and t not in range(self.num_classes):
             msg = (f"Integer label {t} cannot be generated. "
-                   + "They are not in the expected labels for this system."
-                   + " Please refer to the documentation for: "
-                   + "datasets.DataSplit")
+                    + "They are not in the expected labels for this system."
+                    + " Please refer to the documentation for: "
+                    + "datasets.DataSplit")
             raise ValueError(msg)
         return t
 
     def get_samples(self,
-                    target: int | None = None
+                    target: int | None = None,
+                    *,
+                    trim_none: bool = True
                 ) -> list[Verse]:
         """Get samples or instances of each class.
 
@@ -104,22 +107,36 @@ class DataSplit:
                 for the class ``i`` - 1).
                 If target is a valid integer, returns a list from
                 ``self.verses[target]``.
+            trim_none: a boolean indicating whether a sample only with value
+                ``None`` should be excluded.
 
         Returns:
             a list of the samples from the class ``target``.
         """
         target = self._validate_target(target)
-        # default behaviour
-        if target is None:
-            all_verses = self.verses[0].copy()
-            for i in range(1, self.num_classes):
+        all_verses = []
+        if target is None and trim_none:
+            # default behaviour
+            for i in range(self.num_classes):
+                # return all samples from all classes as a 1D list
+                all_verses.extend([v for v in self.verses[i] if v is not None])
+            return all_verses
+        if target is None:  # and not trim_none
+            for i in range(self.num_classes):
+                # return all samples from all classes as a 1D list
                 all_verses.extend(self.verses[i])
             return all_verses
+        # if target is not None
+        if trim_none:
+            return [v for v in self.verses[target] if v is not None]
         # else
         return self.verses[target]
 
+
     def get_labels(self,
-                   target: int | None = None
+                    target: int | None = None,
+                    *,
+                    trim_none: bool = True
                 ) -> list[int]:
         """Generate labels for the specified targets.
 
@@ -131,24 +148,37 @@ class DataSplit:
                 for the class ``i`` - 1).
                 If target is a valid integer, returns a list of ``target``
                 integer repeated for the length of ``self.verses[target]``.
+            trim_none: a boolean indicating whether a sample only with value
+                ``None`` should be excluded.
 
         Returns:
             a list of integers labelling the instances of the class ``target``.
         """
         target = self._validate_target(target)
-        # default behaviour
-        if target is None:
-            # generate a list of labels for all instances in this split
+        labels = []
+        if target is None and trim_none:
+            # default behaviour:
+            # create a list of labels for all instances in this split
             # by concatenating the labels for each class
-            labels = [0 for v in self.verses[0]]
-            for i in range(1, self.num_classes):
-                labels.extend([1 for v in self.verses[i]])
+            for i in range(self.num_classes):
+                labels.extend([i for v in self.verses[i] if v is not None])
             return labels
+        if target is None:  # and not trim_none
+            # create a list of labels for all instances in this split
+            # by concatenating the labels for each class
+            for i in range(self.num_classes):
+                labels.extend([i for v in self.verses[i]])
+            return labels
+        # if target is not None
+        if trim_none:
+            return [target for v in self.verses[target] if v is not None]
         # else
         return [target for v in self.verses[target]]
 
-    def generate_syriac_hf(self, target: int | None = None
-                           ) -> Generator[DatasetDict]:
+    def generate_syriac_hf(
+                        self,
+                        target: int | None = None
+                    ) -> Generator[DatasetDict]:
         """Generate the syriac text of verses in Huggingface datasets format.
 
         Each yielded item is a JSONL (JSON Lines) line.
@@ -195,8 +225,9 @@ class DataSplit:
                 yield {"label": label,
                         "text": syriac_text}
 
-    def generate_translit_hf(self, target: int | None = None
-                             ) -> Generator[DatasetDict]:
+    def generate_translit_hf(self,
+                            target: int | None = None
+                            ) -> Generator[DatasetDict]:
         """Generate the transliterated verses in Huggingface datasets format.
 
         Each yielded item is a JSONL (JSON Lines) line.
@@ -229,6 +260,31 @@ class DataSplit:
                 text = " ".join(v.get_translit_words())
                 yield {"label": label,
                         "text": text}
+
+    def map_on_samples(self,
+                        func: Callable[[Verse], Verse | None],
+                        target: int | None = None
+                    ) -> None:
+        """Map ``func`` on the samples in the data split.
+
+        Args:
+            func: a Callable object that takes a
+                :class:`src.classifier.result_utils.Verse` instance as
+                the argument and returns a transformed ``Verse`` (or ``None``).
+            target: an integer indicating the target class.
+
+        .. attention::
+            This must be called **before** fetching the verses and labels by
+            ``.get_samples`` and ``.get_labels`` methods.
+        """
+        target = self._validate_target(target)
+        if target is None:
+            # default behaviour
+            for i in range(self.num_classes):
+                # map ``func`` on all samples from each class
+                self.verses[i] = list(map(func, self.verses[i]))
+        else:
+            self.verses[target] = list(map(func, self.verses[target]))
 
 
 class LoadedDataset:
