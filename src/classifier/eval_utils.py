@@ -53,6 +53,8 @@ from src.classifier.result_utils import (
     Verse,
 )
 from src.classifier.wrappers import BoWEstimator
+from src.classifier.fname_utils import SavefileName
+from src.shared import label_data
 
 
 def mislabel_stats(
@@ -92,7 +94,7 @@ def mislabel_stats(
 
     if sample_size == 0:
         msg = ("Cannot measure the size of `inputs`!"
-               + " It seems like the argument `inputs` is empty.")
+            + " It seems like the argument `inputs` is empty.")
         raise ValueError(msg)
 
     mislabel_books = {}
@@ -114,10 +116,10 @@ def mislabel_stats(
             if current_book:
                 num_mislabels = len(mislabel_books[current_book])
                 print(f">> {current_book}: {num_mislabels} "
-                      + "mislabelled verses, accounting for "
-                      + f"{num_mislabels / num_book_verses:.02f}% out of "
-                      + f"{num_book_verses} verses ({num_book_unk} verses "
-                      + "labelled unknown)")
+                    + "mislabelled verses, accounting for "
+                    + f"{num_mislabels / num_book_verses:.02f}% out of "
+                    + f"{num_book_verses} verses ({num_book_unk} verses "
+                    + "labelled unknown)")
             # update the book-level variables
             current_book = preds.samples[i].book
             num_book_verses = 0
@@ -137,7 +139,7 @@ def mislabel_stats(
             if preds.samples[i].book not in mislabel_books:
                 mislabel_books.update({
                         current_book: [preds.samples[i]]
-                   })
+                })
             else:
                 mislabel_books[current_book].append(preds.samples[i])
             if preds.predictions[i] == -1:
@@ -146,17 +148,17 @@ def mislabel_stats(
     if current_book:
         num_mislabels = len(mislabel_books[current_book])
         print(f">> {current_book}: {num_mislabels} "
-              + "mislabelled verses, accounting for "
-              + f"{(num_mislabels / num_book_verses) * 100:.02f}% out of "
-              + f"{num_book_verses} verses ({num_book_unk} verses "
-              + "labelled unknown)")
+                + "mislabelled verses, accounting for "
+                + f"{(num_mislabels / num_book_verses) * 100:.02f}% out of "
+                + f"{num_book_verses} verses ({num_book_unk} verses "
+                + "labelled unknown)")
 
     # Collate the collected mislabelling results into a Mislabels class instance
     mislabs = Mislabels(incorrect_labels, correct_labels,
-    [mislab for book in mislabel_books
-                                for mislab in mislabel_books[book]],
-                        mislab_probas
-              )
+            [mislab for book in mislabel_books
+            for mislab in mislabel_books[book]],
+            mislab_probas
+        )
 
     # Print some stats
     print(
@@ -165,7 +167,7 @@ def mislabel_stats(
                 + f"({incorrect_labels.count(-1)} labelled as unknown)"
     )
     print("Local accuracy: "
-          + f"{accuracy_score(y_correct, preds.predictions):.02f}")
+            + f"{accuracy_score(y_correct, preds.predictions):.02f}")
 
     return mislabs
 
@@ -208,7 +210,7 @@ def metricise(
 
     if y_probas is not None and len(y_probas) != len(y_true):
         msg = (f"length of y_probas {len(y_probas)} is not equal to "
-               + f"length of y_true {len(y_true)}")
+                + f"length of y_true {len(y_true)}")
         raise ValueError(msg)
 
     if y_probas is not None:
@@ -333,11 +335,12 @@ def evaluate_classifier(
     ot_proba_preds = predict_proba(
         clf,
         ot_test_x,
+        ot_test_y,
         threshold=threshold
     )
     ot_mislabels = mislabel_stats(
                 ot_test_x,
-                np.array(ot_test_y),
+                ot_test_y,
                 ot_proba_preds
             )
     print(f"Total probas: {ot_proba_preds.get_total_probas()}")
@@ -345,6 +348,7 @@ def evaluate_classifier(
     nt_proba_preds = predict_proba(
         clf,
         nt_test_x,
+        nt_test_y,
         threshold=threshold
     )
     nt_mislabels = mislabel_stats(
@@ -372,11 +376,9 @@ def eval_and_save(  # noqa: PLR0913
         clf: BoWEstimator,
         loaded: LoadedDataset,
         file_formatter: Callable,
+        save_fname: SavefileName,
         *,
         out_dir: str = "./out/",
-        save_file_prefix: str = "",
-        save_file_suffix: str = "",
-        save_file_ext: str = ".csv",
         threshold: float = 0.5,
     ) -> tuple[BoWEstimator, list[ProbaPredictions]]:
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
@@ -388,14 +390,9 @@ def eval_and_save(  # noqa: PLR0913
         file_formatter: any callable object (function, method, etc.)
             that returns a formatted string which can be directly
             written to a file.
+        save_fname: :class:`src.classifier.fname_utils.SavefileName` instance
+            containing the base file name information for this classifier.
         out_dir: Path or string of path to the directory to save result files.
-        save_file_prefix: Prefixes to add before/after the default file name
-            for each evaluation process. These are used to construct save file
-            names passed to save_mislabels and save_all_preds functions.
-        save_file_suffix: Suffix in filenames. **Note** this is different
-            from the *file extension* defined with param ``save_file_ext``.
-            See also the param ``save_file_prefix``.
-        save_file_ext: File extension for the save file. By default, it's CSV.
         threshold: the threshold of probability to classify a certain sample
             as belonging to a particular class.
 
@@ -416,48 +413,33 @@ def eval_and_save(  # noqa: PLR0913
     """
     # convert the out_dir to Path
     out_dir_p = Path(out_dir)
-    # Remove prepended slash in save_file_prefix
-    # since they break Path concatenation
-    if save_file_prefix[0] == "/":
-        save_file_prefix = save_file_prefix[1:]
 
     # evaluate the classifier with the provided samples
     (ot_probas, nt_probas, ot_mislabels, nt_mislabels) = evaluate_classifier(
         clf, loaded, threshold=threshold
     )
 
-    # Construct save files' paths
-    ot_mislabels_file = Path(
-        save_file_prefix
-        + "prediction_mislabels_ot"
-        + save_file_suffix
-        + save_file_ext
-    )
-    nt_mislabels_file = Path(
-        save_file_prefix
-        + "prediction_mislabels_nt"
-        + save_file_suffix
-        + save_file_ext
-    )
-    ot_all_file = Path(
-        save_file_prefix
-        + "prediction_all_ot"
-        + save_file_suffix
-        + save_file_ext
-    )
-    nt_all_file = Path(
-        save_file_prefix
-        + "prediction_all_nt"
-        + save_file_suffix
-        + save_file_ext
-    )
+    # Configure and prepare save files' names
+    ot_all_file = save_fname.copy()
+    ot_all_file.set_scope(label_data.ValToLabel[0])
+    nt_all_file = save_fname.copy()
+    nt_all_file.set_scope(label_data.ValToLabel[1])
+
+    ot_mislabels_file = ot_all_file.copy()
+    ot_mislabels_file.mark_special_file(is_mislabel=True)
+    nt_mislabels_file = nt_all_file.copy()
+    nt_mislabels_file.mark_special_file(is_mislabel=True)
 
     # Save the evaluation results to files
-    ot_mislabels.save_to_file(file_formatter, (out_dir_p / ot_mislabels_file))
-    nt_mislabels.save_to_file(file_formatter, (out_dir_p / nt_mislabels_file))
+    ot_mislabels.save_to_file(file_formatter,
+                                (out_dir_p / ot_mislabels_file.get_fname()))
+    nt_mislabels.save_to_file(file_formatter,
+                                (out_dir_p / nt_mislabels_file.get_fname()))
 
-    ot_probas.save_to_file(file_formatter, (out_dir_p / ot_all_file))
-    nt_probas.save_to_file(file_formatter, (out_dir_p / nt_all_file))
+    ot_probas.save_to_file(file_formatter,
+                            (out_dir_p / ot_all_file.get_fname()))
+    nt_probas.save_to_file(file_formatter,
+                            (out_dir_p / nt_all_file.get_fname()))
 
     return (clf, [ot_probas, nt_probas])
 
@@ -497,11 +479,12 @@ def cross_validate(
 
         proba_c.fit(train_verses, train_labels)
         predictions = predict_proba(proba_c,
-                                            test_verses,
-                                            threshold=threshold
-                                    )
+                                    test_verses,
+                                    test_labels,
+                                    threshold=threshold
+                                )
         acc, prec, rec, fone = metricise(test_labels,
-                                         y_all=predictions.predictions)
+                                        y_all=predictions.predictions)
         accs.append(acc)
         precs.append(prec)
         recs.append(rec)

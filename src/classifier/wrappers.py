@@ -129,8 +129,10 @@ class ProbaClassifier(Classifier):
             raise ValueError(msg)
         super().__init__(clf)
 
-    def predict_proba(self, X: list[Any] | np.ndarray
-                      ) -> list[list[float]] | np.ndarray:
+    def predict_proba(
+                self,
+                X: list[Any] | NDArray
+            ) -> list[list[float]] | NDArray:
         """Predict probabilities on the provided samples.
 
         Args:
@@ -189,17 +191,44 @@ class BoWEstimator(ProbaClassifier):
         self.train_vector: Sequence[Sequence[int | float]] = []
         self.train_y: list[int] = []
         self.pred_vector: np.ndarray | list[list[int]] | None = None
+        self.preprocessor: Callable[[list[Verse]], list[Verse]] | None = None
 
-    def fit(self,  # type: ignore[reportIncompatibleMethodOverride]
-            X: list[Verse],
+    def set_preprocessor(
+            self,
+            preprocessor: Callable[[list[str]], list[str]]
+        ) -> None:
+        """Register a global preprocessor.
+
+        Args:
+            preprocessor: a callable object to preprocess all string before
+                training and testing (prediction).
+        """
+        self.preprocessor = preprocessor
+
+    def _process_verses(self, X: list[Verse] | list[list[str]]) -> list[str]:
+        verses = []
+        for vrs in X:
+            current = ""
+            if isinstance(vrs, Verse):
+                current = vrs.get_translit_words()
+            else:
+                current = vrs
+            # Apply preprocessing function if registered
+            if self.preprocessor is not None:
+                verses.append(self.preprocessor(current))
+            else:
+                verses.append(current)
+        return verses
+
+    def fit(self,
+            X: list[Verse] | list[list[str]],
             y: list[int],
         ) -> None:
         """Train the algorithm on train_x to get a classifier.
 
         .. note:: This method is in strict terms incompatible with the super
-            classes' ``.fit`` method because
-            :class:`src.classifier.result_utils.Verse` is not hashable.
-            Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
+            classes' ``.fit`` method because ``list[Verse]`` is incompatible
+            with ``np.typing.NDArray`` in some cases.
 
         Args:
             X: the samples to train the model.
@@ -214,14 +243,14 @@ class BoWEstimator(ProbaClassifier):
             msg = f"Length of X ({len(X)}) and y ({len(y)}) do not match."
             raise ValueError(msg)
 
-        self.vocabs = make_vocab(X,
-                                 self.n_gram_formatter,
-                                 span=self.n)
+        self.vocabs = make_vocab(self._process_verses(X),
+                                self.n_gram_formatter,
+                                span=self.n)
         self.train_y = y
 
         if self.vocabs is None:
             msg = ("The result of `make_vocab` was None. Cannot construct"
-                   + " vocabulary to fit the model. Aborting.")
+                    + " vocabulary to fit the model. Aborting.")
             raise RuntimeError(msg)
 
         print(
@@ -231,13 +260,12 @@ class BoWEstimator(ProbaClassifier):
         self.train_vector = make_feature(self.vocabs)
         self.algo.fit(self.train_vector, y)  # type: ignore[reportArgumentType]
 
-    def predict(self, X: list[Verse]) -> np.ndarray:  # type: ignore[reportIncompatibleMethodOverride]
+    def predict(self, X: list[Verse] | list[list[str]]) -> NDArray:
         """Predict on target_x with the pretrained classifier.
 
         .. note:: This method is in strict terms incompatible with the super
-            classes' ``.fit`` method because
-            :class:`src.classifier.result_utils.Verse` is not hashable.
-            Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
+            classes' ``.fit`` method because ``list[Verse]`` is incompatible
+            with ``np.typing.NDArray`` in some cases.
 
         Args:
             X: list of inputs to the model
@@ -252,22 +280,29 @@ class BoWEstimator(ProbaClassifier):
         """
         if self.vocabs is None:
             msg = ("Cannot fetch the vocabulary of the model. "
-                   + "You must run `.fit` method before making predictions.")
+                    + "You must run `.fit` method before making predictions.")
+            raise ValueError(msg)
+        if len(X) == 0:
+            msg = "X is empty. You must provide samples to predict."
             raise ValueError(msg)
 
         self.pred_vector = np.array(
-            vectorise(X, self.vocabs[0],
-                      self.n_gram_formatter, span=self.n)
+            vectorise(
+                        self._process_verses(X),
+                        self.vocabs[0],
+                        self.n_gram_formatter, span=self.n)
         )
         return self.algo.predict(self.pred_vector)  # type: ignore[reportAttributeAccessIssue]
 
-    def predict_proba(self, X: list[Verse]) -> np.ndarray:  # type: ignore[reportIncompatibleMethodOverride]
+    def predict_proba(
+            self,
+            X: list[Verse] | list[list[str]]
+        ) -> np.ndarray:  # type: ignore[reportIncompatibleMethodOverride]
         """Predict probability on target_x with the pretrained classifier.
 
         .. note:: This method is in strict terms incompatible with the super
-            classes' ``.fit`` method because
-            :class:`src.classifier.result_utils.Verse` is not hashable.
-            Also, :class:`numpy.ndarray` is not assignable to ``list[Verse]``.
+            classes' ``.fit`` method because ``list[Verse]`` is incompatible
+            with ``np.typing.NDArray`` in some cases.
 
         Args:
             X: list of input samples to the model
@@ -278,27 +313,25 @@ class BoWEstimator(ProbaClassifier):
             the sample belonging to class ``i``.
 
         Raises:
-            ValueError: if ``self.vocabs`` is still empty. This is likely
-                because one forgot to run `.fit` method before running
-                `.predict`.
+            ValueError: if X is empty. also raised when ``self.vocabs`` is
+                not set. This is likely because one forgot to run `.fit` method
+                before running `.predict`.
         """
         if self.vocabs is None:
             msg = ("Cannot fetch the vocabulary of the model. "
-                   + "You must run `.fit` method before making predictions.")
+                    + "You must run `.fit` method before making predictions.")
+            raise ValueError(msg)
+        if len(X) == 0:
+            msg = "X is empty. You must provide samples to predict_proba."
             raise ValueError(msg)
 
         targets = np.array(
-            vectorise(X, self.vocabs[0],
-                        self.n_gram_formatter, span=self.n
-                      )
+            vectorise(
+                        self._process_verses(X),
+                        self.vocabs[0],
+                        self.n_gram_formatter,
+                        span=self.n
+                    )
         )
 
         return self.algo.predict_proba(targets)  # type: ignore[reportFunctionMemberAccess]
-
-    def predict_proba_translit(self, strings: list[str]) -> NDArray:
-        """Take transliterated strings and return probabilities."""
-        vs = []
-        for i in range(len(strings)):
-            vs.append(Verse("Unknown", "Unknown", strings[i].split(" ")))
-        return self.predict_proba(vs)
-

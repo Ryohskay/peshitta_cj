@@ -29,7 +29,7 @@ import json
 from pathlib import Path
 from typing import TypedDict
 
-from src.classifier import book_data
+from src.shared import book_data
 from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.result_utils import Verse
 from src.classifier.sanitisation_utils import normalise_book_title
@@ -116,8 +116,8 @@ def extract_verse(
                 continue
 
     return Verse(book_dict["book_title"],
-          refs, lemmata,
-          words_annotations=lemma_annots, origin="CAL")
+            refs, lemmata,
+            words_annotations=lemma_annots, origin="CAL")
 
 
 def get_book_verses(

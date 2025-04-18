@@ -64,20 +64,18 @@ def count_n_grams(
 
 
 def make_vocab(
-    verses: list[Verse],
+    verses: list[list[str]],
     ngram_formatter: Callable,
-    span: int = 3,
-    mode: int = 1
+    span: int = 3
 ) -> tuple[Counter, list[Counter]]:
     """Construct the model's vocabulary by extracting n-grams from verses.
 
     Args:
-        verses: list of verses to find n-grams.
+        verses: list of verses as str to find n-grams.
         ngram_formatter: This is a pre-processing function or method to apply
             to the text on each verse.
             See :func:`src.classifier.fitting_utils.count_n_grams` for more details.
         span: the size of window for n-gram extraction, i.e. *N* of n-grams.
-        mode: type of script to find the n-grams in.
 
     .. seealso::
         :meth:`src.classifier.result_utils.Verse.get_words_in_mode`
@@ -104,15 +102,12 @@ def make_vocab(
     for verse in verses:
         word_cnt += len(verse)
 
-        # get the words in this verse
-        verse_words = verse.get_words_in_mode(mode)
-
         # count n-grams
         n_gram_counter = count_n_grams(
-                                            verse_words,
-                                            ngram_formatter,
-                                            span
-                                            )
+                                        verse,
+                                        ngram_formatter,
+                                        span
+                                    )
 
         n_gram_counters.append(n_gram_counter)
 
@@ -125,7 +120,7 @@ def make_vocab(
 
     if n_gram_vocabs is None:
         msg = ("Verse parsing completed but the n-gram counter is empty. "
-               + "Make sure that the arguments are properly defined.")
+                + "Make sure that the arguments are properly defined.")
         raise RuntimeError(msg)
 
     return (n_gram_vocabs, n_gram_counters)
@@ -160,7 +155,8 @@ def make_word_n_gram_vocab(
             tuple[(Global word n-gram counts),
                     (word n-gram counts for each verse)]
     """
-    return make_vocab(verses, identity, span, mode)
+    verses_s = [v.get_words_in_mode(mode) for v in verses]
+    return make_vocab(verses_s, identity, span, mode)
 
 
 def make_char_n_gram_vocab(
@@ -179,7 +175,8 @@ def make_char_n_gram_vocab(
             tuple[(Global character n-gram counts),
                     (character n-gram counts for each verse)]
     """
-    return make_vocab(verses, ngram_formatter, span, mode)
+    verses_s = [v.get_words_in_mode(mode) for v in verses]
+    return make_vocab(verses_s, ngram_formatter, span, mode)
 
 
 def make_feature(
@@ -239,12 +236,11 @@ def merge_counts(counter: Counter, bow: dict) -> None:
 
 
 def vectorise(
-    verses: list[Verse],
-    vocab: Counter,
-    ngram_formatter: Callable,
-    span: int = 3,
-    mode: int = 1,
-) -> list[list[int]]:
+        verses: list[list[str]],
+        vocab: Counter,
+        ngram_formatter: Callable,
+        span: int = 3
+    ) -> list[list[int]]:
     """Count n-grams in unseen verses, using predefined vocabulary.
 
     Args:
@@ -255,9 +251,9 @@ def vectorise(
             counts.
         ngram_formatter: This is a pre-processing function or method to apply
             to the text on each verse.
-            See :func:`src.classifier.fitting_utils.count_n_grams` for more details.
+            See :func:`src.classifier.fitting_utils.count_n_grams`
+            for more details.
         span: the size of window for n-gram extraction, i.e. *N* of n-grams.
-        mode: type of script to find the n-grams in.
 
     .. seealso::
         :meth:`src.classifier.result_utils.Verse.get_words_in_mode`
@@ -276,7 +272,7 @@ def vectorise(
     for verse in verses:
         wc += len(verse)
         local_n_gram_counts = count_n_grams(
-            words=verse.get_words_in_mode(mode),
+            words=verse,
             ngram_formatter=ngram_formatter,
             span=span
         )

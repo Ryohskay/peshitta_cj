@@ -26,7 +26,6 @@
 """Utilities to handle data extraction and estimation results."""
 
 import logging
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, Protocol
 
@@ -57,9 +56,8 @@ def append_to_dict(key: str, values: list, target: dict[str, list]) -> dict:
     return target
 
 
-@dataclass
 class PeshittaWord:
-    """A dataclass to represent a word in the Peshitta texts.
+    """An abstract class to represent a word in the Peshitta texts.
 
     .. caution::
         This class does not implement __hash__ method, which means that
@@ -84,10 +82,14 @@ class PeshittaWord:
         The transliterations and Syriac scripts of the word depends on the
         standards of datasets they were originally acquired from.
     """
-    translit: str
-    syriac: str = ""
-    annots: str = ""
-    origin: Literal["ETCBC", "CAL"] = "ETCBC"
+    def __init__(self, translit: str, syriac: str = "", annots: str = "",
+                origin: Literal["ETCBC", "CAL"] = ""):
+            if not origin:
+                logger.warning("No origin provided to PeshittaWord.__init__")
+            self.translit = translit
+            self.syriac = syriac
+            self.annots = annots
+            self.origin = origin
 
     def __eq__(self, value: object, /) -> bool:
         """Equality comparator for Verse objects with any Python object.
@@ -139,7 +141,7 @@ class Verse(Any):
             syriac_words: list[str] | None = None,
             words_annotations: list[str] | None = None,
             *,
-            origin: Literal["ETCBC", "CAL"] = "ETCBC",
+            origin: Literal["ETCBC", "CAL"] = "",
         ) -> None:
         """Initialise Verse object with PeshittaWord attribute.
 
@@ -183,6 +185,7 @@ class Verse(Any):
         # Parse the provided lists and organise them into a PeshittaWord obj
         for i in range(len(translit_words)):
             if syriac_words is not None and words_annotations is not None:
+                # full data
                 self.words.append(PeshittaWord(
                         translit_words[i],
                         syriac_words[i],
@@ -190,21 +193,23 @@ class Verse(Any):
                         origin=origin,
                         ))
             elif syriac_words is not None and words_annotations is None:
+                # ETCBC data
                 self.words.append(PeshittaWord(
                         translit_words[i],
                         syriac_words[i],
                         origin=origin,
                         ))
             elif syriac_words is None and words_annotations is not None:
+                # CAL data
                 self.words.append(PeshittaWord(
                         translit_words[i],
                         annots=words_annotations[i],
                         origin=origin,
                         ))
             else:
-                logger.warning("No origin provided to Verse.__init__")
                 self.words.append(PeshittaWord(
                         translit_words[i],
+                        origin=origin
                         ))
 
     def __eq__(self, value: object, /) -> bool:
@@ -446,8 +451,8 @@ class ProbaPredictions(Predictions):
         return total_probas
 
     def save_to_file(self,
-                     formatter: FileFormatterProto,
-                     save_file: str | Path = "./out/prediction_all_ot.csv",
+                    formatter: FileFormatterProto,
+                    save_file: str | Path = "./out/prediction_all_ot.csv",
                 ) -> None:
         """Save all verses into a file, along with prediction results.
 
@@ -466,7 +471,7 @@ class ProbaPredictions(Predictions):
             data_str = formatter(samples=self.samples,
                                         probas=self.get_probas(),
                                         correct_labels=self.correct_labels
-                                 )
+                                )
         else:
             data_str = formatter(samples=self.samples,
                                         probas=self.get_probas())
@@ -502,8 +507,8 @@ class Mislabels(Any):
             or len(incorrect_labels) < 1
             or len(correct_labels) < 1):
             msg = ("indices of mislabelled samples were empty."
-                   + "Make sure to instanciate this only when "
-                   + "there are one or more mislabelled samples.")
+                    + "Make sure to instanciate this only when "
+                    + "there are one or more mislabelled samples.")
             raise ValueError(msg)
 
         self.mislabels = incorrect_labels

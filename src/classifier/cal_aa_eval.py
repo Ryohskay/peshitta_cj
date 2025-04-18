@@ -35,9 +35,11 @@ from src.classifier.dataset_skeleton import DataSplit
 from src.classifier.eval_utils import (
     eval_and_save,
 )
+from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.classifier.load_cal import load_cal_dataset
 from src.classifier.result_utils import Verse
 from src.classifier.wrappers import BoWEstimator
+from src.shared import label_data
 
 
 def csvify_cal(
@@ -56,24 +58,32 @@ def csvify_cal(
     Returns:
         string containing the prediction results in CSV format.
     """
-    assert (len(samples) == len(probas))
+    if len(samples) != len(probas):
+        msg = "The number of samples do not match the number of probabilities!"
+        raise ValueError(msg)
+
     if correct_labels is not None:
-        csv_data = ("Reference,Probability for OT,Probability for NT,"
-                    + "Correct Label,Leammatised Verse\n")
+        csv_data = ("Book,Reference,"
+                    + f'"Probability for {label_data.ValToLabel[0]}",'
+                    + f'"Probability for {label_data.ValToLabel[1]}",'
+                    + "Leammatised Verse,Correct Label\n")
 
         for i in range(len(probas)):
             csv_data += (
-                f"{samples[i].reference},{probas[i][0]:.04f},"
-                + f"{probas[i][1]:.04f},{correct_labels[i]},"
-                + f"{' '.join(samples[i].get_translit_words())}\n"
+                f"{samples[i].book},{samples[i].reference},{probas[i][0]:.04f},"
+                + f"{probas[i][1]:.04f},"
+                + f"{' '.join(samples[i].get_translit_words())},"
+                + f"{correct_labels[i]}\n"
             )
     else:
-        csv_data = ("Reference,Probability for OT,Probability for NT,"
+        csv_data = ("Book,Reference,"
+                    + f'"Probability for {label_data.ValToLabel[0]}",'
+                    + f'"Probability for {label_data.ValToLabel[1]}",'
                     + "Leammatised Verse\n")
 
         for i in range(len(probas)):
             csv_data += (
-                f"{samples[i].reference},{probas[i][0]:.04f},"
+                f"{samples[i].book},{samples[i].reference},{probas[i][0]:.04f},"
                 + f"{probas[i][1]:.04f},"
                 + f"{' '.join(samples[i].get_translit_words())}\n"
             )
@@ -99,11 +109,11 @@ def remove_underscores(verses: list[Verse]) -> list[Verse]:
             vrs_lemmata.append(w.replace("_", ""))
 
         updated_verse = Verse(vrs.book,
-                                   vrs.reference,
-                                   vrs_lemmata,
-                                   words_annotations=vrs.get_annotations(),
-                                   origin="CAL"
-                                   )
+                                vrs.reference,
+                                vrs_lemmata,
+                                words_annotations=vrs.get_annotations(),
+                                origin="CAL"
+                                )
         train_x_no_ub.append(updated_verse)
     return train_x_no_ub
 
@@ -127,11 +137,11 @@ def remove_enclitics(verses: list[Verse]) -> list[Verse]:
                 vrs_lemmata.append(vrs.words[i].translit)
                 vrs_annots.append(vrs.words[i].annots)
         updated_verse = Verse(vrs.book,
-                                   vrs.reference,
-                                   vrs_lemmata,
-                                   words_annotations=vrs_annots,
-                                   origin="CAL"
-                                   )
+                                vrs.reference,
+                                vrs_lemmata,
+                                words_annotations=vrs_annots,
+                                origin="CAL"
+                                )
         if updated_verse != vrs:
             print(f"vrs {vrs}")
         train_x_no_ub.append(updated_verse)
@@ -169,7 +179,7 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
                                         words_annotations=vrs_annots,
                                         origin="CAL"
                                         )
-                                  )
+                                )
     return verses_trimmed
 
 
@@ -184,13 +194,15 @@ if __name__ == "__main__":
     c_mnb = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb.fit(train_x, train_y)
 
+    save_fname = SavefileName("CAL", "mnb")
+
     # train and evaluate
     eval_and_save(
                 c_mnb,
                 cal_ds,
                 csvify_cal,
+                save_fname,
                 out_dir="./src/classifier/out/",
-                save_file_prefix="cal_mnb_char_",
             )
 
     print("\nRemove underscores marking proclitics, from training set")
@@ -200,13 +212,14 @@ if __name__ == "__main__":
     c_mnb_nub = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_nub.fit(train_x_no_ub, train_y)
 
+    save_fname_nub = save_fname.copy()
+    save_fname_nub.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES])
     c_mnb_nub, probas_pair_nub = eval_and_save(
                                 c_mnb_nub,
                                 cal_ds,
                                 csvify_cal,
+                                save_fname_nub,
                                 out_dir="./src/classifier/out/",
-                                save_file_prefix="cal_mnb_char_",
-                                save_file_suffix="_nub"
                             )
 
     print("\nRemove PN & GN")
@@ -219,13 +232,14 @@ if __name__ == "__main__":
     c_mnb_r = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_r.fit(train_x_removed, train_y)
 
+    save_fname_npn = save_fname.copy()
+    save_fname_npn.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
     c_mnb_r, probas_pair_r = eval_and_save(
                                 c_mnb_r,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./src/classifier/out/",
-                                save_file_prefix="cal_mnb_char_",
-                                save_file_suffix="_removed"
+                                save_fname_npn,
+                                out_dir="./src/classifier/out/"
                             )
 
     print("\nRemove PN, GN, underscores")
@@ -241,13 +255,14 @@ if __name__ == "__main__":
     c_mnb_rnub = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_rnub.fit(train_x_removed_nub, train_y)
 
+    save_fname_rnub = save_fname_npn.copy()
+    save_fname_rnub.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES])
     c_mnb_rnub, probas_pair_rnub = eval_and_save(
                                 c_mnb_rnub,
                                 cal_ds,
                                 csvify_cal,
+                                save_fname_rnub,
                                 out_dir="./src/classifier/out/",
-                                save_file_prefix="cal_mnb_char_",
-                                save_file_suffix="_removed_nub"
                             )
 
     print("\n!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!")
@@ -264,13 +279,13 @@ if __name__ == "__main__":
     c_mnb_nub_both = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_nub_both.fit(train_x_no_ub, train_y)
 
+    save_fname_nub.add_extra_opts([FnameExtraOpts.REMOVE_FROM_BOTH])
     c_mnb_nub_both, probas_pair_nub_both = eval_and_save(
                                 c_mnb_nub_both,
                                 cal_ds,
                                 csvify_cal,
-                                out_dir="./src/classifier/out/",
-                                save_file_prefix="cal_mnb_char_",
-                                save_file_suffix="_nub"
+                                save_fname_nub,
+                                out_dir="./src/classifier/out/"
                             )
 
     print("\nRemove PN & GN")
@@ -287,13 +302,13 @@ if __name__ == "__main__":
     c_mnb_rboth = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_rboth.fit(train_x_removed, train_y)
 
+    save_fname_npn.add_extra_opts([FnameExtraOpts.REMOVE_FROM_BOTH])
     c_mnb_rboth, probas_pair_rboth = eval_and_save(
                                 c_mnb_rboth,
                                 cal_ds,
                                 csvify_cal,
+                                save_fname_npn,
                                 out_dir="./src/classifier/out/",
-                                save_file_prefix="cal_mnb_char_",
-                                save_file_suffix="_removed_both"
                             )
 
     print("\nRemove PN, GN, underscores")
@@ -311,11 +326,11 @@ if __name__ == "__main__":
     c_mnb_rboth_nub = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_rboth_nub.fit(train_x_removed_both_nub, train_y)
 
+    save_fname_rnub.add_extra_opts([FnameExtraOpts.REMOVE_FROM_BOTH])
     c_mnb_rboth_nub, probas_pair_rboth_nub = eval_and_save(
                                 c_mnb_rboth_nub,
                                 cal_ds,
                                 csvify_cal,
+                                save_fname_rnub,
                                 out_dir="./src/classifier/out/",
-                                save_file_prefix="cal_mnb_char_",
-                                save_file_suffix="_removed_both_nub"
                             )

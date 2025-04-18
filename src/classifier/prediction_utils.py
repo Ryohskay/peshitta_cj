@@ -60,7 +60,7 @@ def predict(
                 test_labels)
 
 
-def convert(probas: NDArray | list[Any], thresh: float) -> NDArray:
+def convert(probas: NDArray | list[list[float]], thresh: float) -> NDArray:
     """Convert list of probabilities to a list of labels.
 
     Args:
@@ -94,6 +94,8 @@ def convert(probas: NDArray | list[Any], thresh: float) -> NDArray:
 def predict_proba(
         clf: ProbaClassifier,
         test_x: NDArray | list[Verse],
+        test_y: NDArray | list[int] | None = None,
+        *,
         threshold: float = 0.5,
     ) -> ProbaPredictions:
     """Predict on the data with the classifier and return the probabilities.
@@ -101,6 +103,7 @@ def predict_proba(
     Args:
         clf: any object that has a method `.predict_proba()`.
         test_x: inputs to the classifier
+        test_y: correct labels of the test data
         test_labels: correct labels (gold references) for the inputs. This is
             not used to predict probabilities, but is used to calculate
             prediction accuracy etc.
@@ -114,4 +117,4 @@ def predict_proba(
     # convert the list of probas to a list of labels
     y_pred = convert(y_pred_proba, threshold)
 
-    return ProbaPredictions(test_x, y_pred, y_pred_proba)
+    return ProbaPredictions(test_x, y_pred, y_pred_proba, test_y)

@@ -37,12 +37,14 @@ from src.classifier.fitting_utils import identity
 from src.classifier.result_utils import Verse
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
+from src.shared import label_data
+from src.classifier.fname_utils import SavefileName, FnameExtraOpts
 
 
 def csvify_etcbc(
-         samples: list[Verse] | NDArray[Verse],
-         probas: list[list[float]] | NDArray[np.float64],
-         correct_labels: list[int] | NDArray[np.int64] | None = None
+        samples: list[Verse] | NDArray[Verse],
+        probas: list[list[float]] | NDArray[np.float64],
+        correct_labels: list[int] | NDArray[np.int64] | None = None
     ) -> str:
     """Convert the ETCBC verse data into a CSV-formatted string.
 
@@ -58,33 +60,34 @@ def csvify_etcbc(
     if correct_labels is not None:
         # Set header line
         result = (
-            '"Reference","Probability for OT","Probability for NT",'
-            + '"Correct Label","No. Words","ܐܠܦܒܝܬ ܣܘܪܝܝܐ",'
-            + '"ETCBC Transliteration"\n'
-
+            '"Book","Reference",'
+            + f'"Probability for {label_data.ValToLabel[0]}",'
+            + f'"Probability for {label_data.ValToLabel[1]}",'
+            + '"ETCBC Transliteration","ܐܠܦܒܝܬ ܣܘܪܝܝܐ",'
+            + '"Correct Label"\n'
         )
         # Extract & format verse data
         for i in range(len(samples)):
             result += (
-                f'"{samples[i].reference}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
-                + f"{correct_labels[i]}, {len(samples[i])},"
+                f'"{samples[i].book}","{samples[i].reference}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
+                + f"{' '.join(samples[i].get_translit_words())},"
                 + f"{' '.join(samples[i].get_syriac_words())},"
-                + f"{' '.join(samples[i].get_translit_words())}\n"
+                + f"{correct_labels[i]}\n"
             )
     else:
         # Set header line
         result = (
-            '"Reference","Probability for OT","Probability for NT",'
-            + '"No. Words","ܐܠܦܒܝܬ ܣܘܪܝܝܐ","ETCBC Transliteration"\n'
-
+            '"Book","Reference",'
+            + f'"Probability for {label_data.ValToLabel[0]}",'
+            + f'"Probability for {label_data.ValToLabel[1]}",'
+            + '"ETCBC Transliteration","ܐܠܦܒܝܬ ܣܘܪܝܝܐ"\n'
         )
         # Extract & format verse data
         for i in range(len(samples)):
             result += (
-                f'"{samples[i].reference}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
-                + f"{len(samples[i])},"
-                + f'{" ".join(samples[i].get_syriac_words())},'
-                + f'{" ".join(samples[i].get_translit_words())}\n'
+                f'"{samples[i].book}","{samples[i].reference}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
+                + f'{" ".join(samples[i].get_translit_words())},'
+                + f'{" ".join(samples[i].get_syriac_words())}\n'
             )
     return result
 
@@ -136,10 +139,10 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
             # + "({translit_words})")
             result_verses.append(
                     Verse(verses[i].book,
-                          verses[i].reference,
-                          translit_words=translit_r,
-                          syriac_words=syriac_r,
-                          origin="ETCBC")
+                        verses[i].reference,
+                        translit_words=translit_r,
+                        syriac_words=syriac_r,
+                        origin="ETCBC")
                     )
     return result_verses
 
@@ -177,12 +180,14 @@ if __name__ == "__main__":
     mnb.fit(train_verses, train_verse_labels)
 
     # evaluate and save results
+    save_fname = SavefileName("ETCBC", "mnb")
+    save_fname.set_ngram_opts()
     eval_and_save(
             mnb,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./src/classifier/out/",
-            save_file_prefix="etcbc_"
+            save_fname,
+            out_dir="./src/classifier/out/"
             )
 
     # Remove a few common proper nouns only from the training set
@@ -194,13 +199,14 @@ if __name__ == "__main__":
     mnb_r.fit(train_verses_removed, train_verse_labels)
 
     # evaluate and save results
+    save_fname_r = save_fname.copy()
+    save_fname_r.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
     eval_and_save(
             mnb_r,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./src/classifier/out/",
-            save_file_prefix="etcbc_",
-            save_file_suffix="_removed"
+            save_fname_r,
+            out_dir="./src/classifier/out/"
             )
 
     # Remove a few common proper nouns from both training and test sets
@@ -210,31 +216,32 @@ if __name__ == "__main__":
     # assert(train_verses_removed != train_verse_txts)
     etcbc_ds.test = DataSplit(ot_test_verses_r, nt_test_verses_r)
 
-    # mnb_rb = BoWEstimator(MultinomialNB(), " ".join)
-    # mnb_rb.fit(train_verses_removed, train_verse_labels)
-
     # evaluate and save results
+    save_fname_rb = save_fname.copy()
+    save_fname_rb.add_extra_opts([FnameExtraOpts.REMOVE_PROPN,
+                                    FnameExtraOpts.REMOVE_FROM_BOTH])
     eval_and_save(
             mnb_r,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./src/classifier/out/",
-            save_file_prefix="etcbc_",
-            save_file_suffix="_removed_both"
+            save_fname_rb,
+            out_dir="./src/classifier/out/"
             )
 
     print("\n===================WORD N-GRAMS=========================\n")
     print("\nPlain Classifier")
-    mnb = BoWEstimator(MultinomialNB(), identity)
-    mnb.fit(train_verses, train_verse_labels)
+    mnb_w = BoWEstimator(MultinomialNB(), identity)
+    mnb_w.fit(train_verses, train_verse_labels)
 
     # evaluate and save results
+    save_fname_w = save_fname.copy()
+    save_fname_w.set_ngram_opts(is_char_level=False)
     eval_and_save(
-            mnb,
+            mnb_w,
             etcbc_ds,
             csvify_etcbc,
+            save_fname_w,
             out_dir="./src/classifier/out/",
-            save_file_prefix="etcbc_"
             )
 
     # Remove a few common proper nouns only from the training set
@@ -242,17 +249,18 @@ if __name__ == "__main__":
     train_verses_removed = remove_proper_nouns(train_verses)
     # assert(train_verses_removed != train_verses)
 
-    mnb_r = BoWEstimator(MultinomialNB(), identity)
-    mnb_r.fit(train_verses_removed, train_verse_labels)
+    mnb_wr = BoWEstimator(MultinomialNB(), identity)
+    mnb_wr.fit(train_verses_removed, train_verse_labels)
 
     # evaluate and save results
+    save_fname_wr = save_fname_w.copy()
+    save_fname_wr.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
     eval_and_save(
-            mnb_r,
+            mnb_wr,
             etcbc_ds,
             csvify_etcbc,
-            out_dir="./src/classifier/out/",
-            save_file_prefix="etcbc_",
-            save_file_suffix="_removed"
+            save_fname_wr,
+            out_dir="./src/classifier/out/"
             )
 
     # Remove a few common proper nouns from both training and test sets
@@ -262,15 +270,14 @@ if __name__ == "__main__":
     # assert(train_verses_removed != train_verse_txts)
     etcbc_ds.test = DataSplit(ot_test_verses_r, nt_test_verses_r)
 
-    # mnb_rb = BoWEstimator(MultinomialNB(), " ".join)
-    # mnb_rb.fit(train_verses_removed, train_verse_labels)
-
     # evaluate and save results
+    save_fname_wrb = save_fname_w.copy()
+    save_fname_wrb.extra_opts([FnameExtraOpts.REMOVE_PROPN,
+                                FnameExtraOpts.REMOVE_FROM_BOTH])
     eval_and_save(
-            mnb_r,
+            mnb_wr,
             etcbc_ds,
             csvify_etcbc,
+            save_fname_wrb,
             out_dir="./src/classifier/out/",
-            save_file_prefix="etcbc_",
-            save_file_suffix="_removed_both"
             )
