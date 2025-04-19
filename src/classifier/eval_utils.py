@@ -25,9 +25,9 @@
 
 """Tools and functions to evaluate classifiers."""
 
-from collections.abc import Callable
+import json
 from pathlib import Path
-from typing import Any, TypedDict, Optional
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -44,84 +44,28 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import StratifiedKFold
 
-from src.classifier.dataset_skeleton import LoadedDataset, DataSplit
-from src.classifier.prediction_utils import predict_proba, convert
-from src.classifier.result_utils import (
-    Mislabels,
-    Predictions,
-    ProbaPredictions,
-    Verse,
-    FileFormatterProto
-)
+from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import identity
-from src.classifier.wrappers import BoWEstimator
 from src.classifier.fname_utils import SavefileName
+from src.classifier.prediction_utils import convert, predict_proba
+from src.classifier.result_utils import (
+    FileFormatterProto,
+    Mislabels,
+    ProbaPredictions,
+    ResultStats,
+    ThresholdStats,
+    Verse,
+    jsonify_dict,
+)
+from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
-from dataclasses import dataclass
-import json
-
-@dataclass
-class ThresholdStats:
-    """A container for statistics of classifier results at a threshold.
-
-    Attributes:
-        threshold: the threshold of predicted probability at which to decide
-            that a sample should be classified as belonging to
-            a particular class.
-        accuracy: a tuple (list[local accuracies], overall accuracy)
-        precision: precision of the predictions where each class is considered
-            as the positive case
-        recall: recall of the predictions where each class is considered
-            as the positive case
-        f_beta: f_beta score of the predictions where each class is considered
-            as the positive case
-    """
-    threshold: float
-    accuracy: float
-    precision: list[float]
-    recall: list[float]
-    f_beta: list[float]
-
-    def get_stats(self) -> tuple[float, list[float], list[float], list[float]]:
-        """Return statistics of the predictions at the defined threshold."""
-        if self.threshold > 0.5:
-            # exclude the classification scores for "unknown" (-1) class
-            # which doesn't really mean much
-            return (self.accuracy[1:], self.precision[1:],
-                    self.recall[1:], self.f_beta[1:])
-        # else
-        return (self.accuracy, self.precision, self.recall, self.f_beta)
-
-
-class ResultStats:
-    """A container for classifier result statistics.
-
-    Attributes:
-        thresh_data: a list of ``ThresholdStats`` instances
-        support: number of supports (true samples) for each class
-        log_loss: cross-entropy loss (log loss) for each class
-        roc_auc: Area under the ROC curve
-    """
-    def __init__(self,
-                supports: list[int],
-                log_loss: list[float],
-                roc_auc: list[float]
-            ):
-        self.supports = supports
-        self.log_loss = log_loss
-        self.roc_auc = roc_auc
-        self.thresh_stats = []
-
-    def set_thresh_stats(self, stats: list[ThresholdStats]) -> None:
-        """Associate statistics of prediction results at some thresholds."""
-        self.thresh_stats = stats
 
 
 def mislabel_stats(
-        inputs: np.ndarray | list[Any],
-        y_correct: np.ndarray,
-        preds: ProbaPredictions,
-    ) -> Mislabels:
+    inputs: np.ndarray | list[Any],
+    y_correct: np.ndarray,
+    preds: ProbaPredictions,
+) -> Mislabels:
     """Calculate and print some basic statistics on model inputs & outputs.
 
     Args:
@@ -153,8 +97,10 @@ def mislabel_stats(
         sample_size = len(inputs)
 
     if sample_size == 0:
-        msg = ("Cannot measure the size of `inputs`!"
-            + " It seems like the argument `inputs` is empty.")
+        msg = (
+            "Cannot measure the size of `inputs`!"
+            + " It seems like the argument `inputs` is empty."
+        )
         raise ValueError(msg)
 
     mislabel_books = {}
@@ -170,16 +116,18 @@ def mislabel_stats(
     # verses in each book
     for i in range(len(preds.predictions)):
         num_book_verses += 1
-        if (current_book != preds.samples[i].book):
+        if current_book != preds.samples[i].book:
             # if current_book is not empty,
             # calculate some statistics and print
             if current_book:
                 num_mislabels = len(mislabel_books[current_book])
-                print(f">> {current_book}: {num_mislabels} "
+                print(
+                    f">> {current_book}: {num_mislabels} "
                     + "mislabelled verses, accounting for "
                     + f"{num_mislabels / num_book_verses:.02f}% out of "
                     + f"{num_book_verses} verses ({num_book_unk} verses "
-                    + "labelled unknown)")
+                    + "labelled unknown)"
+                )
             # update the book-level variables
             current_book = preds.samples[i].book
             num_book_verses = 0
@@ -197,9 +145,7 @@ def mislabel_stats(
             # after updating the variables,
             # add the mislabelled verse to the mislabel_books dict
             if preds.samples[i].book not in mislabel_books:
-                mislabel_books.update({
-                        current_book: [preds.samples[i]]
-                })
+                mislabel_books.update({current_book: [preds.samples[i]]})
             else:
                 mislabel_books[current_book].append(preds.samples[i])
             if preds.predictions[i] == -1:
@@ -207,42 +153,50 @@ def mislabel_stats(
 
     if current_book:
         num_mislabels = len(mislabel_books[current_book])
-        print(f">> {current_book}: {num_mislabels} "
-                + "mislabelled verses, accounting for "
-                + f"{(num_mislabels / num_book_verses) * 100:.02f}% out of "
-                + f"{num_book_verses} verses ({num_book_unk} verses "
-                + "labelled unknown)")
+        print(
+            f">> {current_book}: {num_mislabels} "
+            + "mislabelled verses, accounting for "
+            + f"{(num_mislabels / num_book_verses) * 100:.02f}% out of "
+            + f"{num_book_verses} verses ({num_book_unk} verses "
+            + "labelled unknown)"
+        )
 
     # Collate the collected mislabelling results into a Mislabels class instance
-    mislabs = Mislabels(incorrect_labels, correct_labels,
-            [mislab for book in mislabel_books
-            for mislab in mislabel_books[book]],
-            mislab_probas
-        )
+    mislabs = Mislabels(
+        incorrect_labels,
+        correct_labels,
+        [mislab for book in mislabel_books for mislab in mislabel_books[book]],
+        mislab_probas,
+    )
 
     # Print some stats
     print(
         f"Number of mislabelled points out of the total {sample_size} "
-                + f"verses: {len(mislabs)} "
-                + f"({incorrect_labels.count(-1)} labelled as unknown)"
+        + f"verses: {len(mislabs)} "
+        + f"({incorrect_labels.count(-1)} labelled as unknown)"
     )
-    print("Local accuracy: "
-            + f"{accuracy_score(y_correct, preds.predictions):.02f}")
+    print(
+        "Local accuracy: "
+        + f"{accuracy_score(y_correct, preds.predictions):.04f}"
+    )
 
     return mislabs
 
 
 def metricise(
-        y_true: list[int] | NDArray,
-        y_all: list[int] | NDArray,
-        y_probas: list[list[float]] | NDArray | None = None
-    ) -> tuple[float, NDArray, NDArray, NDArray, ResultStats | None]:
+    y_true: list[int] | NDArray,
+    y_all: list[int] | NDArray,
+    y_probas: list[list[float]] | NDArray | None = None,
+    *,
+    do_print: bool = True,
+) -> tuple[float, NDArray, NDArray, NDArray, ResultStats | None]:
     """Calculate performance metrics of a classifier using the outputs.
 
     Args:
         y_true: Correct (gold reference) labels
         y_all: all predictions in a one-dimensional list.
         y_probas: probabilities predicted for each sample.
+        do_print: if True, print the results of the evaluation.
 
     Returns:
         accuracy (value), precision (1D array), recall (1D array),
@@ -260,13 +214,15 @@ def metricise(
 
     accuracy = accuracy_score(y_true, y_pred)
     precision, recall, fbeta, support = precision_recall_fscore_support(
-                    y_true, y_pred)
+        y_true, y_pred, zero_division=0
+    )
 
-    print(f"Overall Accuracy: {accuracy:.02f}")
-    print(f"Precisions: {precision}")
-    print(f"Recalls: {recall}")
-    print(f"F1 Score: {fbeta}")
-    print(f"Supports: {support}")
+    if do_print:
+        print(f"Overall Accuracy: {accuracy:.04f}")
+        print(f"Precisions: [0] {precision[0]:.04f}, [1] {precision[1]:.04f}")
+        print(f"Recalls: [0] {recall[0]:.04f}, [1] {recall[1]:.04f}")
+        print(f"F1 Score: [0] {fbeta[0]:.04f}, [1] {fbeta[1]:.04f}")
+        print(f"Supports: [0] {support[0]:.04f}, [1] {support[1]:.04f}")
 
     if y_probas is None:
         # if probabilities are not provided, finish calculations here
@@ -274,8 +230,10 @@ def metricise(
 
     # if y_probas is not None and
     if len(y_probas) != len(y_true):
-        msg = (f"length of y_probas {len(y_probas)} is not equal to "
-                + f"length of y_true {len(y_true)}")
+        msg = (
+            f"length of y_probas {len(y_probas)} is not equal to "
+            + f"length of y_true {len(y_true)}"
+        )
         raise ValueError(msg)
 
     # if y_probas is not None:
@@ -284,21 +242,23 @@ def metricise(
     y_probas_one = [proba[1] for proba in y_probas]
 
     # cross-entropy loss
-    cel_res = [log_loss(y_true, y_probas_zero),
-                log_loss(y_true, y_probas_one)]
-    print(f"log loss: {cel_res}")
+    cel_res = [log_loss(y_true, y_probas_zero), log_loss(y_true, y_probas_one)]
     # area under curve
-    roc_auc_res = [roc_auc_score(y_true, y_probas_zero),
-                    roc_auc_score(y_true, y_probas_one)]
-    print(f"roc auc: {roc_auc_res}")
+    roc_auc_res = [
+        roc_auc_score(y_true, y_probas_zero),
+        roc_auc_score(y_true, y_probas_one),
+    ]
+    # print probability-based stats
+    if do_print:
+        print(f"log loss: {cel_res}")
+        print(f"roc auc: {roc_auc_res}")
     stats = ResultStats(support, cel_res, roc_auc_res)
     return (accuracy, precision, recall, fbeta, stats)
 
+
 def csvify_total_proba(
-        total_proba_dict: dict[str, list[float]],
-        *,
-        no_header: bool = False
-    ) -> str:
+    total_proba_dict: dict[str, list[float]], *, no_header: bool = False
+) -> str:
     """Format the total proba dict data into CSV.
 
     Args:
@@ -314,23 +274,30 @@ def csvify_total_proba(
     if no_header:
         total_proba_csv = ""
     else:
-        total_proba_csv = ("Book,"
-                            + f"Probability for {label_data.ValToLabel[0]},"
-                            + f"Probability for {label_data.ValToLabel[1]}\n")
+        total_proba_csv = (
+            "Book,"
+            + f"Probability for {label_data.ValToLabel[0]},"
+            + f"Probability for {label_data.ValToLabel[1]}\n"
+        )
 
     print(">> per-book total probabilities:")
     for prod_book in total_proba_dict:
-        print(f"{prod_book}: (OT) {total_proba_dict[prod_book][0]}, "
-                + f"(NT) {total_proba_dict[prod_book][1]}")
-        total_proba_csv += (f"{prod_book},{total_proba_dict[prod_book][0]},"
-                            + f"{total_proba_dict[prod_book][1]}\n")
+        print(
+            f"{prod_book}: (OT) {total_proba_dict[prod_book][0]:.04f}, "
+            + f"(NT) {total_proba_dict[prod_book][1]:.04f}"
+        )
+        total_proba_csv += (
+            f"{prod_book},{total_proba_dict[prod_book][0]},"
+            + f"{total_proba_dict[prod_book][1]}\n"
+        )
     return total_proba_csv
 
+
 def plot_charts(
-                y_true: list[int] | np.ndarray,
-                y_pred: list[int] | np.ndarray,
-                y_probas: list[list[float]] | np.ndarray,
-            ) -> None:
+    y_true: list[int] | np.ndarray,
+    y_pred: list[int] | np.ndarray,
+    y_probas: list[list[float]] | np.ndarray,
+) -> None:
     """Plot charts from predictions.
 
     Currently, this function plots charts with :class:`ConfusionMatrixDisplay`,
@@ -342,7 +309,8 @@ def plot_charts(
 
     # Precision Recall curve
     pr_display = PrecisionRecallDisplay.from_predictions(
-                    y_true=y_true, y_pred=y_pred)
+        y_true=y_true, y_pred=y_pred
+    )
     pr_display.plot()
     plt.show()
 
@@ -400,40 +368,43 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
 
 
 def get_summary(
-        clf: BoWEstimator,
-        test_split: DataSplit,
-        ot_mislab: Mislabels,
-        nt_mislab: Mislabels,
-        res_stats: ResultStats
-    ) -> dict:
+    clf: BoWEstimator,
+    test_split: DataSplit,
+    ot_mislab: Mislabels,
+    nt_mislab: Mislabels,
+    res_stats: ResultStats,
+) -> dict:
     """Make a summary of the classifier evaluation results."""
     n_gram_form = "word" if clf.n_gram_formatter == identity else "char"
     mislab_percents = {
-        label_data.ValToLabel[0]:
-            (len(ot_mislab.mislabels) / len(test_split.get_labels(0))) * 100,
-        label_data.ValToLabel[1]:
-            (len(nt_mislab.mislabels) / len(test_split.get_labels(1))) * 100
-        }
+        label_data.ValToLabel[0]: (
+            len(ot_mislab.mislabels) / len(test_split.get_labels(0))
+        )
+        * 100,
+        label_data.ValToLabel[1]: (
+            len(nt_mislab.mislabels) / len(test_split.get_labels(1))
+        )
+        * 100,
+    }
     return {
         "n_gram_form": n_gram_form,
         "n": clf.n,
-        "total_n_grams_parsed": clf.vocabs[0].total,
+        "total_n_grams_parsed": clf.vocabs[0].total(),
         "top_ten_in_training": clf.vocabs[0].most_common(10),
         "test_mislabel_percent": mislab_percents,
-        "metrics": res_stats
+        "metrics": res_stats,
     }
 
 
 def evaluate_classifier(
-        clf: BoWEstimator,
-        test_ds: DataSplit,
-        *,
-        plot: bool = False,
-        threshold: float = 0.5
-    ) -> tuple[
-            ProbaPredictions, ProbaPredictions,
-            Mislabels, Mislabels,
-            ResultStats]:
+    clf: BoWEstimator,
+    test_ds: DataSplit,
+    *,
+    plot: bool = False,
+    threshold: float = 0.5,
+) -> tuple[
+    ProbaPredictions, ProbaPredictions, Mislabels, Mislabels, ResultStats
+]:
     """Evaluate a classifier with provided test sets.
 
     Args:
@@ -463,30 +434,17 @@ def evaluate_classifier(
     # predict probabilities with clf
     print("OT --->")
     ot_proba_preds = predict_proba(
-        clf,
-        ot_test_x,
-        ot_test_y,
-        threshold=threshold
+        clf, ot_test_x, ot_test_y, threshold=threshold
     )
-    ot_mislabels = mislabel_stats(
-                ot_test_x,
-                ot_test_y,
-                ot_proba_preds
-            )
+    ot_mislabels = mislabel_stats(ot_test_x, ot_test_y, ot_proba_preds)
     print("NT --->")
     nt_proba_preds = predict_proba(
-        clf,
-        nt_test_x,
-        nt_test_y,
-        threshold=threshold
+        clf, nt_test_x, nt_test_y, threshold=threshold
     )
     nt_mislabels = mislabel_stats(
-                nt_test_x,
-                np.array(nt_test_y),
-                nt_proba_preds
-            )
+        nt_test_x, np.array(nt_test_y), nt_proba_preds
+    )
     print("All --->")
-    # print(f"len y all: {len(pred_y_all)} ~ len ot {len(ot_proba_preds.predictions)} len nt {len(nt_proba_preds.predictions)}")
     probas = ot_proba_preds.get_probas()
     probas = np.append(probas, nt_proba_preds.get_probas(), axis=0)
 
@@ -500,36 +458,35 @@ def evaluate_classifier(
 
     # calculate scores at the first threshold
     pred_y_all = convert(probas, target_thresholds[0])
+    print(f"> with threshold: {target_thresholds[0]}")
     acc, prc, rec, f1, stats = metricise(all_test_y, pred_y_all, probas)
     measurements.append(ThresholdStats(target_thresholds[0], acc, prc, rec, f1))
 
     # measure scores at various thresholds
     for thresh in target_thresholds[1:]:
         pred_y_all = convert(probas, thresh)
-        acc, prc, rec, f1, _ = metricise(all_test_y, pred_y_all)
+        acc, prc, rec, f1, _ = metricise(all_test_y, pred_y_all, do_print=False)
         measurements.append(ThresholdStats(thresh, acc, prc, rec, f1))
 
     # register the calculated measurements
-    stats.set_thresh_stats(measurements)
+    stats.add_thresh_stats(measurements)
 
     if plot:
         plot_charts(all_test_y, pred_y_all, probas)
 
-    return (ot_proba_preds, nt_proba_preds,
-            ot_mislabels, nt_mislabels,
-            stats)
+    return (ot_proba_preds, nt_proba_preds, ot_mislabels, nt_mislabels, stats)
 
 
 def eval_and_save(  # noqa: PLR0913
-        clf: BoWEstimator,
-        loaded: LoadedDataset,
-        file_formatter: FileFormatterProto,
-        save_fname: SavefileName,
-        *,
-        out_dir: str = "./out/",
-        do_plot: bool = False,
-        threshold: float = 0.5,
-    ) -> tuple[BoWEstimator, list[ProbaPredictions]]:
+    clf: BoWEstimator,
+    loaded: LoadedDataset,
+    file_formatter: FileFormatterProto,
+    save_fname: SavefileName,
+    *,
+    out_dir: str = "./out/",
+    do_plot: bool = False,
+    threshold: float = 0.5,
+) -> tuple[BoWEstimator, list[ProbaPredictions]]:
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
 
     Args:
@@ -567,11 +524,9 @@ def eval_and_save(  # noqa: PLR0913
     out_dir_p = Path(out_dir)
 
     # evaluate the classifier with the provided samples
-    (ot_probas, nt_probas,
-    ot_mislabels, nt_mislabels,
-    results) = evaluate_classifier(
-            clf, loaded.test, threshold=threshold, plot=do_plot
-        )
+    (ot_probas, nt_probas, ot_mislabels, nt_mislabels, results) = (
+        evaluate_classifier(clf, loaded.test, threshold=threshold, plot=do_plot)
+    )
 
     # Configure and prepare save files' names
     ot_all_file = save_fname.copy()
@@ -585,15 +540,19 @@ def eval_and_save(  # noqa: PLR0913
     nt_mislabels_file.mark_special_file(is_mislabel=True)
 
     # Save the prediction results to files
-    ot_mislabels.save_to_file(file_formatter,
-                                (out_dir_p / ot_mislabels_file.get_fname()))
-    nt_mislabels.save_to_file(file_formatter,
-                                (out_dir_p / nt_mislabels_file.get_fname()))
+    ot_mislabels.save_to_file(
+        file_formatter, (out_dir_p / ot_mislabels_file.get_fname())
+    )
+    nt_mislabels.save_to_file(
+        file_formatter, (out_dir_p / nt_mislabels_file.get_fname())
+    )
 
-    ot_probas.save_to_file(file_formatter,
-                            (out_dir_p / ot_all_file.get_fname()))
-    nt_probas.save_to_file(file_formatter,
-                            (out_dir_p / nt_all_file.get_fname()))
+    ot_probas.save_to_file(
+        file_formatter, (out_dir_p / ot_all_file.get_fname())
+    )
+    nt_probas.save_to_file(
+        file_formatter, (out_dir_p / nt_all_file.get_fname())
+    )
 
     # save per-book total probabilities
     save_total_proba_fname = save_fname.copy()
@@ -603,29 +562,27 @@ def eval_and_save(  # noqa: PLR0913
     total_proba_csv += csvify_total_proba(nt_probas.get_total_probas())
     total_proba_save_fp.write_text(total_proba_csv)
 
-    # save the classifier summary file
+    # create a summary dictionary of a classifier evaluation
+    summary = get_summary(clf, loaded.test, ot_mislabels, nt_mislabels, results)
+    # save the classifier summary to a file
     summary_fname = save_fname.copy()
     # change file type to json for easier handling upon UI integration
     summary_fname.ext = "json"
     summary_fname.mark_special_file(is_clf_summary=True)
-    summary_fp = out_dir_p / summary_fname
+    summary_fp = out_dir_p / summary_fname.get_fname()
     with summary_fp.open("w") as sfp:
-        json.dump(get_summary(
-                        clf, loaded.test,
-                        ot_mislabels, nt_mislabels,
-                        results
-                    ), sfp)
+        json.dump(summary, sfp, default=jsonify_dict)
 
     return (clf, [ot_probas, nt_probas])
 
 
 def cross_validate(
-        clf: BoWEstimator,
-        training_x: list[Verse],
-        training_y: list[int],
-        fold: int = 5,
-        threshold: float = 0.5
-    ) -> None:
+    clf: BoWEstimator,
+    training_x: list[Verse],
+    training_y: list[int],
+    fold: int = 5,
+    threshold: float = 0.5,
+) -> None:
     """Perform cross validation with the provided training set.
 
     .. attention:: cross validation should be performed with the training set,
@@ -639,7 +596,10 @@ def cross_validate(
     recs = []
     f_ones = []
 
-    for train_g, test_g, in splits:
+    for (
+        train_g,
+        test_g,
+    ) in splits:
         proba_c = BoWEstimator(clone(clf.algo), clf.n_gram_formatter, clf.n)
         train_ids = list(train_g)
         test_ids = list(test_g)
@@ -653,13 +613,12 @@ def cross_validate(
         # test_labels = test[1]
 
         proba_c.fit(train_verses, train_labels)
-        predictions = predict_proba(proba_c,
-                                    test_verses,
-                                    test_labels,
-                                    threshold=threshold
-                                )
-        acc, prec, rec, fone = metricise(test_labels,
-                                        y_all=predictions.predictions)
+        predictions = predict_proba(
+            proba_c, test_verses, test_labels, threshold=threshold
+        )
+        acc, prec, rec, fone = metricise(
+            test_labels, y_all=predictions.predictions
+        )
         accs.append(acc)
         precs.append(prec)
         recs.append(rec)

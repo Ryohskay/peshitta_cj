@@ -267,6 +267,8 @@ class DataSplit:
                     ) -> None:
         """Map ``func`` on the samples in the data split.
 
+        The ``func`` will modify each sample in the data split **in-place**.
+
         Args:
             func: a Callable object that takes a
                 :class:`src.classifier.result_utils.Verse` instance as

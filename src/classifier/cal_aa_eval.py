@@ -42,6 +42,7 @@ from src.classifier.load_cal import load_cal_dataset
 from src.classifier.result_utils import Verse
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
+from src.classifier.fitting_utils import identity
 
 
 def csvify_cal(
@@ -215,7 +216,7 @@ if __name__ == "__main__":
     save_fname_npn.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
     cal_eval_classifier(c_mnb_r, cal_ds, save_fname_npn, remove_proper_nouns)
 
-    print("\n!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!")
+    print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
 
     print("\n> Remove underscores marking proclitics, "
             + "from both training & test sets")
@@ -254,4 +255,43 @@ if __name__ == "__main__":
                                 FnameExtraOpts.REMOVE_FROM_BOTH])
 
     cal_eval_classifier(c_mnb_rnus, cal_ds, save_fname_rnus,
+                        remove_proper_nouns, map_to_both=True)
+
+    print("\n=============== Word n-grams =================")
+    print("\n> Plain Classifier")
+    print("MultinomialNB")
+    w_mnb = BoWEstimator(MultinomialNB(), identity, n=n_window)
+    save_fname_w = SavefileName("CAL", "mnb")
+    save_fname_w.set_ngram_opts(n=n_window, is_char_level=False)
+
+    # train and evaluate
+    cal_eval_classifier(w_mnb, cal_ds, save_fname_w)
+
+    print("\n> Remove PN & GN")
+    print(">> Remove PN & GN from the training set")
+    print("MultinomialNB")
+    # Remove personal names and place names from the training data
+    # and train new classifiers
+    w_mnb_r = BoWEstimator(MultinomialNB(), identity, n=n_window)
+    w_mnb_r.set_preprocessor(remove_underscores)
+
+    save_fname_npn_w = save_fname_w.copy()
+    save_fname_npn_w.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
+    cal_eval_classifier(w_mnb_r, cal_ds, save_fname_npn, remove_proper_nouns)
+
+    print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
+    print("\n>> Remove PN, GN from both training & test sets")
+    print("MultinomialNB")
+    # Remove personal names and place names from
+    # both the training and test datasets
+    # and train new classifiers
+    w_mnb_rnus = BoWEstimator(MultinomialNB(), identity, n=n_window)
+    w_mnb_rnus.set_preprocessor(remove_underscores)
+
+    save_fname_rnus_w = save_fname_npn_w.copy()
+    save_fname_rnus_w.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES,
+                                FnameExtraOpts.REMOVE_PROPN,
+                                FnameExtraOpts.REMOVE_FROM_BOTH])
+
+    cal_eval_classifier(w_mnb_rnus, cal_ds, save_fname_rnus_w,
                         remove_proper_nouns, map_to_both=True)

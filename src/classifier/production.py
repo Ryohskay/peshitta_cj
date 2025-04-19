@@ -55,6 +55,9 @@ def predict_on_prod(  # noqa: PLR0913
         file_formatter = csvify_cal
     elif base_save_fname.origin == "ETCBC":
         file_formatter = csvify_etcbc
+    else:
+        msg = f"Unknown dataset origin: {base_save_fname.origin}"
+        raise ValueError(msg)
 
     print(">> Training")
     clf.fit(loaded_ds.train.get_samples(), loaded_ds.train.get_labels())
@@ -76,7 +79,9 @@ def predict_on_prod(  # noqa: PLR0913
     # save the predictions on the production data
     save_proba_fname = save_fname.copy()
     save_proba_fname.mark_special_file(is_prod=True)
-    preds.save_to_file(csvify_etcbc, save_proba_fname)
+    save_dir_p = Path(save_dir)
+    savefile_p = save_dir_p / save_proba_fname.get_fname()
+    preds.save_to_file(file_formatter, savefile_p)
 
     # Save per-book total probas
     save_dir_p = Path(save_dir)
@@ -98,6 +103,7 @@ if __name__ == "__main__":
     c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
     c_mnb.set_preprocessor(remove_non_chars)
     c_mnb_fname = SavefileName("ETCBC", "mnb")
+    print(f"{c_mnb_fname.origin}")
     c_mnb_fname.set_ngram_opts(n=c_mnb.n)
     predict_on_prod(c_mnb, etcbc_loaded, c_mnb_fname, thresh=thresh)
 
@@ -112,8 +118,6 @@ if __name__ == "__main__":
     # LOAD CAL DATA
     cal_loaded = load_cal_dataset("./src")
 
-    train_x_cal = cal_loaded.train.get_samples()
-    train_y_cal = cal_loaded.train.get_labels()
     print("MultinomialNB")
     print("> Plain Classifier")
     c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
@@ -122,35 +126,13 @@ if __name__ == "__main__":
     predict_on_prod(c_mnb, cal_loaded, c_mnb_fname, thresh=thresh)
 
     print("> Remove PN, GN & underscores from the training & test set")
-    print(">> Training")
     # Remove personal names and place names from the training data
     # and train new classifiers
-    train_x_removed = remove_proper_nouns(remove_underscores(train_x_cal))
-
     c_mnb_r = BoWEstimator(MultinomialNB(), " ".join)
-    c_mnb_r.fit(train_x_removed, train_y_cal)
-
-    print(">> Quick Evaluation")
-    eval_and_save(c_mnb_r, cal_loaded, csvify_cal,
-
-                    out_dir="./src/classifier/out/",
-                    threshold=thresh)
-
-    print("Production Data")
-    ot_prod = remove_proper_nouns(remove_underscores(cal_loaded.production))
-
-    preds = predict_proba(c_mnb, ot_prod, threshold=thresh)
-    total_proba_dict = preds.get_total_probas()
-    total_proba_csv = "Book,Probability for OT,Probability for NT\n"
-    for prod_book in total_proba_dict:
-        print(f"{prod_book}: (OT) {total_proba_dict[prod_book][0]}, "
-                + f"(NT) {total_proba_dict[prod_book][1]}")
-        total_proba_csv += f"{prod_book},{total_proba_dict[prod_book][0]},{total_proba_dict[prod_book][1]}\n"
-
-    save_file = Path("./src/classifier/out/PRODUCTION_mnb_cal_"
-                        + "prediction_proba_all_both_removed.csv")
-    preds.save_to_file(csvify_cal, save_file)
-
-    # Save proba_dict
-    save_f = Path(save_file.parent / "PRODUCTION_mnb_cal_book_total_proba_both_removed.csv")
-    save_f.write_text(total_proba_csv)
+    c_mnb_r.set_preprocessor(remove_underscores)
+    c_mnb_r_fname = c_mnb_fname.copy()
+    c_mnb_r_fname.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES,
+                                    FnameExtraOpts.REMOVE_PROPN,
+                                    FnameExtraOpts.REMOVE_FROM_BOTH])
+    cal_loaded.test.map_on_samples(remove_proper_nouns)
+    predict_on_prod(c_mnb_r, cal_loaded, c_mnb_r_fname, thresh=thresh)

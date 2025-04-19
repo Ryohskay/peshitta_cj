@@ -251,7 +251,7 @@ if __name__ == "__main__":
     mnb_w.set_preprocessor(remove_non_chars)
     # evaluate and save results
     save_fname_w = save_fname.copy()
-    save_fname_w.set_ngram_opts(is_char_level=False)
+    save_fname_w.set_ngram_opts(n=n_window, is_char_level=False)
     etcbc_eval_classifier(mnb_w, etcbc_ds, save_fname_w)
 
     # Remove a few common proper nouns only from the training set

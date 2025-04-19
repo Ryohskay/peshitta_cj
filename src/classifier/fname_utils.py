@@ -55,6 +55,9 @@ class SavefileName(Any):
         if origin not in {"ETCBC", "CAL"}:
             msg = f"Unknown data origin: {origin}"
             raise ValueError(msg)
+
+        self.origin = origin
+
         if not classifier_alias:
             msg = "Classifier alias is empty!"
             raise ValueError(msg)
@@ -62,7 +65,6 @@ class SavefileName(Any):
             msg = "File extension is empty!"
             raise ValueError(msg)
 
-        self.origin = _sanitise(origin)
         self.classifier = _sanitise(classifier_alias)
         self.ext = _sanitise(file_ext)
 
@@ -201,7 +203,7 @@ class SavefileName(Any):
                 by definition.
         """
         # construct the file name
-        fname = self.origin
+        fname = _sanitise(self.origin)
         fname += "_" + self.classifier
 
         # append options related to n-gram models

@@ -82,14 +82,20 @@ class PeshittaWord:
         The transliterations and Syriac scripts of the word depends on the
         standards of datasets they were originally acquired from.
     """
-    def __init__(self, translit: str, syriac: str = "", annots: str = "",
-                origin: Literal["ETCBC", "CAL"] = ""):
-            if not origin:
-                logger.warning("No origin provided to PeshittaWord.__init__")
-            self.translit = translit
-            self.syriac = syriac
-            self.annots = annots
-            self.origin = origin
+
+    def __init__(
+        self,
+        translit: str,
+        syriac: str = "",
+        annots: str = "",
+        origin: Literal["ETCBC", "CAL"] = "",
+    ):
+        if not origin:
+            logger.warning("No origin provided to PeshittaWord.__init__")
+        self.translit = translit
+        self.syriac = syriac
+        self.annots = annots
+        self.origin = origin
 
     def __eq__(self, value: object, /) -> bool:
         """Equality comparator for Verse objects with any Python object.
@@ -105,12 +111,11 @@ class PeshittaWord:
         """
         t_translit = ""
         t_syriac = ""
-        if (hasattr(value, "translit") and hasattr(value, "syriac")):
+        if hasattr(value, "translit") and hasattr(value, "syriac"):
             # If ``value`` has attributes "translit" and "syriac"
             t_translit = value.translit  # type: ignore[reportAttributeAccessIssue]
             t_syriac = value.syriac  # type: ignore[reportAttributeAccessIssue]
-            return (self.translit == t_translit
-                    or self.syriac == t_syriac)
+            return self.translit == t_translit or self.syriac == t_syriac
         # else
         return value in {self.translit, self.syriac}
 
@@ -133,16 +138,17 @@ class Verse(Any):
     .. note:: A *verse* is a exegetical annotation and is not necessarily
         comparable to semantic divisions like sentence, clause, etc.
     """
+
     def __init__(  # noqa: PLR0913
-            self,
-            book_name: str,
-            verse_ref: str,
-            translit_words: list[str],
-            syriac_words: list[str] | None = None,
-            words_annotations: list[str] | None = None,
-            *,
-            origin: Literal["ETCBC", "CAL"] = "",
-        ) -> None:
+        self,
+        book_name: str,
+        verse_ref: str,
+        translit_words: list[str],
+        syriac_words: list[str] | None = None,
+        words_annotations: list[str] | None = None,
+        *,
+        origin: Literal["ETCBC", "CAL"] = "",
+    ) -> None:
         """Initialise Verse object with PeshittaWord attribute.
 
         Raises:
@@ -155,72 +161,85 @@ class Verse(Any):
         self.words: list[PeshittaWord] = []
 
         # Check for invalid arguments
-        if (book_name is None or verse_ref is None or translit_words is None):
-            msg = (f"book_name ({book_name}), verse_ref ({verse_ref}), and"
-                    + f" translit_words ({translit_words}) given: "
-                    + "they cannot be None!")
+        if book_name is None or verse_ref is None or translit_words is None:
+            msg = (
+                f"book_name ({book_name}), verse_ref ({verse_ref}), and"
+                + f" translit_words ({translit_words}) given: "
+                + "they cannot be None!"
+            )
             raise ValueError(msg)
 
-        if (
-                syriac_words is not None
-                and len(translit_words) != len(syriac_words)
-            ):
-            msg = ("The number of words in transliteration "
-                        + f"{len(translit_words)} and "
-                        + f"in Syriac script {len(syriac_words)}"
-                        + " do not match.")
+        if syriac_words is not None and len(translit_words) != len(
+            syriac_words
+        ):
+            msg = (
+                "The number of words in transliteration "
+                + f"{len(translit_words)} and "
+                + f"in Syriac script {len(syriac_words)}"
+                + " do not match."
+            )
             raise ValueError(msg)
 
-        if (
-                words_annotations is not None
-                and len(translit_words) != len(words_annotations)
-            ):
-            msg = ("The number of words in transliteration "
-                        + f"{len(translit_words)} and "
-                        + "the number of annotations "
-                        + f"{len(words_annotations)} "
-                        + " do not match.")
+        if words_annotations is not None and len(translit_words) != len(
+            words_annotations
+        ):
+            msg = (
+                "The number of words in transliteration "
+                + f"{len(translit_words)} and "
+                + "the number of annotations "
+                + f"{len(words_annotations)} "
+                + " do not match."
+            )
             raise ValueError(msg)
 
         # Parse the provided lists and organise them into a PeshittaWord obj
         for i in range(len(translit_words)):
             if syriac_words is not None and words_annotations is not None:
                 # full data
-                self.words.append(PeshittaWord(
+                self.words.append(
+                    PeshittaWord(
                         translit_words[i],
                         syriac_words[i],
                         words_annotations[i],
                         origin=origin,
-                        ))
+                    )
+                )
             elif syriac_words is not None and words_annotations is None:
                 # ETCBC data
-                self.words.append(PeshittaWord(
+                self.words.append(
+                    PeshittaWord(
                         translit_words[i],
                         syriac_words[i],
                         origin=origin,
-                        ))
+                    )
+                )
             elif syriac_words is None and words_annotations is not None:
                 # CAL data
-                self.words.append(PeshittaWord(
+                self.words.append(
+                    PeshittaWord(
                         translit_words[i],
                         annots=words_annotations[i],
                         origin=origin,
-                        ))
+                    )
+                )
             else:
-                self.words.append(PeshittaWord(
-                        translit_words[i],
-                        origin=origin
-                        ))
+                self.words.append(
+                    PeshittaWord(translit_words[i], origin=origin)
+                )
 
     def __eq__(self, value: object, /) -> bool:
         try:
             # reportAttributeAccessIssue can be ignored here since
             # AttributeError is explicitly handled.
-            return (self.get_translit_words() == value.get_translit_words()  # type: ignore[reportAttributeAccessIssue]
-                    or self.get_syriac_words() == value.get_syriac_words())  # type: ignore[reportAttributeAccessIssue]
+            return (
+                self.get_translit_words() == value.get_translit_words()  # type: ignore[reportAttributeAccessIssue]
+                or self.get_syriac_words() == value.get_syriac_words()
+            )  # type: ignore[reportAttributeAccessIssue]
         except AttributeError:
-            return (value == self.get_translit_words()
-                    or value == self.get_syriac_words())
+            return (
+                value == self.get_translit_words()
+                or value == self.get_syriac_words()
+            )
 
     def __str__(self) -> str:
         """Return string representation of the verse.
@@ -303,8 +322,7 @@ class Verse(Any):
         if mode == 2:
             return self.get_syriac_words()
         # else
-        msg = (f"Argument `mode` must be 1 or 2, but {mode}"
-                    + " was found.")
+        msg = f"Argument `mode` must be 1 or 2, but {mode}" + " was found."
         raise ValueError(msg)
 
     def get_annotations(self) -> list[str]:
@@ -323,11 +341,13 @@ class Verse(Any):
 
 class FileFormatterProto(Protocol):
     """A protocol that defines the interface of file formatter functions."""
-    def __call__(self,
-                samples: list[Verse] | NDArray[Verse],
-                probas: list[list[float]] | NDArray[np.float64],
-                correct_labels: list[int] | NDArray[np.int64] | None = None
-                ) -> str:  # type: ignore[reportReturnType]
+
+    def __call__(
+        self,
+        samples: list[Verse] | NDArray[Verse],
+        probas: list[list[float]] | NDArray[np.float64],
+        correct_labels: list[int] | NDArray[np.int64] | None = None,
+    ) -> str:  # type: ignore[reportReturnType]
         """Defines the signature for a FileFormatterProto function.
 
         Args:
@@ -354,23 +374,28 @@ class Predictions(Any):
     """
 
     def __init__(
-            self,
-            samples: list[Verse] | NDArray[Verse],
-            predictions: list[int] | NDArray[np.int64],
-            correct_labels: list[int] | NDArray[np.int64] | None = None,
-        ) -> None:
+        self,
+        samples: list[Verse] | NDArray[Verse],
+        predictions: list[int] | NDArray[np.int64],
+        correct_labels: list[int] | NDArray[np.int64] | None = None,
+    ) -> None:
         self.samples = samples
         self.predictions = predictions
         self.correct_labels = correct_labels
 
         if len(self.samples) != len(self.predictions):
-            msg = ("length of provided lists/arrays for samples and predictions"
-            + " do not match.")
+            msg = (
+                "length of provided lists/arrays for samples and predictions"
+                + " do not match."
+            )
             raise ValueError(msg)
-        if (self.correct_labels is not None
-            and len(self.samples) != len(self.correct_labels)):
-            msg = ("length of provided lists/arrays for samples and correct"
-                + " labels do not match.")
+        if self.correct_labels is not None and len(self.samples) != len(
+            self.correct_labels
+        ):
+            msg = (
+                "length of provided lists/arrays for samples and correct"
+                + " labels do not match."
+            )
             raise ValueError(msg)
 
 
@@ -385,13 +410,14 @@ class ProbaPredictions(Predictions):
         See :class:`src.classifier.result_utils.Predictions` for
             other arguments.
     """
+
     def __init__(
-            self,
-            samples: list[Verse] | NDArray[Verse],
-            predictions: list[int] | NDArray[np.int64],
-            probas: list[list[float]] | NDArray[np.float64],
-            correct_labels: list[int] | NDArray[np.int64] | None = None,
-        ) -> None:
+        self,
+        samples: list[Verse] | NDArray[Verse],
+        predictions: list[int] | NDArray[np.int64],
+        probas: list[list[float]] | NDArray[np.float64],
+        correct_labels: list[int] | NDArray[np.int64] | None = None,
+    ) -> None:
         """Initialises an instance.
 
         Raises:
@@ -399,11 +425,12 @@ class ProbaPredictions(Predictions):
                 do not match
         """
         if len(probas) != len(samples):
-            msg = (f"lengths of probas {len(probas)} and samples {len(samples)}"
-                    + " do not match!")
+            msg = (
+                f"lengths of probas {len(probas)} and samples {len(samples)}"
+                + " do not match!"
+            )
             raise ValueError(msg)
-        super().__init__(samples, predictions,
-                        correct_labels)
+        super().__init__(samples, predictions, correct_labels)
         self._probas = probas
 
     def get_probas(self) -> list[list[float]] | NDArray:
@@ -442,18 +469,19 @@ class ProbaPredictions(Predictions):
                 aj = 1.0
                 ac = 1.0
             # perform smoothing to avoid 0.0 probas
-            aj *= (self._probas[i][0] + smoothing_term)
-            ac *= (self._probas[i][1] + smoothing_term)
+            aj *= self._probas[i][0] + smoothing_term
+            ac *= self._probas[i][1] + smoothing_term
         # calculate percentage of the "probabilities"
         pj = aj / (aj + ac)
         pc = ac / (aj + ac)
         append_to_dict(current_book, [pj, pc], total_probas)
         return total_probas
 
-    def save_to_file(self,
-                    formatter: FileFormatterProto,
-                    save_file: str | Path = "./out/prediction_all_ot.csv",
-                ) -> None:
+    def save_to_file(
+        self,
+        formatter: FileFormatterProto,
+        save_file: str | Path = "./out/prediction_all_ot.csv",
+    ) -> None:
         """Save all verses into a file, along with prediction results.
 
         Args:
@@ -468,13 +496,13 @@ class ProbaPredictions(Predictions):
         # save all prediction results to files
         # format the data into strings
         if self.correct_labels is not None:
-            data_str = formatter(samples=self.samples,
-                                        probas=self.get_probas(),
-                                        correct_labels=self.correct_labels
-                                )
+            data_str = formatter(
+                samples=self.samples,
+                probas=self.get_probas(),
+                correct_labels=self.correct_labels,
+            )
         else:
-            data_str = formatter(samples=self.samples,
-                                        probas=self.get_probas())
+            data_str = formatter(samples=self.samples, probas=self.get_probas())
 
         # write formatted texts to files
         Path(save_file).write_text(data_str, encoding="utf-8")
@@ -494,27 +522,41 @@ class Mislabels(Any):
         probas: probabilities of the mislabelled verses belonging to each class,
             predicted by the src.classifier. Defaults to None if not provided
             upon initialisation.
+        num_total_samples: number of samples in the dataset. This can be used to
+            calculate the percentage of mislabelled verses in the book.
     """
-    def __init__(
-            self,
-            incorrect_labels: list[int] | NDArray[np.int64],
-            correct_labels: list[int] | NDArray[np.int64],
-            mislabelled_verses: list[Verse],
-            probas: list[list[float]] | NDArray[np.float64]
-        ) -> None:
 
-        if (len(mislabelled_verses) < 1
+    def __init__(
+        self,
+        incorrect_labels: list[int] | NDArray[np.int64],
+        correct_labels: list[int] | NDArray[np.int64],
+        mislabelled_verses: list[Verse],
+        probas: list[list[float]] | NDArray[np.float64],
+        num_total_samples: int | None = None
+    ) -> None:
+        if (
+            len(mislabelled_verses) < 1
             or len(incorrect_labels) < 1
-            or len(correct_labels) < 1):
-            msg = ("indices of mislabelled samples were empty."
-                    + "Make sure to instanciate this only when "
-                    + "there are one or more mislabelled samples.")
+            or len(correct_labels) < 1
+        ):
+            msg = (
+                "indices of mislabelled samples were empty."
+                + "Make sure to instantiate this only when "
+                + "there are one or more mislabelled samples."
+            )
+            raise ValueError(msg)
+        if len(mislabelled_verses) != len(probas):
+            msg = (
+                "lengths of mislabelled verses and their probabilities "
+                + "do not match."
+            )
             raise ValueError(msg)
 
         self.mislabels = incorrect_labels
         self.correct_labels = correct_labels
         self.verses: list[Verse] = mislabelled_verses
         self.probas = probas
+        self.num_total_samples = num_total_samples
 
     def __len__(self) -> int:
         """An under-the-hood method defining the result of :func:`len`.
@@ -525,10 +567,10 @@ class Mislabels(Any):
         return len(self.mislabels)
 
     def save_to_file(
-            self,
-            formatter: FileFormatterProto,
-            save_file: str | Path = "./out/prediction_mislabels.csv",
-        ) -> None:
+        self,
+        formatter: FileFormatterProto,
+        save_file: str | Path = "./out/prediction_mislabels.csv",
+    ) -> None:
         """Save mislabelled verses into a file.
 
         Args:
@@ -539,11 +581,10 @@ class Mislabels(Any):
             save_file: :class:`pathlib.Path` obj or string containing
                 a path to save the mislabelled verses' data.
         """
-        assert (len(self.verses) == len(self.probas))
         save_data = formatter(
             samples=self.verses,
             probas=self.probas,
-            correct_labels=self.correct_labels
+            correct_labels=self.correct_labels,
         )
 
         # write formatted texts to files
@@ -552,3 +593,131 @@ class Mislabels(Any):
         else:
             save_file_p = save_file
         save_file_p.write_text(save_data, encoding="utf-8")
+
+
+def np_arr_to_list(lis: NDArray | list) -> list:
+    """Convert a numpy array to a list.
+
+    If the argument is already a list, return it as is. This function uses
+    :meth:`numpy.ndarray.tolist` to convert the numpy array to a list, which
+    ensures that all elements within the array are converted to standard Python
+    scalar types.
+
+    Args:
+        lis: a numpy array or a list.
+
+    Returns:
+        the converted list.
+    """
+    if isinstance(lis, np.ndarray):
+        return lis.tolist()
+    return lis
+
+
+class ThresholdStats:
+    """A container for statistics of classifier results at a threshold.
+
+    Attributes:
+        threshold: the threshold of predicted probability at which to decide
+            that a sample should be classified as belonging to
+            a particular class.
+        accuracy: a tuple (list[local accuracies], overall accuracy)
+        precision: precision of the predictions where each class is considered
+            as the positive case
+        recall: recall of the predictions where each class is considered
+            as the positive case
+        f_beta: f_beta score of the predictions where each class is considered
+            as the positive case
+    """
+
+    def __init__(
+        self,
+        threshold: float | np.double,
+        accuracy: float,
+        precision: list[float],
+        recall: list[float],
+        f_beta: list[float],
+    ) -> None:
+        self.threshold = float(threshold)
+        self.accuracy = np_arr_to_list(accuracy)
+        self.precision = np_arr_to_list(precision)
+        self.recall = np_arr_to_list(recall)
+        self.f_beta = np_arr_to_list(f_beta)
+
+    def get_stats(self) -> tuple[float, list[float], list[float], list[float]]:
+        """Return statistics of the predictions at the defined threshold."""
+        if self.threshold > 0.5:
+            # exclude the classification scores for "unknown" (-1) class
+            # which doesn't really mean much
+            return (
+                self.accuracy[1:],
+                self.precision[1:],
+                self.recall[1:],
+                self.f_beta[1:],
+            )
+        # else
+        return (self.accuracy, self.precision, self.recall, self.f_beta)
+
+
+class ResultStats:
+    """A container for classifier result statistics.
+
+    Attributes:
+        thresh_data: a list of ``ThresholdStats`` instances
+        support: number of supports (true samples) for each class
+        log_loss: cross-entropy loss (log loss) for each class
+        roc_auc: Area under the ROC curve
+    """
+
+    def __init__(
+        self,
+        supports: list[int] | NDArray,
+        log_loss: list[float] | NDArray,
+        roc_auc: list[float] | NDArray,
+    ):
+        self.supports = np_arr_to_list(supports)
+        self.log_loss = np_arr_to_list(log_loss)
+        self.roc_auc = np_arr_to_list(roc_auc)
+        self.thresh_stats = []
+
+    def add_thresh_stats(self, stats: list[ThresholdStats]) -> None:
+        """Associate statistics of prediction results at some thresholds.
+
+        This method is used to extend the attr ``self.thresh_stats``,
+        containing the statistics of the predictions.
+
+        Args:
+            stats: a list of ``ThresholdStats`` instances.
+        """
+        self.thresh_stats.extend(stats)
+
+
+# Code adapted from https://docs.python.org/3/library/json.html
+def jsonify_dict(obj: ResultStats | ThresholdStats) -> dict[str, type]:
+    """Custom factory to convert a dictionary to a JSON string.
+
+    Use this function as the serializer for the arg `default` of
+    :func:`python:json.dump` or :func:`python:json.dumps`.
+
+    Returns:
+        a dictionary containing the JSON string.
+    """
+    if isinstance(obj, ResultStats):
+        return {
+            "supports": obj.supports,
+            "log_loss": obj.log_loss,
+            "roc_auc": obj.roc_auc,
+            "thresh_stats": [jsonify_dict(ts) for ts in obj.thresh_stats],
+        }
+    # if obj is not an instance of ResultStats
+    if isinstance(obj, ThresholdStats):
+        return {
+            "threshold": obj.threshold,
+            "accuracy": obj.accuracy,
+            "precision": obj.precision,
+            "recall": obj.recall,
+            "f_beta": obj.f_beta,
+        }
+    # else
+    msg = f"Object of type {type(obj)} is not JSON serializable"
+    raise TypeError(msg)
