@@ -1,11 +1,11 @@
 """Utilities to construct file names."""
 
 import re
+from copy import copy
 from enum import Enum
 from typing import Any, Literal, Self
 
 from src.shared import label_data
-from copy import copy
 
 
 class FnameExtraOpts(Enum):
@@ -17,6 +17,7 @@ class FnameExtraOpts(Enum):
     REMOVE_UNDERSCORES = "_no_uscore"
     # erroneous data which should not be taken seriously
     IS_ERRONEOUS = "_ERRONEOUS"
+
 
 def _sanitise(s: str) -> str:
     """Return a str where special path characters are removed from s."""
@@ -106,10 +107,7 @@ class SavefileName(Any):
         self.is_n_gram = is_n_gram
         self.is_bow = is_bow
 
-    def set_scope(
-            self,
-            scope: str
-    ) -> None:
+    def set_scope(self, scope: str) -> None:
         """Set the scope of the results stored in the file.
 
         Args:
@@ -149,13 +147,13 @@ class SavefileName(Any):
         return copy(self)
 
     def mark_special_file(
-            self,
-            *,
-            is_mislabel: bool = False,
-            is_prod: bool = False,
-            is_total_proba: bool = False,
-            is_clf_summary: bool = False
-        ) -> None:
+        self,
+        *,
+        is_mislabel: bool = False,
+        is_prod: bool = False,
+        is_total_proba: bool = False,
+        is_clf_summary: bool = False,
+    ) -> None:
         """Mark the file as a special type of data save file.
 
         Args:
@@ -182,8 +180,10 @@ class SavefileName(Any):
             )
             raise ValueError(msg)
         if is_clf_summary and (is_mislabel or is_total_proba):
-            msg = ("The classifier summary file cannot be mislabel file nor "
-                    + "per-book total probability data file!")
+            msg = (
+                "The classifier summary file cannot be mislabel file nor "
+                + "per-book total probability data file!"
+            )
             raise ValueError(msg)
         self.is_prod = is_prod
         self.is_mislabel = is_mislabel
@@ -191,8 +191,8 @@ class SavefileName(Any):
         self.is_clf_summary = is_clf_summary
 
     def get_fname(
-            self,
-        ) -> str:
+        self,
+    ) -> str:
         """Get a file name to save the classifier prediction results.
 
         Returns:

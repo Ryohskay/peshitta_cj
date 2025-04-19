@@ -26,30 +26,29 @@
 """Authorship attribution using CAL data."""
 
 import re
+from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
 from sklearn.naive_bayes import MultinomialNB
 
-from collections.abc import Callable
-
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.eval_utils import (
     eval_and_save,
 )
+from src.classifier.fitting_utils import identity
 from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.classifier.load_cal import load_cal_dataset
 from src.classifier.result_utils import Verse
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
-from src.classifier.fitting_utils import identity
 
 
 def csvify_cal(
-        samples: list[Verse] | NDArray[Verse],
-        probas: list[list[float]] | NDArray[np.float64],
-        correct_labels: list[int] | NDArray[np.int64] | None = None
-    ) -> str:
+    samples: list[Verse] | NDArray[Verse],
+    probas: list[list[float]] | NDArray[np.float64],
+    correct_labels: list[int] | NDArray[np.int64] | None = None,
+) -> str:
     """Format classifier prediction results into CSV format.
 
     Args:
@@ -66,10 +65,12 @@ def csvify_cal(
         raise ValueError(msg)
 
     if correct_labels is not None:
-        csv_data = ("Book,Reference,"
-                    + f'"Probability for {label_data.ValToLabel[0]}",'
-                    + f'"Probability for {label_data.ValToLabel[1]}",'
-                    + "Leammatised Verse,Correct Label\n")
+        csv_data = (
+            "Book,Reference,"
+            + f'"Probability for {label_data.ValToLabel[0]}",'
+            + f'"Probability for {label_data.ValToLabel[1]}",'
+            + "Leammatised Verse,Correct Label\n"
+        )
 
         for i in range(len(probas)):
             csv_data += (
@@ -79,10 +80,12 @@ def csvify_cal(
                 + f"{correct_labels[i]}\n"
             )
     else:
-        csv_data = ("Book,Reference,"
-                    + f'"Probability for {label_data.ValToLabel[0]}",'
-                    + f'"Probability for {label_data.ValToLabel[1]}",'
-                    + "Leammatised Verse\n")
+        csv_data = (
+            "Book,Reference,"
+            + f'"Probability for {label_data.ValToLabel[0]}",'
+            + f'"Probability for {label_data.ValToLabel[1]}",'
+            + "Leammatised Verse\n"
+        )
 
         for i in range(len(probas)):
             csv_data += (
@@ -121,12 +124,13 @@ def remove_enclitics(vrs: Verse) -> Verse | None:
             vrs_lemmata.append(vrs.words[i].translit)
             vrs_annots.append(vrs.words[i].annots)
     if len(vrs_lemmata) != 0:
-        return Verse(vrs.book,
-                    vrs.reference,
-                    vrs_lemmata,
-                    words_annotations=vrs_annots,
-                    origin="CAL"
-                    )
+        return Verse(
+            vrs.book,
+            vrs.reference,
+            vrs_lemmata,
+            words_annotations=vrs_annots,
+            origin="CAL",
+        )
     # else
     return None
 
@@ -155,21 +159,24 @@ def remove_proper_nouns(vrs: Verse) -> Verse | None:
             vrs_lemmata.append(vrs.words[i].translit)
             vrs_annots.append(vrs.words[i].annots)
     if len(vrs_lemmata) > 0:
-        return Verse(vrs.book, vrs.reference,
-                                    vrs_lemmata,
-                                    words_annotations=vrs_annots,
-                                    origin="CAL"
-                                    )
+        return Verse(
+            vrs.book,
+            vrs.reference,
+            vrs_lemmata,
+            words_annotations=vrs_annots,
+            origin="CAL",
+        )
     return None
 
+
 def cal_eval_classifier(
-        clf: BoWEstimator,
-        cal_load: LoadedDataset,
-        save_f: SavefileName,
-        func_to_map: Callable[[Verse], Verse | None] | None = None,
-        *,
-        map_to_both: bool = False
-    ) -> None:
+    clf: BoWEstimator,
+    cal_load: LoadedDataset,
+    save_f: SavefileName,
+    func_to_map: Callable[[Verse], Verse | None] | None = None,
+    *,
+    map_to_both: bool = False,
+) -> None:
     """Evaluate a classifier with the CAL data."""
     train_x = cal_load.train.get_samples()
     train_y = cal_load.train.get_labels()
@@ -184,12 +191,12 @@ def cal_eval_classifier(
     clf.fit(train_x, train_y)
 
     eval_and_save(
-                clf,
-                cal_load,
-                csvify_cal,
-                save_f,
-                out_dir="./src/classifier/out/",
-            )
+        clf,
+        cal_load,
+        csvify_cal,
+        save_f,
+        out_dir="./src/classifier/out/",
+    )
 
 
 if __name__ == "__main__":
@@ -218,15 +225,18 @@ if __name__ == "__main__":
 
     print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
 
-    print("\n> Remove underscores marking proclitics, "
-            + "from both training & test sets")
+    print(
+        "\n> Remove underscores marking proclitics, "
+        + "from both training & test sets"
+    )
     print("MultinomialNB")
     c_mnb_nus = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
     c_mnb_nus.set_preprocessor(remove_underscores)
 
     save_fname_nus = save_fname.copy()
-    save_fname_nus.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES,
-                                    FnameExtraOpts.REMOVE_FROM_BOTH])
+    save_fname_nus.add_extra_opts(
+        [FnameExtraOpts.REMOVE_UNDERSCORES, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
 
     cal_eval_classifier(c_mnb_nus, cal_ds, save_fname_nus)
 
@@ -239,8 +249,13 @@ if __name__ == "__main__":
     c_mnb_npn_both = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
     save_fname_npn_both = save_fname_npn.copy()
     save_fname_npn_both.add_extra_opts([FnameExtraOpts.REMOVE_FROM_BOTH])
-    cal_eval_classifier(c_mnb_npn_both, cal_ds, save_fname_npn_both,
-                        remove_proper_nouns, map_to_both=True)
+    cal_eval_classifier(
+        c_mnb_npn_both,
+        cal_ds,
+        save_fname_npn_both,
+        remove_proper_nouns,
+        map_to_both=True,
+    )
 
     print("\n>> Remove PN, GN, underscores from both training & test sets")
     print("MultinomialNB")
@@ -251,11 +266,17 @@ if __name__ == "__main__":
     c_mnb_rnus.set_preprocessor(remove_underscores)
 
     save_fname_rnus = save_fname_npn.copy()
-    save_fname_rnus.add_extra_opts([FnameExtraOpts.REMOVE_PROPN,
-                                FnameExtraOpts.REMOVE_FROM_BOTH])
+    save_fname_rnus.add_extra_opts(
+        [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
 
-    cal_eval_classifier(c_mnb_rnus, cal_ds, save_fname_rnus,
-                        remove_proper_nouns, map_to_both=True)
+    cal_eval_classifier(
+        c_mnb_rnus,
+        cal_ds,
+        save_fname_rnus,
+        remove_proper_nouns,
+        map_to_both=True,
+    )
 
     print("\n=============== Word n-grams =================")
     print("\n> Plain Classifier")
@@ -289,9 +310,18 @@ if __name__ == "__main__":
     w_mnb_rnus.set_preprocessor(remove_underscores)
 
     save_fname_rnus_w = save_fname_npn_w.copy()
-    save_fname_rnus_w.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES,
-                                FnameExtraOpts.REMOVE_PROPN,
-                                FnameExtraOpts.REMOVE_FROM_BOTH])
+    save_fname_rnus_w.add_extra_opts(
+        [
+            FnameExtraOpts.REMOVE_UNDERSCORES,
+            FnameExtraOpts.REMOVE_PROPN,
+            FnameExtraOpts.REMOVE_FROM_BOTH,
+        ]
+    )
 
-    cal_eval_classifier(w_mnb_rnus, cal_ds, save_fname_rnus_w,
-                        remove_proper_nouns, map_to_both=True)
+    cal_eval_classifier(
+        w_mnb_rnus,
+        cal_ds,
+        save_fname_rnus_w,
+        remove_proper_nouns,
+        map_to_both=True,
+    )

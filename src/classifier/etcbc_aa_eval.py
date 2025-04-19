@@ -25,6 +25,8 @@
 
 """Authorship attribution using data from the ETCBC's dataset."""
 
+from collections.abc import Callable
+
 import numpy as np
 from numpy.typing import NDArray
 from sklearn.naive_bayes import MultinomialNB
@@ -34,19 +36,18 @@ from src.classifier.eval_utils import (
     eval_and_save,
 )
 from src.classifier.fitting_utils import identity
+from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.classifier.result_utils import Verse
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
-from src.classifier.fname_utils import SavefileName, FnameExtraOpts
-from collections.abc import Callable
 
 
 def csvify_etcbc(
-        samples: list[Verse] | NDArray[Verse],
-        probas: list[list[float]] | NDArray[np.float64],
-        correct_labels: list[int] | NDArray[np.int64] | None = None
-    ) -> str:
+    samples: list[Verse] | NDArray[Verse],
+    probas: list[list[float]] | NDArray[np.float64],
+    correct_labels: list[int] | NDArray[np.int64] | None = None,
+) -> str:
     """Convert the ETCBC verse data into a CSV-formatted string.
 
     Args:
@@ -87,8 +88,8 @@ def csvify_etcbc(
         for i in range(len(samples)):
             result += (
                 f'"{samples[i].book}","{samples[i].reference}",{probas[i][0]:.04f},{probas[i][1]:.04f},'
-                + f'{" ".join(samples[i].get_translit_words())},'
-                + f'{" ".join(samples[i].get_syriac_words())}\n'
+                + f"{' '.join(samples[i].get_translit_words())},"
+                + f"{' '.join(samples[i].get_syriac_words())}\n"
             )
     return result
 
@@ -135,11 +136,13 @@ def remove_proper_nouns(verse: Verse) -> Verse:
             removed_words.append(verse)
     # print(f"Removed {removed_words} from ({verse.reference})"
     # + "({translit_words})")
-    return Verse(verse.book,
-                verse.reference,
-                translit_words=translit_r,
-                syriac_words=syriac_r,
-                origin="ETCBC")
+    return Verse(
+        verse.book,
+        verse.reference,
+        translit_words=translit_r,
+        syriac_words=syriac_r,
+        origin="ETCBC",
+    )
 
 
 def remove_non_chars(verse: list[str]) -> list[str]:
@@ -162,13 +165,13 @@ def remove_non_chars(verse: list[str]) -> list[str]:
 
 
 def etcbc_eval_classifier(
-        clf: BoWEstimator,
-        etcbc_load: LoadedDataset,
-        save_f: SavefileName,
-        func_to_map: Callable[[Verse], Verse | None] | None = None,
-        *,
-        map_to_both: bool = False
-    ) -> None:
+    clf: BoWEstimator,
+    etcbc_load: LoadedDataset,
+    save_f: SavefileName,
+    func_to_map: Callable[[Verse], Verse | None] | None = None,
+    *,
+    map_to_both: bool = False,
+) -> None:
     """Evaluate a classifier with the ETCBC data."""
     train_x = etcbc_load.train.get_samples()
     train_y = etcbc_load.train.get_labels()
@@ -183,13 +186,12 @@ def etcbc_eval_classifier(
     clf.fit(train_x, train_y)
 
     eval_and_save(
-                clf,
-                etcbc_load,
-                csvify_etcbc,
-                save_f,
-                out_dir="./src/classifier/out/",
-            )
-
+        clf,
+        etcbc_load,
+        csvify_etcbc,
+        save_f,
+        out_dir="./src/classifier/out/",
+    )
 
 
 if __name__ == "__main__":
@@ -240,10 +242,12 @@ if __name__ == "__main__":
     print("\nRemove common proper nouns from both training & test verses")
     # evaluate and save results
     save_fname_rb = save_fname.copy()
-    save_fname_rb.add_extra_opts([FnameExtraOpts.REMOVE_PROPN,
-                                    FnameExtraOpts.REMOVE_FROM_BOTH])
-    etcbc_eval_classifier(mnb_r, etcbc_ds, save_fname_rb,
-                            remove_proper_nouns, map_to_both=True)
+    save_fname_rb.add_extra_opts(
+        [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
+    etcbc_eval_classifier(
+        mnb_r, etcbc_ds, save_fname_rb, remove_proper_nouns, map_to_both=True
+    )
 
     print("\n===================WORD N-GRAMS=========================")
     print("\nPlain Classifier")
@@ -262,14 +266,15 @@ if __name__ == "__main__":
     # evaluate and save results
     save_fname_wr = save_fname_w.copy()
     save_fname_wr.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-    etcbc_eval_classifier(mnb_wr, etcbc_ds, save_fname_wr,
-                            remove_proper_nouns)
+    etcbc_eval_classifier(mnb_wr, etcbc_ds, save_fname_wr, remove_proper_nouns)
 
     # Remove a few common proper nouns from both training and test sets
     print("\nRemove common proper nouns from both training & test verses")
     # evaluate and save results
     save_fname_wrb = save_fname_w.copy()
-    save_fname_wrb.add_extra_opts([FnameExtraOpts.REMOVE_PROPN,
-                                FnameExtraOpts.REMOVE_FROM_BOTH])
-    etcbc_eval_classifier(mnb_wr, etcbc_ds, save_fname_wrb,
-                            remove_proper_nouns, map_to_both=True)
+    save_fname_wrb.add_extra_opts(
+        [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
+    etcbc_eval_classifier(
+        mnb_wr, etcbc_ds, save_fname_wrb, remove_proper_nouns, map_to_both=True
+    )

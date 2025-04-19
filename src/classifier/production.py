@@ -24,7 +24,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from pathlib import Path
-from typing import Literal
 
 from sklearn.naive_bayes import MultinomialNB
 
@@ -33,23 +32,23 @@ from src.classifier.cal_aa_eval import (
     remove_proper_nouns,
     remove_underscores,
 )
+from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.etcbc_aa_eval import csvify_etcbc, remove_non_chars
-from src.classifier.eval_utils import eval_and_save, csvify_total_proba
+from src.classifier.eval_utils import csvify_total_proba, eval_and_save
+from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.classifier.load_cal import load_cal_dataset
 from src.classifier.prediction_utils import predict_proba
 from src.classifier.textfabric_utils import load_etcbc_dataset
-from src.classifier.wrappers import BoWEstimator, ProbaClassifier
-from src.classifier.fname_utils import SavefileName, FnameExtraOpts
-from src.classifier.result_utils import FileFormatterProto
-from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.wrappers import BoWEstimator
 
-def predict_on_prod(  # noqa: PLR0913
-        clf: BoWEstimator,
-        loaded_ds: LoadedDataset,
-        base_save_fname: SavefileName,
-        save_dir: str = "./src/classifier/out/",
-        thresh: float = 0.5
-    ) -> None:
+
+def predict_on_prod(
+    clf: BoWEstimator,
+    loaded_ds: LoadedDataset,
+    base_save_fname: SavefileName,
+    save_dir: str = "./src/classifier/out/",
+    thresh: float = 0.5,
+) -> None:
     """Predict on the production data with a given classifier."""
     if base_save_fname.origin == "CAL":
         file_formatter = csvify_cal
@@ -65,17 +64,17 @@ def predict_on_prod(  # noqa: PLR0913
     print(">> Quick Evaluation")
     save_fname = base_save_fname.copy()
 
-    eval_and_save(clf,
-                    loaded_ds,
-                    file_formatter,
-                    save_fname,
-                    out_dir=save_dir,
-                    threshold=thresh
-                )
+    eval_and_save(
+        clf,
+        loaded_ds,
+        file_formatter,
+        save_fname,
+        out_dir=save_dir,
+        threshold=thresh,
+    )
 
     print(">> Production Data")
-    preds = predict_proba(c_mnb, loaded_ds.production,
-                            threshold=thresh)
+    preds = predict_proba(c_mnb, loaded_ds.production, threshold=thresh)
     # save the predictions on the production data
     save_proba_fname = save_fname.copy()
     save_proba_fname.mark_special_file(is_prod=True)
@@ -112,6 +111,7 @@ if __name__ == "__main__":
     cu_mnb.set_preprocessor(remove_non_chars)
     cu_mnb_fname = SavefileName("ETCBC", "mnb")
     cu_mnb_fname.set_ngram_opts(n=cu_mnb.n)
+    cu_mnb_fname.add_extra_opts([FnameExtraOpts.IS_ERRONEOUS])
     predict_on_prod(c_mnb, etcbc_loaded, cu_mnb_fname, thresh=thresh)
 
     print("CAL --->")
@@ -131,8 +131,12 @@ if __name__ == "__main__":
     c_mnb_r = BoWEstimator(MultinomialNB(), " ".join)
     c_mnb_r.set_preprocessor(remove_underscores)
     c_mnb_r_fname = c_mnb_fname.copy()
-    c_mnb_r_fname.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES,
-                                    FnameExtraOpts.REMOVE_PROPN,
-                                    FnameExtraOpts.REMOVE_FROM_BOTH])
+    c_mnb_r_fname.add_extra_opts(
+        [
+            FnameExtraOpts.REMOVE_UNDERSCORES,
+            FnameExtraOpts.REMOVE_PROPN,
+            FnameExtraOpts.REMOVE_FROM_BOTH,
+        ]
+    )
     cal_loaded.test.map_on_samples(remove_proper_nouns)
     predict_on_prod(c_mnb_r, cal_loaded, c_mnb_r_fname, thresh=thresh)

@@ -30,17 +30,17 @@
 """
 
 import json
-from collections.abc import Generator, Callable
+from collections.abc import Callable, Generator
 from pathlib import Path
-from typing import Literal, TypedDict, Self
+from typing import Literal, TypedDict
 
 from src.classifier.result_utils import Verse
 from src.classifier.sanitisation_utils import clean_path_str, sanitise_str
-from copy import deepcopy
 
 
 class DatasetDict(TypedDict):
     """An entry in a dataset format for Huggingface."""
+
     label: int | str
     text: str
 
@@ -61,10 +61,8 @@ class DataSplit:
         internally, this class stores data in a list of lists, where each
         sub-list at index ``i`` contains the instances of class ``i``.
     """
-    def __init__(self,
-                ot_verses: list[Verse],
-                nt_verses: list[Verse]
-            ) -> None:
+
+    def __init__(self, ot_verses: list[Verse], nt_verses: list[Verse]) -> None:
         self.num_classes: int = 2  # this is a binary classification problem
         self.verses: list[list[Verse]] = []
         self.verses.append(ot_verses)
@@ -85,18 +83,18 @@ class DataSplit:
                 expected integer labels.
         """
         if t is not None and t not in range(self.num_classes):
-            msg = (f"Integer label {t} cannot be generated. "
-                    + "They are not in the expected labels for this system."
-                    + " Please refer to the documentation for: "
-                    + "datasets.DataSplit")
+            msg = (
+                f"Integer label {t} cannot be generated. "
+                + "They are not in the expected labels for this system."
+                + " Please refer to the documentation for: "
+                + "datasets.DataSplit"
+            )
             raise ValueError(msg)
         return t
 
-    def get_samples(self,
-                    target: int | None = None,
-                    *,
-                    trim_none: bool = True
-                ) -> list[Verse]:
+    def get_samples(
+        self, target: int | None = None, *, trim_none: bool = True
+    ) -> list[Verse]:
         """Get samples or instances of each class.
 
         Args:
@@ -132,12 +130,9 @@ class DataSplit:
         # else
         return self.verses[target]
 
-
-    def get_labels(self,
-                    target: int | None = None,
-                    *,
-                    trim_none: bool = True
-                ) -> list[int]:
+    def get_labels(
+        self, target: int | None = None, *, trim_none: bool = True
+    ) -> list[int]:
         """Generate labels for the specified targets.
 
         Args:
@@ -176,9 +171,8 @@ class DataSplit:
         return [target for v in self.verses[target]]
 
     def generate_syriac_hf(
-                        self,
-                        target: int | None = None
-                    ) -> Generator[DatasetDict]:
+        self, target: int | None = None
+    ) -> Generator[DatasetDict]:
         """Generate the syriac text of verses in Huggingface datasets format.
 
         Each yielded item is a JSONL (JSON Lines) line.
@@ -201,10 +195,12 @@ class DataSplit:
             ValueError: if there is a Verse where every word's ``.syriac``
                 attribute is empty.
         """
-        err_msg = ("Syriac text of Verse (%s) is empty! "
-                        + "Use generate_translit_hf() instead to get the "
-                        + "transliterated text of the verses "
-                        + "in the Huggingface datasets format.")
+        err_msg = (
+            "Syriac text of Verse (%s) is empty! "
+            + "Use generate_translit_hf() instead to get the "
+            + "transliterated text of the verses "
+            + "in the Huggingface datasets format."
+        )
 
         if target is None:
             for i in range(self.num_classes):
@@ -213,8 +209,7 @@ class DataSplit:
                     syriac_text = " ".join(v.get_syriac_words())
                     if not syriac_text.strip():  # if the syriac text is empty
                         raise ValueError(err_msg % v.reference)
-                    yield {"label": i,
-                            "text": syriac_text}
+                    yield {"label": i, "text": syriac_text}
         else:
             label: int = self._validate_target(target)  # type: ignore[reportAssignmentType]
             verses = self.get_samples(label)
@@ -222,12 +217,11 @@ class DataSplit:
                 syriac_text = " ".join(v.get_syriac_words())
                 if not syriac_text.strip():  # if the syriac text is empty
                     raise ValueError(err_msg % v.reference)
-                yield {"label": label,
-                        "text": syriac_text}
+                yield {"label": label, "text": syriac_text}
 
-    def generate_translit_hf(self,
-                            target: int | None = None
-                            ) -> Generator[DatasetDict]:
+    def generate_translit_hf(
+        self, target: int | None = None
+    ) -> Generator[DatasetDict]:
         """Generate the transliterated verses in Huggingface datasets format.
 
         Each yielded item is a JSONL (JSON Lines) line.
@@ -251,20 +245,17 @@ class DataSplit:
                 verses = self.get_samples(i)
                 for v in verses:
                     text = " ".join(v.get_translit_words())
-                    yield {"label": i,
-                            "text": text}
+                    yield {"label": i, "text": text}
         else:
             label: int = self._validate_target(target)  # type: ignore[reportAssignmentType]
             verses = self.get_samples(label)
             for v in verses:
                 text = " ".join(v.get_translit_words())
-                yield {"label": label,
-                        "text": text}
+                yield {"label": label, "text": text}
 
-    def map_on_samples(self,
-                        func: Callable[[Verse], Verse | None],
-                        target: int | None = None
-                    ) -> None:
+    def map_on_samples(
+        self, func: Callable[[Verse], Verse | None], target: int | None = None
+    ) -> None:
         """Map ``func`` on the samples in the data split.
 
         The ``func`` will modify each sample in the data split **in-place**.
@@ -303,24 +294,25 @@ class LoadedDataset:
             inheriting this ``LoadedDataset`` class if you want a separate
             evaluation data split.
     """
+
     def __init__(
-            self,
-            ot_train_verses: list[Verse],
-            nt_train_verses: list[Verse],
-            ot_test_verses: list[Verse],
-            nt_test_verses: list[Verse],
-            production_verses: list[Verse] | None
-        ) -> None:
+        self,
+        ot_train_verses: list[Verse],
+        nt_train_verses: list[Verse],
+        ot_test_verses: list[Verse],
+        nt_test_verses: list[Verse],
+        production_verses: list[Verse] | None,
+    ) -> None:
         self.train = DataSplit(ot_train_verses, nt_train_verses)
         self.test = DataSplit(ot_test_verses, nt_test_verses)
         if production_verses is not None:
             self.production = production_verses
 
     def save_as_json(
-            self,
-            save_dir: str | Path,
-            mode: Literal["syriac", "translit"] = "syriac",
-        ) -> None:
+        self,
+        save_dir: str | Path,
+        mode: Literal["syriac", "translit"] = "syriac",
+    ) -> None:
         """Save the given data in json compatible with Huggingface datasets.
 
         Args:
@@ -370,9 +362,7 @@ class LoadedDataset:
         # save production dataset
         prod_verses = []
         for verse in self.production:
-            prod_verses.append(
-                    {"text": f"{verse.get_syriac_words()}"}
-                    )
+            prod_verses.append({"text": f"{verse.get_syriac_words()}"})
 
         save_file = save_dir_p / "etcbc_production_data.json"
         with save_file.open("w", encoding="utf-8") as fp:

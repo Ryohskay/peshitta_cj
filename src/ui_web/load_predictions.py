@@ -1,19 +1,19 @@
 """Load predictions from CSV files."""
 
 import csv
-
 from pathlib import Path
 from typing import Literal
 
-from src.classifier.result_utils import ProbaPredictions, Verse
 from src.classifier.prediction_utils import convert
+from src.classifier.result_utils import ProbaPredictions, Verse
+
 
 def load_preds(
-            fname: str,
-            load_dir: str = "src/classifier/out/",
-            origin_name: Literal["CAL", "ETCBC"] = "CAL",
-            threshold: float = 0.5
-        ) -> ProbaPredictions:
+    fname: str,
+    load_dir: str = "src/classifier/out/",
+    origin_name: Literal["CAL", "ETCBC"] = "CAL",
+    threshold: float = 0.5,
+) -> ProbaPredictions:
     """Load prediction results from a CSV file.
 
     Args:
@@ -48,23 +48,29 @@ def load_preds(
             probas.append([float(row[2]), float(row[3])])
 
             if data_origin == "CAL":
-                verses.append(Verse(row[0], row[1], row[4].split(" "),
-                                    origin=data_origin
-                                )
-                            )
-                if (len(row) > 5):
+                verses.append(
+                    Verse(row[0], row[1], row[4].split(" "), origin=data_origin)
+                )
+                if len(row) > 5:
                     y.append(row[5])
             elif data_origin == "ETCBC":
                 print(f"(Ref: {row[1]}) OT > {row[2]} NT > {row[3]} [{row[5]}]")
-                verses.append(Verse(row[0], row[1], row[4].split(" "),
-                                        syriac_words=row[5].split(" "),
-                                        origin=data_origin))
-                if (len(row) > 6):
+                verses.append(
+                    Verse(
+                        row[0],
+                        row[1],
+                        row[4].split(" "),
+                        syriac_words=row[5].split(" "),
+                        origin=data_origin,
+                    )
+                )
+                if len(row) > 6:
                     y.append(row[6])
     if len(y) == 0:
         y = None
 
     return ProbaPredictions(verses, convert(probas, threshold), probas, y)
+
 
 if __name__ == "__main__":
     outdir = "src/classifier/out/"
@@ -74,7 +80,6 @@ if __name__ == "__main__":
     # CAL
     cal_fname = "PRODUCTION_mnb_cal_prediction_proba_all_both_removed.csv"
     load_preds(cal_fname, outdir, "CAL", threshold)
-
 
     # ETCBC
     etcbc_fname = "PRODUCTION_mnb_etcbc_prediction_proba_all_remove_nonchar.csv"
