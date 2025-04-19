@@ -15,6 +15,8 @@ class FnameExtraOpts(Enum):
     REMOVE_PROPN = "_no_propn"
     REMOVE_FROM_BOTH = "_both_removed"  # removed from both train and test sets
     REMOVE_UNDERSCORES = "_no_uscore"
+    # erroneous data which should not be taken seriously
+    IS_ERRONEOUS = "_ERRONEOUS"
 
 def _sanitise(s: str) -> str:
     """Return a str where special path characters are removed from s."""
@@ -71,9 +73,11 @@ class SavefileName(Any):
         self.is_bow = False
         self.scope = ""
         self.extra_opts = ""
+        # Special file flags
         self.is_prod = False
         self.is_mislabel = False
         self.is_total_proba = False
+        self.is_clf_summary = False
 
     def set_ngram_opts(
         self,
@@ -148,6 +152,7 @@ class SavefileName(Any):
             is_mislabel: bool = False,
             is_prod: bool = False,
             is_total_proba: bool = False,
+            is_clf_summary: bool = False
         ) -> None:
         """Mark the file as a special type of data save file.
 
@@ -159,6 +164,8 @@ class SavefileName(Any):
                 on the production dataset.
             is_total_proba: a boolean indicating if the file is for the
                 total probability of classification per book.
+            is_clf_summary: a boolean indicating if the file is for the summary
+                of a particular classifier.
         """
         if is_mislabel and is_prod:
             msg = (
@@ -172,10 +179,14 @@ class SavefileName(Any):
                 + " total probability data at the same time!"
             )
             raise ValueError(msg)
+        if is_clf_summary and (is_mislabel or is_total_proba):
+            msg = ("The classifier summary file cannot be mislabel file nor "
+                    + "per-book total probability data file!")
+            raise ValueError(msg)
         self.is_prod = is_prod
         self.is_mislabel = is_mislabel
         self.is_total_proba = is_total_proba
-
+        self.is_clf_summary = is_clf_summary
 
     def get_fname(
             self,
@@ -219,6 +230,9 @@ class SavefileName(Any):
         elif self.is_total_proba:
             # special file for the per-book total probas
             fname += "_total_proba"
+        elif self.is_clf_summary:
+            # special file for the classifier statistics summary
+            fname += "_classifier_stats"
         else:
             fname += "_prediction_all"  # contains all predictions
 

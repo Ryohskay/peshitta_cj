@@ -29,7 +29,7 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.naive_bayes import MultinomialNB
 
-from src.classifier.dataset_skeleton import DataSplit
+from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.eval_utils import (
     eval_and_save,
 )
@@ -39,6 +39,7 @@ from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
 from src.classifier.fname_utils import SavefileName, FnameExtraOpts
+from collections.abc import Callable
 
 
 def csvify_etcbc(
@@ -92,14 +93,14 @@ def csvify_etcbc(
     return result
 
 
-def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
-    """Create a copy of verses with pre-defined proper nouns removed.
+def remove_proper_nouns(verse: Verse) -> Verse:
+    """Remove pre-defined proper nouns from the verse.
 
     Returns:
-        a list of words in each of the verses where the words in the
-        ``frequent_propn`` set is excluded.
+        a :class:`src.classifier.result_utils.Verse` instance where the words
+        in the set ``_frequent_propn`` is excluded.
     """
-    frequent_propn = {
+    _frequent_propn = {
         "JCW<",
         "MWC>",
         "J<QWB",
@@ -109,52 +110,39 @@ def remove_proper_nouns(verses: list[Verse]) -> list[Verse]:
         "CM<WN",
         "LJCW",
     }
-    result_verses = []
-    for i in range(len(verses)):
-        translit_words = verses[i].get_translit_words()
-        if len(set(translit_words) & frequent_propn) == 0:
-            # if there's no intersection, just add the verse
-            result_verses.append(verses[i])
+    translit_words = verse.get_translit_words()
+    if len(set(translit_words) & _frequent_propn) == 0:
+        # if there's no intersection, just return the verse as is
+        return verse
+    # elif there is an intersection of the verse's words
+    # and FREQUENT_PROPER_NOUN
+    # print(f"{verse.reference} contains a propn!")
+    excludes = []
+    verse_range = range(len(translit_words))
+    for j in verse_range:
+        if translit_words[j] in _frequent_propn:
+            excludes.append(j)
+
+    translit_r = []
+    syriac_r = []
+    removed_words = []
+
+    for idx in verse_range:
+        if idx not in excludes:
+            translit_r.append(translit_words[idx])
+            syriac_r.append(verse.words[idx].syriac)
         else:
-            # if there is an intersection of verse's words
-            # and FREQUENT_PROPER_NOUN
-            # print(f"{verses[i].reference} contains a propn!")
-            excludes = []
-            verse_range = range(len(translit_words))
-            for j in verse_range:
-                if translit_words[j] in frequent_propn:
-                    excludes.append(j)
-
-            translit_r = []
-            syriac_r = []
-            removed_words = []
-
-            for idx in verse_range:
-                if idx not in excludes:
-                    translit_r.append(translit_words[idx])
-                    syriac_r.append(verses[i].words[idx].syriac)
-                else:
-                    removed_words.append(verses[i])
-            # print(f"Removed {removed} from verses[{i}] "
-            # + "({translit_words})")
-            result_verses.append(
-                    Verse(verses[i].book,
-                        verses[i].reference,
-                        translit_words=translit_r,
-                        syriac_words=syriac_r,
-                        origin="ETCBC")
-                    )
-    return result_verses
+            removed_words.append(verse)
+    # print(f"Removed {removed_words} from ({verse.reference})"
+    # + "({translit_words})")
+    return Verse(verse.book,
+                verse.reference,
+                translit_words=translit_r,
+                syriac_words=syriac_r,
+                origin="ETCBC")
 
 
-def _replace_diacritics(s: str) -> str:
-    # replace Syriac diacritics
-    s = s.replace("\u0308", "").replace("\u0307", "")
-    # replace transliteration of above diacritics
-    return s.replace('"', "").replace("^", "")
-
-
-def remove_non_chars(verses: list[list[str]]) -> list[list[str]]:
+def remove_non_chars(verse: list[str]) -> list[str]:
     """Remove non-character unicode codepoints from the text.
 
     Specifically, this preprocessing function removes ``\u0308``
@@ -164,124 +152,124 @@ def remove_non_chars(verses: list[list[str]]) -> list[list[str]]:
     Returns:
         a list of str without non-character unicode codepoints.
     """
-    new_verses = []
-    for v in verses:
-        new_verses.append([_replace_diacritics(word) for word in v])
-    return new_verses
+    res_verse = []
+    for i in range(len(verse)):
+        # replace Syriac diacritics
+        word = verse[i].replace("\u0308", "").replace("\u0307", "")
+        # replace transliterations of above diacritics
+        res_verse.append(word.replace('"', "").replace("^", ""))
+    return res_verse
+
+
+def etcbc_eval_classifier(
+        clf: BoWEstimator,
+        etcbc_load: LoadedDataset,
+        save_f: SavefileName,
+        func_to_map: Callable[[Verse], Verse | None] | None = None,
+        *,
+        map_to_both: bool = False
+    ) -> None:
+    """Evaluate a classifier with the ETCBC data."""
+    train_x = etcbc_load.train.get_samples()
+    train_y = etcbc_load.train.get_labels()
+
+    if func_to_map is not None:
+        train_x = list(map(func_to_map, train_x))
+        if map_to_both:
+            test_x_ot = list(map(func_to_map, etcbc_load.test.get_samples(0)))
+            test_x_nt = list(map(func_to_map, etcbc_load.test.get_samples(1)))
+            etcbc_load.test = DataSplit(test_x_ot, test_x_nt)
+
+    clf.fit(train_x, train_y)
+
+    eval_and_save(
+                clf,
+                etcbc_load,
+                csvify_etcbc,
+                save_f,
+                out_dir="./src/classifier/out/",
+            )
+
 
 
 if __name__ == "__main__":
-
     etcbc_ds = load_etcbc_dataset()
-    train_verses = remove_non_chars(etcbc_ds.train.get_samples())
-    train_verse_labels = etcbc_ds.train.get_labels()
-    ot_test_verses = remove_non_chars(etcbc_ds.test.get_samples(0))
-    nt_test_verses = remove_non_chars(etcbc_ds.test.get_samples(1))
+    n_window = 3
 
-    # train classifier
+    print("\n==================ERRONEOUS CHAR UNI-GRAM================")
+    print("\nChar Uni-gram Classifier WITHOUT removing non chars")
+    # erroneous results but interesting example of data leakage
+    c = BoWEstimator(MultinomialNB(), " ".join, n=1)
+    c_fname = SavefileName("ETCBC", "mnb")
+    c_fname.set_ngram_opts(n=1)
+    c_fname.add_extra_opts([FnameExtraOpts.IS_ERRONEOUS])
+    etcbc_eval_classifier(c, etcbc_ds, c_fname)
+
+    print("\nChar Uni-gram Classifier AFTER removing non chars")
+    # correct impl of char uni-gram classifier
+    c = BoWEstimator(MultinomialNB(), " ".join, n=1)
+    c.set_preprocessor(remove_non_chars)
+    c_fname = SavefileName("ETCBC", "mnb")
+    c_fname.set_ngram_opts(n=1)
+    c_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
+    etcbc_eval_classifier(c, etcbc_ds, c_fname)
+
+    print("\n==================REAL RESULTS================")
     print("\nPlain Classifier")
-    mnb = BoWEstimator(MultinomialNB(), " ".join)
-    mnb.fit(train_verses, train_verse_labels)
+    mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
+    mnb.set_preprocessor(remove_non_chars)
 
     # evaluate and save results
     save_fname = SavefileName("ETCBC", "mnb")
-    save_fname.set_ngram_opts()
-    eval_and_save(
-            mnb,
-            etcbc_ds,
-            csvify_etcbc,
-            save_fname,
-            out_dir="./src/classifier/out/"
-            )
+    save_fname.set_ngram_opts(n=n_window)
+    save_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
+    etcbc_eval_classifier(mnb, etcbc_ds, save_fname)
 
     # Remove a few common proper nouns only from the training set
     print("\nRemove common proper nouns from training verses")
-    train_verses_removed = remove_proper_nouns(train_verses)
     # assert(train_verses_removed != train_verses)
-
-    mnb_r = BoWEstimator(MultinomialNB(), " ".join)
-    mnb_r.fit(train_verses_removed, train_verse_labels)
+    mnb_r = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
+    mnb_r.set_preprocessor(remove_non_chars)
 
     # evaluate and save results
     save_fname_r = save_fname.copy()
     save_fname_r.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-    eval_and_save(
-            mnb_r,
-            etcbc_ds,
-            csvify_etcbc,
-            save_fname_r,
-            out_dir="./src/classifier/out/"
-            )
+    etcbc_eval_classifier(mnb_r, etcbc_ds, save_fname_r, remove_proper_nouns)
 
     # Remove a few common proper nouns from both training and test sets
     print("\nRemove common proper nouns from both training & test verses")
-    ot_test_verses_r = remove_proper_nouns(ot_test_verses)
-    nt_test_verses_r = remove_proper_nouns(nt_test_verses)
-    # assert(train_verses_removed != train_verse_txts)
-    etcbc_ds.test = DataSplit(ot_test_verses_r, nt_test_verses_r)
-
     # evaluate and save results
     save_fname_rb = save_fname.copy()
     save_fname_rb.add_extra_opts([FnameExtraOpts.REMOVE_PROPN,
                                     FnameExtraOpts.REMOVE_FROM_BOTH])
-    eval_and_save(
-            mnb_r,
-            etcbc_ds,
-            csvify_etcbc,
-            save_fname_rb,
-            out_dir="./src/classifier/out/"
-            )
+    etcbc_eval_classifier(mnb_r, etcbc_ds, save_fname_rb,
+                            remove_proper_nouns, map_to_both=True)
 
-    print("\n===================WORD N-GRAMS=========================\n")
+    print("\n===================WORD N-GRAMS=========================")
     print("\nPlain Classifier")
-    mnb_w = BoWEstimator(MultinomialNB(), identity)
-    mnb_w.fit(train_verses, train_verse_labels)
-
+    mnb_w = BoWEstimator(MultinomialNB(), identity, n_window)
+    mnb_w.set_preprocessor(remove_non_chars)
     # evaluate and save results
     save_fname_w = save_fname.copy()
     save_fname_w.set_ngram_opts(is_char_level=False)
-    eval_and_save(
-            mnb_w,
-            etcbc_ds,
-            csvify_etcbc,
-            save_fname_w,
-            out_dir="./src/classifier/out/",
-            )
+    etcbc_eval_classifier(mnb_w, etcbc_ds, save_fname_w)
 
     # Remove a few common proper nouns only from the training set
     print("\nRemove common proper nouns from training verses")
-    train_verses_removed = remove_proper_nouns(train_verses)
-    # assert(train_verses_removed != train_verses)
-
-    mnb_wr = BoWEstimator(MultinomialNB(), identity)
-    mnb_wr.fit(train_verses_removed, train_verse_labels)
-
+    # configure classifier
+    mnb_wr = BoWEstimator(MultinomialNB(), identity, n=n_window)
+    mnb_wr.set_preprocessor(remove_non_chars)
     # evaluate and save results
     save_fname_wr = save_fname_w.copy()
     save_fname_wr.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-    eval_and_save(
-            mnb_wr,
-            etcbc_ds,
-            csvify_etcbc,
-            save_fname_wr,
-            out_dir="./src/classifier/out/"
-            )
+    etcbc_eval_classifier(mnb_wr, etcbc_ds, save_fname_wr,
+                            remove_proper_nouns)
 
     # Remove a few common proper nouns from both training and test sets
     print("\nRemove common proper nouns from both training & test verses")
-    ot_test_verses_r = remove_proper_nouns(ot_test_verses)
-    nt_test_verses_r = remove_proper_nouns(nt_test_verses)
-    # assert(train_verses_removed != train_verse_txts)
-    etcbc_ds.test = DataSplit(ot_test_verses_r, nt_test_verses_r)
-
     # evaluate and save results
     save_fname_wrb = save_fname_w.copy()
-    save_fname_wrb.extra_opts([FnameExtraOpts.REMOVE_PROPN,
+    save_fname_wrb.add_extra_opts([FnameExtraOpts.REMOVE_PROPN,
                                 FnameExtraOpts.REMOVE_FROM_BOTH])
-    eval_and_save(
-            mnb_wr,
-            etcbc_ds,
-            csvify_etcbc,
-            save_fname_wrb,
-            out_dir="./src/classifier/out/",
-            )
+    etcbc_eval_classifier(mnb_wr, etcbc_ds, save_fname_wrb,
+                            remove_proper_nouns, map_to_both=True)

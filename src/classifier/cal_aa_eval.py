@@ -162,14 +162,14 @@ def remove_proper_nouns(vrs: Verse) -> Verse | None:
     return None
 
 def cal_eval_classifier(
-            clf: BoWEstimator,
-            cal_load: LoadedDataset,
-            save_f: SavefileName,
-            func_to_map: Callable[[Verse], Verse | None] | None = None,
-            *,
-            map_to_both: bool = False
-        ) -> None:
-    """Evaluate a classifier with CAL data."""
+        clf: BoWEstimator,
+        cal_load: LoadedDataset,
+        save_f: SavefileName,
+        func_to_map: Callable[[Verse], Verse | None] | None = None,
+        *,
+        map_to_both: bool = False
+    ) -> None:
+    """Evaluate a classifier with the CAL data."""
     train_x = cal_load.train.get_samples()
     train_y = cal_load.train.get_labels()
 
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     cal_ds = load_cal_dataset("./src/")
     n_window = 3
 
-    print("\nPlain Classifier")
+    print("\n> Plain Classifier")
     print("MultinomialNB")
     c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
     save_fname = SavefileName("CAL", "mnb")
@@ -205,8 +205,8 @@ if __name__ == "__main__":
     # train and evaluate
     cal_eval_classifier(c_mnb, cal_ds, save_fname)
 
-    print("\nRemove PN & GN")
-    print("> Remove PN & GN from the training set")
+    print("\n> Remove PN & GN")
+    print(">> Remove PN & GN from the training set")
     print("MultinomialNB")
     # Remove personal names and place names from the training data
     # and train new classifiers
@@ -217,7 +217,7 @@ if __name__ == "__main__":
 
     print("\n!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!")
 
-    print("\nRemove underscores marking proclitics, "
+    print("\n> Remove underscores marking proclitics, "
             + "from both training & test sets")
     print("MultinomialNB")
     c_mnb_nus = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
@@ -229,8 +229,8 @@ if __name__ == "__main__":
 
     cal_eval_classifier(c_mnb_nus, cal_ds, save_fname_nus)
 
-    print("\nRemove PN & GN")
-    print("> Remove PN & GN from both training & test sets")
+    print("\n> Remove PN & GN")
+    print(">> Remove PN & GN from both training & test sets")
     print("MultinomialNB")
     # Remove personal names and place names from
     # both the training and test datasets
@@ -241,7 +241,7 @@ if __name__ == "__main__":
     cal_eval_classifier(c_mnb_npn_both, cal_ds, save_fname_npn_both,
                         remove_proper_nouns, map_to_both=True)
 
-    print("> Remove PN, GN, underscores from both training & test sets")
+    print("\n>> Remove PN, GN, underscores from both training & test sets")
     print("MultinomialNB")
     # Remove personal names and place names from
     # both the training and test datasets

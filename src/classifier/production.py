@@ -34,7 +34,7 @@ from src.classifier.cal_aa_eval import (
     remove_underscores,
 )
 from src.classifier.etcbc_aa_eval import csvify_etcbc, remove_non_chars
-from src.classifier.eval_utils import eval_and_save
+from src.classifier.eval_utils import eval_and_save, csvify_total_proba
 from src.classifier.load_cal import load_cal_dataset
 from src.classifier.prediction_utils import predict_proba
 from src.classifier.textfabric_utils import load_etcbc_dataset
@@ -42,20 +42,6 @@ from src.classifier.wrappers import BoWEstimator, ProbaClassifier
 from src.classifier.fname_utils import SavefileName, FnameExtraOpts
 from src.classifier.result_utils import FileFormatterProto
 from src.classifier.dataset_skeleton import LoadedDataset
-
-def csvify_total_proba(total_proba_dict: dict) -> str:
-    """Format the total proba dict data into CSV.
-
-    Returns:
-        the total probability of books as a CSV-formatted str.
-    """
-    total_proba_csv = "Book,Probability for OT,Probability for NT\n"
-
-    for prod_book in total_proba_dict:
-        print(f"{prod_book}: (OT) {total_proba_dict[prod_book][0]}, "
-                + f"(NT) {total_proba_dict[prod_book][1]}")
-        total_proba_csv += f"{prod_book},{total_proba_dict[prod_book][0]},{total_proba_dict[prod_book][1]}\n"
-    return total_proba_csv
 
 def predict_on_prod(  # noqa: PLR0913
         clf: BoWEstimator,
