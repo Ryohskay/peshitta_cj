@@ -88,7 +88,7 @@ class PeshittaWord:
         translit: str,
         syriac: str = "",
         annots: str = "",
-        origin: Literal["ETCBC", "CAL"] = "",
+        origin: Literal["ETCBC", "CAL"] = "CAL",
     ):
         if not origin:
             logger.warning("No origin provided to PeshittaWord.__init__")
@@ -147,7 +147,7 @@ class Verse(Any):
         syriac_words: list[str] | None = None,
         words_annotations: list[str] | None = None,
         *,
-        origin: Literal["ETCBC", "CAL"] = "",
+        origin: Literal["ETCBC", "CAL"] = "CAL",
     ) -> None:
         """Initialise Verse object with PeshittaWord attribute.
 
@@ -233,7 +233,7 @@ class Verse(Any):
             # AttributeError is explicitly handled.
             return (
                 self.get_translit_words() == value.get_translit_words()  # type: ignore[reportAttributeAccessIssue]
-                or self.get_syriac_words() == value.get_syriac_words()
+                or self.get_syriac_words() == value.get_syriac_words()  # type: ignore[reportAttributeAccessIssue]
             )  # type: ignore[reportAttributeAccessIssue]
         except AttributeError:
             return (
@@ -678,7 +678,7 @@ class ResultStats:
         self.supports = np_arr_to_list(supports)
         self.log_loss = np_arr_to_list(log_loss)
         self.roc_auc = np_arr_to_list(roc_auc)
-        self.thresh_stats = []
+        self.thresh_stats: list[ThresholdStats] = []
 
     def add_thresh_stats(self, stats: list[ThresholdStats]) -> None:
         """Associate statistics of prediction results at some thresholds.
@@ -700,7 +700,7 @@ def jsonify_dict(obj: ResultStats | ThresholdStats) -> dict[str, Any]:
     :func:`python:json.dump` or :func:`python:json.dumps`.
 
     Returns:
-        a dictionary containing the JSON string.
+        a dictionary containing the contents of ``obj`` encoded in JSON.
     """
     if isinstance(obj, ResultStats):
         return {

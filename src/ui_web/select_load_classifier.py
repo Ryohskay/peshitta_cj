@@ -6,6 +6,7 @@ from src.ui_web.load_book_probas import BookProbas, load_book_probas
 from src.ui_web.load_predictions import load_preds, BookVerses
 from src.classifier.result_utils import ResultStats, Verse, ThresholdStats
 from dataclasses import dataclass, fields, field, Field
+from src.ui_web.load_clf_stats import load_clf_stats
 
 @dataclass
 class ClassifierConfig:
@@ -180,7 +181,7 @@ class ClassifierResultsModel:
             elif file.is_clf_summary:
                 # load ResultStats from the summary (``classifier_stats``) json
                 # file(s)
-                pass
+                load_clf_stats(file)
             else:
                 # if the file is a normal CSV listing verses and their probas
                 self.book_verses = load_preds(file.origin, file,

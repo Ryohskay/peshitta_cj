@@ -200,12 +200,16 @@ def metricise(
 
     Returns:
         accuracy (value), precision (1D array), recall (1D array),
-        and f1 scores (1D array) as floats.
+        and f beta scores (1D array) as floats. If the ``y_probas`` argument is
+        provided, also returns a :class:`ResultStats` instance.
 
     Raises:
         ValueError: if the length of ``y_all`` after :func:`numpy.array` and
             the length of ``y_true`` do not match
     """
+    # type annotations fail in this function due to very loose typing in
+    # the scikit-learn library. They are explicitly ignored by the special
+    # inline comments for pyright.
     y_pred = np.array(y_all)
 
     if len(y_pred) != len(y_true):
@@ -219,14 +223,14 @@ def metricise(
 
     if do_print:
         print(f"Overall Accuracy: {accuracy:.04f}")
-        print(f"Precisions: [0] {precision[0]:.04f}, [1] {precision[1]:.04f}")
-        print(f"Recalls: [0] {recall[0]:.04f}, [1] {recall[1]:.04f}")
-        print(f"F1 Score: [0] {fbeta[0]:.04f}, [1] {fbeta[1]:.04f}")
-        print(f"Supports: [0] {support[0]:.04f}, [1] {support[1]:.04f}")
+        print(f"Precisions: [0] {precision[0]:.04f}, [1] {precision[1]:.04f}")  # type: ignore[reportIndexIssue]
+        print(f"Recalls: [0] {recall[0]:.04f}, [1] {recall[1]:.04f}")  # type: ignore[reportIndexIssue]
+        print(f"F1 Score: [0] {fbeta[0]:.04f}, [1] {fbeta[1]:.04f}")  # type: ignore[reportIndexIssue]
+        print(f"Supports: [0] {support[0]:.04f}, [1] {support[1]:.04f}")  # type: ignore[reportIndexIssue]
 
     if y_probas is None:
         # if probabilities are not provided, finish calculations here
-        return (accuracy, precision, recall, fbeta, None)
+        return (accuracy, precision, recall, fbeta, None)  # type: ignore[reportReturnType]
 
     # if y_probas is not None and
     if len(y_probas) != len(y_true):
@@ -252,8 +256,8 @@ def metricise(
     if do_print:
         print(f"log loss: {cel_res}")
         print(f"roc auc: {roc_auc_res}")
-    stats = ResultStats(support, cel_res, roc_auc_res)
-    return (accuracy, precision, recall, fbeta, stats)
+    stats = ResultStats(support, cel_res, roc_auc_res)  # type: ignore[reportReturnType]
+    return (accuracy, precision, recall, fbeta, stats)  # type: ignore[reportReturnType]
 
 
 def csvify_total_proba(
@@ -374,7 +378,29 @@ def get_summary(
     nt_mislab: Mislabels,
     res_stats: ResultStats,
 ) -> dict:
-    """Make a summary of the classifier evaluation results."""
+    """Make a summary of the classifier evaluation results.
+
+    Args:
+        clf: a :class:`src.classifier.wrappers.BoWEstimator` instance;
+            the classifier must be trained before calling this function.
+        test_split: a :class:`src.classifier.dataset_skeleton.DataSplit`
+            instance for the test set to evaluate the classifier with.
+        ot_mislab: a :class:`src.classifier.result_utils.Mislabels` instance
+            for the OT verses.
+        nt_mislab: a :class:`src.classifier.result_utils.Mislabels` instance
+            for the NT verses.
+        res_stats: a :class:`src.classifier.result_utils.ResultStats` instance
+            containing the evaluation results of the classifier.
+
+    Raises:
+        ValueError: if the classifier has not been trained.
+    """
+    if clf.vocabs is None:
+        msg = "The classifier has not been fit yet!"
+        raise ValueError(msg)
+
+    # test if the classifier is a word n-gram classifier by checking the
+    # n-gram formatter.
     n_gram_form = "word" if clf.n_gram_formatter == identity else "char"
     mislab_percents = {
         label_data.ValToLabel[0]: (
@@ -422,6 +448,10 @@ def evaluate_classifier(
         :class:`ProbaPredictions` instances, one for OT and another for NT,
         :class:`Mislabels` instances for OT and NT, as well as a
         ``ResultStats`` instance.
+
+    Raises:
+        RuntimeError: if the result of `metricise` function fails to return
+            a `ResultStats` instance even if probabilities are provided.
     """
     ot_test_x = test_ds.get_samples(0)
     nt_test_x = test_ds.get_samples(1)
@@ -460,13 +490,20 @@ def evaluate_classifier(
     pred_y_all = convert(probas, target_thresholds[0])
     print(f"> with threshold: {target_thresholds[0]}")
     acc, prc, rec, f1, stats = metricise(all_test_y, pred_y_all, probas)
-    measurements.append(ThresholdStats(target_thresholds[0], acc, prc, rec, f1))
+    # verify that the stats are not None
+    if stats is None:
+        msg = "The result of `metricise` function with probabilities was None!"
+        raise RuntimeError(msg)
+    # add the calculated stats to the measurements
+    measurements.append(ThresholdStats(
+        target_thresholds[0], acc, list(prc), list(rec), list(f1)))
 
-    # measure scores at various thresholds
+    # measure scores at other thresholds
     for thresh in target_thresholds[1:]:
         pred_y_all = convert(probas, thresh)
         acc, prc, rec, f1, _ = metricise(all_test_y, pred_y_all, do_print=False)
-        measurements.append(ThresholdStats(thresh, acc, prc, rec, f1))
+        measurements.append(ThresholdStats(
+            thresh, acc, list(prc), list(rec), list(f1)))
 
     # register the calculated measurements
     stats.add_thresh_stats(measurements)
@@ -600,7 +637,11 @@ def cross_validate(
         train_g,
         test_g,
     ) in splits:
-        proba_c = BoWEstimator(clone(clf.algo), clf.n_gram_formatter, clf.n)
+        proba_c = BoWEstimator(
+            clone(clf.algo),  # type: ignore[reportArgumentType]
+            clf.n_gram_formatter,
+            clf.n
+        )
         train_ids = list(train_g)
         test_ids = list(test_g)
         # train_samples = train[0]
@@ -616,7 +657,7 @@ def cross_validate(
         predictions = predict_proba(
             proba_c, test_verses, test_labels, threshold=threshold
         )
-        acc, prec, rec, fone = metricise(
+        acc, prec, rec, fone, _ = metricise(
             test_labels, y_all=predictions.predictions
         )
         accs.append(acc)
