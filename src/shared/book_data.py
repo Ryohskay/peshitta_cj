@@ -64,3 +64,12 @@ nt_train_books = {
 }
 
 nt_test_books = {"Acts": list(range(1, 28 + 1))}
+
+# create lists of OT and NT books
+ot_book_titles = []
+ot_book_titles.extend(ot_train_books.keys())
+ot_book_titles.extend(ot_test_books.keys())
+ot_book_titles.extend(ot_prod_books.keys())
+nt_book_titles = []
+nt_book_titles.extend(nt_train_books.keys())
+nt_book_titles.extend(nt_test_books.keys())

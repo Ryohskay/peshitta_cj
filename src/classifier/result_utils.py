@@ -639,7 +639,7 @@ class ThresholdStats:
         f_beta: list[float],
     ) -> None:
         self.threshold = float(threshold)
-        self.accuracy = np_arr_to_list(accuracy)
+        self.accuracy = accuracy
         self.precision = np_arr_to_list(precision)
         self.recall = np_arr_to_list(recall)
         self.f_beta = np_arr_to_list(f_beta)
@@ -650,7 +650,7 @@ class ThresholdStats:
             # exclude the classification scores for "unknown" (-1) class
             # which doesn't really mean much
             return (
-                self.accuracy[1:],
+                self.accuracy,
                 self.precision[1:],
                 self.recall[1:],
                 self.f_beta[1:],
@@ -693,7 +693,7 @@ class ResultStats:
 
 
 # Code adapted from https://docs.python.org/3/library/json.html
-def jsonify_dict(obj: ResultStats | ThresholdStats) -> dict[str, type]:
+def jsonify_dict(obj: ResultStats | ThresholdStats) -> dict[str, Any]:
     """Custom factory to convert a dictionary to a JSON string.
 
     Use this function as the serializer for the arg `default` of

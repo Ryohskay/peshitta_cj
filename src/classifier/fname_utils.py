@@ -1,9 +1,10 @@
 """Utilities to construct file names."""
 
 import re
-from copy import copy
+from copy import deepcopy
 from enum import Enum
 from typing import Any, Literal, Self
+from pathlib import Path
 
 from src.shared import label_data
 
@@ -30,11 +31,11 @@ class SavefileName(Any):
     """A class to handle and construct a save file's name."""
 
     def __init__(
-        self,
-        origin: Literal["CAL", "ETCBC"],
-        classifier_alias: str,
-        file_ext: str = "csv",
-    ) -> None:
+            self,
+            origin: Literal["CAL", "ETCBC"],
+            classifier_alias: str,
+            file_ext: str = "csv",
+        ) -> None:
         """Initialise the skeleton for the savefile name.
 
         Args:
@@ -57,7 +58,7 @@ class SavefileName(Any):
             msg = f"Unknown data origin: {origin}"
             raise ValueError(msg)
 
-        self.origin = origin
+        self.origin: Literal["CAL", "ETCBC"] = origin
 
         if not classifier_alias:
             msg = "Classifier alias is empty!"
@@ -75,12 +76,45 @@ class SavefileName(Any):
         self.is_n_gram = False
         self.is_bow = False
         self.scope = ""
-        self.extra_opts = ""
         # Special file flags
         self.is_prod = False
         self.is_mislabel = False
         self.is_total_proba = False
         self.is_clf_summary = False
+        # initialise extra options
+        self.extra_opts: dict[FnameExtraOpts, bool] = {}
+        for opt in FnameExtraOpts:
+            self.extra_opts[opt] = False
+
+    def is_same_classifier(self, obj: Self) -> bool:
+        """Check if results in two save files are from the same classifier.
+
+        This function compares the classifier configurations represented in two
+        save files' names, regardless of the file contents.
+        E.g. a total probability file and a mislabel file are evaluated to
+        ``True`` if the results come from the same classifier even if their
+        contents and/or formats differ.
+
+        Args:
+            obj: another :class:`SavefileName` instance.
+
+        Returns:
+            a boolean indicating if the classifiers are different.
+        """
+        if not isinstance(obj, SavefileName):
+            return False
+        return (self.origin == obj.origin
+                and self.classifier == obj.classifier
+                and self.is_n_gram == obj.is_n_gram
+                and self.is_char_level == obj.is_char_level
+                and self.is_bow == obj.is_bow
+                and self.n == obj.n
+                and self.extra_opts == obj.extra_opts
+            )
+
+    def as_path(self) -> Path:
+        """Return the file name as a :class:`python:pathlib.Path` instance."""
+        return Path(self.get_fname())
 
     def set_ngram_opts(
         self,
@@ -95,7 +129,7 @@ class SavefileName(Any):
         Args:
             n: the ``n`` of n-grams. this value is only used if the arg
                 ``is_n_gram`` is set to ``True``.
-            is_char_level: a boolean indicating if the classifier is a character-
+            is_char_level: a boolean indicating if the classifier is a character
                 level model. ``False`` indicates a word-level model.
             is_n_gram: a boolean indicating if the classifier uses an n-gram
                 in tokenisation.
@@ -120,12 +154,14 @@ class SavefileName(Any):
         self.scope = _sanitise(scope)
 
     def add_extra_opts(
-        self, extra_opts: list[FnameExtraOpts] | None = None
-    ) -> None:
+            self,
+            extra_opts: list[FnameExtraOpts] | None = None
+        ) -> None:
         """Append extra optional element(s) to the file name.
 
         Args:
-            extra_opts: any value from the ``FnameExtraOpts`` enum.
+            extra_opts: any enum object from the ``FnameExtraOpts``
+                or its value.
 
         Raises:
             ValueError: if no option is given, or if any of the given options
@@ -136,24 +172,28 @@ class SavefileName(Any):
             raise ValueError(msg)
 
         for opt in extra_opts:
-            if opt not in FnameExtraOpts or not isinstance(opt.value, str):
+            # check if all provided options are valid
+            if opt not in FnameExtraOpts:
+                # NB: simply evaluating ``in`` upon the enum class
+                # does not suffice as a value in FnameExtraOpts will
+                # also be evaluated to ``True``.
                 msg = f"Invalid option: {opt}"
                 raise ValueError(msg)
+            # register the extra option
+            self.extra_opts[opt] = True
 
-            self.extra_opts += opt.value
-
-    def copy(self) -> Self:
-        """Returns a shallow copy of self."""
-        return copy(self)
+    def copy(self, memo: dict | None = None) -> Self:
+        """Returns a deep copy of self."""
+        return deepcopy(self, memo)
 
     def mark_special_file(
-        self,
-        *,
-        is_mislabel: bool = False,
-        is_prod: bool = False,
-        is_total_proba: bool = False,
-        is_clf_summary: bool = False,
-    ) -> None:
+            self,
+            *,
+            is_mislabel: bool = False,
+            is_prod: bool = False,
+            is_total_proba: bool = False,
+            is_clf_summary: bool = False,
+        ) -> None:
         """Mark the file as a special type of data save file.
 
         Args:
@@ -191,8 +231,8 @@ class SavefileName(Any):
         self.is_clf_summary = is_clf_summary
 
     def get_fname(
-        self,
-    ) -> str:
+            self,
+        ) -> str:
         """Get a file name to save the classifier prediction results.
 
         Returns:
@@ -220,8 +260,11 @@ class SavefileName(Any):
             fname += "_" + self.scope
 
         # append extra options if defined
-        if self.extra_opts:
-            fname += self.extra_opts
+        # since self.extra_opts is a dict, it is guaranteed that the file name
+        # options are always listed in the same order
+        for opt in self.extra_opts:
+            if self.extra_opts[opt]:
+                fname += opt.value
 
         # add more suffixes based if the file contains a special kind of data
         if self.is_prod:

@@ -11,46 +11,39 @@ from src.classifier.eval_utils import (
     eval_and_save,
 )
 from src.classifier.result_utils import Verse
+from src.classifier.fname_utils import SavefileName, FnameExtraOpts
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
-
-
-def splitter(v: Verse):
-    return v.get_syriac_words()
-
+from src.shared.label_data import ValToLabel
+from src.classifier.etcbc_aa_eval import etcbc_eval_classifier
 
 loaded_etc = load_etcbc_dataset()
-train_verses = remove_non_chars(loaded_etc.train.get_samples())
-train_verse_labels = loaded_etc.train.get_labels()
-ot_test_verses = remove_non_chars(loaded_etc.test.get_samples(0))
-nt_test_verses = remove_non_chars(loaded_etc.test.get_samples(1))
 
-
+n_window = 3
 print("\nPlain Classifier")
-mnb = BoWEstimator(MultinomialNB(), " ".join)
-mnb.fit(train_verses, train_verse_labels)
+mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
+mnb.set_preprocessor(remove_non_chars)
 
 # evaluate and save results
-eval_and_save(
-    mnb,
-    loaded_etc,
-    csvify_etcbc,
-    out_dir="./src/classifier/out/",
-    save_file_prefix="etcbc_",
-)
+save_fname = SavefileName("ETCBC", "mnb")
+save_fname.set_ngram_opts(n=n_window)
+save_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
+etcbc_eval_classifier(mnb, loaded_etc, save_fname)
 
-class_names = ["Jewish", "Christian"]
-explainer = LimeTextExplainer(class_names=class_names, char_level=True)
+explainer = LimeTextExplainer(class_names=list[ValToLabel.values()],
+                                char_level=True)
 
 idx = 83
 exp = explainer.explain_instance(
     " ".join(loaded_etc.test.get_samples()[idx].get_translit_words()),
-    mnb.predict_proba_translit,
-    num_features=10,
+    mnb.predict_proba,
+    num_features=4,
 )
 print("Document id: %d" % idx)
 print(
     "Probability(christian) =",
-    mnb.predict_proba([loaded_etc.test.get_samples()[idx]])[1],
+    mnb.predict_proba([loaded_etc.test.get_samples()[idx]])[0][1],
 )
-print("True class: %s" % class_names[loaded_etc.test.get_labels()[idx]])
+print("True class: %s" % ValToLabel[loaded_etc.test.get_labels()[idx]])
+
+exp.save_to_file("./out/lime_explainer.html", text=True)
