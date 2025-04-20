@@ -5,7 +5,7 @@
 Categorise the OT Peshitta (a *Classical Syriac* Translation of the Old Testament) into:
 
 1. books translated from Hebrew by Jews and
-2. books translated from Hebrew (and/or Greek) by Christians.
+2. books translated from Greek (with some help of Hebrew references) by Christians.
 
 ## Repository Structure
 
