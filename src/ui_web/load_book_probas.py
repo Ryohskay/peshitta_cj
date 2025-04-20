@@ -2,6 +2,8 @@ import csv
 from pathlib import Path
 from typing import Literal
 
+from src.classifier.fname_utils import SavefileName
+
 
 class BookProbas:
     """Class to load book probabilities from CSV files.
@@ -38,8 +40,7 @@ class BookProbas:
 
 
 def load_book_probas(
-        data_origin: Literal["ETCBC", "CAL"],
-        fname: str,
+        fname: SavefileName,
         load_dir: str | Path = "src/classifier/out/",
     ) -> BookProbas:
     """Load total probabilities for books from a CSV file.
@@ -52,10 +53,10 @@ def load_book_probas(
     Returns:
         A :class:`BookProbas` instance containing the loaded book probabilities.
     """
-    book_probas = BookProbas(data_origin)
-    load_dir_p = Path(load_dir)
+    book_probas = BookProbas(fname.origin)
+    fname_p = Path(load_dir) / fname.get_fname()
 
-    with (load_dir_p / fname).open(newline="") as csvfile:
+    with fname_p.open(newline="") as csvfile:
         read_data = csv.reader(csvfile)
         first_row = True
         for row in read_data:

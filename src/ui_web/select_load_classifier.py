@@ -176,13 +176,11 @@ class ClassifierResultsModel:
                 continue
 
             if file.is_total_proba:
-                self.book_probas = load_book_probas(
-                                        file.origin, file, self.load_dir)
+                self.book_probas = load_book_probas(file, self.load_dir)
             elif file.is_clf_summary:
                 # load ResultStats from the summary (``classifier_stats``) json
                 # file(s)
                 load_clf_stats(file)
             else:
                 # if the file is a normal CSV listing verses and their probas
-                self.book_verses = load_preds(file.origin, file,
-                                        str(self.load_dir.resolve()))
+                self.book_verses = load_preds(file, self.load_dir)

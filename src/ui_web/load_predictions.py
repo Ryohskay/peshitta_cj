@@ -4,6 +4,7 @@ import csv
 from pathlib import Path
 from typing import Literal, TypedDict
 
+from src.classifier.fname_utils import SavefileName
 from src.classifier.prediction_utils import convert
 from src.classifier.result_utils import ProbaPredictions, Verse
 
@@ -14,9 +15,8 @@ class BookVerses(TypedDict):
     verse_probas: list[list[float]]
 
 def load_preds(
-        origin_name: Literal["CAL", "ETCBC"],
-        fname: str,
-        load_dir: str = "src/classifier/out/",
+        fname: SavefileName,
+        load_dir: str | Path = Path("src/classifier/out/"),
     ) -> list[BookVerses]:
     """Load prediction results from a CSV file.
 
@@ -34,12 +34,12 @@ def load_preds(
         A list of :class:`src.ui_web.load_predictions.BookVerses` instances
         containing the verses and their prediction results from each book.
     """
-    data_origin = origin_name.strip()
-    load_dir_p = Path(load_dir)
+    data_origin = fname.origin
+    fname_p = Path(load_dir) / fname.get_fname()
     parsed_books = []
     books: list[BookVerses] = []
 
-    with (load_dir_p / fname).open(newline="") as csvfile:
+    with fname_p.open(newline="") as csvfile:
         read_data = csv.reader(csvfile)
         first_row = True
         current_book = ""
@@ -101,9 +101,13 @@ if __name__ == "__main__":
     threshold = 0.5
 
     # CAL
-    cal_fname = "PRODUCTION_mnb_cal_prediction_proba_all_both_removed.csv"
-    load_preds("CAL", cal_fname, outdir)
+    cal_fname = SavefileName("CAL", "mnb", ".csv")
+    cal_fname.set_ngram_opts(n=3)
+    cal_fname.mark_special_file(is_prod=True)
+    load_preds(cal_fname, outdir)
 
     # ETCBC
-    etcbc_fname = "PRODUCTION_mnb_etcbc_prediction_proba_all_remove_nonchar.csv"
-    load_preds("ETCBC", etcbc_fname, outdir)
+    etcbc_fname = SavefileName("ETCBC", "mnb", ".csv")
+    etcbc_fname.set_ngram_opts(n=3)
+    etcbc_fname.mark_special_file(is_prod=True)
+    load_preds(etcbc_fname, outdir)

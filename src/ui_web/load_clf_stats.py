@@ -3,7 +3,10 @@ from src.classifier.result_utils import ResultStats, ThresholdStats
 from pathlib import Path
 import json
 
-def load_clf_stats(json_fname: SavefileName) -> ResultStats:
+def load_clf_stats(
+        json_fname: SavefileName,
+        load_dir: str | Path = "src/classifier/out/"
+    ) -> ResultStats:
     """Load the classifier statistics from the "summary" files.
 
     Returns:
@@ -15,7 +18,7 @@ def load_clf_stats(json_fname: SavefileName) -> ResultStats:
         msg = f"File {json_fname} is not a classifier evaluation summary file."
         raise ValueError(msg)
     # load the classifier statistics
-    fname_p = Path(json_fname.get_fname())
+    fname_p = Path(load_dir) / json_fname.get_fname()
     with fname_p.open(encoding="utf-8") as fp:
         data = json.load(fp)
 
