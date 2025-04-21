@@ -27,10 +27,9 @@
 
 from collections import Counter
 from collections.abc import Callable, Sequence
+from typing import Any
 
 from nltk.util import ngrams
-
-from src.classifier.result_utils import Verse
 
 
 def count_n_grams(
@@ -126,7 +125,7 @@ def make_vocab(
     return (n_gram_vocabs, n_gram_counters)
 
 
-def identity(input_data: type) -> type:
+def identity(input_data: Any) -> Any:  # noqa: ANN401
     """Identity function that returns the same thing as the input.
 
     Args:
@@ -136,47 +135,6 @@ def identity(input_data: type) -> type:
         Identical to the input.
     """
     return input_data
-
-
-def make_word_n_gram_vocab(
-    verses: list[Verse], span: int = 3, mode: int = 1
-) -> tuple[Counter, list[Counter]]:
-    """Wraps the ``make_vocab`` function with a formatter for word n-grams.
-
-    .. seealso:
-        See :func:`src.classifier.fitting_utils.make_vocab`
-            for params: ``verses``, ``span``, ``mode``.
-        See :meth:`src.classifier.result_utils.Verse.get_words_in_mode`
-            for param: ``mode``.
-
-    Returns:
-        A tuple in the format of::
-
-            tuple[(Global word n-gram counts),
-                    (word n-gram counts for each verse)]
-    """
-    verses_s = [v.get_words_in_mode(mode) for v in verses]
-    return make_vocab(verses_s, identity, span, mode)
-
-
-def make_char_n_gram_vocab(
-        verses: list[Verse], span: int = 3, mode: int = 1,
-        ngram_formatter: Callable = " ".join
-) -> tuple[Counter, list[Counter]]:
-    """Wraps the ``make_vocab`` function with a formatter for character n-grams.
-
-    .. seealso:
-        See :func:`src.classifier.fitting_utils.make_vocab`
-            for params: ``verses``, ``span``, ``mode``, ``ngram_formatter``.
-
-    Returns:
-        A tuple in the format of::
-
-            tuple[(Global character n-gram counts),
-                    (character n-gram counts for each verse)]
-    """
-    verses_s = [v.get_words_in_mode(mode) for v in verses]
-    return make_vocab(verses_s, ngram_formatter, span, mode)
 
 
 def make_feature(

@@ -114,7 +114,8 @@ class ResultFilesIndex:
         self.file_paths: list[Path] = []
         # index the files in the directory
         for file in self.load_dir.iterdir():
-            if file.is_file():
+            if file.is_file() and file.suffix in {".csv", ".json"}:
+                # if the file is a data file
                 # parse the file name(s) and append to the index
                 save_fname = parse_fname(file.name)
                 self.files.append(save_fname)

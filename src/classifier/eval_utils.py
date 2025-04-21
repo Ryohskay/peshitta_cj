@@ -26,8 +26,8 @@
 """Tools and functions to evaluate classifiers."""
 
 import json
+import logging
 from pathlib import Path
-from venv import logger
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -43,7 +43,7 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from sklearn.model_selection import StratifiedKFold
-import logging
+
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import identity
 from src.classifier.fname_utils import SavefileName
@@ -64,8 +64,8 @@ logger = logging.getLogger(__name__)
 
 
 def mislabel_stats(
-        preds: ProbaPredictions,
-    ) -> Mislabels | None:
+    preds: ProbaPredictions,
+) -> Mislabels | None:
     """Calculate and print some basic statistics on model inputs & outputs.
 
     Args:
@@ -82,8 +82,10 @@ def mislabel_stats(
         ValueError: if the attribute ``preds.correct_labels`` is ``None``.
     """
     if preds.correct_labels is None:
-        msg = ("The attr `preds.correct_labels` is empty. Correct labels are "
-               + "required to find mislabelled verses.")
+        msg = (
+            "The attr `preds.correct_labels` is empty. Correct labels are "
+            + "required to find mislabelled verses."
+        )
         raise ValueError(msg)
 
     # print some stats about the whole dataset
@@ -238,29 +240,68 @@ def csvify_total_proba(
     return total_proba_csv
 
 
-def plot_charts(
+def plot_charts(  # noqa: PLR0913
     y_true: list[int] | np.ndarray,
     y_pred: list[int] | np.ndarray,
     y_probas: list[list[float]] | np.ndarray,
+    pos_label: int = 1,
+    *,
+    save_fname: SavefileName | None = None,
+    out_dir: str | Path | None = Path("./graphics/out/"),
 ) -> None:
     """Plot charts from predictions.
 
-    Currently, this function plots charts with :class:`ConfusionMatrixDisplay`,
-    :class:`PrecisionRecallDisplay`, and :class:`RocCurveDisplay`.
+    Args:
+        y_true: correct labels
+        y_pred: predicted labels
+        y_probas: predicted probabilities
+        pos_label: positive label for the ROC curve
+        save_fname: a :class:`src.classifier.fname_utils.SavefileName` instance
+            containing the file name for a classifier.
+        out_dir: Path or string of path to the directory to save result files.
+            If ``save_fname`` is not None, the charts will be saved to this
+            directory with the name of ``save_fname``. If the directory name
+            is not provided, the charts will be plotted
+            on a graphical interface.
     """
+    save_fname_p = None
+    if save_fname is not None and out_dir is not None:
+        save_fname.ext = "jpeg"
+        save_fname_p = Path(out_dir) / save_fname.get_fname()
+
     # evaluate with more statistics
-    ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
-    plt.show()
+    cm_display = ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+    cm_display.plot()
+    save_dest = (save_fname_p if save_fname_p is not None
+                    else f"{out_dir}/confusion_matrix.jpeg")
+    if out_dir is None:
+        plt.show()
+    else:
+        plt.savefig(save_dest, bbox_inches="tight")
 
     # Precision Recall curve
     pr_display = PrecisionRecallDisplay.from_predictions(
         y_true=y_true, y_pred=y_pred
     )
     pr_display.plot()
-    plt.show()
+    save_dest = (save_fname_p if save_fname_p is not None
+                    else f"{out_dir}/confusion_matrix.jpeg")
+    if out_dir is None:
+        plt.show()
+    else:
+        plt.savefig(save_dest, bbox_inches="tight")
 
     # Roc curve
-    RocCurveDisplay.from_predictions(y_true=y_true, y_pred=y_probas)
+    proba_pred_pos = [proba[pos_label] for proba in y_probas]
+    roc_display = RocCurveDisplay.from_predictions(y_true=y_true, y_pred=proba_pred_pos)
+    roc_display.plot()
+    save_dest = (save_fname_p if save_fname_p is not None
+                    else f"{out_dir}/confusion_matrix.jpeg")
+    if out_dir is None:
+        plt.show()
+    else:
+        plt.savefig(save_dest, bbox_inches="tight")
+    plt.close()
 
 
 def split_list(lis: list, parts: int = 5) -> list[list]:
@@ -282,9 +323,11 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
             the requested number of partitions.
     """
     if len(lis) % parts != 0:
-        msg = (f"NOTE: the number of training samples ({len(lis)}) "
+        msg = (
+            f"NOTE: the number of training samples ({len(lis)}) "
             + f"is not divisible by {parts}. "
-            + "Resulting split of sub-arrays will be uneven.")
+            + "Resulting split of sub-arrays will be uneven."
+        )
         logger.info(msg)
 
     if len(lis) < parts:
@@ -433,15 +476,19 @@ def evaluate_classifier(
         msg = "The result of `metricise` function with probabilities was None!"
         raise RuntimeError(msg)
     # add the calculated stats to the measurements
-    measurements.append(ThresholdStats(
-        target_thresholds[0], acc, list(prc), list(rec), list(f1)))
+    measurements.append(
+        ThresholdStats(
+            target_thresholds[0], acc, list(prc), list(rec), list(f1)
+        )
+    )
 
     # measure scores at other thresholds
     for thresh in target_thresholds[1:]:
         pred_y_all = convert(probas, thresh)
         acc, prc, rec, f1, _ = metricise(all_test_y, pred_y_all, do_print=False)
-        measurements.append(ThresholdStats(
-            thresh, acc, list(prc), list(rec), list(f1)))
+        measurements.append(
+            ThresholdStats(thresh, acc, list(prc), list(rec), list(f1))
+        )
 
     # register the calculated measurements
     stats.add_thresh_stats(measurements)
@@ -578,7 +625,7 @@ def cross_validate(
         proba_c = BoWEstimator(
             clone(clf.algo),  # type: ignore[reportArgumentType]
             clf.n_gram_formatter,
-            clf.n
+            clf.n,
         )
         train_ids = list(train_g)
         test_ids = list(test_g)
