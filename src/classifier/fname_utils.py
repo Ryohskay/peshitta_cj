@@ -3,8 +3,8 @@
 import re
 from copy import deepcopy
 from enum import Enum
-from typing import Any, Literal, Self
 from pathlib import Path
+from typing import Any, Literal, Self
 
 from src.shared import label_data
 
@@ -22,7 +22,8 @@ class FnameExtraOpts(Enum):
 
 def _sanitise(s: str) -> str:
     """Return a str where special path characters are removed from s."""
-    s = s.strip().lower()
+    # clean the string and remove dots to avoid confusing file names
+    s = s.strip().lower().replace(r".", "")
     # replace every non-alnum char except underscore with an underscore
     return re.sub(r"\W", "_", s)
 
@@ -31,11 +32,11 @@ class SavefileName(Any):
     """A class to handle and construct a save file's name."""
 
     def __init__(
-            self,
-            origin: Literal["CAL", "ETCBC"],
-            classifier_alias: str,
-            file_ext: str = "csv",
-        ) -> None:
+        self,
+        origin: Literal["CAL", "ETCBC"],
+        classifier_alias: str,
+        file_ext: str = "csv",
+    ) -> None:
         """Initialise the skeleton for the savefile name.
 
         Args:
@@ -47,8 +48,8 @@ class SavefileName(Any):
             file_ext: file extension to append at the end of the file name.
 
         Raises:
-            ValueError: if any of data origin, file extension, or classifier alias
-                is given but empty,
+            ValueError: if any of data origin, file extension, or classifier
+                alias is given but empty or invalid.
         """
         # check for erroneous options or such combinations
         if not origin:
@@ -103,14 +104,15 @@ class SavefileName(Any):
         """
         if not isinstance(obj, SavefileName):
             return False
-        return (self.origin == obj.origin
-                and self.classifier == obj.classifier
-                and self.is_n_gram == obj.is_n_gram
-                and self.is_char_level == obj.is_char_level
-                and self.is_bow == obj.is_bow
-                and self.n == obj.n
-                and self.extra_opts == obj.extra_opts
-            )
+        return (
+            self.origin == obj.origin
+            and self.classifier == obj.classifier
+            and self.is_n_gram == obj.is_n_gram
+            and self.is_char_level == obj.is_char_level
+            and self.is_bow == obj.is_bow
+            and self.n == obj.n
+            and self.extra_opts == obj.extra_opts
+        )
 
     def as_path(self) -> Path:
         """Return the file name as a :class:`python:pathlib.Path` instance."""
@@ -130,16 +132,19 @@ class SavefileName(Any):
             n: the ``n`` of n-grams. this value is only used if the arg
                 ``is_n_gram`` is set to ``True``.
             is_char_level: a boolean indicating if the classifier is a character
-                level model. ``False`` indicates a word-level model.
+                level model. ``False`` indicates a word-level model. this value
+                is only used if the arg ``is_n_gram`` is set to ``True``.
             is_n_gram: a boolean indicating if the classifier uses an n-gram
                 in tokenisation.
             is_bow: a boolean indicating if the classifier uses a Bag-of-Words
-                approach.
+                approach. this value is only used if the arg ``is_n_gram`` is
+                set to ``True``.
         """
-        self.n = int(n)
-        self.is_char_level = is_char_level
         self.is_n_gram = is_n_gram
-        self.is_bow = is_bow
+        if self.is_n_gram:
+            self.n = int(n)
+            self.is_bow = is_bow
+            self.is_char_level = is_char_level
 
     def set_scope(self, scope: str) -> None:
         """Set the scope of the results stored in the file.
@@ -154,9 +159,8 @@ class SavefileName(Any):
         self.scope = _sanitise(scope)
 
     def add_extra_opts(
-            self,
-            extra_opts: list[FnameExtraOpts] | None = None
-        ) -> None:
+        self, extra_opts: list[FnameExtraOpts] | None = None
+    ) -> None:
         """Append extra optional element(s) to the file name.
 
         Args:
@@ -187,13 +191,13 @@ class SavefileName(Any):
         return deepcopy(self, memo)
 
     def mark_special_file(
-            self,
-            *,
-            is_mislabel: bool = False,
-            is_prod: bool = False,
-            is_total_proba: bool = False,
-            is_clf_summary: bool = False,
-        ) -> None:
+        self,
+        *,
+        is_mislabel: bool = False,
+        is_prod: bool = False,
+        is_total_proba: bool = False,
+        is_clf_summary: bool = False,
+    ) -> None:
         """Mark the file as a special type of data save file.
 
         Args:
@@ -231,8 +235,8 @@ class SavefileName(Any):
         self.is_clf_summary = is_clf_summary
 
     def get_fname(
-            self,
-        ) -> str:
+        self,
+    ) -> str:
         """Get a file name to save the classifier prediction results.
 
         Returns:

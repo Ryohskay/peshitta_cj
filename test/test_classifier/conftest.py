@@ -8,6 +8,7 @@ from sklearn.naive_bayes import MultinomialNB
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import identity
+from src.classifier.fname_utils import SavefileName
 from src.classifier.result_utils import (
     Mislabels,
     PeshittaWord,
@@ -608,3 +609,17 @@ def result_stats_1(
     thresh_stats = [thresh_stats_1, thresh_stats_2]
     stats.add_thresh_stats(thresh_stats)
     return stats
+
+
+# SavefileName
+@pytest.fixture
+def cal_base_savefile() -> SavefileName:
+    return SavefileName(
+            origin="CAL", classifier_alias="mnb", file_ext="csv"
+        )
+
+@pytest.fixture
+def etcbc_base_savefile() -> SavefileName:
+    return SavefileName(
+        origin="ETCBC", classifier_alias="svc", file_ext="json"
+    )
