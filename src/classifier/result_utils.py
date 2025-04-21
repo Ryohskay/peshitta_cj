@@ -31,7 +31,6 @@ from typing import Any, Literal, Protocol
 
 import numpy as np
 from numpy.typing import NDArray
-from torch import threshold
 
 from src.classifier.sanitisation_utils import clean_path_str
 
