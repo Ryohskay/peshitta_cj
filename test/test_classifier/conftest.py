@@ -13,6 +13,7 @@ from src.classifier.result_utils import (
     Verse,
 )
 from src.classifier.wrappers import BoWEstimator, Classifier
+from src.classifier.fitting_utils import identity
 
 
 # Verse & PeshittaWord
@@ -259,9 +260,35 @@ def proba_preds(cal_verse: Verse,
                 ) -> ProbaPredictions:
     """Return a ProbaPredictions instance with verses from Genesis."""
     return ProbaPredictions([cal_verse, etcbc_verse, full_data_verse],
-                              [0, 0, 1],
-                              [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]],
-                             [0, 0, 0])
+                            [0, 0, 1],
+                            [[0.8, 0.2], [0.7, 0.3], [0.4, 0.6]],
+                            [0, 0, 0])
+
+
+@pytest.fixture
+def proba_preds_no_correct(
+        etcbc_verse: Verse,
+        etcbc_acts_verse: Verse
+    ) -> ProbaPredictions:
+    """Return a ProbaPredictions instance with no correct labels."""
+    return ProbaPredictions([etcbc_verse, etcbc_acts_verse],
+                            [0, 1],
+                            [[0.7, 0.3], [0.4, 0.6]])
+
+@pytest.fixture
+def proba_preds_mislab(
+        etcbc_chr_verses: list[Verse],
+        etcbc_acts_verse: Verse,
+        etcbc_cor1_verse: Verse,
+        ) -> ProbaPredictions:
+    """Return a ProbaPredictions instance with several mislabels."""
+    verses = etcbc_chr_verses
+    verses.extend([etcbc_acts_verse, etcbc_cor1_verse])
+    return ProbaPredictions(verses,
+                            [1, 1, 0, 0, 0],
+                            [[0.11, 0.89], [0.33, 0.67], [0.8, 0.2],
+                                [0.7, 0.3], [0.6, 0.4]],
+                            [0, 0, 0, 1, 1])
 
 
 @pytest.fixture
@@ -348,13 +375,13 @@ def lr_classifier() -> Classifier:
     """Mock LinearRegression classifier."""
     # ArgumentType can be ignored here since LinearRegression inherits from the
     # BaseEstimator class
-    return Classifier(LinearRegression)  # type: ignore[reportArgumentType]
+    return Classifier(LinearRegression())
 
 
 @pytest.fixture
 def mnb_classifier() -> BoWEstimator:
     """Mock MultinomialNB classifier."""
-    return BoWEstimator(MultinomialNB)  # type: ignore[reportArgumentType]
+    return BoWEstimator(MultinomialNB(), identity, n=3)
 
 
 @pytest.fixture

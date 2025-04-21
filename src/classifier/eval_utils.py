@@ -27,7 +27,7 @@
 
 import json
 from pathlib import Path
-from typing import Any
+from venv import logger
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -43,7 +43,7 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from sklearn.model_selection import StratifiedKFold
-
+import logging
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import identity
 from src.classifier.fname_utils import SavefileName
@@ -60,19 +60,15 @@ from src.classifier.result_utils import (
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
 
+logger = logging.getLogger(__name__)
+
 
 def mislabel_stats(
-    inputs: np.ndarray | list[Any],
-    y_correct: np.ndarray,
-    preds: ProbaPredictions,
-) -> Mislabels:
+        preds: ProbaPredictions,
+    ) -> Mislabels | None:
     """Calculate and print some basic statistics on model inputs & outputs.
 
     Args:
-        inputs: Inputs passed when the classifier
-            produced the predictions.
-        y_correct: Correct (gold-standard) labels
-            for the input verses.
         preds: a :class:`src.classifier.result_utils.Predictions` instance for
             the results of predictions on the input. When a
             :class:`src.classifier.result_utils.ProbaPredictions` instance is
@@ -80,107 +76,52 @@ def mislabel_stats(
             the ``probas`` attribute set.
 
     Returns:
-        A :class:`src.classifier.result_utils.Mislabels` instance.
+        an instance of :class:`src.classifier.result_utils.Mislabels`.
 
     Raises:
-        ValueError: If the provided list of inputs to test is either zero
-            length or does not have a measurable length.
+        ValueError: if the attribute ``preds.correct_labels`` is ``None``.
     """
-    sample_size = 0
-    if hasattr(inputs, "shape"):
-        # AttributeAccessIssue can be ignored since AttributeError is
-        # implicitly handled by hasattr
-        sample_size = int(inputs.shape[0])  # type: ignore[reportAttributeAccessIssue]
-    else:
-        # If the argument ``inputs`` is not a np.ndarray,
-        # use the standard len() function instead.
-        sample_size = len(inputs)
-
-    if sample_size == 0:
-        msg = (
-            "Cannot measure the size of `inputs`!"
-            + " It seems like the argument `inputs` is empty."
-        )
+    if preds.correct_labels is None:
+        msg = ("The attr `preds.correct_labels` is empty. Correct labels are "
+               + "required to find mislabelled verses.")
         raise ValueError(msg)
 
-    mislabel_books = {}
-    current_book = ""
-    num_book_verses = 0  # number of verses in the current book
-    incorrect_labels = []
-    correct_labels = []
-    num_book_unk = 0  # number of verses labelled as unknown (-1)
-    pred_probas = preds.get_probas()
-    mislab_probas = []
-
-    # count the number of mislabels per verse while counting the number of
-    # verses in each book
-    for i in range(len(preds.predictions)):
-        num_book_verses += 1
-        if current_book != preds.samples[i].book:
-            # if current_book is not empty,
-            # calculate some statistics and print
-            if current_book:
-                num_mislabels = len(mislabel_books[current_book])
-                print(
-                    f">> {current_book}: {num_mislabels} "
-                    + "mislabelled verses, accounting for "
-                    + f"{num_mislabels / num_book_verses:.02f}% out of "
-                    + f"{num_book_verses} verses ({num_book_unk} verses "
-                    + "labelled unknown)"
-                )
-            # update the book-level variables
-            current_book = preds.samples[i].book
-            num_book_verses = 0
-            num_book_unk = 0
-
-        # the following section is triggered both when the above `if` section
-        # is triggered and when it is not triggered but the verse's mislabelled
-        if y_correct[i] != preds.predictions[i]:
-            # print(preds.samples[i].book)
-            # update variables other than book-level ones
-            incorrect_labels.append(preds.predictions[i])
-            correct_labels.append(y_correct[i])
-            mislab_probas.append(pred_probas[i])
-
-            # after updating the variables,
-            # add the mislabelled verse to the mislabel_books dict
-            if preds.samples[i].book not in mislabel_books:
-                mislabel_books.update({current_book: [preds.samples[i]]})
-            else:
-                mislabel_books[current_book].append(preds.samples[i])
-            if preds.predictions[i] == -1:
-                num_book_unk += 1
-
-    if current_book:
-        num_mislabels = len(mislabel_books[current_book])
-        print(
-            f">> {current_book}: {num_mislabels} "
-            + "mislabelled verses, accounting for "
-            + f"{(num_mislabels / num_book_verses) * 100:.02f}% out of "
-            + f"{num_book_verses} verses ({num_book_unk} verses "
-            + "labelled unknown)"
-        )
-
-    # Collate the collected mislabelling results into a Mislabels class instance
-    mislabs = Mislabels(
-        incorrect_labels,
-        correct_labels,
-        [mislab for book in mislabel_books for mislab in mislabel_books[book]],
-        mislab_probas,
-    )
-
-    # Print some stats
-    print(
-        f"Number of mislabelled points out of the total {sample_size} "
-        + f"verses: {len(mislabs)} "
-        + f"({incorrect_labels.count(-1)} labelled as unknown)"
-    )
+    # print some stats about the whole dataset
     print(
         "Local accuracy: "
-        + f"{accuracy_score(y_correct, preds.predictions):.04f}"
+        + f"{accuracy_score(preds.correct_labels, preds.predictions):.04f}"
     )
 
-    return mislabs
+    mislab_books = preds.find_book_mislabels()
+    # Flatten the per-book mislabelled results into a Mislabels class instance
+    mislabelled_preds = []
+    y_correct = []
+    mislabelled_verses = []
+    mislabel_probas = []
+
+    for book in mislab_books:
+        mislabelled_preds.extend(book.predictions)
+        y_correct.extend(book.correct_labels)
+        mislabelled_verses.extend(book.mislabels)
+        mislabel_probas.extend(book.probas)
+
+    if len(mislabelled_preds) > 0:
+        mislabs = Mislabels(
+            mislabelled_preds,
+            y_correct,
+            mislabelled_verses,
+            mislabel_probas,
+        )
+
+        # Print some stats about mislabelled verses
+        print(
+            f"Number of mislabelled points out of the total {len(preds.samples)} "
+            + f"verses: {len(mislabs)} "
+            + f"({mislabelled_preds.count(-1)} labelled as unknown)"
+        )
+
+        return mislabs
+    return None
 
 
 def metricise(
@@ -341,11 +282,10 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
             the requested number of partitions.
     """
     if len(lis) % parts != 0:
-        print(
-            f"NOTE: the number of training samples ({len(lis)}) "
-            + f"is not divisible by {parts}."
-        )
-        print("Resulting split of sub-arrays will be uneven.")
+        msg = (f"NOTE: the number of training samples ({len(lis)}) "
+            + f"is not divisible by {parts}. "
+            + "Resulting split of sub-arrays will be uneven.")
+        logger.info(msg)
 
     if len(lis) < parts:
         msg = f"Cannot divide a list of length {len(lis)} into {parts} parts!"
@@ -362,10 +302,10 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
 
     results = []
     split_start = 0
-    split_end = split_ids[0] - 1
+    split_end = split_ids[0]
     for i in split_ids:
         results.append(lis[split_start : int(split_end)])
-        split_start = i - 1
+        split_start = i
         split_end += separator
     results.append(lis[split_start:])
     return results
@@ -466,14 +406,12 @@ def evaluate_classifier(
     ot_proba_preds = predict_proba(
         clf, ot_test_x, ot_test_y, threshold=threshold
     )
-    ot_mislabels = mislabel_stats(ot_test_x, ot_test_y, ot_proba_preds)
+    ot_mislabels = mislabel_stats(ot_proba_preds)
     print("NT --->")
     nt_proba_preds = predict_proba(
         clf, nt_test_x, nt_test_y, threshold=threshold
     )
-    nt_mislabels = mislabel_stats(
-        nt_test_x, np.array(nt_test_y), nt_proba_preds
-    )
+    nt_mislabels = mislabel_stats(nt_proba_preds)
     print("All --->")
     probas = ot_proba_preds.get_probas()
     probas = np.append(probas, nt_proba_preds.get_probas(), axis=0)
@@ -627,7 +565,7 @@ def cross_validate(
     """
     print("> Cross-Validation <")
     skf_splitter = StratifiedKFold(n_splits=fold)
-    splits = skf_splitter.split(training_x, training_y)
+    splits = skf_splitter.split(training_x, training_y)  # type: ignore[reportArgumentType]
     accs = []
     precs = []
     recs = []

@@ -31,6 +31,7 @@ from typing import Any, Literal, Protocol
 
 import numpy as np
 from numpy.typing import NDArray
+from torch import threshold
 
 from src.classifier.sanitisation_utils import clean_path_str
 
@@ -362,6 +363,28 @@ class FileFormatterProto(Protocol):
         """
 
 
+class BookMislabels:
+    """A container of mislabelled verses in a book.
+
+    Attributes:
+        book: name of the book containing the mislabelled verses.
+        book_num_verses: number of verses in the book.
+        mislabels: a list of mislabelled verses.
+        probas: predicted probabilities of the mislabelled verses
+            belonging to each class.
+    """
+
+    def __init__(self, book: str) -> None:
+        self.book = book
+        # initialise empty lists for mislabelled verses
+        self.book_num_verses: int = 0
+        self.mislabels: list[Verse] = []
+        self.predictions: list[int] = []
+        self.correct_labels: list[int] = []
+        self.probas: list[list[float]] = []
+        self.num_unk: int = 0  # number of verses mislabelled as unknown (-1)
+
+
 class Predictions(Any):
     """A dataclass to hold predictions by some classifier.
 
@@ -476,6 +499,107 @@ class ProbaPredictions(Predictions):
         pc = ac / (aj + ac)
         append_to_dict(current_book, [pj, pc], total_probas)
         return total_probas
+
+    def _is_fully_populated(self) -> bool:
+        """Check if the instance is fully initialised and populated correctly.
+
+        Returns:
+            True if the instance is fully initialised and attrs contain valid
+            values that can be used for furhter calculations.
+
+        Raises:
+            ValueError: If ``self.samples`` is either zero length or does not
+                have a measurable length. Also raises if ``self.correct_labels``
+                is None, or if the lengths of ``self.predictions`` and
+                ``self.corect_labels`` do not match.
+        """
+        sample_size = 0
+        if hasattr(self.samples, "shape"):
+            # AttributeAccessIssue can be ignored since AttributeError is
+            # implicitly handled by hasattr
+            sample_size = int(self.samples.shape[0])  # type: ignore[reportAttributeAccessIssue]
+        else:
+            # If the argument ``inputs`` is not a np.ndarray,
+            # use the standard len() function instead.
+            sample_size = len(self.samples)
+
+        if sample_size == 0:
+            msg = (
+                "Cannot measure the size of the inputs!"
+                + " It seems like `self.samples` is empty."
+            )
+            raise ValueError(msg)
+
+        if len(self.predictions) == 0:
+            msg = "The attr `self.predictions` is empty!"
+            raise ValueError(msg)
+
+        num_correct_y = (None if self.correct_labels is None
+                            else len(self.correct_labels))
+        if (len(self.predictions) != num_correct_y
+            or num_correct_y == 0
+            ):
+            msg = (
+                f"Lengths of `self.predictions` ({len(self.predictions)}) and/or"
+                + f" `self.correct_labels` ({num_correct_y}) are invalid."
+            )
+            raise ValueError(msg)
+        return True
+
+    def find_book_mislabels(self) -> list[BookMislabels]:
+        """Find mislabelled verses in each book, based on the predicted probas.
+
+        Returns:
+            a list of indices of mislabelled verses. if no verse is mislabelled
+            across all books, return an empty list.
+        """
+        results: list[BookMislabels] = []
+        if self._is_fully_populated() and self.correct_labels is not None:
+            mislabel_book: BookMislabels | None = None
+            current_book = ""
+            num_book_verses = 0  # number of verses in the current book
+
+            # count the number of mislabels per verse while counting the number
+            # of verses in each book
+            for i in range(len(self.samples)):
+                num_book_verses += 1
+
+                if current_book != self.samples[i].book:
+                    # if we encounter a new book
+                    # update current_book
+                    current_book = self.samples[i].book
+
+                if mislabel_book is None:
+                    mislabel_book = BookMislabels(current_book)
+
+                # the following section is triggered if the verse's mislabelled
+                if self.correct_labels[i] != self.predictions[i]:
+                    # print(self.samples[i].book)
+                    # update variables other than book-level ones
+                    mislabel_book.predictions.append(self.predictions[i])
+                    mislabel_book.correct_labels.append(self.correct_labels[i])
+                    mislabel_book.probas.append(self._probas[i])
+
+                    # after updating the variables,
+                    # add the mislabelled verse to the mislabel_books
+                    mislabel_book.mislabels.append(self.samples[i])
+
+                if (i == (len(self.samples) - 1)
+                    or (i < (len(self.samples) - 1)
+                        and current_book != self.samples[i+1].book)
+                    ):
+                    # if we reach the end of the list
+                    # or the next book is different
+                    mislabel_book.book_num_verses = num_book_verses
+                    mislabel_book.num_unk = mislabel_book.predictions.count(-1)
+                    if len(mislabel_book.mislabels) > 0:
+                        # register the mislabels from the current book
+                        results.append(mislabel_book)
+                    # reset the book-level variables
+                    num_book_verses = 0
+                    mislabel_book = BookMislabels(current_book)
+            return results
+        return results
 
     def save_to_file(
         self,
