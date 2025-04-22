@@ -157,13 +157,13 @@ def get_book_verses(
 
 
 def load_cal_dataset(
-        src_dir: str = "./",
-        ot_train: dict[str, list[int]] = book_data.ot_train_books,
-        nt_train: dict[str, list[int]] = book_data.nt_train_books,
-        ot_test: dict[str, list[int]] = book_data.ot_test_books,
-        nt_test: dict[str, list[int]] = book_data.nt_test_books,
-        ot_prod: dict[str, list[int]] = book_data.ot_prod_books,
-    ) -> LoadedDataset:
+    src_dir: str = "./",
+    ot_train: dict[str, list[int]] = book_data.ot_train_books,
+    nt_train: dict[str, list[int]] = book_data.nt_train_books,
+    ot_test: dict[str, list[int]] = book_data.ot_test_books,
+    nt_test: dict[str, list[int]] = book_data.nt_test_books,
+    ot_prod: dict[str, list[int]] = book_data.ot_prod_books,
+) -> LoadedDataset:
     """Load CAL dataset from json files into a dictionary.
 
     .. note::
@@ -187,25 +187,15 @@ def load_cal_dataset(
     loaded_data = load_json(target_path)
 
     # get the training data
-    ot_train_verses = get_book_verses(
-        loaded_data, ot_train, trim_none=True
-    )
-    nt_train_verses = get_book_verses(
-        loaded_data, nt_train, trim_none=True
-    )
+    ot_train_verses = get_book_verses(loaded_data, ot_train, trim_none=True)
+    nt_train_verses = get_book_verses(loaded_data, nt_train, trim_none=True)
 
     # get the test data
-    ot_test_verses = get_book_verses(
-        loaded_data, ot_test, trim_none=True
-    )
-    nt_test_verses = get_book_verses(
-        loaded_data, nt_test, trim_none=True
-    )
+    ot_test_verses = get_book_verses(loaded_data, ot_test, trim_none=True)
+    nt_test_verses = get_book_verses(loaded_data, nt_test, trim_none=True)
 
     # get the production data
-    prod_verses = get_book_verses(
-        loaded_data, ot_prod, trim_none=True
-    )
+    prod_verses = get_book_verses(loaded_data, ot_prod, trim_none=True)
     return LoadedDataset(
         ot_train_verses,
         nt_train_verses,

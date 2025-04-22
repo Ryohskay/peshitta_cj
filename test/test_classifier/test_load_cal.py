@@ -1,16 +1,13 @@
-import pytest
-from unittest.mock import MagicMock, patch
-from pathlib import Path
+from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.load_cal import (
     BookData,
-    load_json,
-    verse_in_chapters,
     extract_verse,
     get_book_verses,
     load_cal_dataset,
+    load_json,
+    verse_in_chapters,
 )
 from src.classifier.result_utils import Verse
-from src.classifier.dataset_skeleton import LoadedDataset
 
 
 def test_load_json(cal_book_data_est: BookData):
@@ -23,9 +20,13 @@ def test_load_json(cal_book_data_est: BookData):
     assert len(result[0]["verse_refs"]) == 3
     assert len(result[0]["lemma_annotations"]) == 3
     assert result[0]["book_title"] == cal_book_data_est["book_title"]
-    assert result[0]["lemmatised_verses"] == cal_book_data_est["lemmatised_verses"]
+    assert (
+        result[0]["lemmatised_verses"] == cal_book_data_est["lemmatised_verses"]
+    )
     assert result[0]["verse_refs"] == cal_book_data_est["verse_refs"]
-    assert result[0]["lemma_annotations"] == cal_book_data_est["lemma_annotations"]
+    assert (
+        result[0]["lemma_annotations"] == cal_book_data_est["lemma_annotations"]
+    )
 
 
 def test_verse_in_chapters():
@@ -35,7 +36,9 @@ def test_verse_in_chapters():
     assert not verse_in_chapters("1_Chronicles Chapter 05 Verse 01", [1])
 
 
-def test_extract_verse(cal_book_data_gen: BookData, cal_translits: list[str], cal_annots: list[str]):
+def test_extract_verse(
+    cal_book_data_gen: BookData, cal_translits: list[str], cal_annots: list[str]
+):
     """Test the extract_verse function."""
     verse = extract_verse(cal_book_data_gen, 0)
     assert isinstance(verse, Verse)
@@ -58,17 +61,18 @@ def test_get_book_verses(cal_books_data: list):
 
 def test_load_cal_dataset(cal_books_data: list[BookData]):
     """Test the load_cal_dataset function."""
-
     dataset = load_cal_dataset(
         src_dir="./assets/",
         ot_train={"Genesis": [1]},
         nt_train={"Genesis": [1]},
         ot_test={"Esther": [1]},
-        nt_test={"Esther": [6]}
-        )
+        nt_test={"Esther": [6]},
+    )
 
     assert isinstance(dataset, LoadedDataset)
     assert len(dataset.train.get_samples()) == 0
     assert len(dataset.test.get_samples()) == 2
     assert dataset.test.get_samples()[0].book == "Esther"
-    assert dataset.test.get_samples()[0].reference == "Esther Chapter 01 Verse 01"
+    assert (
+        dataset.test.get_samples()[0].reference == "Esther Chapter 01 Verse 01"
+    )
