@@ -25,12 +25,11 @@
 
 """Utility functions to make predictions with a classifier."""
 
+import logging
 from math import isclose
-from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
-import logging
 
 from src.classifier.result_utils import (
     Predictions,
@@ -43,8 +42,8 @@ logger = logging.getLogger(__name__)
 
 def predict(
         clf: Classifier,
-        test_samples: NDArray | list,
-        test_labels: NDArray
+        test_samples: NDArray | list[Verse],
+        test_labels: NDArray | list[int]
     ) -> Predictions:
     """Predict on the data with a classifier and get some simple statistics.
 

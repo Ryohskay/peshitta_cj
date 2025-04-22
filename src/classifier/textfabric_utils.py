@@ -36,12 +36,11 @@ Thus, by declaring ``import use``, we automatically load objects such as ``F``,
 along with all of its methods.
 """
 
+from tf import app
 
-from tf.app import use
-
-from src.shared import book_data
 from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.result_utils import Verse
+from src.shared import book_data
 
 
 def get_verses(
@@ -64,7 +63,7 @@ def get_verses(
         {"BOOK_TITLE": [list of ("VERSE_REF", [list of words])]}
     """
     # Load text-fabric library
-    handler = use(target_fabric, version=ver)
+    handler = app.use(target_fabric, version=ver)
     api = handler.api
     result_verses = []
 
@@ -79,10 +78,10 @@ def get_verses(
                     # ``target_books``
                     for verse in api.L.d(chapter, otype="verse"):
                         verse_ref = (
-                                    f"{book[1]} Chapter "
-                                    + f"{int(api.F.chapter.v(chapter)):02} "
-                                    + f"Verse {int(api.F.verse.v(verse)):02}"
-                                 )
+                            f"{book[1]} Chapter "
+                            + f"{int(api.F.chapter.v(chapter)):02} "
+                            + f"Verse {int(api.F.verse.v(verse)):02}"
+                        )
                         # get all words in this verse
                         words = api.L.d(verse, otype="word")
                         # transliteration of this verse as a list of words
@@ -92,31 +91,47 @@ def get_verses(
                         # original Syriac text of this verse, as a list of words
                         syriac_verse = [api.F.word.v(w_id) for w_id in words]
                         # append this verse's info to the results list
-                        result_verses.append(Verse(book[1], verse_ref,
-                              translit_verse, syriac_verse,
-                              origin="ETCBC"))
+                        result_verses.append(
+                            Verse(
+                                book[1],
+                                verse_ref,
+                                translit_verse,
+                                syriac_verse,
+                                origin="ETCBC",
+                            )
+                        )
     return result_verses
 
 
-def load_etcbc_dataset() -> LoadedDataset:
+def load_etcbc_dataset(
+    ot_train: dict[str, list[int]] = book_data.ot_train_books,
+    nt_train: dict[str, list[int]] = book_data.nt_train_books,
+    ot_test: dict[str, list[int]] = book_data.ot_test_books,
+    nt_test: dict[str, list[int]] = book_data.nt_test_books,
+    ot_prod: dict[str, list[int]] = book_data.ot_prod_books,
+) -> LoadedDataset:
     """Parse the dataset and get verses.
 
     Returns:
-        a :class:`src.classifier.dataset_skeleton.LoadedDataset` object containing
-        the verses from ETCBC.
+        a :class:`src.classifier.dataset_skeleton.LoadedDataset` object
+        containing the verses from ETCBC.
     """
     # extract verses from the ETCBC dataset
-    ot_train_verses = get_verses(book_data.ot_train_books)
-    ot_test_verses = get_verses(book_data.ot_test_books)
-    ot_prod_verses = get_verses(book_data.ot_prod_books)
+    ot_train_verses = get_verses(ot_train)
+    ot_test_verses = get_verses(ot_test)
+    ot_prod_verses = get_verses(ot_prod)
 
     nt_train_verses = get_verses(
-        book_data.nt_train_books, target_fabric="etcbc/syrnt", ver="0.1"
+        nt_train, target_fabric="etcbc/syrnt", ver="0.1"
     )
     nt_test_verses = get_verses(
-        book_data.nt_test_books, target_fabric="etcbc/syrnt", ver="0.1"
+        nt_test, target_fabric="etcbc/syrnt", ver="0.1"
     )
 
-    return LoadedDataset(ot_train_verses, nt_train_verses,
-                  ot_test_verses, nt_test_verses,
-                  ot_prod_verses)
+    return LoadedDataset(
+        ot_train_verses,
+        nt_train_verses,
+        ot_test_verses,
+        nt_test_verses,
+        ot_prod_verses,
+    )

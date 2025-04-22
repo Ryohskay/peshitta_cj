@@ -29,7 +29,7 @@ from collections import Counter
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import make_vocab
-from src.classifier.inspection_utils import find_top_k_words
+from src.scripts.inspection_utils import find_top_k_words
 from src.classifier.load_cal import load_cal_dataset
 from src.classifier.textfabric_utils import load_etcbc_dataset
 
