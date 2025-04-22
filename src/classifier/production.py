@@ -41,6 +41,9 @@ from src.classifier.prediction_utils import predict_proba
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 def predict_on_prod(
     clf: BoWEstimator,
@@ -58,10 +61,10 @@ def predict_on_prod(
         msg = f"Unknown dataset origin: {base_save_fname.origin}"
         raise ValueError(msg)
 
-    print(">> Training")
+    logger.info(">> Training")
     clf.fit(loaded_ds.train.get_samples(), loaded_ds.train.get_labels())
 
-    print(">> Quick Evaluation")
+    logger.info(">> Quick Evaluation")
     save_fname = base_save_fname.copy()
 
     eval_and_save(
@@ -73,13 +76,17 @@ def predict_on_prod(
         threshold=thresh,
     )
 
-    print(">> Production Data")
-    preds = predict_proba(c_mnb, loaded_ds.production, threshold=thresh)
+    logger.info(">> Production Data")
+    preds = predict_proba(clf, loaded_ds.production, threshold=thresh)
+
     # save the predictions on the production data
     save_proba_fname = save_fname.copy()
     save_proba_fname.mark_special_file(is_prod=True)
     save_dir_p = Path(save_dir)
     savefile_p = save_dir_p / save_proba_fname.get_fname()
+    # write to the save file
+    msg = f"Saving predictions to {savefile_p.resolve()}"
+    logger.info(msg)
     preds.save_to_file(file_formatter, savefile_p)
 
     # Save per-book total probas
@@ -87,6 +94,8 @@ def predict_on_prod(
     save_total_proba_fname = save_fname.copy()
     save_total_proba_fname.mark_special_file(is_prod=True, is_total_proba=True)
     total_proba_save_fp = save_dir_p / save_total_proba_fname.get_fname()
+    msg = f"Saving total probabilities to {total_proba_save_fp.resolve()}"
+    logger.info(msg)
     total_proba_save_fp.write_text(csvify_total_proba(preds.get_total_probas()))
 
 

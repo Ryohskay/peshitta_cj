@@ -5,6 +5,7 @@ import pytest
 from numpy.typing import NDArray
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import MultinomialNB
+from unittest.mock import MagicMock
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import identity
@@ -563,6 +564,14 @@ def mnb_classifier() -> BoWEstimator:
 
 
 @pytest.fixture
+def mock_bow_clf():
+    """Mock BoWEstimator object."""
+    mock_clf = MagicMock(spec=BoWEstimator)
+    mock_clf.fit.return_value = None
+    mock_clf.predict_proba.return_value = [[0.8, 0.2], [0.6, 0.4]]
+    return mock_clf
+
+@pytest.fixture
 def mock_formatter(
     samples: list[Verse] | NDArray[Verse],
     probas: list[list[float]] | NDArray[np.float64],
@@ -573,6 +582,15 @@ def mock_formatter(
         return "A,B,C,D,E"
     # else
     return "A,B,C,D"
+
+@pytest.fixture
+def mock_predict_proba(proba_preds: ProbaPredictions) -> MagicMock:
+    return MagicMock(return_value=proba_preds)
+
+@pytest.fixture
+def mock_eval_and_save():
+    """Mock eval_and_save function."""
+    return MagicMock(return_value=None)
 
 
 # Threshold-related Results
