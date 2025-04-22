@@ -25,10 +25,12 @@
 
 """Utility functions to make predictions with a classifier."""
 
+from math import isclose
 from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
+import logging
 
 from src.classifier.result_utils import (
     Predictions,
@@ -37,6 +39,7 @@ from src.classifier.result_utils import (
 )
 from src.classifier.wrappers import Classifier, ProbaClassifier
 
+logger = logging.getLogger(__name__)
 
 def predict(
         clf: Classifier,
@@ -71,23 +74,46 @@ def convert(probas: NDArray | list[list[float]], thresh: float) -> NDArray:
     Returns:
         0 if prediction for label 0 is over the threshold,
         1 if prediction for label 1 is over the threshold,
-        -1 if probabilities for both labels do not exceed the threshold.
+        -1 if probabilities for no label exceeds the threshold, or if more than
+            one class is have probabilities beyond the threshold.
 
     Raises:
-        ValueError: if neither of the classes score 0.5 probability.
+        ValueError: if the sum of probabilities for a sample is not 1.0.
     """
+    if thresh < 0.5:
+        msg = ("The threshold is below 0.5, which leads to many cases with "
+                + "unknown classification labels since multiple classes"
+                + "can easily have probabilities over the threshold.")
+        logger.warning(msg)
+
     result = np.empty(0, dtype=int)
+    num_classes = len(probas[0])  # number of classes to classify samples into
+
     for i in range(len(probas)):
         probability = probas[i]
-        if probability[0] > thresh:
-            result = np.append(result, 0)
-        elif probability[1] > thresh:
-            result = np.append(result, 1)
-        elif probability[0] != probability[1]:
-            result = np.append(result, -1)
-        else:
+
+        if not isclose(np.sum(probability), 1.0):
+            # raise if the sum of probability is not 1
             msg = f"Something is wrong with the probability at index: {i}!"
             raise ValueError(msg)
+
+        proba_class = -1
+        # flag to detect if the sample at i is already assigned to a class with
+        # a probability exceeding the thresh.
+        already_classified = False
+        for j in range(num_classes):
+            if probability[j] > thresh and already_classified:
+                msg = (f"Probability for the sample at {i} has more than one "
+                        + "class that has probability over the threshold "
+                        + f"{thresh}. This is converted to label unknown (-1).")
+                logger.info(msg)
+                proba_class = -1
+            elif probability[j] > thresh:
+                # if the probability of class j exceeds thresh
+                proba_class = j
+                already_classified = True
+
+        result = np.append(result, proba_class)
     return result
 
 
