@@ -8,6 +8,8 @@ from numpy.typing import NDArray
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import MultinomialNB
 
+from src.classifier.load_cal import BookData
+
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import identity
 from src.classifier.fname_utils import SavefileName
@@ -643,3 +645,37 @@ def cal_base_savefile() -> SavefileName:
 @pytest.fixture
 def etcbc_base_savefile() -> SavefileName:
     return SavefileName(origin="ETCBC", classifier_alias="svc", file_ext="json")
+
+# BookData
+@pytest.fixture
+def cal_book_data_gen() -> BookData:
+    """Mock BookData dictionary."""
+    return {
+        "book_title": "Genesis",
+        "verse_refs": ["Genesis Chapter 01 Verse 01"],
+        "lemmatised_verses": [
+            ["br$yt","br)",")lh)","yt","$my)","w_","yt",")r()"]],
+        "lemma_annotations": [[
+            "noun sg. abs. or construct",
+            "verb G",
+            "noun sg. emphatic",
+            "p01",
+            "noun pl. emphatic",
+            "c",
+            "p01",
+            "noun sg. emphatic"],
+        ],
+    }
+
+@pytest.fixture
+def cal_book_data_est() -> BookData:
+    return {"book_title": "Esther","verse_refs":["Esther Chapter 00 Verse 00", "Esther Chapter 01 Verse 01","Esther Chapter 01 Verse 02"],
+"lemmatised_verses": [["ktb", "d_", ")styr"],["w_", "hwy", "b_", "ywm", "d_", ")x$yr$", "hw", "br", "d_", ")x$yr$", "d_", "mlk", "mn", "hwd", "w_", "(dm)", "l_", "kw$", "(l", "m))", "w_", "(sryn", "mdynh"],["b_", "ywm", "hnwn", "kd", "ytb", "hwy", "mlk", ")x$yr$", "(l", "kwrsy", "d_", "mlkw", "d_", "b_", "$w$n", "byrh"]],
+"lemma_annotations": [["noun sg. emphatic", "p = d_ p --> dy p", "PN Personal name"], 
+["c", "verb G", "p02", "noun pl. emphatic", "p = d_ p --> dy p", "PN Personal name", "P01", "noun sg. emphatic", "p = d_ p --> dy p", "PN Personal name", "c = d_ c --> dy c", "verb C", "p01", "GN Geographic name", "c", "c = (dm) c --> (dm) p", "p03", "GN Geographic name", "p01", "n01 = m)) b --> m)h b", "c", "n01", "noun pl. absolute"],
+["p02", "noun pl. emphatic", "P01", "c", "verb G", "verb G", "noun sg. emphatic", "PN Personal name", "p01", "noun sg. emphatic", "p = d_ p --> dy p", "noun sg. emphatic", "c = d_ c --> dy c", "p02", "GN Geographic name", "noun sg. emphatic"]]
+}
+
+@pytest.fixture
+def cal_books_data(cal_book_data_gen, cal_book_data_est) -> list[BookData]:
+    return [cal_book_data_gen, cal_book_data_est]

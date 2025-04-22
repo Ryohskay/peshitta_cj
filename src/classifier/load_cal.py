@@ -29,14 +29,15 @@ import json
 from pathlib import Path
 from typing import TypedDict
 
-from src.shared import book_data
 from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.result_utils import Verse
 from src.classifier.sanitisation_utils import normalise_book_title
+from src.shared import book_data
 
 
 class BookData(TypedDict):
     """A dictionary representing the data structure in scrapers' CSV files."""
+
     book_title: str
     verse_refs: list[str]
     lemmatised_verses: list[list[str]]
@@ -85,9 +86,8 @@ def verse_in_chapters(verse_ref: str, chapters: list[int]) -> bool:
 
 
 def extract_verse(
-        book_dict: BookData, verse_idx: int,
-        *, trim_none: bool = False
-    ) -> Verse:
+    book_dict: BookData, verse_idx: int, *, trim_none: bool = False
+) -> Verse:
     """Extract Verse objects from the book_dict dictionaries.
 
     Returns:
@@ -115,15 +115,21 @@ def extract_verse(
                 # we don't need them so skip appending lemma and annots
                 continue
 
-    return Verse(book_dict["book_title"],
-            refs, lemmata,
-            words_annotations=lemma_annots, origin="CAL")
+    return Verse(
+        book_dict["book_title"],
+        refs,
+        lemmata,
+        words_annotations=lemma_annots,
+        origin="CAL",
+    )
 
 
 def get_book_verses(
-        jso_lis: list[BookData], target_books: dict[str, list[int]],
-        *, trim_none: bool = False
-    ) -> list[Verse]:
+    jso_lis: list[BookData],
+    target_books: dict[str, list[int]],
+    *,
+    trim_none: bool = False,
+) -> list[Verse]:
     """Get all books in the dict format and return a list of ``Verse``.
 
     This function checks if each verse in the listed books is target for
@@ -141,18 +147,22 @@ def get_book_verses(
             # print(book["book_title"])
             for i in range(len(book["lemmatised_verses"])):
                 # one verse
-                if (verse_in_chapters(
-                        book["verse_refs"][i],
-                        target_books[book["book_title"]]
-                    )):
+                if verse_in_chapters(
+                    book["verse_refs"][i], target_books[book["book_title"]]
+                ):
                     verse_box.append(
-                            extract_verse(book, i, trim_none=trim_none)
-                            )
+                        extract_verse(book, i, trim_none=trim_none)
+                    )
     return verse_box
 
 
 def load_cal_dataset(
-        src_dir: str = "./"
+        src_dir: str = "./",
+        ot_train: dict[str, list[int]] = book_data.ot_train_books,
+        nt_train: dict[str, list[int]] = book_data.nt_train_books,
+        ot_test: dict[str, list[int]] = book_data.ot_test_books,
+        nt_test: dict[str, list[int]] = book_data.nt_test_books,
+        ot_prod: dict[str, list[int]] = book_data.ot_prod_books,
     ) -> LoadedDataset:
     """Load CAL dataset from json files into a dictionary.
 
@@ -178,26 +188,31 @@ def load_cal_dataset(
 
     # get the training data
     ot_train_verses = get_book_verses(
-        loaded_data, book_data.ot_train_books, trim_none=True
+        loaded_data, ot_train, trim_none=True
     )
     nt_train_verses = get_book_verses(
-        loaded_data, book_data.nt_train_books, trim_none=True
+        loaded_data, nt_train, trim_none=True
     )
 
     # get the test data
     ot_test_verses = get_book_verses(
-        loaded_data, book_data.ot_test_books, trim_none=True
+        loaded_data, ot_test, trim_none=True
     )
     nt_test_verses = get_book_verses(
-        loaded_data, book_data.nt_test_books, trim_none=True
+        loaded_data, nt_test, trim_none=True
     )
 
     # get the production data
     prod_verses = get_book_verses(
-                    loaded_data, book_data.ot_prod_books, trim_none=True
-                    )
-    return LoadedDataset(ot_train_verses, nt_train_verses,
-                                ot_test_verses, nt_test_verses, prod_verses)
+        loaded_data, ot_prod, trim_none=True
+    )
+    return LoadedDataset(
+        ot_train_verses,
+        nt_train_verses,
+        ot_test_verses,
+        nt_test_verses,
+        prod_verses,
+    )
 
 
 if __name__ == "__main__":

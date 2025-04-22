@@ -1,0 +1,18 @@
+{"book_title": "Esther",
+"verse_refs":["Esther Chapter 00 Verse 00", "Esther Chapter 01 Verse 01",
+"Esther Chapter 01 Verse 02"],
+"verse_urls": ["https://cal.huc.edu/get_a_chapter.php?file=620340000&cset=Latin", 
+"https://cal.huc.edu/get_a_chapter.php?file=620340101&cset=Latin",
+"https://cal.huc.edu/get_a_chapter.php?file=620340102&cset=Latin"],
+"raw_text_verses": [
+    ["ktb)", "d)styr"],
+    ["wh_w)", "byw:mwhy", "d)x$yr$", "h.w", "brh", "d)x$yr$", "d)mlk", "mn", "hwd,", "w(dm)", "lkw$,", "(l", "m:))", "w(sr:yn", "md:ynn,"],
+    ["byw:mt_)", "h.nwn,", "kd", "y.t_b", "hw)", "mlk)", ")x$yr$", "(l", "k.wrsy)", "dmlkwth;", "db$w$n", "byr.t),"]
+    ],
+"lemmatised_verses": [
+    ["ktb", "d_", ")styr"],
+    ["w_", "hwy", "b_", "ywm", "d_", ")x$yr$", "hw", "br", "d_", ")x$yr$", "d_", "mlk", "mn", "hwd", "w_", "(dm)", "l_", "kw$", "(l", "m))", "w_", "(sryn", "mdynh"],
+    ["b_", "ywm", "hnwn", "kd", "ytb", "hwy", "mlk", ")x$yr$", "(l", "kwrsy", "d_", "mlkw", "d_", "b_", "$w$n", "byrh"]],
+"lemma_annotations": [["noun sg. emphatic", "p = d_ p --> dy p", "PN Personal name"], 
+["c", "verb G", "p02", "noun pl. emphatic", "p = d_ p --> dy p", "PN Personal name", "P01", "noun sg. emphatic", "p = d_ p --> dy p", "PN Personal name", "c = d_ c --> dy c", "verb C", "p01", "GN Geographic name", "c", "c = (dm) c --> (dm) p", "p03", "GN Geographic name", "p01", "n01 = m)) b --> m)h b", "c", "n01", "noun pl. absolute"],
+["p02", "noun pl. emphatic", "P01", "c", "verb G", "verb G", "noun sg. emphatic", "PN Personal name", "p01", "noun sg. emphatic", "p = d_ p --> dy p", "noun sg. emphatic", "c = d_ c --> dy c", "p02", "GN Geographic name", "noun sg. emphatic"]]}
