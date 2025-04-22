@@ -1,24 +1,29 @@
-import pytest
-from unittest.mock import MagicMock, patch
 from pathlib import Path
+from typing import Any
+
+from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.fname_utils import SavefileName
 from src.classifier.production import predict_on_prod
 from src.classifier.wrappers import BoWEstimator
-from src.classifier.fname_utils import SavefileName
-from src.classifier.dataset_skeleton import LoadedDataset
+
 
 def test_predict_on_prod(
-    monkeypatch,
-    mock_eval_and_save,
-    mock_predict_proba,
-    mnb_classifier,
-    loaded_etcbc,
+    monkeypatch: Any,
+    mock_eval_and_save:Any,
+    mock_predict_proba: Any,
+    mnb_classifier: BoWEstimator,
+    loaded_etcbc: LoadedDataset,
     etcbc_base_savefile: SavefileName,
-    tmp_path: Path
+    tmp_path: Path,
 ):
     """Test the predict_on_prod function."""
     # Mock the behaviour of predict_proba
-    monkeypatch.setattr("src.classifier.prediction_utils.predict_proba", mock_predict_proba)
-    monkeypatch.setattr("src.classifier.production.eval_and_save", mock_eval_and_save)
+    monkeypatch.setattr(
+        "src.classifier.prediction_utils.predict_proba", mock_predict_proba
+    )
+    monkeypatch.setattr(
+        "src.classifier.production.eval_and_save", mock_eval_and_save
+    )
 
     # Call the function
     predict_on_prod(

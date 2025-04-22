@@ -23,6 +23,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import logging
 from pathlib import Path
 
 from sklearn.naive_bayes import MultinomialNB
@@ -41,9 +42,8 @@ from src.classifier.prediction_utils import predict_proba
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 
-import logging
-
 logger = logging.getLogger(__name__)
+
 
 def predict_on_prod(
     clf: BoWEstimator,

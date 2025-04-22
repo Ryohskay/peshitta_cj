@@ -40,11 +40,12 @@ from src.classifier.wrappers import Classifier, ProbaClassifier
 
 logger = logging.getLogger(__name__)
 
+
 def predict(
-        clf: Classifier,
-        test_samples: NDArray | list[Verse],
-        test_labels: NDArray | list[int]
-    ) -> Predictions:
+    clf: Classifier,
+    test_samples: NDArray | list[Verse],
+    test_labels: NDArray | list[int],
+) -> Predictions:
     """Predict on the data with a classifier and get some simple statistics.
 
     Args:
@@ -58,8 +59,7 @@ def predict(
         A :class:`Prediction` class instance.
     """
     y_pred = clf.predict(test_samples)
-    return Predictions(test_samples, y_pred,
-                test_labels)
+    return Predictions(test_samples, y_pred, test_labels)
 
 
 def convert(probas: NDArray | list[list[float]], thresh: float) -> NDArray:
@@ -80,9 +80,11 @@ def convert(probas: NDArray | list[list[float]], thresh: float) -> NDArray:
         ValueError: if the sum of probabilities for a sample is not 1.0.
     """
     if thresh < 0.5:
-        msg = ("The threshold is below 0.5, which leads to many cases with "
-                + "unknown classification labels since multiple classes"
-                + "can easily have probabilities over the threshold.")
+        msg = (
+            "The threshold is below 0.5, which leads to many cases with "
+            + "unknown classification labels since multiple classes"
+            + "can easily have probabilities over the threshold."
+        )
         logger.warning(msg)
 
     result = np.empty(0, dtype=int)
@@ -102,9 +104,11 @@ def convert(probas: NDArray | list[list[float]], thresh: float) -> NDArray:
         already_classified = False
         for j in range(num_classes):
             if probability[j] > thresh and already_classified:
-                msg = (f"Probability for the sample at {i} has more than one "
-                        + "class that has probability over the threshold "
-                        + f"{thresh}. This is converted to label unknown (-1).")
+                msg = (
+                    f"Probability for the sample at {i} has more than one "
+                    + "class that has probability over the threshold "
+                    + f"{thresh}. This is converted to label unknown (-1)."
+                )
                 logger.info(msg)
                 proba_class = -1
             elif probability[j] > thresh:
@@ -117,12 +121,12 @@ def convert(probas: NDArray | list[list[float]], thresh: float) -> NDArray:
 
 
 def predict_proba(
-        clf: ProbaClassifier,
-        test_x: NDArray | list[Verse],
-        test_y: NDArray | list[int] | None = None,
-        *,
-        threshold: float = 0.5,
-    ) -> ProbaPredictions:
+    clf: ProbaClassifier,
+    test_x: NDArray | list[Verse],
+    test_y: NDArray | list[int] | None = None,
+    *,
+    threshold: float = 0.5,
+) -> ProbaPredictions:
     """Predict on the data with the classifier and return the probabilities.
 
     Args:

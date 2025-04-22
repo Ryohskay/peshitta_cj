@@ -1,11 +1,12 @@
 """pytest.fixture objects to reuse among tests"""
 
+from unittest.mock import MagicMock
+
 import numpy as np
 import pytest
 from numpy.typing import NDArray
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import MultinomialNB
-from unittest.mock import MagicMock
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.fitting_utils import identity
@@ -571,6 +572,7 @@ def mock_bow_clf():
     mock_clf.predict_proba.return_value = [[0.8, 0.2], [0.6, 0.4]]
     return mock_clf
 
+
 @pytest.fixture
 def mock_formatter(
     samples: list[Verse] | NDArray[Verse],
@@ -583,9 +585,11 @@ def mock_formatter(
     # else
     return "A,B,C,D"
 
+
 @pytest.fixture
 def mock_predict_proba(proba_preds: ProbaPredictions) -> MagicMock:
     return MagicMock(return_value=proba_preds)
+
 
 @pytest.fixture
 def mock_eval_and_save():
@@ -597,28 +601,29 @@ def mock_eval_and_save():
 @pytest.fixture
 def thresh_stats_1() -> ThresholdStats:
     return ThresholdStats(
-            threshold=0.6,
-            accuracy=0.85,
-            precision=[0.7, 0.8],
-            recall=[0.6, 0.7],
-            f_beta=[0.65, 0.75],
-        )
+        threshold=0.6,
+        accuracy=0.85,
+        precision=[0.7, 0.8],
+        recall=[0.6, 0.7],
+        f_beta=[0.65, 0.75],
+    )
+
 
 @pytest.fixture
 def thresh_stats_2() -> ThresholdStats:
     return ThresholdStats(
-            threshold=0.5,
-            accuracy=0.9,
-            precision=[0.8, 0.9],
-            recall=[0.1, 0.8],
-            f_beta=[0.75, 0.85],
-        )
+        threshold=0.5,
+        accuracy=0.9,
+        precision=[0.8, 0.9],
+        recall=[0.1, 0.8],
+        f_beta=[0.75, 0.85],
+    )
+
 
 @pytest.fixture
 def result_stats_1(
-        thresh_stats_1: ThresholdStats,
-        thresh_stats_2: ThresholdStats
-    ) -> ResultStats:
+    thresh_stats_1: ThresholdStats, thresh_stats_2: ThresholdStats
+) -> ResultStats:
     stats = ResultStats(
         supports=[50, 30],
         log_loss=[0.2, 0.3],
@@ -632,12 +637,9 @@ def result_stats_1(
 # SavefileName
 @pytest.fixture
 def cal_base_savefile() -> SavefileName:
-    return SavefileName(
-            origin="CAL", classifier_alias="mnb", file_ext="csv"
-        )
+    return SavefileName(origin="CAL", classifier_alias="mnb", file_ext="csv")
+
 
 @pytest.fixture
 def etcbc_base_savefile() -> SavefileName:
-    return SavefileName(
-        origin="ETCBC", classifier_alias="svc", file_ext="json"
-    )
+    return SavefileName(origin="ETCBC", classifier_alias="svc", file_ext="json")
