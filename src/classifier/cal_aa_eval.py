@@ -119,8 +119,8 @@ def remove_enclitics(vrs: Verse) -> Verse | None:
     vrs_annots = []
 
     for i in range(len(vrs.words)):
-        matches = re.search(r"p\d\d|c", vrs.words[i].annots)
-        if matches is not None:
+        matches = re.search(r"^p\d\d$|^c$", vrs.words[i].annots)
+        if matches is None:
             vrs_lemmata.append(vrs.words[i].translit)
             vrs_annots.append(vrs.words[i].annots)
     if len(vrs_lemmata) != 0:
@@ -139,9 +139,8 @@ def remove_proper_nouns(vrs: Verse) -> Verse | None:
     """Remove proper nouns from the verse.
 
     Returns:
-        Similar to  list of tuples, each containing verse reference,
-        lemmata from the verse, annotations for each lemma,
-        but without proper nouns and their annotations.
+        a :class:`src.classifier.load_cal.Verse` object without the proper nouns
+        or ``None`` if all words are proper nouns.
 
     .. seealso:
         :func:`src.classifier.aa_cal_consistent.remove_proclitic_ubs`
@@ -149,6 +148,7 @@ def remove_proper_nouns(vrs: Verse) -> Verse | None:
     """
     vrs_lemmata = []
     vrs_annots = []
+    vrs_syriac = []
     # for each word in the verse
     for i in range(len(vrs)):
         # look for PN or GN in annots
@@ -158,11 +158,13 @@ def remove_proper_nouns(vrs: Verse) -> Verse | None:
             # include the lemma in the training set
             vrs_lemmata.append(vrs.words[i].translit)
             vrs_annots.append(vrs.words[i].annots)
+            vrs_syriac.append(vrs.words[i].syriac)
     if len(vrs_lemmata) > 0:
         return Verse(
             vrs.book,
             vrs.reference,
             vrs_lemmata,
+            vrs_syriac,
             words_annotations=vrs_annots,
             origin="CAL",
         )

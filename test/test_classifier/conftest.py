@@ -237,20 +237,20 @@ def cal_romans_verse() -> Verse:
         "Romans",
         "Romans Chapter 01 Verse 01",
         [
-            "p.awlAws",
-            "(ab_d.A)",
-            "d",
-            "ye$w_(",
-            "m$yixA)",
-            "qaryA)",
-            "w",
-            "a$lyixA)",
-            "d",
-            "e)t_p.re$",
-            "l",
-            "e)wang.elyiAwn",
-            "d",
-            "a)lAhA)",
+            "pwlws",
+            "(bd",
+            "d_",
+            "y$w(",
+            "m$yx",
+            "qry",
+            "w_",
+            "$lyx",
+            "d_",
+            "pr$",
+            "l_",
+            ")wnglywn",
+            "d_",
+            ")lh",
         ],
         syriac_words=[
             "ܦܿܰܘܠܳܘܣ",
@@ -549,6 +549,21 @@ def loaded_etcbc(
         [full_data_verse],
     )
 
+@pytest.fixture
+def loaded_cal(
+    cal_verse: Verse,
+    cal_one_word_verse: Verse,
+    cal_romans_verse: Verse,
+    full_data_verse: Verse,
+) -> LoadedDataset:
+    """Return a LoadedDataset object with CAL data."""
+    return LoadedDataset(
+        [cal_verse, cal_one_word_verse],
+        [cal_romans_verse],
+        [cal_verse],
+        [cal_romans_verse],
+        [full_data_verse],
+    )
 
 # Classifier
 @pytest.fixture

@@ -116,7 +116,10 @@ def parse_fname(fname: str) -> SavefileName:
         save_fname.mark_special_file(is_mislabel=True)
     elif "total" in parts and parts[(parts.index("total") + 1)] == "proba":
         save_fname.mark_special_file(is_prod=is_prod, is_total_proba=True)
-    elif "classifier" in parts and parts[(parts.index("classifier") + 1)] == "stats":
+    elif (
+        "classifier" in parts
+        and parts[(parts.index("classifier") + 1)] == "stats"
+    ):
         save_fname.mark_special_file(is_prod=is_prod, is_clf_summary=True)
     # check for extra options
     extra_opts = []
