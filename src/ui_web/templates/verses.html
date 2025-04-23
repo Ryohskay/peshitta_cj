@@ -1,14 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for verse in verses %}
-        <div class="border-3">
-            <p lang="syc-Syre" translate="no">
-                <!-- Classical Syriac text in Estrangelo script. -->
-                {{ " ".join(verse.get_syriac_words()) }}
-            </p>
-            <p>
-                {{ verse.reference }}
-            </p>
-        </div>
+    <p>
+        Classifier Info:
+        <a href="{{ url_for('get_classifier', name=results.config.name, origin=results.config.origin, is_n_gram=results.config.is_n_gram, n=results.config.n, is_bow=results.config.is_bow, is_char_level=results.config.is_char_level, extra_opts=results.config.extra_opts) }}">
+            {{ results.config.name }}
+        </a>
+    </p>
+    {% for book_verses in results.get_book_verses() %}
+        <h2>Book: {{ book_verses["book_name"] }}</h2>
+        {% for i in len(book_verses["verses"]) %}
+            <div class="border-3">
+                <p>Verse</p>
+                <p dir="rtl" lang="syc-Syre" translate="no">
+                    <!-- Classical Syriac text in Estrangelo script. -->
+                    {{ " ".join(book_verses["verses"][i].get_syriac_words()) }}
+                </p>
+                <p>
+                    {{ book_verses["verses"][i].reference }}
+                </p>
+            </div>
+        {% endfor %}
     {% endfor %}
 {% endblock %}

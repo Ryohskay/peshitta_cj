@@ -112,3 +112,16 @@ class TestResultFilesIndex:
             assert file.origin == config.origin
             assert file.classifier == config.name
             assert file.n == config.n
+
+        # check if it works with files containing extra options
+        config = ClassifierConfig(
+            name="mnb",
+            origin="ETCBC",
+            is_n_gram=True,
+            n=3,
+            is_bow=True,
+            is_char_level=True,
+            extra_opts=[FnameExtraOpts.REMOVE_DIACRITICS],
+        )
+        matched_files = index.match_files_by_config(config)
+        assert len(matched_files) == 3

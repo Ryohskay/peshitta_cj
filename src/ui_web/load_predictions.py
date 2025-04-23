@@ -1,12 +1,14 @@
 """Load predictions from CSV files."""
 
 import csv
+import logging
 from pathlib import Path
 from typing import TypedDict
 
 from src.classifier.fname_utils import SavefileName
 from src.classifier.result_utils import Verse
 
+logger = logging.getLogger(__name__)
 
 class BookVerses(TypedDict):
     """A dict to represent the link between verses and a book."""
@@ -41,6 +43,7 @@ def load_preds(
     parsed_books = []
     books: list[BookVerses] = []
 
+    print(f"Loading predictions from {fname_p}")
     with fname_p.open(newline="") as csvfile:
         read_data = csv.reader(csvfile)
         first_row = True
@@ -74,8 +77,8 @@ def load_preds(
             if current_book != row[0]:
                 # when we discover a new book
                 current_book = row[0]
-
-            print(f"(Ref: {row[1]}) OT > {row[2]} NT > {row[3]} [{row[4]}]")
+            log_msg = f"(Ref: {row[1]}) OT > {row[2]} NT > {row[3]} [{row[4]}]"
+            logger.info(log_msg)
             probas.append([float(row[2]), float(row[3])])
 
             # initialise the Verse instance based on the data origin
@@ -93,6 +96,14 @@ def load_preds(
                         origin=data_origin,
                     )
                 )
+        # when we finish parsing the last book
+        books.append(
+            {
+                "book_name": current_book,
+                "verses": verses,
+                "verse_probas": probas,
+            }
+        )
     return books
 
 

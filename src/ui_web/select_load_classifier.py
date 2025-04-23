@@ -10,7 +10,7 @@ from src.classifier.fname_utils import FnameExtraOpts, SavefileName, _sanitise
 from src.classifier.result_utils import ResultStats
 from src.shared import label_data
 from src.ui_web.load_book_probas import BookProbas, load_book_probas
-from src.ui_web.load_clf_stats import load_clf_stats
+from src.ui_web.load_clf_stats import JsonifiedSummaryDict, load_clf_stats
 from src.ui_web.load_predictions import BookVerses, load_preds
 
 logger = logging.getLogger(__name__)
@@ -82,7 +82,8 @@ def parse_fname(fname: str) -> SavefileName:
     # split the filename into parts
     parts = fname_stem.split("_")
     # check if the file is for production data
-    print(f"Parsing file name from: {parts}")
+    msg = f"Parsing file name from: {parts}"
+    logger.debug(msg)
     is_prod = False
     if parts[0].upper() == "PRODUCTION":
         is_prod = True
@@ -202,18 +203,30 @@ class ClassifierResultsModel:
     def __init__(
         self,
         config: ClassifierConfig,
+        result_index: ResultFilesIndex,
         load_dir: str | Path = "./src/classifier/out/",
     ) -> None:
         self.config: ClassifierConfig = config
+        self.index: ResultFilesIndex = result_index
         self.load_dir: Path = Path(load_dir)
         # initialise empty attributes
-        self.files: list[Path] = []
+        self._is_loaded: bool = False
+        self.files: list[SavefileName] = []
         self.book_probas: BookProbas | None = None
-        self.book_verses: list[BookVerses] | None = None
-        self.result_stats: list[ResultStats] = []
+        self.book_verses: list[BookVerses] = []
+        self.results_summary: JsonifiedSummaryDict | None = None
 
-    def load_results(self, save_files: list[SavefileName]) -> None:
+    def update_index(self, file_index: ResultFilesIndex) -> None:
+        """Update the index of files."""
+        self.index = file_index
+        # re-load the results
+        self.load_results()
+
+    def load_results(self) -> None:
         """A utility to load data into the model."""
+        save_files = self.index.match_files_by_config(self.config)
+        msg = f"Filtering from: {[f.get_fname() for f in save_files]}"
+        print(msg)
         for file in save_files:
             if file.is_mislabel:
                 # skip the file(s) for inspecting mislabelled instances
@@ -224,7 +237,27 @@ class ClassifierResultsModel:
             elif file.is_clf_summary:
                 # load ResultStats from the summary (``classifier_stats``) json
                 # file(s)
-                load_clf_stats(file)
+                self.results_summary = load_clf_stats(file)
             else:
                 # if the file is a normal CSV listing verses and their probas
-                self.book_verses = load_preds(file, self.load_dir)
+                self.book_verses.extend(load_preds(file, self.load_dir))
+            self.files.append(file)
+        print(self.book_verses)
+        # set the loaded flag to True
+        self._is_loaded = True
+
+    def _verify_load(self) -> None:
+        """Verify that the data is loaded into the model.
+
+        Raises:
+            ValueError: if the data is not yet loaded.
+        """
+        if not self._is_loaded:
+            msg = "Data not loaded. Call `load_results()` first."
+            raise ValueError(msg)
+
+    def get_book_verses(self) -> list[BookVerses]:
+        """Get the book probas."""
+        if not self._is_loaded:
+            self.load_results()
+        return self.book_verses

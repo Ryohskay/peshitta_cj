@@ -14,8 +14,8 @@ class FnameExtraOpts(Enum):
 
     REMOVE_DIACRITICS = "_no_diacritics"
     REMOVE_PROPN = "_no_propn"
-    REMOVE_FROM_BOTH = "_both_removed"  # removed from both train and test sets
     REMOVE_UNDERSCORES = "_no_uscore"
+    REMOVE_FROM_BOTH = "_both_removed"  # removed from both train and test sets
     # erroneous data which should not be taken seriously
     IS_ERRONEOUS = "_ERRONEOUS"
 

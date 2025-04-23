@@ -274,7 +274,7 @@ def plot_charts(  # noqa: PLR0913
     cm_display = ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
     cm_display.plot()
     save_dest = (
-        save_fname_p
+        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_cm" + save_fname_p.suffix)
         if save_fname_p is not None
         else f"{out_dir}/confusion_matrix.jpeg"
     )
@@ -289,7 +289,7 @@ def plot_charts(  # noqa: PLR0913
     )
     pr_display.plot()
     save_dest = (
-        save_fname_p
+        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_cm" + save_fname_p.suffix)
         if save_fname_p is not None
         else f"{out_dir}/confusion_matrix.jpeg"
     )
@@ -305,7 +305,7 @@ def plot_charts(  # noqa: PLR0913
     )
     roc_display.plot()
     save_dest = (
-        save_fname_p
+        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_roc" + save_fname_p.suffix)
         if save_fname_p is not None
         else f"{out_dir}/confusion_matrix.jpeg"
     )
@@ -440,7 +440,7 @@ def evaluate_classifier(
     clf: BoWEstimator,
     test_ds: DataSplit,
     *,
-    plot: bool = False,
+    plot: bool = True,
     threshold: float = 0.5,
 ) -> tuple[
     ProbaPredictions, ProbaPredictions, Mislabels, Mislabels, ResultStats
