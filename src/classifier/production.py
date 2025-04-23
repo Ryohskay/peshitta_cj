@@ -113,6 +113,7 @@ if __name__ == "__main__":
     c_mnb_fname = SavefileName("ETCBC", "mnb")
     print(f"{c_mnb_fname.origin}")
     c_mnb_fname.set_ngram_opts(n=c_mnb.n)
+    c_mnb_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
     predict_on_prod(c_mnb, etcbc_loaded, c_mnb_fname, thresh=thresh)
 
     print("> Character unigram classifier")

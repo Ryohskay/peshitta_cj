@@ -1,16 +1,21 @@
-from src.classifier.fname_utils import SavefileName, FnameExtraOpts
-from typing import Iterable, Literal, TypedDict
 import re
+from collections.abc import Iterable
+from dataclasses import Field, dataclass, field, fields
 from pathlib import Path
+from typing import Literal
+
+from src.classifier.fname_utils import FnameExtraOpts, SavefileName, _sanitise
+from src.classifier.result_utils import ResultStats
+from src.shared import label_data
 from src.ui_web.load_book_probas import BookProbas, load_book_probas
-from src.ui_web.load_predictions import load_preds, BookVerses
-from src.classifier.result_utils import ResultStats, Verse, ThresholdStats
-from dataclasses import dataclass, fields, field, Field
 from src.ui_web.load_clf_stats import load_clf_stats
+from src.ui_web.load_predictions import BookVerses, load_preds
+
 
 @dataclass
 class ClassifierConfig:
     """Configuration for the classifier."""
+
     name: str = ""
     origin: Literal["CAL", "ETCBC"] = "CAL"
     # n-gram options
@@ -24,7 +29,7 @@ class ClassifierConfig:
         """Returns the specs of fields."""
         return fields(self)
 
-    def get_keys(self, attr_type: type | None=None) -> list[str]:
+    def get_keys(self, attr_type: type | None = None) -> list[str]:
         """Returns the names of fields.
 
         Args:
@@ -36,24 +41,43 @@ class ClassifierConfig:
         # else
         return [f.name for f in self.fields() if f.type == attr_type]
 
+
 def configure_fname_opts(
-        save_fname: SavefileName,
-        configs: ClassifierConfig,
-    ) -> SavefileName:
+    save_fname: SavefileName,
+    configs: ClassifierConfig,
+) -> SavefileName:
     """Configure the filename options for the classifier."""
-    save_fname.set_ngram_opts(n = configs.n,
-                                is_n_gram = configs.is_n_gram,
-                                is_bow = configs.is_bow,
-                                is_char_level = configs.is_char_level)
-    if configs.extra_opts is not None:
+    save_fname.set_ngram_opts(
+        n=configs.n,
+        is_n_gram=configs.is_n_gram,
+        is_bow=configs.is_bow,
+        is_char_level=configs.is_char_level,
+    )
+    if configs.extra_opts is not None and len(configs.extra_opts) > 0:
         save_fname.add_extra_opts(configs.extra_opts)
     return save_fname
 
 
 def parse_fname(fname: str) -> SavefileName:
-    """Parse a file name and extract the classifier data file options."""
+    """Parse a file name and extract the classifier data file options.
+
+    Raises:
+        ValueError: if the file name is empty or does not contain a
+            file extension.
+    """
+    fname = fname.strip()
+    if not fname:
+        msg = "Empty file name"
+        raise ValueError(msg)
+    # get the file extension
+    fname_sections = fname.split(".")
+    if len(fname_sections) < 2:
+        msg = f"Missing file extension in: {fname}"
+        raise ValueError(msg)
+    fname_stem = _sanitise(fname_sections[0])
+    f_ext = fname_sections[1]
     # split the filename into parts
-    parts = fname.split("_")
+    parts = fname_stem.split("_")
     # check if the file is for production data
     is_prod = False
     if parts[0] == "PRODUCTION":
@@ -61,30 +85,38 @@ def parse_fname(fname: str) -> SavefileName:
         # remove the first word and continue parsing
         parts = parts[1:]
     # extract the origin and classifier alias
-    origin = parts[0]
+    origin = parts[0].upper()
     if origin not in {"CAL", "ETCBC"}:
         msg = f"Unknown data origin: {origin}"
         raise ValueError(msg)
     classifier_alias = parts[1]
     # initialise the save file name
-    save_fname = SavefileName(origin, classifier_alias)  # type: ignore[reportArgumentType]
+    save_fname = SavefileName(origin, classifier_alias, f_ext)  # type: ignore[reportArgumentType]
     # check if the file is for a n-gram classifier
-    is_n_gram = (re.search(r"\dgram", fname) is not None)
+    is_n_gram = re.search(r"\dgram", fname) is not None
     if is_n_gram:
         # find the n-gram options
-        is_char_level = (parts[2] == "char")
+        is_char_level = parts[2] == "char"
         n = parts[3].replace("gram", "")
-        is_bow = (parts[4] == "bow")
+        is_bow = parts[4] == "bow"
         # set the n-gram options
-        save_fname.set_ngram_opts(n=int(n), is_n_gram=is_n_gram,
-                                    is_char_level=is_char_level,
-                                    is_bow=is_bow)
+        save_fname.set_ngram_opts(
+            n=int(n),
+            is_n_gram=is_n_gram,
+            is_char_level=is_char_level,
+            is_bow=is_bow,
+        )
+    # check if it contains scope name
+    for scope in label_data.LabelToVal:
+        if scope.lower() in parts:
+            save_fname.set_scope(scope)
+            break
     # check if it is a special file
-    if "_mislabels" in parts:
-        save_fname.mark_special_file(is_prod=is_prod, is_mislabel=True)
-    elif "_total_proba" in parts:
+    if "mislabels" in parts:
+        save_fname.mark_special_file(is_mislabel=True)
+    elif "total" in parts and parts[(parts.index("total") + 1)] == "proba":
         save_fname.mark_special_file(is_prod=is_prod, is_total_proba=True)
-    elif "_classifier_stats" in parts:
+    elif "classifier" in parts and parts[(parts.index("classifier") + 1)] == "stats":
         save_fname.mark_special_file(is_prod=is_prod, is_clf_summary=True)
     # check for extra options
     extra_opts = []
@@ -104,11 +136,11 @@ def parse_fname(fname: str) -> SavefileName:
 # TODO (essential): create a file index to enable data retrieval for a
 # particular classifier's results by matching the classifier configurations
 
+
 class ResultFilesIndex:
     """A class to represent the index of classifier result files."""
 
-    def __init__(self,
-                load_dir: str | Path = "./src/classifier/out/"):
+    def __init__(self, load_dir: str | Path = "./src/classifier/out/"):
         self.load_dir: Path = Path(load_dir)
         self.files: list[SavefileName] = []
         self.file_paths: list[Path] = []
@@ -125,9 +157,9 @@ class ResultFilesIndex:
         """Returns the number of files in the index."""
         return len(self.files)
 
-    def match_files_by_config(self,
-                        config: ClassifierConfig
-                    ) -> list[SavefileName]:
+    def match_files_by_config(
+        self, config: ClassifierConfig
+    ) -> list[SavefileName]:
         """Match the file(s) in the index by the classifier configuration.
 
         Returns:
@@ -150,6 +182,7 @@ class ResultFilesIndex:
 # (a model for loading data to be controlled by the Flask view functions
 # = contain data to be listed on one HTML page)
 
+
 class ClassifierResultsModel:
     """A class to represent the classifier results.
 
@@ -157,10 +190,11 @@ class ClassifierResultsModel:
     although in this case we deal with raw text files instead of DBs.
     """
 
-    def __init__(self,
-                config: ClassifierConfig,
-                load_dir: str | Path = "./src/classifier/out/"
-            ) -> None:
+    def __init__(
+        self,
+        config: ClassifierConfig,
+        load_dir: str | Path = "./src/classifier/out/",
+    ) -> None:
         self.config: ClassifierConfig = config
         self.load_dir: Path = Path(load_dir)
         # initialise empty attributes

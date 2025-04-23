@@ -26,6 +26,7 @@
 """Utilities to handle data extraction and estimation results."""
 
 import logging
+from math import log
 from pathlib import Path
 from typing import Any, Literal, Protocol
 
@@ -628,6 +629,8 @@ class ProbaPredictions(Predictions):
             data_str = formatter(samples=self.samples, probas=self.get_probas())
 
         # write formatted texts to files
+        msg = f"Saving proba predictions to {save_file}"
+        logger.info(msg)
         Path(save_file).write_text(data_str, encoding="utf-8")
 
 
@@ -715,6 +718,8 @@ class Mislabels(Any):
             save_file_p = Path(clean_path_str(save_file))
         else:
             save_file_p = save_file
+        msg = f"Saving mislabelled verses to {save_file_p.name}"
+        logger.info(msg)
         save_file_p.write_text(save_data, encoding="utf-8")
 
 

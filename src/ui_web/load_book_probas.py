@@ -2,7 +2,7 @@ import csv
 from pathlib import Path
 from typing import Literal
 
-from src.classifier.fname_utils import SavefileName
+from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 
 
 class BookProbas:
@@ -68,14 +68,39 @@ def load_book_probas(
             book_probas.add_book_proba(row[0], [float(row[1]), float(row[2])])
     return book_probas
 
-outdir = Path("src/classifier/out/")
+if __name__ == "__main__":
+    outdir = Path("src/classifier/out/")
 
-# CAL
-print("\nCAL")
-cal_fname = "PRODUCTION_cal_mnb_char_3gram_bow_no_uscore_no_propn_both_removed_total_proba.csv"
-load_book_probas("CAL", cal_fname, outdir)
+    # CAL
+    print("\nCAL")
+    cal_fname = SavefileName(
+        origin="CAL",
+        classifier_alias="mnb",
+    )
+    cal_fname.set_ngram_opts(
+        n=3,
+        is_n_gram=True,
+        is_bow=True,
+        is_char_level=True,
+    )
+    cal_fname.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES, 
+                              FnameExtraOpts.REMOVE_PROPN, 
+                              FnameExtraOpts.REMOVE_FROM_BOTH])
+    cal_fname.mark_special_file(is_prod=True, is_total_proba=True)
+    load_book_probas(cal_fname, outdir)
 
-# ETCBC
-print("\nETCBC")
-etcbc_fname = "PRODUCTION_etcbc_mnb_char_3gram_bow_total_proba.csv"
-load_book_probas("ETCBC", etcbc_fname, outdir)
+    # ETCBC
+    print("\nETCBC")
+    etcbc_fname = SavefileName(
+        origin="ETCBC",
+        classifier_alias="mnb",
+    )
+    etcbc_fname.set_ngram_opts(
+        n=3,
+        is_n_gram=True,
+        is_bow=True,
+        is_char_level=True,
+    )
+    etcbc_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
+    etcbc_fname.mark_special_file(is_prod=True, is_total_proba=True)
+    load_book_probas(etcbc_fname, outdir)
