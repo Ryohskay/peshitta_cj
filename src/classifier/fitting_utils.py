@@ -63,9 +63,7 @@ def count_n_grams(
 
 
 def make_vocab(
-    verses: list[list[str]],
-    ngram_formatter: Callable,
-    span: int = 3
+    verses: list[list[str]], ngram_formatter: Callable, span: int = 3
 ) -> tuple[Counter, list[Counter]]:
     """Construct the model's vocabulary by extracting n-grams from verses.
 
@@ -102,11 +100,7 @@ def make_vocab(
         word_cnt += len(verse)
 
         # count n-grams
-        n_gram_counter = count_n_grams(
-                                        verse,
-                                        ngram_formatter,
-                                        span
-                                    )
+        n_gram_counter = count_n_grams(verse, ngram_formatter, span)
 
         n_gram_counters.append(n_gram_counter)
 
@@ -118,8 +112,10 @@ def make_vocab(
     print(f"Total words parsed: {word_cnt}")
 
     if n_gram_vocabs is None:
-        msg = ("Verse parsing completed but the n-gram counter is empty. "
-                + "Make sure that the arguments are properly defined.")
+        msg = (
+            "Verse parsing completed but the n-gram counter is empty. "
+            + "Make sure that the arguments are properly defined."
+        )
         raise RuntimeError(msg)
 
     return (n_gram_vocabs, n_gram_counters)
@@ -194,11 +190,11 @@ def merge_counts(counter: Counter, bow: dict) -> None:
 
 
 def vectorise(
-        verses: list[list[str]],
-        vocab: Counter,
-        ngram_formatter: Callable,
-        span: int = 3
-    ) -> list[list[int]]:
+    verses: list[list[str]],
+    vocab: Counter,
+    ngram_formatter: Callable,
+    span: int = 3,
+) -> list[list[int]]:
     """Count n-grams in unseen verses, using predefined vocabulary.
 
     Args:
@@ -230,9 +226,7 @@ def vectorise(
     for verse in verses:
         wc += len(verse)
         local_n_gram_counts = count_n_grams(
-            words=verse,
-            ngram_formatter=ngram_formatter,
-            span=span
+            words=verse, ngram_formatter=ngram_formatter, span=span
         )
         n_gram_bow = dict.fromkeys(bag_of_words.keys(), 0)
         merge_counts(local_n_gram_counts, n_gram_bow)

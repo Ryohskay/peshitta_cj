@@ -1,17 +1,17 @@
-from unittest import mock
-import pytest
-import json
 from pathlib import Path
-from unittest.mock import MagicMock
-from src.ui_web.load_clf_stats import load_clf_stats
+
+import pytest
+
 from src.classifier.fname_utils import SavefileName
-from src.classifier.result_utils import ResultStats
+from src.ui_web.load_clf_stats import load_clf_stats
 
 
 @pytest.fixture
 def mock_savefile_name() -> SavefileName:
     """Fixture to provide a mock SavefileName object."""
-    savefile = SavefileName(origin="CAL", classifier_alias="mnb", file_ext="json")
+    savefile = SavefileName(
+        origin="CAL", classifier_alias="mnb", file_ext="json"
+    )
     savefile.mark_special_file(is_clf_summary=True)
     savefile.set_ngram_opts(
         n=3,
@@ -20,6 +20,7 @@ def mock_savefile_name() -> SavefileName:
         is_char_level=True,
     )
     return savefile
+
 
 def test_load_clf_stats(mock_savefile_name: SavefileName):
     """Test loading a valid classifier statistics file."""
@@ -40,9 +41,9 @@ def test_load_clf_stats(mock_savefile_name: SavefileName):
 
 
 def test_load_clf_stats_raises(
-        mock_savefile_name: SavefileName,
-        tmp_path: Path,
-        ):
+    mock_savefile_name: SavefileName,
+    tmp_path: Path,
+):
     """Test loading invalid files."""
     with pytest.raises(FileNotFoundError):
         load_clf_stats(mock_savefile_name, load_dir=tmp_path)
@@ -50,5 +51,7 @@ def test_load_clf_stats_raises(
     mock_savefile_name.is_clf_summary = False
     asset_dir = "assets/classifier_results"
 
-    with pytest.raises(ValueError, match="is not a classifier evaluation summary file"):
+    with pytest.raises(
+        ValueError, match="is not a classifier evaluation summary file"
+    ):
         load_clf_stats(mock_savefile_name, load_dir=asset_dir)

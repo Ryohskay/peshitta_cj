@@ -16,6 +16,7 @@ from src.classifier.result_utils import (
     jsonify_dict,
 )
 
+
 class TestPeshittaWord:
     def test_eq(
         self, cal_word: PeshittaWord, etcbc_word: PeshittaWord, words: object
@@ -501,7 +502,9 @@ class TestJsonifyDict:
             ],
         }
 
-    def test_jsonify_threshold_stats(self, thresh_stats_1: ThresholdStats) -> None:
+    def test_jsonify_threshold_stats(
+        self, thresh_stats_1: ThresholdStats
+    ) -> None:
         result = jsonify_dict(thresh_stats_1)
         assert result == {
             "threshold": 0.6,

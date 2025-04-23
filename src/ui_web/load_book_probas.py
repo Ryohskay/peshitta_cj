@@ -63,7 +63,9 @@ def load_book_probas(
                     f"{row[0]}: (OT) {float(row[1]):.08f} vs."
                     + f" (NT) {float(row[2]):.08f}"
                 )
-                book_probas.add_book_proba(row[0], [float(row[1]), float(row[2])])
+                book_probas.add_book_proba(
+                    row[0], [float(row[1]), float(row[2])]
+                )
     return book_probas
 
 

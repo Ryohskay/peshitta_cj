@@ -1,18 +1,12 @@
-from collections.abc import Generator, Iterator
-import pytest
-from unittest.mock import MagicMock, patch
 from pathlib import Path
+
+from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.ui_web.select_load_classifier import (
     ClassifierConfig,
+    ResultFilesIndex,
     configure_fname_opts,
     parse_fname,
-    ResultFilesIndex,
-    ClassifierResultsModel,
 )
-from src.classifier.fname_utils import SavefileName, FnameExtraOpts
-from src.ui_web.load_book_probas import BookProbas
-from src.ui_web.load_clf_stats import load_clf_stats
-from src.ui_web.load_predictions import load_preds
 
 
 def test_classifier_config_init():
@@ -37,7 +31,9 @@ def test_classifier_config_init():
 
 def test_configure_fname_opts():
     """Test the configure_fname_opts function."""
-    save_fname = SavefileName(origin="CAL", classifier_alias="mnb", file_ext="csv")
+    save_fname = SavefileName(
+        origin="CAL", classifier_alias="mnb", file_ext="csv"
+    )
     config = ClassifierConfig(
         name="mnb",
         origin="CAL",
@@ -73,6 +69,7 @@ def test_parse_fname():
     assert parsed_fname.is_mislabel
     assert FnameExtraOpts.REMOVE_DIACRITICS in parsed_fname.extra_opts
 
+
 class TestResultFilesIndex:
     def test_result_files_index(self):
         """Test the ResultFilesIndex class."""
@@ -91,7 +88,6 @@ class TestResultFilesIndex:
                 assert f.is_mislabel
         assert index.files[0].origin == "CAL"
 
-
     def test_match_files_by_config(self):
         """Test the match_files_by_config method."""
         config = ClassifierConfig(
@@ -100,7 +96,7 @@ class TestResultFilesIndex:
             is_n_gram=True,
             n=3,
             is_bow=True,
-            is_char_level=False
+            is_char_level=False,
         )
         index = ResultFilesIndex("./assets/classifier_results/")
 

@@ -54,7 +54,6 @@ from src.classifier.result_utils import (
     Mislabels,
     ProbaPredictions,
     ResultStats,
-    ResultStatsDict,
     ThresholdStats,
     Verse,
     jsonify_dict,
@@ -613,7 +612,9 @@ def eval_and_save(  # noqa: PLR0913
     save_total_proba_fname.mark_special_file(is_total_proba=True)
     total_proba_save_fp = out_dir_p / save_total_proba_fname.get_fname()
     total_proba_csv = csvify_total_proba(ot_probas.get_total_probas())
-    total_proba_csv += csvify_total_proba(nt_probas.get_total_probas(), no_header=True)
+    total_proba_csv += csvify_total_proba(
+        nt_probas.get_total_probas(), no_header=True
+    )
     total_proba_save_fp.write_text(total_proba_csv)
 
     # create a summary dictionary of a classifier evaluation

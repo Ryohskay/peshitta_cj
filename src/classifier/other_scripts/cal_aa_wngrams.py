@@ -27,7 +27,6 @@
 
 from sklearn.naive_bayes import MultinomialNB
 
-from classifier import cal_aa_eval
 from src.classifier.cal_aa_eval import (
     csvify_cal,
     remove_enclitics,
@@ -58,12 +57,12 @@ if __name__ == "__main__":
 
     # train and evaluate
     eval_and_save(
-                c_mnb,
-                cal_ds,
-                csvify_cal,
-                out_dir="./classifier/out/",
-                save_file_prefix="cal_mnb_word_n_gram",
-            )
+        c_mnb,
+        cal_ds,
+        csvify_cal,
+        out_dir="./classifier/out/",
+        save_file_prefix="cal_mnb_word_n_gram",
+    )
 
     print("\nRemove PN & GN")
     print("> Remove PN & GN from the training set")
@@ -76,13 +75,13 @@ if __name__ == "__main__":
     c_mnb_r.fit(train_x_removed, train_y)
 
     c_mnb_r, probas_pair_r = eval_and_save(
-                                c_mnb_r,
-                                cal_ds,
-                                csvify_cal,
-                                out_dir="./classifier/out/",
-                                save_file_prefix="cal_mnb_word_n_gram",
-                                save_file_suffix="_removed"
-                            )
+        c_mnb_r,
+        cal_ds,
+        csvify_cal,
+        out_dir="./classifier/out/",
+        save_file_prefix="cal_mnb_word_n_gram",
+        save_file_suffix="_removed",
+    )
 
     print("\nRemove PN & GN")
     print("> Remove PN & GN from both training & test sets")
@@ -99,13 +98,13 @@ if __name__ == "__main__":
     c_mnb_rboth.fit(train_x_removed, train_y)
 
     c_mnb_rboth, probas_pair_rboth = eval_and_save(
-                                c_mnb_rboth,
-                                cal_ds,
-                                csvify_cal,
-                                out_dir="./classifier/out/",
-                                save_file_prefix="cal_mnb_word_n_gram",
-                                save_file_suffix="_removed_both"
-                            )
+        c_mnb_rboth,
+        cal_ds,
+        csvify_cal,
+        out_dir="./classifier/out/",
+        save_file_prefix="cal_mnb_word_n_gram",
+        save_file_suffix="_removed_both",
+    )
 
     print("Remove proclitics")
     print("MultinomialNB")
@@ -115,13 +114,13 @@ if __name__ == "__main__":
 
     # train and evaluate
     w_mnb_noc_, probas_noc = eval_and_save(
-                w_mnb_noc,
-                cal_ds,
-                csvify_cal,
-                out_dir="./classifier/out/",
-                save_file_prefix="cal_mnb_word_n_gram",
-                save_file_suffix="_noc"
-            )
+        w_mnb_noc,
+        cal_ds,
+        csvify_cal,
+        out_dir="./classifier/out/",
+        save_file_prefix="cal_mnb_word_n_gram",
+        save_file_suffix="_noc",
+    )
 
     print(probas_noc)
 
@@ -129,14 +128,15 @@ if __name__ == "__main__":
     print("MultinomialNB")
     # Remove personal names and place names from the training data
     # and train new classifiers
-    cal_ds.test = DataSplit(remove_enclitics(ot_test_verses_r),
-                            remove_enclitics(nt_test_verses_r))
+    cal_ds.test = DataSplit(
+        remove_enclitics(ot_test_verses_r), remove_enclitics(nt_test_verses_r)
+    )
 
     eval_and_save(
-                w_mnb_noc,
-                cal_ds,
-                csvify_cal,
-                out_dir="./classifier/out/",
-                save_file_prefix="cal_mnb_word_n_gram",
-                save_file_suffix="_removed_noc_both"
-            )
+        w_mnb_noc,
+        cal_ds,
+        csvify_cal,
+        out_dir="./classifier/out/",
+        save_file_prefix="cal_mnb_word_n_gram",
+        save_file_suffix="_removed_noc_both",
+    )

@@ -40,10 +40,24 @@ from src.classifier.wrappers import BoWEstimator
 def remove_non_chars(verses: list[Verse]) -> list[Verse]:
     new_verses = []
     for v in verses:
-        syriac = [sw.replace("\u0308", "").replace("\u0307", "") for sw in v.get_syriac_words()]
-        translit = [tw.replace('"', "").replace("^", "") for tw in v.get_translit_words()]
-        new_verses.append(Verse(v.book, v.reference, translit, syriac,
-                                v.get_annotations(), origin="ETCBC"))
+        syriac = [
+            sw.replace("\u0308", "").replace("\u0307", "")
+            for sw in v.get_syriac_words()
+        ]
+        translit = [
+            tw.replace('"', "").replace("^", "")
+            for tw in v.get_translit_words()
+        ]
+        new_verses.append(
+            Verse(
+                v.book,
+                v.reference,
+                translit,
+                syriac,
+                v.get_annotations(),
+                origin="ETCBC",
+            )
+        )
     return new_verses
 
 
@@ -51,7 +65,9 @@ if __name__ == "__main__":
     etcbc_ds = load_etcbc_dataset()
 
     for n in range(1, 6):
-        print(f"\n +++++++++++++++++++++++++++++ N={n} ++++++++++++++++++++++++++++")
+        print(
+            f"\n +++++++++++++++++++++++++++++ N={n} ++++++++++++++++++++++++++++"
+        )
 
         train_x = remove_non_chars(etcbc_ds.train.get_samples())
         etcbc_ds.train.verses = remove_non_chars(etcbc_ds.train.get_samples())
@@ -65,12 +81,12 @@ if __name__ == "__main__":
 
         # train and evaluate
         eval_and_save(
-                    c_mnb,
-                    etcbc_ds,
-                    csvify_etcbc,
-                    out_dir="./classifier/out/",
-                    save_file_prefix=f"etcbc_mnb_char_{n}gram_",
-                )
+            c_mnb,
+            etcbc_ds,
+            csvify_etcbc,
+            out_dir="./classifier/out/",
+            save_file_prefix=f"etcbc_mnb_char_{n}gram_",
+        )
 
         print("\nRemove Proper nouns")
         print("> Remove common proper nouns from the training set")
@@ -84,15 +100,17 @@ if __name__ == "__main__":
         c_mnb_r.fit(train_x_removed, train_y)
 
         c_mnb_r, probas_pair_r = eval_and_save(
-                                    c_mnb_r,
-                                    etcbc_ds,
-                                    csvify_etcbc,
-                                    out_dir="./classifier/out/",
-                                    save_file_prefix=f"etcbc_mnb_char_{n}gram_",
-                                    save_file_suffix="_removed"
-                                )
+            c_mnb_r,
+            etcbc_ds,
+            csvify_etcbc,
+            out_dir="./classifier/out/",
+            save_file_prefix=f"etcbc_mnb_char_{n}gram_",
+            save_file_suffix="_removed",
+        )
 
-        print("\n!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!")
+        print(
+            "\n!!!!!!!!!!!!!!!BELOW REQUIRES DS-wide processing!!!!!!!!!!!!!!!"
+        )
         ot_test_verses = etcbc_ds.test.get_samples(0)
         nt_test_verses = etcbc_ds.test.get_samples(1)
 
@@ -111,13 +129,13 @@ if __name__ == "__main__":
         c_mnb_rboth.fit(train_x_removed, train_y)
 
         c_mnb_rboth, probas_pair_rboth = eval_and_save(
-                                    c_mnb_rboth,
-                                    etcbc_ds,
-                                    csvify_etcbc,
-                                    out_dir="./classifier/out/",
-                                    save_file_prefix=f"etcbc_mnb_char_{n}gram_",
-                                    save_file_suffix="_removed_both"
-                                )
+            c_mnb_rboth,
+            etcbc_ds,
+            csvify_etcbc,
+            out_dir="./classifier/out/",
+            save_file_prefix=f"etcbc_mnb_char_{n}gram_",
+            save_file_suffix="_removed_both",
+        )
 
         print("\n===================WORD N-GRAMS=========================\n")
         print("\nPlain Classifier")
@@ -128,12 +146,12 @@ if __name__ == "__main__":
 
         # train and evaluate
         eval_and_save(
-                    w_mnb,
-                    etcbc_ds,
-                    csvify_etcbc,
-                    out_dir="./classifier/out/",
-                    save_file_prefix=f"etcbc_mnb_word_{n}gram_",
-                )
+            w_mnb,
+            etcbc_ds,
+            csvify_etcbc,
+            out_dir="./classifier/out/",
+            save_file_prefix=f"etcbc_mnb_word_{n}gram_",
+        )
 
         print("\nRemove Proper nouns")
         print("> Remove common proper nouns from the training set")
@@ -147,13 +165,13 @@ if __name__ == "__main__":
         w_mnb_r.fit(train_x_removed, train_y)
 
         w_mnb_r, probas_pair_r = eval_and_save(
-                                    w_mnb_r,
-                                    etcbc_ds,
-                                    csvify_etcbc,
-                                    out_dir="./classifier/out/",
-                                    save_file_prefix=f"etcbc_mnb_word_{n}gram_",
-                                    save_file_suffix="_removed"
-                                )
+            w_mnb_r,
+            etcbc_ds,
+            csvify_etcbc,
+            out_dir="./classifier/out/",
+            save_file_prefix=f"etcbc_mnb_word_{n}gram_",
+            save_file_suffix="_removed",
+        )
 
         print("\nRemove Proper nouns")
         print("> Remove common proper nouns from both training & test sets")
@@ -170,10 +188,10 @@ if __name__ == "__main__":
         c_mnb_rboth.fit(train_x_removed, train_y)
 
         c_mnb_rboth, probas_pair_rboth = eval_and_save(
-                                    c_mnb_rboth,
-                                    etcbc_ds,
-                                    csvify_etcbc,
-                                    out_dir="./classifier/out/",
-                                    save_file_prefix=f"etcbc_mnb_word_{n}gram_",
-                                    save_file_suffix="_removed_both"
-                                )
+            c_mnb_rboth,
+            etcbc_ds,
+            csvify_etcbc,
+            out_dir="./classifier/out/",
+            save_file_prefix=f"etcbc_mnb_word_{n}gram_",
+            save_file_suffix="_removed_both",
+        )

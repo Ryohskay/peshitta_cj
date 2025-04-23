@@ -124,9 +124,7 @@ def load_etcbc_dataset(
     nt_train_verses = get_verses(
         nt_train, target_fabric="etcbc/syrnt", ver="0.1"
     )
-    nt_test_verses = get_verses(
-        nt_test, target_fabric="etcbc/syrnt", ver="0.1"
-    )
+    nt_test_verses = get_verses(nt_test, target_fabric="etcbc/syrnt", ver="0.1")
 
     return LoadedDataset(
         ot_train_verses,

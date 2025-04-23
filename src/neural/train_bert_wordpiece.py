@@ -23,8 +23,8 @@ This program was adapted from `HuggingFace's tokenizer library examples
 """
 
 import argparse
-import datasets
 
+import datasets
 from tokenizers import BertWordPieceTokenizer
 
 
@@ -53,8 +53,12 @@ if __name__ == "__main__":
         type=str,
         help="Path to the output directory, where the files will be saved",
     )
-    parser.add_argument("--name", default="syrbert-wordpiece", type=str,
-                        help="The name of the output vocab files")
+    parser.add_argument(
+        "--name",
+        default="syrbert-wordpiece",
+        type=str,
+        help="The name of the output vocab files",
+    )
     args = parser.parse_args()
 
     # Initialize an empty tokenizer
@@ -67,7 +71,9 @@ if __name__ == "__main__":
 
     # prepare a training dataset
     # Build an iterator over this dataset
-    dataset = datasets.load_dataset("wikitext", "wikitext-103-raw-v1", split="train")
+    dataset = datasets.load_dataset(
+        "wikitext", "wikitext-103-raw-v1", split="train"
+    )
 
     # And then train
     tokenizer.train_from_iterator(

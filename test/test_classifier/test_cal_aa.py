@@ -1,16 +1,16 @@
-import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
+
 from src.classifier.cal_aa_eval import (
+    cal_eval_classifier,
     csvify_cal,
-    remove_underscores,
     remove_enclitics,
     remove_proper_nouns,
-    cal_eval_classifier,
+    remove_underscores,
 )
+from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.fname_utils import SavefileName
 from src.classifier.result_utils import Verse
 from src.classifier.wrappers import BoWEstimator
-from src.classifier.fname_utils import SavefileName
-from src.classifier.dataset_skeleton import LoadedDataset
 
 
 def test_csvify_cal(cal_verse: Verse) -> None:
@@ -22,7 +22,7 @@ def test_csvify_cal(cal_verse: Verse) -> None:
     # Test with correct labels
     result = csvify_cal(samples, probas, correct_labels)
     expected = (
-        "Book,Reference,\"Probability for Jewish\",\"Probability for Christian\",Leammatised Verse,Correct Label\n"
+        'Book,Reference,"Probability for Jewish","Probability for Christian",Leammatised Verse,Correct Label\n'
         "Genesis,Genesis Chapter 01 Verse 01,0.8000,0.2000,br$yt br) )lh) yt $my) w_ yt )r(),0\n"
     )
     assert result == expected
@@ -30,7 +30,7 @@ def test_csvify_cal(cal_verse: Verse) -> None:
     # Test without correct labels
     result_no_labels = csvify_cal(samples, probas)
     expected_no_labels = (
-        "Book,Reference,\"Probability for Jewish\",\"Probability for Christian\",Leammatised Verse\n"
+        'Book,Reference,"Probability for Jewish","Probability for Christian",Leammatised Verse\n'
         "Genesis,Genesis Chapter 01 Verse 01,0.8000,0.2000,br$yt br) )lh) yt $my) w_ yt )r()\n"
     )
     assert result_no_labels == expected_no_labels
@@ -50,18 +50,19 @@ def test_remove_enclitics(cal_verse: Verse) -> None:
     result = remove_enclitics(cal_verse)
     assert isinstance(result, Verse)
     assert result.get_translit_words() == [
-            "br$yt",
-            "br)",
-            ")lh)",
-            "$my)",
-            ")r()"]
+        "br$yt",
+        "br)",
+        ")lh)",
+        "$my)",
+        ")r()",
+    ]
     assert result.get_annotations() == [
-            "noun sg. abs. or construct",
-            "verb G",
-            "noun sg. emphatic",
-            "noun pl. emphatic",
-            "noun sg. emphatic",
-        ]
+        "noun sg. abs. or construct",
+        "verb G",
+        "noun sg. emphatic",
+        "noun pl. emphatic",
+        "noun sg. emphatic",
+    ]
 
     # Test with no enclitics, this should leave the verse intact
     verse_no_enclitics = Verse(
@@ -91,7 +92,16 @@ def test_remove_proper_nouns(cal_verse: Verse, cal_romans_verse: Verse) -> None:
     # Test with a verse without proper nouns, this should leave the verse intact
     result = remove_proper_nouns(cal_verse)
     assert isinstance(result, Verse)
-    assert result.get_translit_words() == ["br$yt", "br)", ")lh)", "yt", "$my)", "w_", "yt", ")r()"]
+    assert result.get_translit_words() == [
+        "br$yt",
+        "br)",
+        ")lh)",
+        "yt",
+        "$my)",
+        "w_",
+        "yt",
+        ")r()",
+    ]
     assert result.get_annotations() == [
         "noun sg. abs. or construct",
         "verb G",
@@ -108,69 +118,67 @@ def test_remove_proper_nouns(cal_verse: Verse, cal_romans_verse: Verse) -> None:
     assert result_rem_propn is not None
     assert result_rem_propn.book == "Romans"
     assert result_rem_propn.get_syriac_words() == [
-            "ܥܰܒܼܕܿܳܐ",
-            "ܕ",
-            "ܡܫܺܝܚܳܐ",
-            "ܩܰܪܝܳܐ",
-            "ܘܰ",
-            "ܫܠܺܝܚܳܐ",
-            "ܕܶ",
-            "ܐܬܼܦܿܪܶܫ",
-            "ܠܶ",
-            "ܐܘܰܢܓܿܶܠܺܝܳܘܢ",
-            "ܕܰ",
-            "ܐܠܳܗܳܐ",
-        ]
+        "ܥܰܒܼܕܿܳܐ",
+        "ܕ",
+        "ܡܫܺܝܚܳܐ",
+        "ܩܰܪܝܳܐ",
+        "ܘܰ",
+        "ܫܠܺܝܚܳܐ",
+        "ܕܶ",
+        "ܐܬܼܦܿܪܶܫ",
+        "ܠܶ",
+        "ܐܘܰܢܓܿܶܠܺܝܳܘܢ",
+        "ܕܰ",
+        "ܐܠܳܗܳܐ",
+    ]
     assert result_rem_propn.get_translit_words() == [
-            "(bd",
-            "d_",
-            "m$yx",
-            "qry",
-            "w_",
-            "$lyx",
-            "d_",
-            "pr$",
-            "l_",
-            ")wnglywn",
-            "d_",
-            ")lh",
-        ]
+        "(bd",
+        "d_",
+        "m$yx",
+        "qry",
+        "w_",
+        "$lyx",
+        "d_",
+        "pr$",
+        "l_",
+        ")wnglywn",
+        "d_",
+        ")lh",
+    ]
     assert result_rem_propn.get_annotations() == [
-            "noun sg. emphatic",
-            "p",
-            "noun sg. emphatic",
-            "verb G",
-            "c",
-            "noun sg. emphatic",
-            "c",
-            "Verb Gt",
-            "p03",
-            "noun sg. abs. or construct",
-            "p",
-            "noun sg. emphatic",
-        ]
+        "noun sg. emphatic",
+        "p",
+        "noun sg. emphatic",
+        "verb G",
+        "c",
+        "noun sg. emphatic",
+        "c",
+        "Verb Gt",
+        "p03",
+        "noun sg. abs. or construct",
+        "p",
+        "noun sg. emphatic",
+    ]
 
     # test with a verse containing only proper nouns
-    propn_verse = Verse("Romans", "Romans Chapter 01 Verse 01",
-            [
-            "pwlws",
-            "y$w("
-        ],
+    propn_verse = Verse(
+        "Romans",
+        "Romans Chapter 01 Verse 01",
+        ["pwlws", "y$w("],
         syriac_words=[
             "ܦܿܰܘܠܳܘܣ",
             "ܝܶܫܽܘܥ",
         ],
-        words_annotations=[
-            "PN Personal Name",
-            "PN Personal Name"
-        ]
-        )
+        words_annotations=["PN Personal Name", "PN Personal Name"],
+    )
     propn_verse_result = remove_proper_nouns(propn_verse)
     assert propn_verse_result is None
 
 
 @patch("src.classifier.cal_aa_eval.eval_and_save")
-def test_cal_eval_classifier(mock_eval_and_save, mnb_classifier: BoWEstimator, loaded_cal: LoadedDataset) -> None:
+def test_cal_eval_classifier(
+    mock_eval_and_save, mnb_classifier: BoWEstimator, loaded_cal: LoadedDataset
+) -> None:
     """Test the cal_eval_classifier function."""
     save_fname = SavefileName("CAL", "mnb", "csv")
 

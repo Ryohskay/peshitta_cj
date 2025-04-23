@@ -8,11 +8,11 @@ if __name__ == "__main__":
     book_idx = "62006"
 
     http = pool_init()
-    #for book_idx in target_books:
+    # for book_idx in target_books:
     i = 15
-    #book_idx = target_books[0]
-    #print(f"Chapter: {i}")
-    #result = get_a_chapter(http, book_id=book_idx)
+    # book_idx = target_books[0]
+    # print(f"Chapter: {i}")
+    # result = get_a_chapter(http, book_id=book_idx)
     result = get_a_chapter(http, book_id=book_idx, section=i)
 
     # Use lxml parser to correctly handle raw texts in body tag
@@ -20,10 +20,10 @@ if __name__ == "__main__":
 
     # lists to store results
     verses = []
-    raw_verses = [] # aggregate list of inflected texts from all verses
-    raw_words = [] # inflected form of words in each verse, as a list
+    raw_verses = []  # aggregate list of inflected texts from all verses
+    raw_words = []  # inflected form of words in each verse, as a list
     word_lis = []  # lemmatised words of each verse as a list of lemmata
-    verse_ref_nums = [] # the reference numbers for each verse
+    verse_ref_nums = []  # the reference numbers for each verse
     verse_urls = []
 
     lex_url = ""
@@ -35,13 +35,14 @@ if __name__ == "__main__":
     num_links = 0
 
     print(soup.find_all("td"))
-    table_data = soup.find("td", string=re.compile("33")).find_next_sibling("td")
+    table_data = soup.find("td", string=re.compile("33")).find_next_sibling(
+        "td"
+    )
     if len(table_data.text) <= 0:
         print(f"table_data: {table_data.text}")
     elif len(table_data.text) > 0:  # If it's the cell containing verse
         # go through all links in the table data cell
         for link in table_data.find_all("a"):
-
             lex_url = link["href"]
 
             if is_lex(lex_url):
@@ -89,9 +90,13 @@ if __name__ == "__main__":
         num_variances = num_slashes / 2
 
         if len(verses) != len(verse_ref_nums):
-            print("Something is wrong with the number of verses vs verse_ref_nums")
-            raise ValueError(f"verse_ref_nums: {len(verse_ref_nums)} but" +
-                             f" verses: {len(verses)}, raw_verses: {len(raw_verses)}")
+            print(
+                "Something is wrong with the number of verses vs verse_ref_nums"
+            )
+            raise ValueError(
+                f"verse_ref_nums: {len(verse_ref_nums)} but"
+                + f" verses: {len(verses)}, raw_verses: {len(raw_verses)}"
+            )
 
         # format the data in a string of CSV format
         formatted_data = "Verse Ref. No.,Verse URL,Raw Text,Lemmatised Text\n"
@@ -99,7 +104,10 @@ if __name__ == "__main__":
             indices = verse_ref_nums[i].split(":")
             raw_txt_verse = " ".join(raw_verses[i])
             lemma_verse = " ".join(verses[i])
-            formatted_data = formatted_data + f'"Chapter {indices[0]} verse {indices[1]}",{verse_urls[i]},"{raw_txt_verse}","{lemma_verse}"\n'
+            formatted_data = (
+                formatted_data
+                + f'"Chapter {indices[0]} verse {indices[1]}",{verse_urls[i]},"{raw_txt_verse}","{lemma_verse}"\n'
+            )
 
         # Store the scraped lines into a csv file
         # p = Path(f"./out/scraper_results_{book_idx}.csv")

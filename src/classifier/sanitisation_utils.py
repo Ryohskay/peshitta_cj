@@ -9,15 +9,15 @@ def normalise_book_title(book_title: str) -> str:
     """
     # Mapping of book titles where ETCBC and CAL diverge.
     etcbc_cal_map = {
-                "1_Chronicles": "Chronicles_1",
-                "1_Samuel": "Samuel_1",
-                "2_Samuel": "Samuel_2",
-                "1_Kings": "Kings_1",
-                "2_Kings": "Kings_2",
-                "Nehemiah": "Nehemia",
-                "2_Chronicles": "Chronicles_2",
-                "1_Maccabees": "Maccabees_1_B",
-            }
+        "1_Chronicles": "Chronicles_1",
+        "1_Samuel": "Samuel_1",
+        "2_Samuel": "Samuel_2",
+        "1_Kings": "Kings_1",
+        "2_Kings": "Kings_2",
+        "Nehemiah": "Nehemia",
+        "2_Chronicles": "Chronicles_2",
+        "1_Maccabees": "Maccabees_1_B",
+    }
     if book_title in etcbc_cal_map:
         return etcbc_cal_map[book_title]
     # else

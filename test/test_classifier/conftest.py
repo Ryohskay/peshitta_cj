@@ -549,6 +549,7 @@ def loaded_etcbc(
         [full_data_verse],
     )
 
+
 @pytest.fixture
 def loaded_cal(
     cal_verse: Verse,
@@ -564,6 +565,7 @@ def loaded_cal(
         [cal_romans_verse],
         [full_data_verse],
     )
+
 
 # Classifier
 @pytest.fixture

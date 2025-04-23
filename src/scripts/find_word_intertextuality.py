@@ -27,17 +27,11 @@
 
 from collections import Counter
 
-from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
-from src.classifier.fitting_utils import make_vocab
-from src.scripts.inspection_utils import find_top_k_words
-from src.classifier.load_cal import load_cal_dataset
+from src.classifier.dataset_skeleton import DataSplit
 from src.classifier.textfabric_utils import load_etcbc_dataset
 
 
-def print_common_chars(
-        dataset: DataSplit,
-        target: int | None = None
-    ) -> None:
+def print_common_chars(dataset: DataSplit, target: int | None = None) -> None:
     """Find and print common characters in the given dataset.
 
     Args:
@@ -57,22 +51,21 @@ def print_common_chars(
         translit_chars.extend([char for w in v_words for char in w])
 
     syr_counts = Counter(syr_chars)
-    print("\nMost common chars: "
-          + f"{syr_counts.most_common()}")
+    print("\nMost common chars: " + f"{syr_counts.most_common()}")
 
     num_chars = syr_counts.total()
-    percents = [(char[0], (char[1] / num_chars), char[1])
-                for char in syr_counts.most_common()]
+    percents = [
+        (char[0], (char[1] / num_chars), char[1])
+        for char in syr_counts.most_common()
+    ]
 
     for p in percents:
         print(f"{p[0]} ({hex(ord(p[0]))}): {p[1] * 100:.01f} % ({p[2]})")
 
     translit_counts = Counter(translit_chars)
-    print("\nMost common chars: "
-          + f"{translit_counts.most_common()}")
+    print("\nMost common chars: " + f"{translit_counts.most_common()}")
 
-    print(f"\nTop {k} common words: "
-          + f"{translit_counts.most_common(k)}")
+    print(f"\nTop {k} common words: " + f"{translit_counts.most_common(k)}")
 
 
 if __name__ == "__main__":

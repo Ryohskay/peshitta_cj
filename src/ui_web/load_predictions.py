@@ -2,22 +2,24 @@
 
 import csv
 from pathlib import Path
-from typing import Literal, TypedDict
+from typing import TypedDict
 
 from src.classifier.fname_utils import SavefileName
-from src.classifier.prediction_utils import convert
-from src.classifier.result_utils import ProbaPredictions, Verse
+from src.classifier.result_utils import Verse
+
 
 class BookVerses(TypedDict):
     """A dict to represent the link between verses and a book."""
+
     book_name: str
     verses: list[Verse]
     verse_probas: list[list[float]]
 
+
 def load_preds(
-        fname: SavefileName,
-        load_dir: str | Path = Path("src/classifier/out/"),
-    ) -> list[BookVerses]:
+    fname: SavefileName,
+    load_dir: str | Path = Path("src/classifier/out/"),
+) -> list[BookVerses]:
     """Load prediction results from a CSV file.
 
     Args:
@@ -51,23 +53,27 @@ def load_preds(
                 first_row = False
                 continue
 
-            if (current_book
+            if (
+                current_book
                 and current_book != row[0]
-                and current_book not in parsed_books):
+                and current_book not in parsed_books
+            ):
                 # when we finish parsing a book
                 parsed_books.append(current_book)
-                books.append({"book_name": current_book,
-                                "verses": verses,
-                                "verse_probas": probas
-                            })
+                books.append(
+                    {
+                        "book_name": current_book,
+                        "verses": verses,
+                        "verse_probas": probas,
+                    }
+                )
                 # reset the lists
                 verses = []
                 probas = []
 
-            if (current_book != row[0]):
+            if current_book != row[0]:
                 # when we discover a new book
                 current_book = row[0]
-
 
             print(f"(Ref: {row[1]}) OT > {row[2]} NT > {row[3]} [{row[4]}]")
             probas.append([float(row[2]), float(row[3])])
@@ -75,12 +81,7 @@ def load_preds(
             # initialise the Verse instance based on the data origin
             if data_origin == "CAL":
                 verses.append(
-                    Verse(
-                        row[0],
-                        row[1],
-                        row[4].split(" "),
-                        origin=data_origin
-                    )
+                    Verse(row[0], row[1], row[4].split(" "), origin=data_origin)
                 )
             elif data_origin == "ETCBC":
                 verses.append(

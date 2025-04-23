@@ -24,6 +24,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """Utility functions to facilitate inspection of classification results."""
+
 from collections import Counter
 from pathlib import Path
 
@@ -33,10 +34,10 @@ from src.classifier.result_utils import (
 
 
 def find_top_k_words(
-        verses: list[Verse],
-        top_k: int = 150,
-        save_file: str | None = None,
-    ) -> tuple[list[tuple[str, int]], list[tuple[str, int]] | None]:
+    verses: list[Verse],
+    top_k: int = 150,
+    save_file: str | None = None,
+) -> tuple[list[tuple[str, int]], list[tuple[str, int]] | None]:
     """Find the top k words from the verses.
 
     Args:
@@ -71,10 +72,12 @@ def find_top_k_words(
         # If Syriac version is provided but word counts do not match up
         # with the transliterated version, raise an exception
         if [w[1] for w in sorted_syrs] != [w[1] for w in sorted_translits]:
-            msg = ("Syriac data for words were provided, but the counts of "
-                   + f"each word from Syriac {len(sorted_syrs)} and "
-                   + "Transliterated data {len(sorted_translits)} "
-                   + "do not match!")
+            msg = (
+                "Syriac data for words were provided, but the counts of "
+                + f"each word from Syriac {len(sorted_syrs)} and "
+                + "Transliterated data {len(sorted_translits)} "
+                + "do not match!"
+            )
             raise ValueError(msg)
     else:
         sorted_syrs = None
@@ -83,26 +86,29 @@ def find_top_k_words(
     if save_file is not None and sorted_syrs is not None:
         csv_data = "Syriac,Transliteration,Counts"
         for i in range(top_k):
-            csv_data += (f"'{sorted_syrs[i][0]}',"
-                        + f"{sorted_translits[i][0]},"
-                        + f"{int(sorted_translits[i][1])}")
+            csv_data += (
+                f"'{sorted_syrs[i][0]}',"
+                + f"{sorted_translits[i][0]},"
+                + f"{int(sorted_translits[i][1])}"
+            )
     elif save_file is not None:
         # Format the data without Syriac script
         csv_data = "Transliteration,Counts"
         for i in range(top_k):
-            csv_data += (f"{sorted_translits[i][0]},"
-                         + f"{int(sorted_translits[i][1])}")
+            csv_data += (
+                f"{sorted_translits[i][0]}," + f"{int(sorted_translits[i][1])}"
+            )
 
         Path(save_file).write_text(csv_data, encoding="utf-8")
     return (sorted_translits, sorted_syrs)
 
 
 def get_top_n_grams(
-        translit_vocabs: Counter,
-        syr_vocabs: Counter | None = None,
-        top_k: int = 150,
-        save_file: str | None = None,
-    ) -> tuple[list[tuple[str, int]], list[tuple[str, int]] | None]:
+    translit_vocabs: Counter,
+    syr_vocabs: Counter | None = None,
+    top_k: int = 150,
+    save_file: str | None = None,
+) -> tuple[list[tuple[str, int]], list[tuple[str, int]] | None]:
     """Get top k n-grams, based on the counts stored in translit_vocabs.
 
     Args:
@@ -137,7 +143,9 @@ def get_top_n_grams(
             csv_data = "Syriac,Transliteration,Counts"
             for i in range(top_k):
                 csv_data += f"'{''.join(top_syr_vocabs[i][0])}',"
-                csv_data += f"'{''.join(top_n_grams[i][0])}',{int(top_n_grams[i][1])}"
+                csv_data += (
+                    f"'{''.join(top_n_grams[i][0])}',{int(top_n_grams[i][1])}"
+                )
             # print(csv_data.split("")[1])
             Path(save_file).write_text(csv_data, encoding="utf-8")
     else:

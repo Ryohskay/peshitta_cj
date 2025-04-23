@@ -9,7 +9,7 @@ from src.classifier.wrappers import BoWEstimator
 
 def test_predict_on_prod(
     monkeypatch: Any,
-    mock_eval_and_save:Any,
+    mock_eval_and_save: Any,
     mock_predict_proba: Any,
     mnb_classifier: BoWEstimator,
     loaded_etcbc: LoadedDataset,

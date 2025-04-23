@@ -33,9 +33,9 @@ from sklearn.base import BaseEstimator
 
 
 def save_to_onnx(
-        clf: BaseEstimator,
-        save_file_name: Path | str = "./out/classifier_saved.onnx"
-        ) -> None:
+    clf: BaseEstimator,
+    save_file_name: Path | str = "./out/classifier_saved.onnx",
+) -> None:
     """Convert the given classifier into ONNX format and save into a file.
 
     Code in this function has been adapted from: `ONNX tutorial <https://onnx.ai/sklearn-onnx/introduction.html>`
@@ -54,7 +54,9 @@ def save_to_onnx(
     initial_type = [("Int32 inputs", Int32TensorType([None, 4]))]
     onx = convert_sklearn(clf, initial_types=initial_type)
     if not Path(save_file_name).exists():
-        msg = (f"The provided file path {save_file_name} for save file "
-               + "could not be reached.")
+        msg = (
+            f"The provided file path {save_file_name} for save file "
+            + "could not be reached."
+        )
         raise ValueError(msg)
     Path(save_file_name).write_bytes(onx.SerializeToString())

@@ -1,7 +1,7 @@
 from collections import Counter
 
-from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.result_utils import Verse
+from src.classifier.textfabric_utils import load_etcbc_dataset
 
 
 def find_top_k_chars(verses: list[Verse]) -> None:
@@ -14,16 +14,16 @@ def find_top_k_chars(verses: list[Verse]) -> None:
         translit_chars.extend([char for w in v_words for char in w])
 
     translit_char_counts = Counter(translit_chars)
-    print("Most common chars: "
-          + f"{translit_char_counts.most_common()}")
+    print("Most common chars: " + f"{translit_char_counts.most_common()}")
 
     syr_char_counts = Counter(syr_chars)
-    print("Most common chars: "
-          + f"{syr_char_counts.most_common()}")
+    print("Most common chars: " + f"{syr_char_counts.most_common()}")
 
     num_chars = syr_char_counts.total()
-    percents = [(char[0], (char[1] / num_chars), char[1])
-                for char in syr_char_counts.most_common()]
+    percents = [
+        (char[0], (char[1] / num_chars), char[1])
+        for char in syr_char_counts.most_common()
+    ]
 
     for p in percents:
         print(f"{p[0]}: {p[1] * 100:.01f} % ({p[2]})")

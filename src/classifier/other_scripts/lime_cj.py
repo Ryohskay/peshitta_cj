@@ -6,16 +6,14 @@
 from lime.lime_text import LimeTextExplainer
 from sklearn.naive_bayes import MultinomialNB
 
-from src.classifier.etcbc_aa_eval import csvify_etcbc, remove_non_chars
-from src.classifier.eval_utils import (
-    eval_and_save,
+from src.classifier.etcbc_aa_eval import (
+    etcbc_eval_classifier,
+    remove_non_chars,
 )
-from src.classifier.result_utils import Verse
-from src.classifier.fname_utils import SavefileName, FnameExtraOpts
+from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 from src.shared.label_data import ValToLabel
-from src.classifier.etcbc_aa_eval import etcbc_eval_classifier
 
 loaded_etc = load_etcbc_dataset()
 
@@ -30,8 +28,9 @@ save_fname.set_ngram_opts(n=n_window)
 save_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
 etcbc_eval_classifier(mnb, loaded_etc, save_fname)
 
-explainer = LimeTextExplainer(class_names=list[ValToLabel.values()],
-                                char_level=True)
+explainer = LimeTextExplainer(
+    class_names=list[ValToLabel.values()], char_level=True
+)
 
 idx = 83
 exp = explainer.explain_instance(

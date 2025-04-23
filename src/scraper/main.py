@@ -1,16 +1,19 @@
 """The main scraping script to get Syriac texts from CAL."""
 
 import json
-from bs4 import BeautifulSoup, Tag
-from cal_handler import (pool_init, get_a_chapter, get_a_syriac_chapter,
-                         follow_link, get_verse_url, normalise_cset)
-from pathlib import Path
 import re
 import time
 from pathlib import Path
 
 from bs4 import BeautifulSoup, Tag
-from cal_handler import follow_link, get_a_chapter, get_verse_url, pool_init
+from cal_handler import (
+    follow_link,
+    get_a_chapter,
+    get_a_syriac_chapter,
+    get_verse_url,
+    normalise_cset,
+    pool_init,
+)
 
 
 def count_char(target: str, source: str) -> int:
@@ -27,7 +30,7 @@ def get_lemma_line(markup_tag: Tag) -> str | None:
 
     markup_tag: Tag
         result(s) returned by bs4's find() or find_all(),
-        an excerpt of a HTML document. 
+        an excerpt of a HTML document.
     """
     stripped = markup_tag.text.strip()
     # remove trailing spaces and self-standing periods.
@@ -46,21 +49,21 @@ def get_lemma_line(markup_tag: Tag) -> str | None:
 def is_lemma(lex: str) -> bool:
     """Verifies if given string is a valid lemma."""
     anomalous_words = [
-            "part of previous word",
-            "non-Aramaic or fragmentary",
-            "there is no data" # https://cal.huc.edu/getlex.php?coord=620411620&word=15
-            ]
+        "part of previous word",
+        "non-Aramaic or fragmentary",
+        "there is no data",  # https://cal.huc.edu/getlex.php?coord=620411620&word=15
+    ]
     for keywords in anomalous_words:
         if keywords in lex:
-        # If the given string contains either of these phrases,
-        # the entry does not list any lemma
+            # If the given string contains either of these phrases,
+            # the entry does not list any lemma
             return False
     return True
 
 
 def extract_lemma_annot(tag_txt: str) -> tuple[str | None, str | None]:
     """Extract the lemma and annotation from given document excerpt.
-    
+
     Note that the lemma annotations may not provide POS at all,
     e.g. https://cal.huc.edu/getlex.php?coord=620010102&word=9
 
@@ -76,7 +79,9 @@ def extract_lemma_annot(tag_txt: str) -> tuple[str | None, str | None]:
         lemma = re.sub("#\\d", "", lemma).replace("@", " ")
         # record the annotations if they exist
         if len(split_line) > 1:
-            annot = " ".join(split_line[1:]) # lemma annotations like POS, morphology
+            annot = " ".join(
+                split_line[1:]
+            )  # lemma annotations like POS, morphology
         else:
             print(f"INFO: Annotation not given for lemma: {lemma}")
             annot = None
@@ -100,33 +105,32 @@ def is_empty_verse(words: list) -> bool:
 
 
 if __name__ == "__main__":
-
     OT = False
     NT = True
 
     target_books = [
-            ("Matthew", "62040", NT),
-            ("Mark", "62041", NT),
-            ("Luke", "62042", NT),
-            ("John", "62043", NT),
-            ("Genesis", "62001", OT),
-            ("Exodus", "62002", OT),
-            ("Acts", "62044", NT),
-            ("Deuteronomy", "62005", OT),
-            ("Joshua", "62006", OT),
-            ("Judges", "62007", OT),
-            ("1_Samuel", "62008", OT),
-            ("2_Samuel", "62009", OT),
-            ("1_Kings", "62010", OT),
-            ("2_Kings", "62011", OT),
-            ("Ruth", "62030", OT),
-            ("Esther", "62034", OT),
-            ("Ezra", "62036", OT),
-            ("Nehemiah", "62037", OT),
-            ("1_Chronicles", "62038", OT),
-            ("2_Chronicles", "62039", OT),
-            ("1_Maccabees", "62078", OT),
-            ]
+        ("Matthew", "62040", NT),
+        ("Mark", "62041", NT),
+        ("Luke", "62042", NT),
+        ("John", "62043", NT),
+        ("Genesis", "62001", OT),
+        ("Exodus", "62002", OT),
+        ("Acts", "62044", NT),
+        ("Deuteronomy", "62005", OT),
+        ("Joshua", "62006", OT),
+        ("Judges", "62007", OT),
+        ("1_Samuel", "62008", OT),
+        ("2_Samuel", "62009", OT),
+        ("1_Kings", "62010", OT),
+        ("2_Kings", "62011", OT),
+        ("Ruth", "62030", OT),
+        ("Esther", "62034", OT),
+        ("Ezra", "62036", OT),
+        ("Nehemiah", "62037", OT),
+        ("1_Chronicles", "62038", OT),
+        ("2_Chronicles", "62039", OT),
+        ("1_Maccabees", "62078", OT),
+    ]
 
     # book_idx = "62006"
 
@@ -139,10 +143,12 @@ if __name__ == "__main__":
         result = None
         print(f"Book: {book[0]}")
         if normalise_cset(cset) == "S":
-            result = get_a_syriac_chapter(http, book_id=book[1], needs_est=book[2])
+            result = get_a_syriac_chapter(
+                http, book_id=book[1], needs_est=book[2]
+            )
         else:
             result = get_a_chapter(http, book_id=book[1], display_in=cset)
-    # for i in range(15,16):
+        # for i in range(15,16):
         # book_idx = target_books[0]
         # print(f"Chapter: {i}")
         # result = get_a_chapter(http, book_id=book_idx, section=i)
@@ -153,14 +159,14 @@ if __name__ == "__main__":
         # book-level vars
         # lists to store results
         verses = []
-        raw_verses = [] # aggregate list of inflected texts from all verses
-        verse_ref_nums = [] # the reference numbers for each verse
-        empty_verses = [] # verse reference to verses where no lemma could be
-                          # retrieved
-        error_lines = [] # lines where DB error is suspected
-        xx_lines = [] # lines where the reference is XX
-        verse_urls = [] # list of verse urls
-        verse_annots = [] # aggregate list of verse annotations
+        raw_verses = []  # aggregate list of inflected texts from all verses
+        verse_ref_nums = []  # the reference numbers for each verse
+        empty_verses = []  # verse reference to verses where no lemma could be
+        # retrieved
+        error_lines = []  # lines where DB error is suspected
+        xx_lines = []  # lines where the reference is XX
+        verse_urls = []  # list of verse urls
+        verse_annots = []  # aggregate list of verse annotations
 
         # book-level counters
         num_slashes = 0
@@ -170,8 +176,8 @@ if __name__ == "__main__":
 
         # verse-level vars
         word_lis = []  # lemmatised words of each verse as a list of lemmata
-        raw_words = [] # inflected form of words in each verse, as a list
-        annot_lis = [] # annotations of the lemma, as a list of str
+        raw_words = []  # inflected form of words in each verse, as a list
+        annot_lis = []  # annotations of the lemma, as a list of str
         lex_url = ""
         verse_url = ""
 
@@ -179,7 +185,10 @@ if __name__ == "__main__":
         is_verse_line = False
 
         for table_data in soup.find_all("td"):
-            if "valign" in table_data.attrs.keys() and table_data["valign"] == "top":
+            if (
+                "valign" in table_data.attrs.keys()
+                and table_data["valign"] == "top"
+            ):
                 stripped = str(table_data.text).strip()
                 # when the scraper reaches a new row on the table.
                 # add the verse identifier (e.g. "01:01")
@@ -191,9 +200,8 @@ if __name__ == "__main__":
                     print(vid)
                     v_refs = vid.split(":")
                     reference = (
-                            f"{book[0]} Chapter {v_refs[0]}"
-                            + f" Verse {v_refs[1]}"
-                            )
+                        f"{book[0]} Chapter {v_refs[0]}" + f" Verse {v_refs[1]}"
+                    )
                     verse_ref_nums.append(reference)
                     is_verse_line = True
                 elif "d.:ne" in table_data.text:
@@ -202,24 +210,31 @@ if __name__ == "__main__":
                     # https://cal.huc.edu/get_a_chapter.php?file=62040&cset=Latin
                     error_lines.append(f"{verse_ref_nums[-1]} +1")
                     is_verse_line = False
-                    print("INFO: Found an errorneous line after verse " +
-                          f"{verse_ref_nums[-1]}, skipping")
+                    print(
+                        "INFO: Found an errorneous line after verse "
+                        + f"{verse_ref_nums[-1]}, skipping"
+                    )
                 elif "xx" in table_data.text.lower():
                     # Handle cases like 2 Samuel 24:XX
                     xx_lines.append(f"{verse_ref_nums[-1]} +1")
                     vid = table_data.text.strip()
                     verse_ref_nums.append(vid)
-                    print("INFO: Found a line with reference no." +
-                          f" {table_data.text}" +
-                          f" after verse {verse_ref_nums[-1]}")
+                    print(
+                        "INFO: Found a line with reference no."
+                        + f" {table_data.text}"
+                        + f" after verse {verse_ref_nums[-1]}"
+                    )
                     is_verse_line = True
                 else:
-                    print("INFO: Found td cell with valign attr that is not a verse reference")
+                    print(
+                        "INFO: Found td cell with valign attr that is not a verse reference"
+                    )
 
-            elif len(table_data.text) > 0 and is_verse_line:  # If it's the cell containing verse
+            elif (
+                len(table_data.text) > 0 and is_verse_line
+            ):  # If it's the cell containing verse
                 # go through all links in the table data cell
                 for link in table_data.find_all("a"):
-
                     lex_url = link["href"]
 
                     if is_lex(lex_url):
@@ -256,7 +271,6 @@ if __name__ == "__main__":
                     extracted = get_verse_url(verse_url, cset=cset)
                     verse_urls.append(extracted)
 
-
                 # when all links in one table cell has been explored,
                 # push the list of scraped lemmata to verses[]
                 print(word_lis)
@@ -275,12 +289,15 @@ if __name__ == "__main__":
         num_variances = num_slashes / 2
 
         if len(verses) != len(verse_ref_nums):
-            print("INFO: the number of verses and verse_ref_nums do not match: ")
-            print(f"verse_ref_nums: {len(verse_ref_nums)} but" +
-                             f" verses: {len(verses)}," +
-                             f" raw_verses: {len(raw_verses)}" +
-                             f" empty_verses: {len(empty_verses)}"
-                             )
+            print(
+                "INFO: the number of verses and verse_ref_nums do not match: "
+            )
+            print(
+                f"verse_ref_nums: {len(verse_ref_nums)} but"
+                + f" verses: {len(verses)},"
+                + f" raw_verses: {len(raw_verses)}"
+                + f" empty_verses: {len(empty_verses)}"
+            )
             print(f"empty verses: {empty_verses}")
 
         # # format the data in a string of CSV format
@@ -302,15 +319,17 @@ if __name__ == "__main__":
         #             )
 
         # Store the scraped lines into a csv file
-        with Path(f"./out/scraper_results_{cset}_{book[0]}.json").open(mode="w") as fp:
+        with Path(f"./out/scraper_results_{cset}_{book[0]}.json").open(
+            mode="w"
+        ) as fp:
             book_data = {
-                    "book_title": book[0],
-                    "verse_refs": verse_ref_nums,
-                    "verse_urls": verse_urls,
-                    "raw_text_verses": raw_verses,
-                    "lemmatised_verses": verses,
-                    "lemma_annotations": verse_annots
-                    }
+                "book_title": book[0],
+                "verse_refs": verse_ref_nums,
+                "verse_urls": verse_urls,
+                "raw_text_verses": raw_verses,
+                "lemmatised_verses": verses,
+                "lemma_annotations": verse_annots,
+            }
             json.dump(book_data, fp)
 
         print(f"Done scraping for book {book[0]}")

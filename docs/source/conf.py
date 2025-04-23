@@ -1,4 +1,5 @@
 """Sphinx config file."""
+
 import sys
 from pathlib import Path
 
@@ -13,18 +14,18 @@ version = "0.0.0"
 html_theme = "sphinx_rtd_theme"
 
 extensions = [
-        "sphinx.ext.autodoc",
-        "sphinx.ext.autosummary",
-        "sphinx.ext.napoleon",
-        ]
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+]
 
 intersphinx_mapping = {
-        "python": ("https://docs.python.org/3", None),
-        "numpy": ("https://docs.scipy.org/doc/numpy/", None),
-        "pandas": ("https://pandas.pydata.org/docs/", None),
-        "nltk": ("https://www.nltk.org/", None),
-        "sklearn": ("https://scikit-learn.org/stable/objects.inv", None),
-    }
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://docs.scipy.org/doc/numpy/", None),
+    "pandas": ("https://pandas.pydata.org/docs/", None),
+    "nltk": ("https://www.nltk.org/", None),
+    "sklearn": ("https://scikit-learn.org/stable/objects.inv", None),
+}
 
 
 nitpicky = True

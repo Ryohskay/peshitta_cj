@@ -851,24 +851,23 @@ class ResultStatsDict(TypedDict):
     thresh_stats: list[ThreshStatsDict]
 
 
-def jsonify_thresh_stats(
-    obj: ThresholdStats) -> ThreshStatsDict:
+def jsonify_thresh_stats(obj: ThresholdStats) -> ThreshStatsDict:
     return {
-            "threshold": obj.threshold,
-            "accuracy": obj.accuracy,
-            "precision": obj.precision,
-            "recall": obj.recall,
-            "f_beta": obj.f_beta,
-        }
+        "threshold": obj.threshold,
+        "accuracy": obj.accuracy,
+        "precision": obj.precision,
+        "recall": obj.recall,
+        "f_beta": obj.f_beta,
+    }
 
 
 def jsonify_result_stats(obj: ResultStats) -> ResultStatsDict:
     return {
-            "supports": obj.supports,
-            "log_loss": obj.log_loss,
-            "roc_auc": obj.roc_auc,
-            "thresh_stats": [jsonify_thresh_stats(ts) for ts in obj.thresh_stats],
-        }
+        "supports": obj.supports,
+        "log_loss": obj.log_loss,
+        "roc_auc": obj.roc_auc,
+        "thresh_stats": [jsonify_thresh_stats(ts) for ts in obj.thresh_stats],
+    }
 
 
 # Code adapted from https://docs.python.org/3/library/json.html
