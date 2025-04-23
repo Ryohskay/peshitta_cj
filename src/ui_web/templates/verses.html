@@ -8,7 +8,7 @@
     </p>
     {% for book_verses in results.get_book_verses() %}
         <h2>Book: {{ book_verses["book_name"] }}</h2>
-        {% for i in len(book_verses["verses"]) %}
+        {% for i in range(book_verses["verses"] | length) %}
             <div class="border-3">
                 <p>Verse</p>
                 <p dir="rtl" lang="syc-Syre" translate="no">

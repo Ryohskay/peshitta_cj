@@ -4,9 +4,10 @@
         <p>Classifier Summary</p>
         <p>Model: {{ results.config.name }}</p>
         <p>Trained on: {{ results.config.origin }} data</p>
-        {% if results.config.is_ngram %}
+        {% if results.config.is_n_gram %}
         <div>
-            <p>{{ results.config.n }}-gram</p>
+            <p>{{ "Word" if results.config.is_char_level else "Character" }} level
+                {{ results.config.n }}-gram</p>
         </div>
         {% endif %}
         <div>
@@ -18,6 +19,34 @@
                     </li>
                 {% endfor %}
             </ul>
+        </div>
+        <div>
+            <h3>Classifier Evaluation Results</h3>
+            <div>
+                <p>Parsed n-grams in training: {{ results.results_summary["total_n_grams_parsed"] }}</p>
+                <p>Top 10 n-grams in training: {{ results.results_summary["top_ten_in_training"] }}</p>
+                <p>Mislabelled verses: {{ results.results_summary["test_mislabel_percent"] }}</p>
+            </div>
+            {% if results.results_summary["metrics"] %}
+            <div>
+                <ul>
+                <li>Test samples from each class: {{ results.results_summary["metrics"]["supports"] }}</li>
+                <li>Log loss (Cross-entropy Loss): {{ results.results_summary["metrics"]["log_loss"] }}</li>
+                <li>ROC AUC: {{ results.results_summary["metrics"]["roc_auc"] }}</li>
+                {% for thresh_stats in results.results_summary["metrics"]["thresh_stats"] %}
+                <li>
+                    <h5>At threshold: {{ thresh_stats["threshold"] }}</h5>
+                    <ul>
+                        <li>Accuracy: {{ thresh_stats["accuracy"] }}</li>
+                        <li>Precision: {{ thresh_stats["precision"] }}</li>
+                        <li>Recall: {{ thresh_stats["recall"] }}</li>
+                        <li>F1 score: {{ thresh_stats["f_beta"] }}</li>
+                    </ul>
+                </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

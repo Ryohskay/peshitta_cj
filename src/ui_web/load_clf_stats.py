@@ -12,7 +12,13 @@ class JsonifiedSummaryDict(TypedDict):
     """TypedDict for the JSON summary file.
 
     Attributes:
-        metrics: dictionary containing the metrics.
+        n_gram_form: the n-gram form (word or char).
+        n: the n for n-grams.
+        top_ten_in_training: the top ten n-grams in the training set.
+        test_mislabel_percent: the mislabel percentages for the test set.
+        total_n_grams_parsed: the total number of n-grams parsed.
+        metrics: dictionary containing the metrics, of
+            :class:``src.classifier.result_utils.ResultStatsDict`` type.
     """
 
     n_gram_form: Literal["word", "char"]

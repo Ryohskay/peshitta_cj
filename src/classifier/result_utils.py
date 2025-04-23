@@ -843,6 +843,10 @@ class ResultStatsDict(TypedDict):
         supports: the number of samples in each class.
         log_loss: the cross-entropy loss for each class.
         roc_auc: the area under the ROC curve for each class.
+        thresh_stats: a list of dictionaries containing the
+            statistics of the predictions at each threshold. Each instance
+            is represented as a dictionary of the type
+            :class:`src.classifier.result_utils.ThresholdStatsDict`.
     """
 
     supports: list[int]
