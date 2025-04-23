@@ -26,9 +26,8 @@
 """Utilities to handle data extraction and estimation results."""
 
 import logging
-from math import log
 from pathlib import Path
-from typing import Any, Literal, Protocol
+from typing import Any, Literal, Protocol, TypedDict
 
 import numpy as np
 from numpy.typing import NDArray
@@ -534,11 +533,10 @@ class ProbaPredictions(Predictions):
             msg = "The attr `self.predictions` is empty!"
             raise ValueError(msg)
 
-        num_correct_y = (None if self.correct_labels is None
-                            else len(self.correct_labels))
-        if (len(self.predictions) != num_correct_y
-            or num_correct_y == 0
-            ):
+        num_correct_y = (
+            None if self.correct_labels is None else len(self.correct_labels)
+        )
+        if len(self.predictions) != num_correct_y or num_correct_y == 0:
             msg = (
                 f"Lengths of `self.predictions` ({len(self.predictions)}) and/or"
                 + f" `self.correct_labels` ({num_correct_y}) are invalid."
@@ -584,10 +582,10 @@ class ProbaPredictions(Predictions):
                     # add the mislabelled verse to the mislabel_books
                     mislabel_book.mislabels.append(self.samples[i])
 
-                if (i == (len(self.samples) - 1)
-                    or (i < (len(self.samples) - 1)
-                        and current_book != self.samples[i+1].book)
-                    ):
+                if i == (len(self.samples) - 1) or (
+                    i < (len(self.samples) - 1)
+                    and current_book != self.samples[i + 1].book
+                ):
                     # if we reach the end of the list
                     # or the next book is different
                     mislabel_book.book_num_verses = num_book_verses
@@ -658,7 +656,7 @@ class Mislabels(Any):
         correct_labels: list[int] | NDArray[np.int64],
         mislabelled_verses: list[Verse],
         probas: list[list[float]] | NDArray[np.float64],
-        num_total_samples: int | None = None
+        num_total_samples: int | None = None,
     ) -> None:
         if (
             len(mislabelled_verses) < 1
@@ -803,9 +801,9 @@ class ResultStats:
         log_loss: list[float] | NDArray,
         roc_auc: list[float] | NDArray,
     ):
-        self.supports = np_arr_to_list(supports)
-        self.log_loss = np_arr_to_list(log_loss)
-        self.roc_auc = np_arr_to_list(roc_auc)
+        self.supports: list[int] = np_arr_to_list(supports)
+        self.log_loss: list[float] = np_arr_to_list(log_loss)
+        self.roc_auc: list[float] = np_arr_to_list(roc_auc)
         self.thresh_stats: list[ThresholdStats] = []
 
     def add_thresh_stats(self, stats: list[ThresholdStats]) -> None:
@@ -820,8 +818,63 @@ class ResultStats:
         self.thresh_stats.extend(stats)
 
 
+class ThreshStatsDict(TypedDict):
+    """TypedDict for the threshold statistics class as json.
+
+    Attributes:
+        threshold: the threshold value.
+        accuracy: the accuracy of the classifier at the threshold.
+        precision: the precision of the classifier at the threshold.
+        recall: the recall of the classifier at the threshold.
+        f_beta: the f-beta/f1 score of the classifier at the threshold.
+    """
+
+    threshold: float
+    accuracy: float
+    precision: list[float]
+    recall: list[float]
+    f_beta: list[float]
+
+
+class ResultStatsDict(TypedDict):
+    """TypedDict for the result statistics class as json.
+
+    Attributes:
+        supports: the number of samples in each class.
+        log_loss: the cross-entropy loss for each class.
+        roc_auc: the area under the ROC curve for each class.
+    """
+
+    supports: list[int]
+    log_loss: list[float]
+    roc_auc: list[float]
+    thresh_stats: list[ThreshStatsDict]
+
+
+def jsonify_thresh_stats(
+    obj: ThresholdStats) -> ThreshStatsDict:
+    return {
+            "threshold": obj.threshold,
+            "accuracy": obj.accuracy,
+            "precision": obj.precision,
+            "recall": obj.recall,
+            "f_beta": obj.f_beta,
+        }
+
+
+def jsonify_result_stats(obj: ResultStats) -> ResultStatsDict:
+    return {
+            "supports": obj.supports,
+            "log_loss": obj.log_loss,
+            "roc_auc": obj.roc_auc,
+            "thresh_stats": [jsonify_thresh_stats(ts) for ts in obj.thresh_stats],
+        }
+
+
 # Code adapted from https://docs.python.org/3/library/json.html
-def jsonify_dict(obj: ResultStats | ThresholdStats) -> dict[str, Any]:
+def jsonify_dict(
+    obj: ResultStats | ThresholdStats,
+) -> ResultStatsDict | ThreshStatsDict:
     """Custom factory to convert a dictionary to a JSON string.
 
     Use this function as the serializer for the arg `default` of
@@ -831,21 +884,10 @@ def jsonify_dict(obj: ResultStats | ThresholdStats) -> dict[str, Any]:
         a dictionary containing the contents of ``obj`` encoded in JSON.
     """
     if isinstance(obj, ResultStats):
-        return {
-            "supports": obj.supports,
-            "log_loss": obj.log_loss,
-            "roc_auc": obj.roc_auc,
-            "thresh_stats": [jsonify_dict(ts) for ts in obj.thresh_stats],
-        }
+        return jsonify_result_stats(obj)
     # if obj is not an instance of ResultStats
     if isinstance(obj, ThresholdStats):
-        return {
-            "threshold": obj.threshold,
-            "accuracy": obj.accuracy,
-            "precision": obj.precision,
-            "recall": obj.recall,
-            "f_beta": obj.f_beta,
-        }
+        return jsonify_thresh_stats(obj)
     # else
     msg = f"Object of type {type(obj)} is not JSON serializable"
     raise TypeError(msg)

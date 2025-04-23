@@ -1,6 +1,5 @@
 import csv
 from pathlib import Path
-from typing import Literal
 
 from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 
@@ -13,10 +12,7 @@ class BookProbas:
         book_proba_dict: dictionary of per-book probabilities.
     """
 
-    def __init__(
-            self,
-            origin: str
-        ) -> None:
+    def __init__(self, origin: str) -> None:
         """Load the book probabilities from a CSV file.
 
         Args:
@@ -40,9 +36,9 @@ class BookProbas:
 
 
 def load_book_probas(
-        fname: SavefileName,
-        load_dir: str | Path = "src/classifier/out/",
-    ) -> BookProbas:
+    fname: SavefileName,
+    load_dir: str | Path = "src/classifier/out/",
+) -> BookProbas:
     """Load total probabilities for books from a CSV file.
 
     Args:
@@ -62,11 +58,14 @@ def load_book_probas(
         for row in read_data:
             if first_row:
                 first_row = False
-                continue
-            print(f"{row[0]}: (OT) {float(row[1]):.08f} vs."
-                    + f" (NT) {float(row[2]):.08f}")
-            book_probas.add_book_proba(row[0], [float(row[1]), float(row[2])])
+            else:
+                print(
+                    f"{row[0]}: (OT) {float(row[1]):.08f} vs."
+                    + f" (NT) {float(row[2]):.08f}"
+                )
+                book_probas.add_book_proba(row[0], [float(row[1]), float(row[2])])
     return book_probas
+
 
 if __name__ == "__main__":
     outdir = Path("src/classifier/out/")
@@ -83,9 +82,13 @@ if __name__ == "__main__":
         is_bow=True,
         is_char_level=True,
     )
-    cal_fname.add_extra_opts([FnameExtraOpts.REMOVE_UNDERSCORES, 
-                              FnameExtraOpts.REMOVE_PROPN, 
-                              FnameExtraOpts.REMOVE_FROM_BOTH])
+    cal_fname.add_extra_opts(
+        [
+            FnameExtraOpts.REMOVE_UNDERSCORES,
+            FnameExtraOpts.REMOVE_PROPN,
+            FnameExtraOpts.REMOVE_FROM_BOTH,
+        ]
+    )
     cal_fname.mark_special_file(is_prod=True, is_total_proba=True)
     load_book_probas(cal_fname, outdir)
 

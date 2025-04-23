@@ -76,8 +76,9 @@ def test_parse_fname():
 class TestResultFilesIndex:
     def test_result_files_index(self):
         """Test the ResultFilesIndex class."""
-        index = ResultFilesIndex("./assets/classifier_results/")
-        assert len(index) == 7
+        assets_dir = Path("./assets/classifier_results/")
+        index = ResultFilesIndex(assets_dir)
+        assert len(index) == len(list(assets_dir.iterdir()))
         for i in range(len(index)):
             f = index.files[i]
             assert f.origin in {"ETCBC", "CAL"}

@@ -28,6 +28,7 @@
 import json
 import logging
 from pathlib import Path
+from typing import Literal, TypedDict
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -53,6 +54,7 @@ from src.classifier.result_utils import (
     Mislabels,
     ProbaPredictions,
     ResultStats,
+    ResultStatsDict,
     ThresholdStats,
     Verse,
     jsonify_dict,
@@ -272,8 +274,11 @@ def plot_charts(  # noqa: PLR0913
     # evaluate with more statistics
     cm_display = ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
     cm_display.plot()
-    save_dest = (save_fname_p if save_fname_p is not None
-                    else f"{out_dir}/confusion_matrix.jpeg")
+    save_dest = (
+        save_fname_p
+        if save_fname_p is not None
+        else f"{out_dir}/confusion_matrix.jpeg"
+    )
     if out_dir is None:
         plt.show()
     else:
@@ -284,8 +289,11 @@ def plot_charts(  # noqa: PLR0913
         y_true=y_true, y_pred=y_pred
     )
     pr_display.plot()
-    save_dest = (save_fname_p if save_fname_p is not None
-                    else f"{out_dir}/confusion_matrix.jpeg")
+    save_dest = (
+        save_fname_p
+        if save_fname_p is not None
+        else f"{out_dir}/confusion_matrix.jpeg"
+    )
     if out_dir is None:
         plt.show()
     else:
@@ -293,10 +301,15 @@ def plot_charts(  # noqa: PLR0913
 
     # Roc curve
     proba_pred_pos = [proba[pos_label] for proba in y_probas]
-    roc_display = RocCurveDisplay.from_predictions(y_true=y_true, y_pred=proba_pred_pos)
+    roc_display = RocCurveDisplay.from_predictions(
+        y_true=y_true, y_pred=proba_pred_pos
+    )
     roc_display.plot()
-    save_dest = (save_fname_p if save_fname_p is not None
-                    else f"{out_dir}/confusion_matrix.jpeg")
+    save_dest = (
+        save_fname_p
+        if save_fname_p is not None
+        else f"{out_dir}/confusion_matrix.jpeg"
+    )
     if out_dir is None:
         plt.show()
     else:
@@ -354,13 +367,31 @@ def split_list(lis: list, parts: int = 5) -> list[list]:
     return results
 
 
+class SummaryDict(TypedDict):
+    """TypedDict for the summary dictionary.
+
+    Attributes:
+        n_gram_form: the n-gram form of the classifier.
+        n: the n-gram size of the classifier.
+        total_n_grams_parsed: the total number of n-grams parsed.
+        top_ten_in_training
+    """
+
+    n_gram_form: Literal["word", "char"]
+    n: int
+    total_n_grams_parsed: int
+    top_ten_in_training: list[tuple[tuple[str], int]]
+    test_mislabel_percent: dict[str, float]
+    metrics: ResultStats
+
+
 def get_summary(
     clf: BoWEstimator,
     test_split: DataSplit,
     ot_mislab: Mislabels,
     nt_mislab: Mislabels,
     res_stats: ResultStats,
-) -> dict:
+) -> SummaryDict:
     """Make a summary of the classifier evaluation results.
 
     Args:
@@ -385,6 +416,7 @@ def get_summary(
     # test if the classifier is a word n-gram classifier by checking the
     # n-gram formatter.
     n_gram_form = "word" if clf.n_gram_formatter == identity else "char"
+    # percentage of mislabelled verses out of all supports per each class.
     mislab_percents = {
         label_data.ValToLabel[0]: (
             len(ot_mislab.mislabels) / len(test_split.get_labels(0))
@@ -581,7 +613,7 @@ def eval_and_save(  # noqa: PLR0913
     save_total_proba_fname.mark_special_file(is_total_proba=True)
     total_proba_save_fp = out_dir_p / save_total_proba_fname.get_fname()
     total_proba_csv = csvify_total_proba(ot_probas.get_total_probas())
-    total_proba_csv += csvify_total_proba(nt_probas.get_total_probas())
+    total_proba_csv += csvify_total_proba(nt_probas.get_total_probas(), no_header=True)
     total_proba_save_fp.write_text(total_proba_csv)
 
     # create a summary dictionary of a classifier evaluation

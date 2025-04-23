@@ -1,12 +1,31 @@
-from src.classifier.fname_utils import SavefileName
-from src.classifier.result_utils import ResultStats, ThresholdStats
-from pathlib import Path
 import json
+from pathlib import Path
+from typing import TYPE_CHECKING, TypedDict, Literal
+
+from src.classifier.fname_utils import SavefileName
+from src.classifier.result_utils import ResultStats, ResultStatsDict, ThresholdStats
+
+if TYPE_CHECKING:
+    from src.classifier.eval_utils import SummaryDict
+
+
+class JsonifiedSummaryDict(TypedDict):
+    """TypedDict for the JSON summary file.
+
+    Attributes:
+        metrics: dictionary containing the metrics.
+    """
+    n_gram_form: Literal["word", "char"]
+    n: int
+    total_n_grams_parsed: int
+    top_ten_in_training: list[tuple[tuple[str], int]]
+    test_mislabel_percent: dict[str, float]
+    metrics: ResultStatsDict
 
 def load_clf_stats(
-        json_fname: SavefileName,
-        load_dir: str | Path = "src/classifier/out/"
-    ) -> ResultStats:
+    json_fname: SavefileName,
+    load_dir: str | Path = "src/classifier/out/"
+) -> JsonifiedSummaryDict:
     """Load the classifier statistics from the "summary" files.
 
     Returns:
@@ -20,6 +39,6 @@ def load_clf_stats(
     # load the classifier statistics
     fname_p = Path(load_dir) / json_fname.get_fname()
     with fname_p.open(encoding="utf-8") as fp:
-        data = json.load(fp)
+        data: JsonifiedSummaryDict = json.load(fp)
 
-    clf_stats = data["metrics"]
+    return data
