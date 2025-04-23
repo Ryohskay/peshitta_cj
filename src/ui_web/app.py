@@ -49,7 +49,7 @@ def parse_clf_configs(req: LocalProxy) -> ClassifierConfig:
         :class:`src.ui_web.select_load_classifier.ClassifierConfig`.
     """
     result = ClassifierConfig()
-    for field in ClassifierConfig.fields():
+    for field in result.fields():
         # loop over the predefined configurations to avoid
         # picking up unwanted values
         config_val = req.form.get(field.name)
@@ -60,8 +60,9 @@ def parse_clf_configs(req: LocalProxy) -> ClassifierConfig:
             elif field.type is int:
                 setattr(result, field.name, int(config_val))
             else:
-                # cast to str by default
-                setattr(result, field.name, str(config_val))
+                # pass the value as is by default
+                setattr(result, field.name, config_val)
+    return result
 
 
 @app.route("/")
@@ -82,8 +83,12 @@ def display_default():
 
 # Code adapted from https://github.com/pallets/flask/blob/main/examples/javascript/js_example
 # (Accessed: 15 April 2025)
-@app.route("/classifier")
-def find_classifier():
+@app.route("/get_classifier")
+def get_classifier_summary():
     clf_configs = parse_clf_configs(request)
-    save_file = file_index.match_files_by_config(clf_configs)
-    return jsonify()
+    files = file_index.match_files_by_config(clf_configs)
+    for file in files:
+        if file.is_clf_summary:
+            return jsonify(file.get_summary())
+    flask.abort(404)  # Not found
+    # code after abort is never executed

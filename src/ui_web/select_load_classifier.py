@@ -1,8 +1,10 @@
+import logging
 import re
 from collections.abc import Iterable
 from dataclasses import Field, dataclass, field, fields
 from pathlib import Path
 from typing import Literal
+from venv import logger
 
 from src.classifier.fname_utils import FnameExtraOpts, SavefileName, _sanitise
 from src.classifier.result_utils import ResultStats
@@ -11,6 +13,7 @@ from src.ui_web.load_book_probas import BookProbas, load_book_probas
 from src.ui_web.load_clf_stats import load_clf_stats
 from src.ui_web.load_predictions import BookVerses, load_preds
 
+logger = logging.getLogger(__name__)
 
 @dataclass
 class ClassifierConfig:
@@ -79,8 +82,9 @@ def parse_fname(fname: str) -> SavefileName:
     # split the filename into parts
     parts = fname_stem.split("_")
     # check if the file is for production data
+    print(f"Parsing file name from: {parts}")
     is_prod = False
-    if parts[0] == "PRODUCTION":
+    if parts[0].upper() == "PRODUCTION":
         is_prod = True
         # remove the first word and continue parsing
         parts = parts[1:]
@@ -96,7 +100,7 @@ def parse_fname(fname: str) -> SavefileName:
     is_n_gram = re.search(r"\dgram", fname) is not None
     if is_n_gram:
         # find the n-gram options
-        is_char_level = parts[2] == "char"
+        is_char_level = (parts[2] == "char")
         n = parts[3].replace("gram", "")
         is_bow = parts[4] == "bow"
         # set the n-gram options
@@ -121,6 +125,8 @@ def parse_fname(fname: str) -> SavefileName:
         and parts[(parts.index("classifier") + 1)] == "stats"
     ):
         save_fname.mark_special_file(is_prod=is_prod, is_clf_summary=True)
+    elif is_prod:
+        save_fname.mark_special_file(is_prod=True)
     # check for extra options
     extra_opts = []
     for opt in FnameExtraOpts:

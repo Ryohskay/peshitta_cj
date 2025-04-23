@@ -2,6 +2,7 @@ import pytest
 from sklearn.naive_bayes import MultinomialNB
 
 from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.fitting_utils import identity
 from src.classifier.result_utils import Verse
 from src.classifier.wrappers import BoWEstimator, Classifier, ProbaClassifier
 
@@ -57,7 +58,7 @@ class TestProbaClassifier:
 
 class TestBoWEstimator:
     def test_init(self):
-        clf = BoWEstimator(MultinomialNB(), formatter=lambda x: x, n=2)
+        clf = BoWEstimator(MultinomialNB(), formatter=identity, n=2)
         assert clf.n == 2
         assert callable(clf.n_gram_formatter)
 

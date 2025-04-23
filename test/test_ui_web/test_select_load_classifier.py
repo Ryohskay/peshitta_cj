@@ -68,6 +68,12 @@ def test_parse_fname():
     assert parsed_fname.is_bow
     assert parsed_fname.is_mislabel
     assert FnameExtraOpts.REMOVE_DIACRITICS in parsed_fname.extra_opts
+    # production file
+    fname = "PRODUCTION_cal_mnb_char_3gram_bow_jewish_no_diacritics.csv"
+    parsed_fname = parse_fname(fname)
+    assert parsed_fname.origin == "CAL"
+    assert parsed_fname.classifier == "mnb"
+    assert parsed_fname.is_prod
 
 
 class TestResultFilesIndex:

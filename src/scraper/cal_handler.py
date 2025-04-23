@@ -190,22 +190,17 @@ def get_and_save(
     if normalise_cset(display_in) == "S":
         qr = get_a_syriac_chapter(pool_mgr, book_id, section, needs_est)
     else:
-        qr = get_a_chapter(pool_mgr, book_id, section, display_in)
-    if isinstance(fpath, Path):
-        dest = fpath
-    else:
-        dest = Path(fpath)
+        qr = get_a_chapter(pool_mgr, book_id, section)
+    dest = fpath if isinstance(fpath, Path) else Path(fpath)
 
     if dest.exists() and not dest.is_file():
-        raise ValueError(
-            f"The specified path {fpath} exists, and it is not a file path."
-        )
+        msg = f"The specified path {fpath} exists, and it is not a file path."
+        raise ValueError(msg)
 
     # Avoid overwriting files unless explicitly allowed
     if dest.exists() and not allow_overwrite:
-        raise FileExistsError(
-            f"Overwrite not allowed: The file {fpath} exists, and allow_overwrite parameter is False!"
-        )
+        msg = f"Overwrite not allowed: The file {fpath} exists, and allow_overwrite parameter is False!"
+        raise FileExistsError(msg)
     if dest.exists():
         print(f"Overwriting: {fpath}")
 
