@@ -36,6 +36,7 @@ from typing import Literal, TypedDict
 
 from src.classifier.result_utils import Verse
 from src.classifier.sanitisation_utils import clean_path_str, sanitise_str
+from src.shared.label_data import ValToLabel
 
 
 class DatasetDict(TypedDict):
@@ -63,7 +64,7 @@ class DataSplit:
     """
 
     def __init__(self, ot_verses: list[Verse], nt_verses: list[Verse]) -> None:
-        self.num_classes: int = 2  # this is a binary classification problem
+        self.num_classes: int = len(ValToLabel)  # this is a binary classification problem
         self.verses: list[list[Verse]] = []
         self.verses.append(ot_verses)
         self.verses.append(nt_verses)

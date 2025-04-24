@@ -77,6 +77,11 @@ class SavefileName(Any):
         self.is_n_gram = False
         self.is_bow = False
         self.scope = ""
+        # other per-algorithm features
+        # k-nearest neighbours
+        self.knn_k: int = 0
+        self.knn_weights: Literal["uniform", "distance", ""] = ""
+        self.knn_minkowski_p: int = 0
         # Special file flags
         self.is_prod = False
         self.is_mislabel = False
@@ -111,6 +116,9 @@ class SavefileName(Any):
             and self.is_char_level == obj.is_char_level
             and self.is_bow == obj.is_bow
             and self.n == obj.n
+            and self.knn_k == obj.knn_k
+            and self.knn_weights == obj.knn_weights
+            and self.knn_minkowski_p == obj.knn_minkowski_p
             and self.extra_opts == obj.extra_opts
         )
 
@@ -186,6 +194,28 @@ class SavefileName(Any):
             # register the extra option
             self.extra_opts[opt] = True
 
+
+    def set_knn_opts(
+        self,
+        k: int = 5,
+        *,
+        weights: Literal["uniform", "distance"] = "uniform",
+        p: int = 2,
+    ) -> None:
+        """Set the options related to classifiers based on k-nearest neighbours.
+
+        Args:
+            k: the number of neighbours to consider.
+            weights: the weight function used in prediction. Possible values are
+                ``uniform`` and ``distance``. ``uniform`` means all points
+                are weighted equally, while ``distance`` means closer points
+                have more influence on the prediction.
+            p: the power parameter for the Minkowski distance metric.
+        """
+        self.knn_k = int(k)
+        self.knn_weights = weights
+        self.knn_minkowski_p = int(p)
+
     def copy(self, memo: dict | None = None) -> Self:
         """Returns a deep copy of self."""
         return deepcopy(self, memo)
@@ -259,6 +289,14 @@ class SavefileName(Any):
 
         if self.is_bow:
             fname += "_bow"
+
+        # append options related to k-nearest neighbours
+        if self.knn_k != 0:
+            fname += f"_{self.knn_k}knn"
+            if self.knn_weights:
+                fname += "_" + self.knn_weights
+            if self.knn_minkowski_p:
+                fname += f"_p{self.knn_minkowski_p}"
 
         if self.scope:
             fname += "_" + self.scope

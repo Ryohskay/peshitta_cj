@@ -35,7 +35,7 @@ def load_clf_stats(
     """Load the classifier statistics from the "summary" files.
 
     Returns:
-        A list of :class:`src.classifier.result_utils.ResultStats` instances
+        dict with scheme :class:`src.ui_web.load_clf_stats.JsonifiedSummaryDict`
         containing the classifier statistics.
     """
     # check if the file is a summary file

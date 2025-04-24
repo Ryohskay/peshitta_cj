@@ -77,7 +77,8 @@ def mislabel_stats(
             the ``probas`` attribute set.
 
     Returns:
-        an instance of :class:`src.classifier.result_utils.Mislabels`.
+        an instance of :class:`src.classifier.result_utils.Mislabels`. `None`
+        if no verse was mislabelled.
 
     Raises:
         ValueError: if the attribute ``preds.correct_labels`` is ``None``.
@@ -443,7 +444,7 @@ def evaluate_classifier(
     plot: bool = True,
     threshold: float = 0.5,
 ) -> tuple[
-    ProbaPredictions, ProbaPredictions, Mislabels, Mislabels, ResultStats
+    ProbaPredictions, ProbaPredictions, Mislabels | None, Mislabels | None, ResultStats
 ]:
     """Evaluate a classifier with provided test sets.
 
@@ -461,7 +462,8 @@ def evaluate_classifier(
     Returns:
         :class:`ProbaPredictions` instances, one for OT and another for NT,
         :class:`Mislabels` instances for OT and NT, as well as a
-        ``ResultStats`` instance.
+        ``ResultStats`` instance. The `Mislabels` instances may be `None` if
+        no mislabelled verses for the corresponding class were found.
 
     Raises:
         RuntimeError: if the result of `metricise` function fails to return
@@ -587,25 +589,28 @@ def eval_and_save(  # noqa: PLR0913
     nt_all_file = save_fname.copy()
     nt_all_file.set_scope(label_data.ValToLabel[1])
 
-    ot_mislabels_file = ot_all_file.copy()
-    ot_mislabels_file.mark_special_file(is_mislabel=True)
-    nt_mislabels_file = nt_all_file.copy()
-    nt_mislabels_file.mark_special_file(is_mislabel=True)
-
     # Save the prediction results to files
-    ot_mislabels.save_to_file(
-        file_formatter, (out_dir_p / ot_mislabels_file.get_fname())
-    )
-    nt_mislabels.save_to_file(
-        file_formatter, (out_dir_p / nt_mislabels_file.get_fname())
-    )
-
     ot_probas.save_to_file(
         file_formatter, (out_dir_p / ot_all_file.get_fname())
     )
     nt_probas.save_to_file(
         file_formatter, (out_dir_p / nt_all_file.get_fname())
     )
+
+    # save the mislabelled verses to files
+    if ot_mislabels is not None:
+        ot_mislabels_file = ot_all_file.copy()
+        ot_mislabels_file.mark_special_file(is_mislabel=True)
+        ot_mislabels.save_to_file(
+            file_formatter, (out_dir_p / ot_mislabels_file.get_fname())
+        )
+
+    if nt_mislabels is not None:
+        nt_mislabels_file = nt_all_file.copy()
+        nt_mislabels_file.mark_special_file(is_mislabel=True)
+        nt_mislabels.save_to_file(
+            file_formatter, (out_dir_p / nt_mislabels_file.get_fname())
+        )
 
     # save per-book total probabilities
     save_total_proba_fname = save_fname.copy()

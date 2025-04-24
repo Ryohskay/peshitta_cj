@@ -17,15 +17,20 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ClassifierConfig:
-    """Configuration for the classifier."""
+    """Dataclass of configurations for the classifier."""
 
-    name: str = ""
-    origin: Literal["CAL", "ETCBC"] = "CAL"
+    name: str
+    origin: Literal["CAL", "ETCBC"]
     # n-gram options
     is_n_gram: bool = False
     n: int = 0
     is_bow: bool = False
     is_char_level: bool = False
+    # knn options
+    k: int = 0
+    weights: str = ""
+    p: int = 0
+    # extra options
     extra_opts: list[FnameExtraOpts] = field(default_factory=list)
 
     def fields(self) -> Iterable[Field]:
@@ -55,6 +60,11 @@ def configure_fname_opts(
         is_n_gram=configs.is_n_gram,
         is_bow=configs.is_bow,
         is_char_level=configs.is_char_level,
+    )
+    save_fname.set_knn_opts(
+        k=configs.k,
+        weights=configs.weights,  # type: ignore[reportArgumentType]
+        p=configs.p,
     )
     if configs.extra_opts is not None and len(configs.extra_opts) > 0:
         save_fname.add_extra_opts(configs.extra_opts)
@@ -98,18 +108,33 @@ def parse_fname(fname: str) -> SavefileName:
     # initialise the save file name
     save_fname = SavefileName(origin, classifier_alias, f_ext)  # type: ignore[reportArgumentType]
     # check if the file is for a n-gram classifier
-    is_n_gram = re.search(r"\dgram", fname) is not None
-    if is_n_gram:
+    ngram_fname = re.search(r"(char|word)_\dgram", fname)
+    if ngram_fname is not None:
         # find the n-gram options
-        is_char_level = (parts[2] == "char")
-        n = parts[3].replace("gram", "")
-        is_bow = parts[4] == "bow"
+        ngram_opts = ngram_fname.group().split("_")
+        is_char_level = (ngram_opts[0] == "char")
+        n = ngram_opts[1].replace("gram", "")
+        is_bow = re.search(r"_bow", fname) is not None
         # set the n-gram options
         save_fname.set_ngram_opts(
             n=int(n),
-            is_n_gram=is_n_gram,
+            is_n_gram=True,
             is_char_level=is_char_level,
             is_bow=is_bow,
+        )
+    fname_match = re.search(r"\dknn", fname)
+    if fname_match:
+        # find the knn options
+        k = int(fname_match.group().replace("knn", ""))
+        fname_weights = re.search(r"uniform|distance", fname)
+        weights = fname_weights.group() if fname_weights else "uniform"
+        fname_p = re.search(r"p\d", fname)
+        p = int(fname_p.group().replace("p", "")) if fname_p else 2
+        # set the knn options
+        save_fname.set_knn_opts(
+            k=int(k),
+            weights=weights,  # type: ignore[reportArgumentType]
+            p=p,
         )
     # check if it contains scope name
     for scope in label_data.LabelToVal:
@@ -162,6 +187,7 @@ class ResultFilesIndex:
                 save_fname = parse_fname(file.name)
                 self.files.append(save_fname)
                 self.file_paths.append(file)
+                print(f"Indexed File: {file.name} -> {save_fname.get_fname()}")
 
     def __len__(self) -> int:
         """Returns the number of files in the index."""
@@ -184,6 +210,7 @@ class ResultFilesIndex:
         matched_fnames: list[SavefileName] = []
         for file in self.files:
             if sf.is_same_classifier(file):
+                print(f"Matched File: {config} -> {sf.get_fname()}")
                 matched_fnames.append(file)
         return matched_fnames
 
@@ -223,8 +250,16 @@ class ClassifierResultsModel:
         self.load_results()
 
     def load_results(self) -> None:
-        """A utility to load data into the model."""
+        """A utility to load data into the model.
+
+        Raises:
+            ValueError: if there is no data file matching the specified
+            classifier configurations in the file index.
+        """
         save_files = self.index.match_files_by_config(self.config)
+        if len(save_files) == 0:
+            msg = f"No files found for classifier: {self.config}"
+            raise ValueError(msg)
         msg = f"Filtering from: {[f.get_fname() for f in save_files]}"
         print(msg)
         for file in save_files:
@@ -237,12 +272,12 @@ class ClassifierResultsModel:
             elif file.is_clf_summary:
                 # load ResultStats from the summary (``classifier_stats``) json
                 # file(s)
-                self.results_summary = load_clf_stats(file)
+                self.results_summary = load_clf_stats(file, self.load_dir)
             else:
                 # if the file is a normal CSV listing verses and their probas
                 self.book_verses.extend(load_preds(file, self.load_dir))
             self.files.append(file)
-        print(self.book_verses)
+        logger.debug(self.book_verses)
         # set the loaded flag to True
         self._is_loaded = True
 

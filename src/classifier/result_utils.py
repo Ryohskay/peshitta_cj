@@ -33,6 +33,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from src.classifier.sanitisation_utils import clean_path_str
+from src.shared.label_data import ValToLabel
 
 logger = logging.getLogger(__name__)
 
@@ -772,7 +773,7 @@ class ThresholdStats:
 
     def get_stats(self) -> tuple[float, list[float], list[float], list[float]]:
         """Return statistics of the predictions at the defined threshold."""
-        if self.threshold > 0.5:
+        if self.threshold > 0.5 and len(self.precision) > len(ValToLabel):
             # exclude the classification scores for "unknown" (-1) class
             # which doesn't really mean much
             return (
@@ -801,7 +802,11 @@ class ResultStats:
         log_loss: list[float] | NDArray,
         roc_auc: list[float] | NDArray,
     ):
-        self.supports: list[int] = np_arr_to_list(supports)
+        if len(supports) > len(ValToLabel):
+            # exclude the sample counts for "unknown" (-1) class
+            self.supports: list[int] = np_arr_to_list(supports[1:])
+        else:
+            self.supports: list[int] = np_arr_to_list(supports)
         self.log_loss: list[float] = np_arr_to_list(log_loss)
         self.roc_auc: list[float] = np_arr_to_list(roc_auc)
         self.thresh_stats: list[ThresholdStats] = []

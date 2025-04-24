@@ -1,3 +1,4 @@
+from dataclasses import fields
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -62,6 +63,14 @@ def test_configure_fname_opts():
     assert not configured_fname.is_total_proba
     assert not configured_fname.is_clf_summary
     assert FnameExtraOpts.REMOVE_DIACRITICS in configured_fname.extra_opts
+    # make sure all options are set
+    mock_sfn = MagicMock()
+    configure_fname_opts(mock_sfn, config)
+    # check that all methods of SavefileName are called once
+    for attr in dir(SavefileName):
+        if callable(getattr(save_fname, attr)):
+            # for each method of SavefileName class
+            getattr(mock_sfn, attr).assert_called_once()
 
 
 def test_parse_fname():
