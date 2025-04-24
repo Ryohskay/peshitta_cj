@@ -427,11 +427,7 @@ class TestThresholdStats:
         assert stats.f_beta == [0.75, 0.8]
 
     def test_get_stats(self, thresh_stats_1: ThresholdStats) -> None:
-        # Threshold > 0.5, exclude "unknown" class
-        assert thresh_stats_1.get_stats() == (0.85, [0.8], [0.7], [0.75])
-
-        # Threshold <= 0.5, include all classes
-        thresh_stats_1.threshold = 0.5
+        # exclude "unknown" class
         assert thresh_stats_1.get_stats() == (
             0.85,
             [0.7, 0.8],

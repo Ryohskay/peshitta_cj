@@ -106,5 +106,6 @@ convention = "google"
     "D103",   # undocumented-public-function
     "PLR0913",# too-many-arguments
     "PLR6301",# no-self-use
-    "S101"   # assert
+    "S101",   # assert
+    "SLF001"
     ]

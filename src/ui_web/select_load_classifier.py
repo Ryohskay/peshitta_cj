@@ -54,7 +54,12 @@ def configure_fname_opts(
     save_fname: SavefileName,
     configs: ClassifierConfig,
 ) -> SavefileName:
-    """Configure the filename options for the classifier."""
+    """Configure the filename options for a classifier.
+
+    This produces a base filename to compare against the real result files in
+    the directory to filter for the files containing this particular
+    classifier's results.
+    """
     save_fname.set_ngram_opts(
         n=configs.n,
         is_n_gram=configs.is_n_gram,
@@ -225,6 +230,19 @@ class ClassifierResultsModel:
 
     This functions as a Model of the Model-View-Controller (MVC) framework,
     although in this case we deal with raw text files instead of DBs.
+
+    Attributes:
+        config: The classifier configuration.
+        index: The :class:`src.ui_web.select_load_classifier.ResultFilesIndex`
+            instance representing the index of classifier result files.
+        load_dir: The directory to load the classifier result files from.
+        _is_loaded: Flag indicating whether the data is loaded or not.
+        files: The list of files.
+        book_probas: The probabilities of each book belonging to a particular
+            class.
+        book_verses: The list of dict of format `BookVerses`, containing
+            the verses for each book.
+        results_summary: The results summary.
     """
 
     def __init__(

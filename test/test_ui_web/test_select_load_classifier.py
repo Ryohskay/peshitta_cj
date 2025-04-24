@@ -1,8 +1,8 @@
-from dataclasses import fields
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
+from pytest import MonkeyPatch
 
 from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.ui_web.load_book_probas import BookProbas
@@ -37,7 +37,7 @@ def test_classifier_config_init():
     assert config.extra_opts == [FnameExtraOpts.REMOVE_DIACRITICS]
 
 
-def test_configure_fname_opts():
+def test_configure_fname_opts(monkeypatch: MonkeyPatch):
     """Test the configure_fname_opts function."""
     save_fname = SavefileName(
         origin="CAL", classifier_alias="mnb", file_ext="csv"
@@ -63,14 +63,27 @@ def test_configure_fname_opts():
     assert not configured_fname.is_total_proba
     assert not configured_fname.is_clf_summary
     assert FnameExtraOpts.REMOVE_DIACRITICS in configured_fname.extra_opts
-    # make sure all options are set
-    mock_sfn = MagicMock()
-    configure_fname_opts(mock_sfn, config)
-    # check that all methods of SavefileName are called once
+    # mock all setter methods that define a classifier spec
     for attr in dir(SavefileName):
-        if callable(getattr(save_fname, attr)):
+        if (
+            callable(getattr(save_fname, attr))
+            and attr.startswith("set")
+            and attr != "set_scope"
+        ):
             # for each method of SavefileName class
-            getattr(mock_sfn, attr).assert_called_once()
+            monkeypatch.setattr(save_fname, attr, MagicMock(name=attr))
+    # call the function to test
+    configure_fname_opts(save_fname, config)
+    # check that all setter methods of SavefileName, specifying a classifier,
+    # are called once and only once by the configure_fname_opts function.
+    for attr in dir(SavefileName):
+        if (
+            callable(getattr(save_fname, attr))
+            and attr.startswith("set")
+            and attr != "set_scope"
+        ):
+            # for each method of SavefileName class
+            getattr(save_fname, attr).assert_called_once()
 
 
 def test_parse_fname():
@@ -143,81 +156,10 @@ class TestResultFilesIndex:
         assert len(matched_files) == 3
 
 
-@pytest.fixture
-def mock_classifier_config():
-    """Fixture to provide a mock ClassifierConfig object."""
-    return ClassifierConfig(
-        name="mnb",
-        origin="ETCBC",
-        is_n_gram=True,
-        n=3,
-        is_bow=True,
-        is_char_level=True,
-        extra_opts=[FnameExtraOpts.REMOVE_DIACRITICS],
-    )
-
-
-@pytest.fixture
-def mock_result_files_index():
-    """Fixture to provide a mock ResultFilesIndex object."""
-    mock_index = MagicMock(spec=ResultFilesIndex)
-    mock_index.match_files_by_config.return_value = [
-        SavefileName(origin="ETCBC", classifier_alias="mnb", file_ext="csv"),
-        SavefileName(origin="ETCBC", classifier_alias="mnb", file_ext="json"),
-    ]
-    return mock_index
-
-
-@pytest.fixture
-def mock_load_dir(tmp_path):
-    """Fixture to provide a temporary directory for loading files."""
-    return tmp_path
-
-
-@patch("src.ui_web.select_load_classifier.load_book_probas")
-@patch("src.ui_web.select_load_classifier.load_clf_stats")
-@patch("src.ui_web.select_load_classifier.load_preds")
-def test_load_results(
-    mock_load_preds,
-    mock_load_clf_stats,
-    mock_load_book_probas,
-    mock_classifier_config,
-    mock_result_files_index,
-    mock_load_dir,
-):
-    """Test the load_results method."""
-    # Mock the loading functions
-    mock_load_book_probas.return_value = MagicMock(spec=BookProbas)
-    mock_load_clf_stats.return_value = MagicMock(spec=JsonifiedSummaryDict)
-    mock_load_preds.return_value = [MagicMock(spec=BookVerses)]
-
-    # Create the ClassifierResultsModel instance
-    model = ClassifierResultsModel(
-        config=mock_classifier_config,
-        result_index=mock_result_files_index,
-        load_dir=mock_load_dir,
-    )
-
-    # Call the load_results method
-    model.load_results()
-
-    # Assertions
-    mock_result_files_index.match_files_by_config.assert_called_once_with(
-        mock_classifier_config
-    )
-    mock_load_book_probas.assert_called_once()
-    mock_load_clf_stats.assert_called_once()
-    mock_load_preds.assert_called_once()
-    assert model.book_probas is not None
-    assert model.results_summary is not None
-    assert len(model.book_verses) == 1
-    assert model._is_loaded is True
-    assert model.results_summary is not None
-
-
-
 def test_verify_load(
-    mock_classifier_config, mock_result_files_index, mock_load_dir
+    mock_classifier_config: ClassifierConfig,
+    mock_result_files_index: ResultFilesIndex,
+    mock_load_dir: Path,
 ):
     """Test the _verify_load method."""
     model = ClassifierResultsModel(
@@ -238,7 +180,9 @@ def test_verify_load(
 
 
 def test_get_book_verses(
-    mock_classifier_config, mock_result_files_index, mock_load_dir
+    mock_classifier_config: ClassifierConfig,
+    mock_result_files_index: ResultFilesIndex,
+    mock_load_dir: Path,
 ):
     """Test the get_book_verses method."""
     model = ClassifierResultsModel(
@@ -259,3 +203,71 @@ def test_get_book_verses(
 
     # Verify that load_results is not called again
     model.load_results.assert_not_called()
+
+
+class TestClassifierResultsModel:
+    def test_classifier_results_model_init(
+        self,
+        mock_cal_clf_conf: ClassifierConfig,
+        mock_load_dir: Path,
+        mock_result_files_index_assets: ResultFilesIndex,
+    ):
+        """Test the ClassifierResultsModel class."""
+        model = ClassifierResultsModel(
+            mock_cal_clf_conf, mock_result_files_index_assets, mock_load_dir
+        )
+        assert model.config == mock_cal_clf_conf
+        assert model.index == mock_result_files_index_assets
+        assert model.load_dir == mock_load_dir
+        assert not model._is_loaded
+
+    def test_load_results(
+        self,
+        monkeypatch: MonkeyPatch,
+        mock_cal_book_probas: BookProbas,
+        mock_jsonified_summary_dict: JsonifiedSummaryDict,
+        mock_list_book_verses: list[BookVerses],
+        mock_classifier_results_model: ClassifierResultsModel,
+    ):
+        """Test the load_results method."""
+        # Mock the loading functions
+        monkeypatch.setattr(
+            "src.ui_web.load_book_probas.load_book_probas",
+            MagicMock(return_value=mock_cal_book_probas),
+        )
+        monkeypatch.setattr(
+            "src.ui_web.load_clf_stats.load_clf_stats",
+            MagicMock(return_value=mock_jsonified_summary_dict),
+        )
+        monkeypatch.setattr(
+            "src.ui_web.load_predictions.load_preds",
+            MagicMock(return_value=mock_list_book_verses)
+        )
+
+        # Call the method
+        mock_classifier_results_model.load_results()
+
+        # Assertions
+        assert mock_classifier_results_model._is_loaded
+        assert mock_classifier_results_model.book_probas == mock_cal_book_probas
+        assert (
+            mock_classifier_results_model.results_summary
+            == mock_jsonified_summary_dict
+        )
+        assert (
+            mock_classifier_results_model.book_verses == mock_list_book_verses
+        )
+
+    def test_verify_load(
+        self, mock_classifier_results_model: ClassifierResultsModel
+    ):
+        """Test the _verify_load method."""
+        # Verify that an exception is raised if data is not loaded
+        with pytest.raises(
+            ValueError, match=r"Data not loaded. Call `load_results\(\)` first."
+        ):
+            mock_classifier_results_model._verify_load()
+
+        # Load the data and verify no exception is raised
+        mock_classifier_results_model._is_loaded = True
+        mock_classifier_results_model._verify_load()

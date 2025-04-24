@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Literal, TypedDict
+from typing import Iterable, Literal, TypedDict
 
 from src.classifier.fname_utils import SavefileName
 from src.classifier.result_utils import (
@@ -24,7 +24,7 @@ class JsonifiedSummaryDict(TypedDict):
     n_gram_form: Literal["word", "char"]
     n: int
     total_n_grams_parsed: int
-    top_ten_in_training: list[tuple[tuple[str], int]]
+    top_ten_in_training: list[tuple[Iterable[str], int]]
     test_mislabel_percent: dict[str, float]
     metrics: ResultStatsDict
 

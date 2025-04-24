@@ -772,8 +772,19 @@ class ThresholdStats:
         self.f_beta = np_arr_to_list(f_beta)
 
     def get_stats(self) -> tuple[float, list[float], list[float], list[float]]:
-        """Return statistics of the predictions at the defined threshold."""
-        if self.threshold > 0.5 and len(self.precision) > len(ValToLabel):
+        """Get statistics of the predictions at the defined threshold
+
+        Returns:
+            a tuple of
+
+            * accuracy: overall accuracy of the classifier
+            * precision: precision of the classifier for each class at
+                the threshold
+            * recall: recall of the classifier for each class at the threshold
+            * f_beta: f-beta/f1 score of the classifier for each class at
+                the threshold
+        """
+        if len(self.precision) > len(ValToLabel):
             # exclude the classification scores for "unknown" (-1) class
             # which doesn't really mean much
             return (
@@ -861,12 +872,13 @@ class ResultStatsDict(TypedDict):
 
 
 def jsonify_thresh_stats(obj: ThresholdStats) -> ThreshStatsDict:
+    acc, prc, rec, f_beta = obj.get_stats()
     return {
         "threshold": obj.threshold,
-        "accuracy": obj.accuracy,
-        "precision": obj.precision,
-        "recall": obj.recall,
-        "f_beta": obj.f_beta,
+        "accuracy": acc,
+        "precision": prc,
+        "recall": rec,
+        "f_beta": f_beta,
     }
 
 

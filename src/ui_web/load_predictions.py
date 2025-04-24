@@ -11,7 +11,14 @@ from src.classifier.result_utils import Verse
 logger = logging.getLogger(__name__)
 
 class BookVerses(TypedDict):
-    """A dict to represent the link between verses and a book."""
+    """A dict to represent the link between verses and a book.
+
+    Attributes:
+        book_name: The name of the book.
+        verses: A list of Verse instances.
+        verse_probas: A list of lists containing the predicted probabilities for
+            each verse for each class.
+    """
 
     book_name: str
     verses: list[Verse]
