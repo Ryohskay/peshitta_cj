@@ -1,0 +1,3220 @@
+Loading dataset(s) from: /Users/ryohskay/Documents/uni/peshitta_cj/src/scraper/cal_results
+
+================= 1-gram ===================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 29 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11857 words from 557 verses
+Local accuracy: 0.4847
+Number of mislabelled points out of the total 557 verses: 287 (0 labelled as unknown)
+NT --->
+Parsed 20828 words from 1007 verses
+Local accuracy: 0.7934
+Number of mislabelled points out of the total 1007 verses: 208 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6835
+Precisions: [0] 0.5649, [1] 0.7357
+Recalls: [0] 0.4847, [1] 0.7934
+F1 Score: [0] 0.5217, [1] 0.7635
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.4817094719484416, 0.623483200687213]
+roc auc: [np.float64(0.2803392411111447), np.float64(0.7196607588888552)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0006, (NT) 0.9994
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 24 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11857 words from 557 verses
+Local accuracy: 0.4865
+Number of mislabelled points out of the total 557 verses: 286 (0 labelled as unknown)
+NT --->
+Parsed 20828 words from 1007 verses
+Local accuracy: 0.8133
+Number of mislabelled points out of the total 1007 verses: 188 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6969
+Precisions: [0] 0.5904, [1] 0.7412
+Recalls: [0] 0.4865, [1] 0.8133
+F1 Score: [0] 0.5335, [1] 0.7756
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.5390500495018236, 0.6244247297393084]
+roc auc: [np.float64(0.2789610963827712), np.float64(0.7210389036172288)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0001, (NT) 0.9999
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+MultinomialNB
+Total words parsed: 107178
+Found 28 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11857 words from 557 verses
+Local accuracy: 0.4632
+Number of mislabelled points out of the total 557 verses: 299 (0 labelled as unknown)
+NT --->
+Parsed 20828 words from 1007 verses
+Local accuracy: 0.7944
+Number of mislabelled points out of the total 1007 verses: 207 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6765
+Precisions: [0] 0.5548, [1] 0.7279
+Recalls: [0] 0.4632, [1] 0.7944
+F1 Score: [0] 0.5049, [1] 0.7597
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.440060718234877, 0.6238578010974892]
+roc auc: [np.float64(0.28471792604372625), np.float64(0.7152820739562737)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 24 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4973
+Number of mislabelled points out of the total 557 verses: 280 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8113
+Number of mislabelled points out of the total 1007 verses: 190 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6995
+Precisions: [0] 0.5931, [1] 0.7448
+Recalls: [0] 0.4973, [1] 0.8113
+F1 Score: [0] 0.5410, [1] 0.7766
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.5047618008510446, 0.6227921641569347]
+roc auc: [np.float64(0.28000763060729295), np.float64(0.719992369392707)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0588, (NT) 0.9412
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 23 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4847
+Number of mislabelled points out of the total 557 verses: 287 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8272
+Number of mislabelled points out of the total 1007 verses: 174 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7052
+Precisions: [0] 0.6081, [1] 0.7438
+Recalls: [0] 0.4847, [1] 0.8272
+F1 Score: [0] 0.5395, [1] 0.7833
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.4422548109553794, 0.5983793597678494]
+roc auc: [np.float64(0.2695512026229321), np.float64(0.7304487973770679)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0004, (NT) 0.9996
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 2648 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7289
+Number of mislabelled points out of the total 557 verses: 151 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9206
+Number of mislabelled points out of the total 1007 verses: 80 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8523
+Precisions: [0] 0.8354, [1] 0.8599
+Recalls: [0] 0.7289, [1] 0.9206
+F1 Score: [0] 0.7785, [1] 0.8892
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.969302351944603, 0.4914753063977002]
+roc auc: [np.float64(0.08538435618533818), np.float64(0.914615643814662)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 2140 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7864
+Number of mislabelled points out of the total 557 verses: 119 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8888
+Number of mislabelled points out of the total 1007 verses: 112 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8523
+Precisions: [0] 0.7964, [1] 0.8826
+Recalls: [0] 0.7864, [1] 0.8888
+F1 Score: [0] 0.7913, [1] 0.8857
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.717797123813079, 0.4694534949013803]
+roc auc: [np.float64(0.08360150401409167), np.float64(0.9163984959859084)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 2140 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7864
+Number of mislabelled points out of the total 557 verses: 119 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8888
+Number of mislabelled points out of the total 1007 verses: 112 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8523
+Precisions: [0] 0.7964, [1] 0.8826
+Recalls: [0] 0.7864, [1] 0.8888
+F1 Score: [0] 0.7913, [1] 0.8857
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.717797123813079, 0.4694534949013803]
+roc auc: [np.float64(0.08360150401409167), np.float64(0.9163984959859084)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= 2-gram ===================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 494 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.6966
+Number of mislabelled points out of the total 557 verses: 169 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8322
+Number of mislabelled points out of the total 1007 verses: 169 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7839
+Precisions: [0] 0.6966, [1] 0.8322
+Recalls: [0] 0.6966, [1] 0.8322
+F1 Score: [0] 0.6966, [1] 0.8322
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.1567918793374465, 0.6946764253452278]
+roc auc: [np.float64(0.13936555422634023), np.float64(0.8606344457736599)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 475 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7415
+Number of mislabelled points out of the total 557 verses: 144 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8133
+Number of mislabelled points out of the total 1007 verses: 188 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7877
+Precisions: [0] 0.6872, [1] 0.8505
+Recalls: [0] 0.7415, [1] 0.8133
+F1 Score: [0] 0.7133, [1] 0.8315
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.190043727697239, 0.7092151952260994]
+roc auc: [np.float64(0.1361760316919802), np.float64(0.86382396830802)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+MultinomialNB
+Total words parsed: 107178
+Found 489 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7038
+Number of mislabelled points out of the total 557 verses: 165 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8401
+Number of mislabelled points out of the total 1007 verses: 161 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7916
+Precisions: [0] 0.7089, [1] 0.8368
+Recalls: [0] 0.7038, [1] 0.8401
+F1 Score: [0] 0.7063, [1] 0.8385
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.064725070218104, 0.6449203428342334]
+roc auc: [np.float64(0.13160301587273288), np.float64(0.8683969841272672)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 475 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7415
+Number of mislabelled points out of the total 557 verses: 144 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8133
+Number of mislabelled points out of the total 1007 verses: 188 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7877
+Precisions: [0] 0.6872, [1] 0.8505
+Recalls: [0] 0.7415, [1] 0.8133
+F1 Score: [0] 0.7133, [1] 0.8315
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.190043727697239, 0.7092151952260994]
+roc auc: [np.float64(0.1361760316919802), np.float64(0.86382396830802)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 470 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7648
+Number of mislabelled points out of the total 557 verses: 131 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8242
+Number of mislabelled points out of the total 1007 verses: 177 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8031
+Precisions: [0] 0.7065, [1] 0.8637
+Recalls: [0] 0.7648, [1] 0.8242
+F1 Score: [0] 0.7345, [1] 0.8435
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.064991188508449, 0.6411055123191624]
+roc auc: [np.float64(0.12461958391796027), np.float64(0.8753804160820396)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 27467 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7181
+Number of mislabelled points out of the total 557 verses: 157 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9037
+Number of mislabelled points out of the total 1007 verses: 97 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8376
+Precisions: [0] 0.8048, [1] 0.8529
+Recalls: [0] 0.7181, [1] 0.9037
+F1 Score: [0] 0.7590, [1] 0.8775
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [7.528471960758741, 0.5497878914481281]
+roc auc: [np.float64(0.0809200943485369), np.float64(0.9190799056514631)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 24014 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7738
+Number of mislabelled points out of the total 557 verses: 126 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8848
+Number of mislabelled points out of the total 1007 verses: 116 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8453
+Precisions: [0] 0.7879, [1] 0.8761
+Recalls: [0] 0.7738, [1] 0.8848
+F1 Score: [0] 0.7808, [1] 0.8804
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [7.202735336232995, 0.555311510971272]
+roc auc: [np.float64(0.08241234161587022), np.float64(0.9175876583841298)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 24014 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7738
+Number of mislabelled points out of the total 557 verses: 126 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8848
+Number of mislabelled points out of the total 1007 verses: 116 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8453
+Precisions: [0] 0.7879, [1] 0.8761
+Recalls: [0] 0.7738, [1] 0.8848
+F1 Score: [0] 0.7808, [1] 0.8804
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [7.202735336232995, 0.555311510971272]
+roc auc: [np.float64(0.08241234161587022), np.float64(0.9175876583841298)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= 3-gram ===================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 3789 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7612
+Number of mislabelled points out of the total 557 verses: 133 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8729
+Number of mislabelled points out of the total 1007 verses: 128 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8331
+Precisions: [0] 0.7681, [1] 0.8686
+Recalls: [0] 0.7612, [1] 0.8729
+F1 Score: [0] 0.7647, [1] 0.8707
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.225095819559606, 0.946372849239601]
+roc auc: [np.float64(0.09086840946409247), np.float64(0.9091333733880789)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8151
+Number of mislabelled points out of the total 557 verses: 103 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8500
+Number of mislabelled points out of the total 1007 verses: 151 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8376
+Precisions: [0] 0.7504, [1] 0.8926
+Recalls: [0] 0.8151, [1] 0.8500
+F1 Score: [0] 0.7814, [1] 0.8708
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.40986516749172, 0.9675548017065514]
+roc auc: [np.float64(0.08664126696606697), np.float64(0.9133533844774192)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+MultinomialNB
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7558
+Number of mislabelled points out of the total 557 verses: 136 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8709
+Number of mislabelled points out of the total 1007 verses: 130 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8299
+Precisions: [0] 0.7641, [1] 0.8657
+Recalls: [0] 0.7558, [1] 0.8709
+F1 Score: [0] 0.7599, [1] 0.8683
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.219026319050739, 0.9283110231174252]
+roc auc: [np.float64(0.08965606998764483), np.float64(0.9103439300123553)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8151
+Number of mislabelled points out of the total 557 verses: 103 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8500
+Number of mislabelled points out of the total 1007 verses: 151 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8376
+Precisions: [0] 0.7504, [1] 0.8926
+Recalls: [0] 0.8151, [1] 0.8500
+F1 Score: [0] 0.7814, [1] 0.8708
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.40986516749172, 0.9675548017065514]
+roc auc: [np.float64(0.08664126696606697), np.float64(0.9133533844774192)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8205
+Number of mislabelled points out of the total 557 verses: 100 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8491
+Number of mislabelled points out of the total 1007 verses: 152 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8389
+Precisions: [0] 0.7504, [1] 0.8953
+Recalls: [0] 0.8205, [1] 0.8491
+F1 Score: [0] 0.7839, [1] 0.8716
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.399611825726943, 0.921406102107071]
+roc auc: [np.float64(0.08321373366684554), np.float64(0.9167916148896682)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7002
+Number of mislabelled points out of the total 557 verses: 167 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8520
+Number of mislabelled points out of the total 1007 verses: 149 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7980
+Precisions: [0] 0.7236, [1] 0.8371
+Recalls: [0] 0.7002, [1] 0.8520
+F1 Score: [0] 0.7117, [1] 0.8445
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [3.82901556543964, 0.5215625509753922]
+roc auc: [np.float64(0.1307365497175071), np.float64(0.869249187465123)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7325
+Number of mislabelled points out of the total 557 verses: 149 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8302
+Number of mislabelled points out of the total 1007 verses: 171 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7954
+Precisions: [0] 0.7047, [1] 0.8487
+Recalls: [0] 0.7325, [1] 0.8302
+F1 Score: [0] 0.7183, [1] 0.8394
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [3.8530411742201274, 0.5345270350248137]
+roc auc: [np.float64(0.12562332969037207), np.float64(0.874381127440056)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7325
+Number of mislabelled points out of the total 557 verses: 149 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8302
+Number of mislabelled points out of the total 1007 verses: 171 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7954
+Precisions: [0] 0.7047, [1] 0.8487
+Recalls: [0] 0.7325, [1] 0.8302
+F1 Score: [0] 0.7183, [1] 0.8394
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [3.8530411742201274, 0.5345270350248137]
+roc auc: [np.float64(0.12562332969037207), np.float64(0.874381127440056)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= 4-gram ===================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 14455 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7864
+Number of mislabelled points out of the total 557 verses: 119 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9007
+Number of mislabelled points out of the total 1007 verses: 100 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8600
+Precisions: [0] 0.8141, [1] 0.8840
+Recalls: [0] 0.7864, [1] 0.9007
+F1 Score: [0] 0.8000, [1] 0.8923
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [17.35908721604915, 1.1316446545314922]
+roc auc: [np.float64(0.07266281451740866), np.float64(0.9272943970304814)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8276
+Number of mislabelled points out of the total 557 verses: 96 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8759
+Number of mislabelled points out of the total 1007 verses: 125 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8587
+Precisions: [0] 0.7867, [1] 0.9018
+Recalls: [0] 0.8276, [1] 0.8759
+F1 Score: [0] 0.8066, [1] 0.8887
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [17.337196237344855, 1.1757149903514752]
+roc auc: [np.float64(0.07204238196181487), np.float64(0.9280218007163499)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+MultinomialNB
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7774
+Number of mislabelled points out of the total 557 verses: 124 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9037
+Number of mislabelled points out of the total 1007 verses: 97 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8587
+Precisions: [0] 0.8170, [1] 0.8801
+Recalls: [0] 0.7774, [1] 0.9037
+F1 Score: [0] 0.7967, [1] 0.8917
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [17.339904005352803, 1.1417583784839143]
+roc auc: [np.float64(0.07314685888190209), np.float64(0.9265928447010959)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8276
+Number of mislabelled points out of the total 557 verses: 96 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8759
+Number of mislabelled points out of the total 1007 verses: 125 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8587
+Precisions: [0] 0.7867, [1] 0.9018
+Recalls: [0] 0.8276, [1] 0.8759
+F1 Score: [0] 0.8066, [1] 0.8887
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [17.337196237344855, 1.1757149903514752]
+roc auc: [np.float64(0.07204238196181487), np.float64(0.9280218007163499)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8187
+Number of mislabelled points out of the total 557 verses: 101 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8749
+Number of mislabelled points out of the total 1007 verses: 126 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8549
+Precisions: [0] 0.7835, [1] 0.8971
+Recalls: [0] 0.8187, [1] 0.8749
+F1 Score: [0] 0.8007, [1] 0.8859
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [17.300786424179208, 1.162831300186143]
+roc auc: [np.float64(0.07167689726670934), np.float64(0.928364999759315)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4973
+Number of mislabelled points out of the total 557 verses: 280 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9116
+Number of mislabelled points out of the total 1007 verses: 89 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7641
+Precisions: [0] 0.7568, [1] 0.7663
+Recalls: [0] 0.4973, [1] 0.9116
+F1 Score: [0] 0.6002, [1] 0.8327
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.5779824441501271, 0.5603823627740804]
+roc auc: [np.float64(0.22032932845307263), np.float64(0.7796840429382117)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5224
+Number of mislabelled points out of the total 557 verses: 266 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8848
+Number of mislabelled points out of the total 1007 verses: 116 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7558
+Precisions: [0] 0.7150, [1] 0.7701
+Recalls: [0] 0.5224, [1] 0.8848
+F1 Score: [0] 0.6037, [1] 0.8235
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.6208218012227351, 0.5820754238231783]
+roc auc: [np.float64(0.2230365894751105), np.float64(0.777005307550914)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5224
+Number of mislabelled points out of the total 557 verses: 266 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8848
+Number of mislabelled points out of the total 1007 verses: 116 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7558
+Precisions: [0] 0.7150, [1] 0.7701
+Recalls: [0] 0.5224, [1] 0.8848
+F1 Score: [0] 0.6037, [1] 0.8235
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.6208218012227351, 0.5820754238231783]
+roc auc: [np.float64(0.2230365894751105), np.float64(0.777005307550914)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= 5-gram ===================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 38161 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7756
+Number of mislabelled points out of the total 557 verses: 125 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9076
+Number of mislabelled points out of the total 1007 verses: 93 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8606
+Precisions: [0] 0.8229, [1] 0.8797
+Recalls: [0] 0.7756, [1] 0.9076
+F1 Score: [0] 0.7985, [1] 0.8935
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [20.026115850882725, 1.2751554551161894]
+roc auc: [np.float64(0.06605021581425533), np.float64(0.9327383361353827)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8169
+Number of mislabelled points out of the total 557 verses: 102 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8779
+Number of mislabelled points out of the total 1007 verses: 123 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8561
+Precisions: [0] 0.7872, [1] 0.8966
+Recalls: [0] 0.8169, [1] 0.8779
+F1 Score: [0] 0.8018, [1] 0.8871
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [19.740200681263126, 1.3131642206232386]
+roc auc: [np.float64(0.06713597278654446), np.float64(0.9323951370924177)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+MultinomialNB
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7774
+Number of mislabelled points out of the total 557 verses: 124 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9106
+Number of mislabelled points out of the total 1007 verses: 90 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8632
+Precisions: [0] 0.8279, [1] 0.8809
+Recalls: [0] 0.7774, [1] 0.9106
+F1 Score: [0] 0.8019, [1] 0.8955
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [19.852603730227436, 1.2879467284392039]
+roc auc: [np.float64(0.06814684996764123), np.float64(0.9309715296336774)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8169
+Number of mislabelled points out of the total 557 verses: 102 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8779
+Number of mislabelled points out of the total 1007 verses: 123 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8561
+Precisions: [0] 0.7872, [1] 0.8966
+Recalls: [0] 0.8169, [1] 0.8779
+F1 Score: [0] 0.8018, [1] 0.8871
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [19.740200681263126, 1.3131642206232386]
+roc auc: [np.float64(0.06713597278654446), np.float64(0.9323951370924177)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8223
+Number of mislabelled points out of the total 557 verses: 99 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8808
+Number of mislabelled points out of the total 1007 verses: 120 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8600
+Precisions: [0] 0.7924, [1] 0.8996
+Recalls: [0] 0.8223, [1] 0.8808
+F1 Score: [0] 0.8070, [1] 0.8901
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [19.626802136425326, 1.308786816449715]
+roc auc: [np.float64(0.06796945617660222), np.float64(0.9318094701541633)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+MultinomialNB
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.2065
+Number of mislabelled points out of the total 557 verses: 442 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9752
+Number of mislabelled points out of the total 1007 verses: 25 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7014
+Precisions: [0] 0.8214, [1] 0.6896
+Recalls: [0] 0.2065, [1] 0.9752
+F1 Score: [0] 0.3300, [1] 0.8079
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.01910740173031, 0.6333022785251767]
+roc auc: [np.float64(0.38288889800124437), np.float64(0.6171111019987556)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+MultinomialNB
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.2226
+Number of mislabelled points out of the total 557 verses: 433 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9593
+Number of mislabelled points out of the total 1007 verses: 41 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6969
+Precisions: [0] 0.7515, [1] 0.6905
+Recalls: [0] 0.2226, [1] 0.9593
+F1 Score: [0] 0.3435, [1] 0.8030
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.0414044004160068, 0.6445078269804794]
+roc auc: [np.float64(0.3815597817075802), np.float64(0.618473201057588)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+MultinomialNB
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.2226
+Number of mislabelled points out of the total 557 verses: 433 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9593
+Number of mislabelled points out of the total 1007 verses: 41 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6969
+Precisions: [0] 0.7515, [1] 0.6905
+Recalls: [0] 0.2226, [1] 0.9593
+F1 Score: [0] 0.3435, [1] 0.8030
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.0414044004160068, 0.6445078269804794]
+roc auc: [np.float64(0.3815597817075802), np.float64(0.618473201057588)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
+
+
+Plain KNN Classifier (underscore removed) with k=3 and char 1-gram
+Total words parsed: 107178
+Found 28 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4937
+Number of mislabelled points out of the total 557 verses: 282 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8064
+Number of mislabelled points out of the total 1007 verses: 195 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6950
+Precisions: [0] 0.5851, [1] 0.7422
+Recalls: [0] 0.4937, [1] 0.8064
+F1 Score: [0] 0.5355, [1] 0.7730
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.53572467993939, 3.6763818798157972]
+roc auc: [np.float64(0.31088039023068326), np.float64(0.6891196097693169)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 23 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5224
+Number of mislabelled points out of the total 557 verses: 266 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7637
+Number of mislabelled points out of the total 1007 verses: 238 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6777
+Precisions: [0] 0.5501, [1] 0.7430
+Recalls: [0] 0.5224, [1] 0.7637
+F1 Score: [0] 0.5359, [1] 0.7532
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.364762459568968, 3.913596483803243]
+roc auc: [np.float64(0.31806528448080673), np.float64(0.6819347155191934)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.9976, (NT) 0.0024
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and char 1-gram
+Total words parsed: 107178
+Found 28 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.2962
+Number of mislabelled points out of the total 557 verses: 392 (170 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7468
+Number of mislabelled points out of the total 1007 verses: 255 (183 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5863
+Precisions: [0] 0.0000, [1] 0.6962
+Recalls: [0] 0.0000, [1] 0.2962
+F1 Score: [0] 0.0000, [1] 0.4156
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [10.29047785611311, 2.6359486161608903]
+roc auc: [np.float64(0.29079566909550564), np.float64(0.7092043309044943)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 23 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3178
+Number of mislabelled points out of the total 557 verses: 380 (165 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.6902
+Number of mislabelled points out of the total 1007 verses: 312 (204 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5575
+Precisions: [0] 0.0000, [1] 0.6211
+Recalls: [0] 0.0000, [1] 0.3178
+F1 Score: [0] 0.0000, [1] 0.4204
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [10.040869961127393, 2.728784994619724]
+roc auc: [np.float64(0.31029828899677125), np.float64(0.6897017110032287)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and char 1-gram
+Total words parsed: 107178
+Found 28 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4237
+Number of mislabelled points out of the total 557 verses: 321 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8729
+Number of mislabelled points out of the total 1007 verses: 128 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7129
+Precisions: [0] 0.6484, [1] 0.7325
+Recalls: [0] 0.4237, [1] 0.8729
+F1 Score: [0] 0.5125, [1] 0.7966
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [8.352239240599342, 2.121286871761931]
+roc auc: [np.float64(0.29049169280030807), np.float64(0.7095083071996919)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 23 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4399
+Number of mislabelled points out of the total 557 verses: 312 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8361
+Number of mislabelled points out of the total 1007 verses: 165 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6950
+Precisions: [0] 0.5976, [1] 0.7296
+Recalls: [0] 0.4399, [1] 0.8361
+F1 Score: [0] 0.5067, [1] 0.7793
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [8.147340694494753, 2.0749412614653115]
+roc auc: [np.float64(0.3011736515843316), np.float64(0.6988263484156685)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and char 1-gram
+Total words parsed: 107178
+Found 28 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.2944
+Number of mislabelled points out of the total 557 verses: 393 (130 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8054
+Number of mislabelled points out of the total 1007 verses: 196 (127 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6234
+Precisions: [0] 0.0000, [1] 0.7039
+Recalls: [0] 0.0000, [1] 0.2944
+F1 Score: [0] 0.0000, [1] 0.4152
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [6.963008416876958, 1.620357927506042]
+roc auc: [np.float64(0.2796858257903829), np.float64(0.720314174209617)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 23 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3250
+Number of mislabelled points out of the total 557 verses: 376 (120 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7637
+Number of mislabelled points out of the total 1007 verses: 238 (136 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6074
+Precisions: [0] 0.0000, [1] 0.6396
+Recalls: [0] 0.0000, [1] 0.3250
+F1 Score: [0] 0.0000, [1] 0.4310
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [6.94246090195906, 1.547234990850967]
+roc auc: [np.float64(0.28869903494211974), np.float64(0.7113009650578803)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and char 2-gram
+Total words parsed: 107178
+Found 489 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4829
+Number of mislabelled points out of the total 557 verses: 288 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8759
+Number of mislabelled points out of the total 1007 verses: 125 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7359
+Precisions: [0] 0.6827, [1] 0.7538
+Recalls: [0] 0.4829, [1] 0.8759
+F1 Score: [0] 0.5657, [1] 0.8103
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [15.473912700896152, 3.1674479248165137]
+roc auc: [np.float64(0.2525303129440416), np.float64(0.7474696870559584)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0003, (NT) 0.9997
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 470 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.6284
+Number of mislabelled points out of the total 557 verses: 207 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7805
+Number of mislabelled points out of the total 1007 verses: 221 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7263
+Precisions: [0] 0.6130, [1] 0.7915
+Recalls: [0] 0.6284, [1] 0.7805
+F1 Score: [0] 0.6206, [1] 0.7860
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [14.817492205130053, 3.3380176073911167]
+roc auc: [np.float64(0.24697672843060872), np.float64(0.7530232715693913)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and char 2-gram
+Total words parsed: 107178
+Found 489 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3214
+Number of mislabelled points out of the total 557 verses: 378 (147 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8103
+Number of mislabelled points out of the total 1007 verses: 191 (152 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6362
+Precisions: [0] 0.0000, [1] 0.8211
+Recalls: [0] 0.0000, [1] 0.3214
+F1 Score: [0] 0.0000, [1] 0.4619
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [13.167124628520122, 2.6480246782096684]
+roc auc: [np.float64(0.2455335095979847), np.float64(0.7544664904020153)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 470 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4596
+Number of mislabelled points out of the total 557 verses: 301 (138 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7289
+Number of mislabelled points out of the total 1007 verses: 273 (168 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6330
+Precisions: [0] 0.0000, [1] 0.7091
+Recalls: [0] 0.0000, [1] 0.4596
+F1 Score: [0] 0.0000, [1] 0.5577
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [12.592776686680015, 2.232187685582571]
+roc auc: [np.float64(0.22776382200717066), np.float64(0.7722361779928295)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and char 2-gram
+Total words parsed: 107178
+Found 489 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4345
+Number of mislabelled points out of the total 557 verses: 315 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9186
+Number of mislabelled points out of the total 1007 verses: 82 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7462
+Precisions: [0] 0.7469, [1] 0.7460
+Recalls: [0] 0.4345, [1] 0.9186
+F1 Score: [0] 0.5494, [1] 0.8233
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [11.455359949546391, 2.042655689888479]
+roc auc: [np.float64(0.23451459175359557), np.float64(0.7654854082464043)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 470 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5745
+Number of mislabelled points out of the total 557 verses: 237 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8222
+Number of mislabelled points out of the total 1007 verses: 179 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7340
+Precisions: [0] 0.6413, [1] 0.7775
+Recalls: [0] 0.5745, [1] 0.8222
+F1 Score: [0] 0.6061, [1] 0.7992
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [10.66227744533573, 1.7176644623660133]
+roc auc: [np.float64(0.22679573327818375), np.float64(0.7732042667218163)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and char 2-gram
+Total words parsed: 107178
+Found 489 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3214
+Number of mislabelled points out of the total 557 verses: 378 (111 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8759
+Number of mislabelled points out of the total 1007 verses: 125 (78 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6784
+Precisions: [0] 0.0000, [1] 0.7920
+Recalls: [0] 0.0000, [1] 0.3214
+F1 Score: [0] 0.0000, [1] 0.4572
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [9.982559117025659, 1.6995092140119645]
+roc auc: [np.float64(0.22641955147005077), np.float64(0.7735804485299492)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 470 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4829
+Number of mislabelled points out of the total 557 verses: 288 (97 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7666
+Number of mislabelled points out of the total 1007 verses: 235 (123 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6656
+Precisions: [0] 0.0000, [1] 0.7060
+Recalls: [0] 0.0000, [1] 0.4829
+F1 Score: [0] 0.0000, [1] 0.5736
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [9.296977404849397, 1.2847068532470005]
+roc auc: [np.float64(0.21925070288946852), np.float64(0.7807492971105315)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and char 3-gram
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5278
+Number of mislabelled points out of the total 557 verses: 263 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7934
+Number of mislabelled points out of the total 1007 verses: 208 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6988
+Precisions: [0] 0.5857, [1] 0.7524
+Recalls: [0] 0.5278, [1] 0.7934
+F1 Score: [0] 0.5552, [1] 0.7724
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [15.316787962922403, 4.892545741726453]
+roc auc: [np.float64(0.2971916512598525), np.float64(0.7028083487401475)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.6912
+Number of mislabelled points out of the total 557 verses: 172 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.6743
+Number of mislabelled points out of the total 1007 verses: 328 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6803
+Precisions: [0] 0.5400, [1] 0.7979
+Recalls: [0] 0.6912, [1] 0.6743
+F1 Score: [0] 0.6063, [1] 0.7309
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [13.896043511085681, 4.9440742654780525]
+roc auc: [np.float64(0.28068689728453783), np.float64(0.7193131027154622)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and char 3-gram
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3573
+Number of mislabelled points out of the total 557 verses: 358 (130 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7428
+Number of mislabelled points out of the total 1007 verses: 259 (136 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6055
+Precisions: [0] 0.0000, [1] 0.6180
+Recalls: [0] 0.0000, [1] 0.3573
+F1 Score: [0] 0.0000, [1] 0.4528
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [12.39248736587162, 2.8353935460954993]
+roc auc: [np.float64(0.2875606838307788), np.float64(0.7124393161692212)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5655
+Number of mislabelled points out of the total 557 verses: 242 (114 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5998
+Number of mislabelled points out of the total 1007 verses: 403 (182 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5876
+Precisions: [0] 0.0000, [1] 0.5877
+Recalls: [0] 0.0000, [1] 0.5655
+F1 Score: [0] 0.0000, [1] 0.5764
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [11.377903728229105, 3.514826533797646]
+roc auc: [np.float64(0.26982219615296155), np.float64(0.7301778038470383)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and char 3-gram
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4668
+Number of mislabelled points out of the total 557 verses: 297 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8213
+Number of mislabelled points out of the total 1007 verses: 180 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6950
+Precisions: [0] 0.5909, [1] 0.7358
+Recalls: [0] 0.4668, [1] 0.8213
+F1 Score: [0] 0.5216, [1] 0.7762
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [10.660665313230643, 1.9820248861670924]
+roc auc: [np.float64(0.27805629890586364), np.float64(0.7219437010941364)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.6876
+Number of mislabelled points out of the total 557 verses: 174 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.6882
+Number of mislabelled points out of the total 1007 verses: 314 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6880
+Precisions: [0] 0.5495, [1] 0.7993
+Recalls: [0] 0.6876, [1] 0.6882
+F1 Score: [0] 0.6108, [1] 0.7396
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [9.576436882749437, 2.62608190204936]
+roc auc: [np.float64(0.2616371218347688), np.float64(0.7383628781652312)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and char 3-gram
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3052
+Number of mislabelled points out of the total 557 verses: 387 (144 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7587
+Number of mislabelled points out of the total 1007 verses: 243 (170 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5972
+Precisions: [0] 0.0000, [1] 0.6996
+Recalls: [0] 0.0000, [1] 0.3052
+F1 Score: [0] 0.0000, [1] 0.4250
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [9.269110784648094, 1.6331501940253284]
+roc auc: [np.float64(0.26992381872672266), np.float64(0.7300761812732774)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.6104
+Number of mislabelled points out of the total 557 verses: 217 (81 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.6167
+Number of mislabelled points out of the total 1007 verses: 386 (129 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6145
+Precisions: [0] 0.0000, [1] 0.5695
+Recalls: [0] 0.0000, [1] 0.6104
+F1 Score: [0] 0.0000, [1] 0.5893
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [7.899022603264877, 2.1777372945433426]
+roc auc: [np.float64(0.26028304561070714), np.float64(0.739716954389293)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and char 4-gram
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7971
+Number of mislabelled points out of the total 557 verses: 113 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.3178
+Number of mislabelled points out of the total 1007 verses: 687 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4885
+Precisions: [0] 0.3926, [1] 0.7390
+Recalls: [0] 0.7971, [1] 0.3178
+F1 Score: [0] 0.5261, [1] 0.4444
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [11.884101934764653, 12.984982750948095]
+roc auc: [np.float64(0.4450631931952098), np.float64(0.5549368068047902)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8725
+Number of mislabelled points out of the total 557 verses: 71 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.3267
+Number of mislabelled points out of the total 1007 verses: 678 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5211
+Precisions: [0] 0.4175, [1] 0.8225
+Recalls: [0] 0.8725, [1] 0.3267
+F1 Score: [0] 0.5648, [1] 0.4677
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [11.787421481291522, 11.690363148463756]
+roc auc: [np.float64(0.387149023264438), np.float64(0.612850976735562)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and char 4-gram
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7038
+Number of mislabelled points out of the total 557 verses: 165 (84 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.2651
+Number of mislabelled points out of the total 1007 verses: 740 (131 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4214
+Precisions: [0] 0.0000, [1] 0.3916
+Recalls: [0] 0.0000, [1] 0.7038
+F1 Score: [0] 0.0000, [1] 0.5032
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [6.946968724949503, 3.1480268788957466]
+roc auc: [np.float64(0.39277570471689194), np.float64(0.6072242952831081)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7810
+Number of mislabelled points out of the total 557 verses: 122 (66 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.2582
+Number of mislabelled points out of the total 1007 verses: 747 (145 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4444
+Precisions: [0] 0.0000, [1] 0.4195
+Recalls: [0] 0.0000, [1] 0.7810
+F1 Score: [0] 0.0000, [1] 0.5458
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [10.305511615707436, 9.85499727070152]
+roc auc: [np.float64(0.3836341302088255), np.float64(0.6163658697911745)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and char 4-gram
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8115
+Number of mislabelled points out of the total 557 verses: 105 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.2959
+Number of mislabelled points out of the total 1007 verses: 709 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4795
+Precisions: [0] 0.3893, [1] 0.7395
+Recalls: [0] 0.8115, [1] 0.2959
+F1 Score: [0] 0.5262, [1] 0.4227
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [4.793768773902413, 1.6555733501067968]
+roc auc: [np.float64(0.3554980486682986), np.float64(0.6445019513317014)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8707
+Number of mislabelled points out of the total 557 verses: 72 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.2949
+Number of mislabelled points out of the total 1007 verses: 710 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5000
+Precisions: [0] 0.4059, [1] 0.8049
+Recalls: [0] 0.8707, [1] 0.2949
+F1 Score: [0] 0.5537, [1] 0.4317
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [9.237776640048697, 8.88594410023839]
+roc auc: [np.float64(0.37413509384042404), np.float64(0.625864906159576)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and char 4-gram
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5404
+Number of mislabelled points out of the total 557 verses: 256 (180 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.2363
+Number of mislabelled points out of the total 1007 verses: 769 (519 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3446
+Precisions: [0] 0.0000, [1] 0.5463
+Recalls: [0] 0.0000, [1] 0.5404
+F1 Score: [0] 0.0000, [1] 0.5433
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [3.3398090201393, 1.0806782431791828]
+roc auc: [np.float64(0.3335074585620585), np.float64(0.6664925414379416)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8420
+Number of mislabelled points out of the total 557 verses: 88 (39 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.2393
+Number of mislabelled points out of the total 1007 verses: 766 (90 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4540
+Precisions: [0] 0.0000, [1] 0.4096
+Recalls: [0] 0.0000, [1] 0.8420
+F1 Score: [0] 0.0000, [1] 0.5511
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [7.991941000223998, 8.322395758413276]
+roc auc: [np.float64(0.3798170437101867), np.float64(0.6201829562898133)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and char 5-gram
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9425
+Number of mislabelled points out of the total 557 verses: 32 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0675
+Number of mislabelled points out of the total 1007 verses: 939 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3792
+Precisions: [0] 0.3586, [1] 0.6800
+Recalls: [0] 0.9425, [1] 0.0675
+F1 Score: [0] 0.5195, [1] 0.1229
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [11.863046791315703, 19.896285790567344]
+roc auc: [np.float64(0.4926439519414369), np.float64(0.5073560480585632)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9641
+Number of mislabelled points out of the total 557 verses: 20 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0785
+Number of mislabelled points out of the total 1007 verses: 928 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3939
+Precisions: [0] 0.3666, [1] 0.7980
+Recalls: [0] 0.9641, [1] 0.0785
+F1 Score: [0] 0.5312, [1] 0.1429
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [11.892165293901877, 18.255025953300297]
+roc auc: [np.float64(0.44963888329271406), np.float64(0.550361116707286)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and char 5-gram
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9336
+Number of mislabelled points out of the total 557 verses: 37 (16 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0447
+Number of mislabelled points out of the total 1007 verses: 962 (38 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3613
+Precisions: [0] 0.0000, [1] 0.3601
+Recalls: [0] 0.0000, [1] 0.9336
+F1 Score: [0] 0.0000, [1] 0.5197
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [4.031389977148956, 2.533189480191415]
+roc auc: [np.float64(0.4210276716485499), np.float64(0.5789723283514501)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9461
+Number of mislabelled points out of the total 557 verses: 30 (14 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0536
+Number of mislabelled points out of the total 1007 verses: 953 (56 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3715
+Precisions: [0] 0.0000, [1] 0.3701
+Recalls: [0] 0.0000, [1] 0.9461
+F1 Score: [0] 0.0000, [1] 0.5321
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [11.211968536752444, 17.54491962387546]
+roc auc: [np.float64(0.45397656262535674), np.float64(0.5460234373746432)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and char 5-gram
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9551
+Number of mislabelled points out of the total 557 verses: 25 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0467
+Number of mislabelled points out of the total 1007 verses: 960 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3702
+Precisions: [0] 0.3566, [1] 0.6528
+Recalls: [0] 0.9551, [1] 0.0467
+F1 Score: [0] 0.5193, [1] 0.0871
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [2.047768763189634, 1.3759819668329516]
+roc auc: [np.float64(0.4006113400095205), np.float64(0.5993886599904795)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9641
+Number of mislabelled points out of the total 557 verses: 20 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0626
+Number of mislabelled points out of the total 1007 verses: 944 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3836
+Precisions: [0] 0.3626, [1] 0.7590
+Recalls: [0] 0.9641, [1] 0.0626
+F1 Score: [0] 0.5270, [1] 0.1156
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [10.882140699022894, 16.928397990821892]
+roc auc: [np.float64(0.44970574024913584), np.float64(0.5502942597508642)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and char 5-gram
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4794
+Number of mislabelled points out of the total 557 verses: 290 (275 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0328
+Number of mislabelled points out of the total 1007 verses: 974 (720 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.1918
+Precisions: [0] 0.0000, [1] 0.5125
+Recalls: [0] 0.0000, [1] 0.4794
+F1 Score: [0] 0.0000, [1] 0.4954
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [1.3482479385433561, 0.9761362058850672]
+roc auc: [np.float64(0.3802369053965152), np.float64(0.6197630946034848)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove proper nouns and underscores from both training & test verses
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9641
+Number of mislabelled points out of the total 557 verses: 20 (7 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0397
+Number of mislabelled points out of the total 1007 verses: 967 (28 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3689
+Precisions: [0] 0.0000, [1] 0.3638
+Recalls: [0] 0.0000, [1] 0.9641
+F1 Score: [0] 0.0000, [1] 0.5283
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [10.64103208144669, 16.37675378583431]
+roc auc: [np.float64(0.44362799719735635), np.float64(0.5563720028026435)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+Word N-gram Classifier
+
+Plain KNN Classifier (underscore removed) with k=3 and word 1-gram
+Total words parsed: 107178
+Found 2648 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.5925
+Number of mislabelled points out of the total 557 verses: 227 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7438
+Number of mislabelled points out of the total 1007 verses: 258 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6899
+Precisions: [0] 0.5612, [1] 0.7674
+Recalls: [0] 0.5925, [1] 0.7438
+F1 Score: [0] 0.5764, [1] 0.7554
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [13.577132897403882, 4.114610229798135]
+roc auc: [np.float64(0.29114421669498436), np.float64(0.7088557833050158)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 2140 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7738
+Number of mislabelled points out of the total 557 verses: 126 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.4995
+Number of mislabelled points out of the total 1007 verses: 504 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5972
+Precisions: [0] 0.4610, [1] 0.7997
+Recalls: [0] 0.7738, [1] 0.4995
+F1 Score: [0] 0.5777, [1] 0.6149
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.299117205697154, 6.739757721717645]
+roc auc: [np.float64(0.3197358169652647), np.float64(0.6802641830347353)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.8366, (NT) 0.1634
+
+Plain KNN Classifier (underscore removed) with k=4 and word 1-gram
+Total words parsed: 107178
+Found 2648 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3573
+Number of mislabelled points out of the total 557 verses: 358 (141 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.7408
+Number of mislabelled points out of the total 1007 verses: 261 (170 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6042
+Precisions: [0] 0.0000, [1] 0.6862
+Recalls: [0] 0.0000, [1] 0.3573
+F1 Score: [0] 0.0000, [1] 0.4699
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [12.48973097376641, 3.0155540987900693]
+roc auc: [np.float64(0.27634832652580943), np.float64(0.7236516734741906)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 2140 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.6068
+Number of mislabelled points out of the total 557 verses: 219 (107 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.4995
+Number of mislabelled points out of the total 1007 verses: 504 (227 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5377
+Precisions: [0] 0.0000, [1] 0.5496
+Recalls: [0] 0.0000, [1] 0.6068
+F1 Score: [0] 0.0000, [1] 0.5768
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [10.445667886867117, 3.6709302701741753]
+roc auc: [np.float64(0.288748063376829), np.float64(0.7112519366231711)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and word 1-gram
+Total words parsed: 107178
+Found 2648 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.4758
+Number of mislabelled points out of the total 557 verses: 292 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8630
+Number of mislabelled points out of the total 1007 verses: 138 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.7251
+Precisions: [0] 0.6576, [1] 0.7485
+Recalls: [0] 0.4758, [1] 0.8630
+F1 Score: [0] 0.5521, [1] 0.8017
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [10.562407493015538, 2.3174302395851196]
+roc auc: [np.float64(0.26804825824257134), np.float64(0.7319517417574287)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 2140 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7253
+Number of mislabelled points out of the total 557 verses: 153 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.6127
+Number of mislabelled points out of the total 1007 verses: 390 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6528
+Precisions: [0] 0.5088, [1] 0.8013
+Recalls: [0] 0.7253, [1] 0.6127
+F1 Score: [0] 0.5981, [1] 0.6944
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [8.070357893566019, 2.9315165388810973]
+roc auc: [np.float64(0.28192419669138286), np.float64(0.718075803308617)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and word 1-gram
+Total words parsed: 107178
+Found 2648 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.3698
+Number of mislabelled points out of the total 557 verses: 351 (101 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8044
+Number of mislabelled points out of the total 1007 verses: 197 (106 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6496
+Precisions: [0] 0.0000, [1] 0.6936
+Recalls: [0] 0.0000, [1] 0.3698
+F1 Score: [0] 0.0000, [1] 0.4824
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [9.018107798102047, 1.8225065730644086]
+roc auc: [np.float64(0.2621817831730846), np.float64(0.7378182168269154)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 2140 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.6553
+Number of mislabelled points out of the total 557 verses: 192 (76 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5263
+Number of mislabelled points out of the total 1007 verses: 477 (194 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.5723
+Precisions: [0] 0.0000, [1] 0.5633
+Recalls: [0] 0.0000, [1] 0.6553
+F1 Score: [0] 0.0000, [1] 0.6058
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [6.722497745296782, 2.366922983659472]
+roc auc: [np.float64(0.27756066600225704), np.float64(0.7224393339977428)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and word 2-gram
+Total words parsed: 107178
+Found 27467 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9533
+Number of mislabelled points out of the total 557 verses: 26 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0407
+Number of mislabelled points out of the total 1007 verses: 966 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3657
+Precisions: [0] 0.3547, [1] 0.6119
+Recalls: [0] 0.9533, [1] 0.0407
+F1 Score: [0] 0.5170, [1] 0.0764
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [11.488727586370638, 20.557698657852836]
+roc auc: [np.float64(0.5086138502653775), np.float64(0.4913861497346224)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 24014 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9156
+Number of mislabelled points out of the total 557 verses: 47 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0854
+Number of mislabelled points out of the total 1007 verses: 921 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3811
+Precisions: [0] 0.3564, [1] 0.6466
+Recalls: [0] 0.9156, [1] 0.0854
+F1 Score: [0] 0.5131, [1] 0.1509
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [10.652082563653238, 18.479238801421264]
+roc auc: [np.float64(0.49246477529822663), np.float64(0.5075352247017734)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and word 2-gram
+Total words parsed: 107178
+Found 27467 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8474
+Number of mislabelled points out of the total 557 verses: 85 (44 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0417
+Number of mislabelled points out of the total 1007 verses: 965 (72 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3286
+Precisions: [0] 0.0000, [1] 0.3458
+Recalls: [0] 0.0000, [1] 0.8474
+F1 Score: [0] 0.0000, [1] 0.4912
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [5.489602214047624, 6.008059741058554]
+roc auc: [np.float64(0.4491031362152544), np.float64(0.5508968637847456)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 24014 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8456
+Number of mislabelled points out of the total 557 verses: 86 (39 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0715
+Number of mislabelled points out of the total 1007 verses: 935 (91 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3472
+Precisions: [0] 0.0000, [1] 0.3582
+Recalls: [0] 0.0000, [1] 0.8456
+F1 Score: [0] 0.0000, [1] 0.5032
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [10.035761629289713, 16.42463847013369]
+roc auc: [np.float64(0.47780259904189526), np.float64(0.5221974009581049)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and word 2-gram
+Total words parsed: 107178
+Found 27467 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8995
+Number of mislabelled points out of the total 557 verses: 56 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0636
+Number of mislabelled points out of the total 1007 verses: 943 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3613
+Precisions: [0] 0.3470, [1] 0.5333
+Recalls: [0] 0.8995, [1] 0.0636
+F1 Score: [0] 0.5007, [1] 0.1136
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [2.936099863548747, 3.1625439953001795]
+roc auc: [np.float64(0.4314422026068865), np.float64(0.5685577973931135)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 24014 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8869
+Number of mislabelled points out of the total 557 verses: 63 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0963
+Number of mislabelled points out of the total 1007 verses: 910 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3779
+Precisions: [0] 0.3519, [1] 0.6062
+Recalls: [0] 0.8869, [1] 0.0963
+F1 Score: [0] 0.5038, [1] 0.1662
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.9510752207493365, 7.597915241865217]
+roc auc: [np.float64(0.45124969022943523), np.float64(0.5487503097705647)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and word 2-gram
+Total words parsed: 107178
+Found 27467 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.7127
+Number of mislabelled points out of the total 557 verses: 160 (122 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0348
+Number of mislabelled points out of the total 1007 verses: 972 (363 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.2762
+Precisions: [0] 0.0000, [1] 0.3946
+Recalls: [0] 0.0000, [1] 0.7127
+F1 Score: [0] 0.0000, [1] 0.5080
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [1.9222695767214295, 1.8636838783954333]
+roc auc: [np.float64(0.4280895490988573), np.float64(0.5719104509011426)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 24014 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.8654
+Number of mislabelled points out of the total 557 verses: 75 (29 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0665
+Number of mislabelled points out of the total 1007 verses: 940 (47 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3510
+Precisions: [0] 0.0000, [1] 0.3505
+Recalls: [0] 0.0000, [1] 0.8654
+F1 Score: [0] 0.0000, [1] 0.4990
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [3.1513947288789783, 3.1907785357644785]
+roc auc: [np.float64(0.4366552623556113), np.float64(0.5633447376443887)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and word 3-gram
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.815546678525575, 23.051433687612846]
+roc auc: [np.float64(0.49693260283937035), np.float64(0.5030673971606296)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.793721799443585, 23.007006183077813]
+roc auc: [np.float64(0.4968390031003799), np.float64(0.50316099689962)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and word 3-gram
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.0000, [1] 0.3560
+Recalls: [0] 0.0000, [1] 0.9982
+F1 Score: [0] 0.0000, [1] 0.5248
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [6.572885446010016, 11.626480622151007]
+roc auc: [np.float64(0.49667230642236837), np.float64(0.5033276935776316)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.0000, [1] 0.3562
+Recalls: [0] 0.0000, [1] 0.9982
+F1 Score: [0] 0.0000, [1] 0.5250
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [12.66384150724141, 22.632277111649746]
+roc auc: [np.float64(0.49378676018320594), np.float64(0.5062132398167942)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and word 3-gram
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [4.00667507411054, 6.77963434648437]
+roc auc: [np.float64(0.5009306488333907), np.float64(0.49906935116660933)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [7.985370796027451, 14.145585572719549]
+roc auc: [np.float64(0.49488945425112185), np.float64(0.5051105457488781)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and word 3-gram
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9120
+Number of mislabelled points out of the total 557 verses: 49 (48 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (94 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3248
+Precisions: [0] 0.0000, [1] 0.3575
+Recalls: [0] 0.0000, [1] 0.9120
+F1 Score: [0] 0.0000, [1] 0.5137
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [1.0734706137455263, 1.6641660421719187]
+roc auc: [np.float64(0.48929486413775036), np.float64(0.5107051358622497)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [5.894441559447066, 10.084846831505956]
+roc auc: [np.float64(0.4876385944706623), np.float64(0.5123614055293377)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and word 4-gram
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.814509683364173, 23.14080719426361]
+roc auc: [np.float64(0.4989151344537965), np.float64(0.5010848655462036)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.814768932154522, 23.11846381760092]
+roc auc: [np.float64(0.49841950155019), np.float64(0.5015804984498101)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and word 4-gram
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.7522775789955278, 2.4049299901110786]
+roc auc: [np.float64(0.4886325345561322), np.float64(0.5113674654438678)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9461
+Number of mislabelled points out of the total 557 verses: 30 (29 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (42 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3370
+Precisions: [0] 0.0000, [1] 0.3532
+Recalls: [0] 0.0000, [1] 0.9461
+F1 Score: [0] 0.0000, [1] 0.5144
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [10.391910096125468, 18.408745118107703]
+roc auc: [np.float64(0.49444017550396774), np.float64(0.5055598244960322)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and word 4-gram
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [1.0597449117819195, 1.0640368624170102]
+roc auc: [np.float64(0.4909867908482632), np.float64(0.5090132091517368)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0010
+Number of mislabelled points out of the total 1007 verses: 1006 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3561
+Precisions: [0] 0.3560, [1] 0.5000
+Recalls: [0] 0.9982, [1] 0.0010
+F1 Score: [0] 0.5248, [1] 0.0020
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [9.876619025517076, 17.300867387924157]
+roc auc: [np.float64(0.48939202958108324), np.float64(0.5106079704189168)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and word 4-gram
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9874
+Number of mislabelled points out of the total 557 verses: 7 (7 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (8 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3517
+Precisions: [0] 0.0000, [1] 0.3551
+Recalls: [0] 0.0000, [1] 0.9874
+F1 Score: [0] 0.0000, [1] 0.5223
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [0.7020143798539822, 0.9520700088867643]
+roc auc: [np.float64(0.4970163968914189), np.float64(0.502983603108581)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.0000, [1] 0.3560
+Recalls: [0] 0.0000, [1] 0.9982
+F1 Score: [0] 0.0000, [1] 0.5248
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [9.508958130095007, 17.018178474539905]
+roc auc: [np.float64(0.49794526287263835), np.float64(0.5020547371273616)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=3 and word 5-gram
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.814250434573824, 23.163150570926298]
+roc auc: [np.float64(0.4999064002610095), np.float64(0.5000935997389905)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9982
+Number of mislabelled points out of the total 557 verses: 1 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0000
+Number of mislabelled points out of the total 1007 verses: 1007 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3555
+Precisions: [0] 0.3557, [1] 0.0000
+Recalls: [0] 0.9982, [1] 0.0000
+F1 Score: [0] 0.5245, [1] 0.0000
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [12.814509683364173, 23.14080719426361]
+roc auc: [np.float64(0.499410767357403), np.float64(0.500589232642597)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=4 and word 5-gram
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.0610
+Number of mislabelled points out of the total 557 verses: 523 (519 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0060
+Number of mislabelled points out of the total 1007 verses: 1001 (969 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.0256
+Precisions: [0] 0.0000, [1] 0.5152
+Recalls: [0] 0.0000, [1] 0.0610
+F1 Score: [0] 0.0000, [1] 0.1091
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [0.767100383918153, 0.8089773871446398]
+roc auc: [np.float64(0.48611336443816094), np.float64(0.5138866355618391)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9659
+Number of mislabelled points out of the total 557 verses: 19 (13 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0060
+Number of mislabelled points out of the total 1007 verses: 1001 (9 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3478
+Precisions: [0] 0.0000, [1] 0.3516
+Recalls: [0] 0.0000, [1] 0.9659
+F1 Score: [0] 0.0000, [1] 0.5156
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [1.1593403682195145, 1.4335602511187624]
+roc auc: [np.float64(0.49972365791345685), np.float64(0.5002763420865431)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=5 and word 5-gram
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.0862
+Number of mislabelled points out of the total 557 verses: 509 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9464
+Number of mislabelled points out of the total 1007 verses: 54 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6400
+Precisions: [0] 0.4706, [1] 0.6518
+Recalls: [0] 0.0862, [1] 0.9464
+F1 Score: [0] 0.1457, [1] 0.7720
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [0.7989482183647458, 0.6853972481912319]
+roc auc: [np.float64(0.4839864217978638), np.float64(0.5160135782021362)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.9856
+Number of mislabelled points out of the total 557 verses: 8 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0060
+Number of mislabelled points out of the total 1007 verses: 1001 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3549
+Precisions: [0] 0.3542, [1] 0.4286
+Recalls: [0] 0.9856, [1] 0.0060
+F1 Score: [0] 0.5211, [1] 0.0118
+Supports: [0] 557.0000, [1] 1007.0000
+log loss: [0.9053250085774559, 1.0433020100800572]
+roc auc: [np.float64(0.4878881937746368), np.float64(0.5121118062253632)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+Plain KNN Classifier (underscore removed) with k=6 and word 5-gram
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.0682
+Number of mislabelled points out of the total 557 verses: 519 (20 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9374
+Number of mislabelled points out of the total 1007 verses: 63 (23 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6279
+Precisions: [0] 0.0000, [1] 0.4872
+Recalls: [0] 0.0000, [1] 0.0682
+F1 Score: [0] 0.0000, [1] 0.1197
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [0.8541226226710883, 0.6560324224257698]
+roc auc: [np.float64(0.4790185042226854), np.float64(0.5209814957773147)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 0.0000, (NT) 1.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+Remove common proper nouns from both training & test verses
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+test size: (1564,)
+OT --->
+Parsed 11591 words from 557 verses
+Local accuracy: 0.0880
+Number of mislabelled points out of the total 557 verses: 508 (508 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0010
+Number of mislabelled points out of the total 1007 verses: 1006 (957 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.0320
+Precisions: [0] 0.0000, [1] 0.5000
+Recalls: [0] 0.0000, [1] 0.0880
+F1 Score: [0] 0.0000, [1] 0.1496
+Supports: [0] 0.0000, [1] 557.0000
+log loss: [0.8159716216380679, 0.9661305837640118]
+roc auc: [np.float64(0.4798617932996849), np.float64(0.520138206700315)]
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
