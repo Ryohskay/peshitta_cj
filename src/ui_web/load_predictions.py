@@ -42,7 +42,7 @@ def load_preds(
             belonging to a particular class.
 
     Returns:
-        A list of :class:`src.ui_web.load_predictions.BookVerses` instances
+        list of :class:`src.ui_web.load_predictions.BookVerses` instances
         containing the verses and their prediction results from each book.
     """
     data_origin = fname.origin

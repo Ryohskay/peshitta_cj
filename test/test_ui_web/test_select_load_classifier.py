@@ -1,3 +1,4 @@
+from json import load
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -223,40 +224,58 @@ class TestClassifierResultsModel:
 
     def test_load_results(
         self,
-        monkeypatch: MonkeyPatch,
         mock_cal_book_probas: BookProbas,
-        mock_jsonified_summary_dict: JsonifiedSummaryDict,
-        mock_list_book_verses: list[BookVerses],
         mock_classifier_results_model: ClassifierResultsModel,
+        loaded_clf_stats: JsonifiedSummaryDict,
     ):
         """Test the load_results method."""
-        # Mock the loading functions
-        monkeypatch.setattr(
-            "src.ui_web.load_book_probas.load_book_probas",
-            MagicMock(return_value=mock_cal_book_probas),
-        )
-        monkeypatch.setattr(
-            "src.ui_web.load_clf_stats.load_clf_stats",
-            MagicMock(return_value=mock_jsonified_summary_dict),
-        )
-        monkeypatch.setattr(
-            "src.ui_web.load_predictions.load_preds",
-            MagicMock(return_value=mock_list_book_verses)
-        )
-
         # Call the method
         mock_classifier_results_model.load_results()
 
-        # Assertions
         assert mock_classifier_results_model._is_loaded
-        assert mock_classifier_results_model.book_probas == mock_cal_book_probas
+        assert mock_classifier_results_model.book_probas is not None
         assert (
-            mock_classifier_results_model.results_summary
-            == mock_jsonified_summary_dict
+            mock_classifier_results_model.book_probas.book_proba_dict
+            == mock_cal_book_probas.book_proba_dict
         )
-        assert (
-            mock_classifier_results_model.book_verses == mock_list_book_verses
+        assert mock_classifier_results_model.results_summary == loaded_clf_stats
+
+    def test_load_results_book_verses(
+        self,
+        loaded_book_verses: list[BookVerses],
+        mock_result_files_index_assets: ResultFilesIndex,
+        mock_load_dir: Path,
+    ):
+        """Test that load_results method correctly loads BookVerses dicts."""
+        config = ClassifierConfig(
+            "mnb",
+            "CAL",
+            is_n_gram=True,
+            n=3,
+            is_bow=True,
+            is_char_level=True,
+            extra_opts=[
+                FnameExtraOpts.REMOVE_PROPN,
+                FnameExtraOpts.REMOVE_FROM_BOTH,
+            ],
         )
+        model = ClassifierResultsModel(
+            config, mock_result_files_index_assets, mock_load_dir
+        )
+        model.load_results()
+        loaded_book_names = [v["book_name"] for v in model.book_verses]
+        loaded_verses = [v["verses"] for v in model.book_verses]
+        loaded_probas = [v["verse_probas"] for v in model.book_verses]
+
+        assert len(model.book_verses) > 0
+        assert len(loaded_book_verses) == len(model.book_verses)
+        for i in range(len(loaded_book_verses)):
+            assert loaded_book_verses[i]["book_name"] in loaded_book_names
+            corresp_idx = loaded_book_names.index(loaded_book_verses[i]["book_name"])
+            assert loaded_book_verses[i]["verses"] == loaded_verses[corresp_idx]
+            assert loaded_book_verses[i]["verse_probas"] == loaded_probas[
+                corresp_idx
+            ]
 
     def test_verify_load(
         self, mock_classifier_results_model: ClassifierResultsModel

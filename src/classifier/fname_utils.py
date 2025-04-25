@@ -158,8 +158,8 @@ class SavefileName(Any):
         """Set the scope of the results stored in the file.
 
         Args:
-        scope: a str designating the scope. This must be a valid name
-            associated with a label in :mod:`src.shared.label_data`.
+            scope: a str designating the scope. This must be a valid name
+                associated with a label in :mod:`src.shared.label_data`.
         """
         if scope not in label_data.LabelToVal:
             msg = f"Invalid scope or label name: {scope}"

@@ -178,7 +178,13 @@ def parse_fname(fname: str) -> SavefileName:
 
 
 class ResultFilesIndex:
-    """A class to represent the index of classifier result files."""
+    """A class to represent the index of classifier result files.
+
+    .. attention::
+        The order of the files in the index is not guaranteed to be the same
+        due to the behaviour of the underlying
+        :meth:`python:pathlib.Path.iterdir`.
+    """
 
     def __init__(self, load_dir: str | Path = "./src/classifier/out/"):
         self.load_dir: Path = Path(load_dir)
@@ -192,7 +198,7 @@ class ResultFilesIndex:
                 save_fname = parse_fname(file.name)
                 self.files.append(save_fname)
                 self.file_paths.append(file)
-                print(f"Indexed File: {file.name} -> {save_fname.get_fname()}")
+                # print(f"Indexed File: {file.name} -> {save_fname.get_fname()}")
 
     def __len__(self) -> int:
         """Returns the number of files in the index."""

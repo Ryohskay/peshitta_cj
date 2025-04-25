@@ -6,13 +6,12 @@ import pytest
 from src.classifier.fname_utils import FnameExtraOpts, SavefileName
 from src.classifier.result_utils import (
     ResultStats,
-    ThresholdStats,
     Verse,
     jsonify_result_stats,
 )
 from src.ui_web.load_book_probas import BookProbas
-from src.ui_web.load_clf_stats import JsonifiedSummaryDict
-from src.ui_web.load_predictions import BookVerses
+from src.ui_web.load_clf_stats import JsonifiedSummaryDict, load_clf_stats
+from src.ui_web.load_predictions import BookVerses, load_preds
 from src.ui_web.select_load_classifier import (
     ClassifierConfig,
     ClassifierResultsModel,
@@ -56,7 +55,7 @@ def mock_classifier_config():
 
 
 @pytest.fixture
-def mock_result_files_index():
+def mock_result_files_index() -> ResultFilesIndex:
     """Fixture to provide a mock ResultFilesIndex object."""
     mock_index = MagicMock(spec=ResultFilesIndex)
     mock_index.match_files_by_config.return_value = [
@@ -76,8 +75,8 @@ def mock_result_files_index_assets(mock_load_dir: Path) -> ResultFilesIndex:
 def mock_cal_book_probas() -> BookProbas:
     """Mock BookProbas object from CAL data."""
     bp = BookProbas("CAL")
-    bp.add_book_proba("Genesis", [0.8, 0.2])
-    bp.add_book_proba("Esther", [0.6, 0.4])
+    bp.add_book_proba("Deuteronomy", [1.0, 5.621240341779208e-91])
+    bp.add_book_proba("Acts", [3.6016408971181304e-225, 1.0])
     return bp
 
 
@@ -101,9 +100,7 @@ def mock_jsonified_summary_dict(
 
 @pytest.fixture
 def mock_list_book_verses(
-    cal_verse: Verse,
-    cal_romans_verse: Verse,
-    etcbc_chr_verses: list[Verse]
+    cal_verse: Verse, cal_romans_verse: Verse, etcbc_chr_verses: list[Verse]
 ) -> list[BookVerses]:
     return [
         {
@@ -132,7 +129,7 @@ def mock_cal_clf_conf() -> ClassifierConfig:
         is_n_gram=True,
         n=3,
         is_bow=True,
-        is_char_level=False,
+        is_char_level=True,
     )
 
 
@@ -145,3 +142,25 @@ def mock_classifier_results_model(
     return ClassifierResultsModel(
         mock_cal_clf_conf, mock_result_files_index_assets, mock_load_dir
     )
+
+
+@pytest.fixture
+def loaded_clf_stats(mock_load_dir: Path) -> JsonifiedSummaryDict:
+    fname = SavefileName("CAL", "mnb", "json")
+    fname.set_ngram_opts(n=3)
+    fname.mark_special_file(is_clf_summary=True)
+    return load_clf_stats(fname, mock_load_dir)
+
+
+@pytest.fixture
+def loaded_book_verses(mock_load_dir: Path) -> list[BookVerses]:
+    fname = SavefileName("CAL", "mnb")
+    fname.set_ngram_opts(n=3)
+    fname.add_extra_opts(
+        [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
+    fname.set_scope("Jewish")
+    books = load_preds(fname, mock_load_dir)
+    fname.set_scope("Christian")
+    books.extend(load_preds(fname, mock_load_dir))
+    return books
