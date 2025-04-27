@@ -283,6 +283,7 @@ def plot_charts(  # noqa: PLR0913
         plt.show()
     else:
         plt.savefig(save_dest, bbox_inches="tight")
+    plt.close("all")
 
     # Precision Recall curve
     pr_display = PrecisionRecallDisplay.from_predictions(
@@ -298,6 +299,7 @@ def plot_charts(  # noqa: PLR0913
         plt.show()
     else:
         plt.savefig(save_dest, bbox_inches="tight")
+    plt.close("all")
 
     # Roc curve
     proba_pred_pos = [proba[pos_label] for proba in y_probas]
@@ -314,7 +316,7 @@ def plot_charts(  # noqa: PLR0913
         plt.show()
     else:
         plt.savefig(save_dest, bbox_inches="tight")
-    plt.close()
+    plt.close("all")
 
 
 def split_list(lis: list, parts: int = 5) -> list[list]:

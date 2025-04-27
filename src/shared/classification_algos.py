@@ -1,19 +1,20 @@
 """Definition of the match between the algorithms and their name."""
 
+from sklearn.base import BaseEstimator
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.base import BaseEstimator
-
-from src.classifier.wrappers import BoWEstimator
+from sklearn.neural_network import MLPClassifier
 
 ALGORITHMS = {
     "mnb": {"algo": MultinomialNB, "description": "Multinomial Naive Bayes"},
     "knn": {"algo": KNeighborsClassifier, "description": "K-Nearest Neighbors"},
     "rf": {"algo": RandomForestClassifier, "description": "Random Forest"},
+    "mlp": {"algo": MLPClassifier, "description": "Multi-layer Perceptron"},
 }
 
-def get_algo_by_name(name: str, **kwargs) -> BaseEstimator: # noqa: ANN003
+
+def get_algo_by_name(name: str, **kwargs) -> BaseEstimator:  # noqa: ANN003
     """Get the algorithm by its name.
 
     Args:
@@ -29,7 +30,9 @@ def get_algo_by_name(name: str, **kwargs) -> BaseEstimator: # noqa: ANN003
         ValueError: If the algorithm is not defined.
     """
     if name not in ALGORITHMS:
-        msg = (f"Algorithm {name} is not defined. Available algorithms are: "
-        + f"{[(algo, ALGORITHMS[algo]["description"]) for algo in ALGORITHMS]}")
+        msg = (
+            f"Algorithm {name} is not defined. Available algorithms are: "
+            + f"{[(algo, ALGORITHMS[algo]['description']) for algo in ALGORITHMS]}"
+        )
         raise ValueError(msg)
     return ALGORITHMS[name]["algo"](**kwargs)

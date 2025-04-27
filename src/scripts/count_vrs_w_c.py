@@ -105,7 +105,9 @@ def count_verses_words_characters(
     """Count the number of verses, words, and characters in the dataset.
 
     Args:
-        ds: The dataset to analyse.
+        dataset: The dataset to analyse.
+        split: The string for the name of the data split
+        preprocessor: a preprocessing function.
     """
     if split in {"train", "test"}:
         ds = getattr(dataset, split)
