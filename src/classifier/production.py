@@ -25,6 +25,7 @@
 
 import logging
 from pathlib import Path
+from pdb import run
 
 from sklearn.naive_bayes import MultinomialNB
 
@@ -41,6 +42,7 @@ from src.classifier.load_cal import load_cal_dataset
 from src.classifier.prediction_utils import predict_proba
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
+from src.shared.classification_algos import get_algo_by_name
 
 logger = logging.getLogger(__name__)
 
@@ -98,55 +100,58 @@ def predict_on_prod(
     logger.info(msg)
     total_proba_save_fp.write_text(csvify_total_proba(preds.get_total_probas()))
 
-
-if __name__ == "__main__":
-    thresh = 0.9  # probability threshold
-    n_window = 3  # n of n-gram
-
-    # LOAD ETCBC DATA
-    etcbc_loaded = load_etcbc_dataset()
+def run_prod_clf(  # noqa: PLR0913
+    clf_alias: str,
+    n_window: int,
+    etcbc_ds: LoadedDataset,
+    cal_ds: LoadedDataset,
+    base_fname_etc: SavefileName,
+    base_fname_cal: SavefileName,
+    **kwargs
+):
     print("ETCBC --->")
-    print("MultinomialNB")
+    algo = get_algo_by_name(clf_alias, **kwargs)
     print("> Plain Classifier")
-    c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
-    c_mnb.set_preprocessor(remove_non_chars)
-    c_mnb_fname = SavefileName("ETCBC", "mnb")
-    print(f"{c_mnb_fname.origin}")
-    c_mnb_fname.set_ngram_opts(n=c_mnb.n)
-    c_mnb_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
-    predict_on_prod(c_mnb, etcbc_loaded, c_mnb_fname, thresh=thresh)
-
-    print("> Character unigram classifier")
-    cu_mnb = BoWEstimator(MultinomialNB(), " ".join, n=1)
-    cu_mnb.set_preprocessor(remove_non_chars)
-    cu_mnb_fname = SavefileName("ETCBC", "mnb")
-    cu_mnb_fname.set_ngram_opts(n=cu_mnb.n)
-    cu_mnb_fname.add_extra_opts([FnameExtraOpts.IS_ERRONEOUS])
-    predict_on_prod(c_mnb, etcbc_loaded, cu_mnb_fname, thresh=thresh)
+    c_clf = BoWEstimator(algo, " ".join, n=n_window)
+    c_clf.set_preprocessor(remove_non_chars)
+    c_clf_fname = base_fname_etc.copy()
+    print(f"{c_clf_fname.origin}")
+    c_clf_fname.set_ngram_opts(n=c_clf.n)
+    c_clf_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
+    predict_on_prod(c_clf, etcbc_ds, c_clf_fname, thresh=thresh)
 
     print("CAL --->")
-    # LOAD CAL DATA
-    cal_loaded = load_cal_dataset("./src")
-
-    print("MultinomialNB")
     print("> Plain Classifier")
-    c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
-    c_mnb_fname = SavefileName("CAL", "mnb")
-    c_mnb_fname.set_ngram_opts(n=c_mnb.n)
-    predict_on_prod(c_mnb, cal_loaded, c_mnb_fname, thresh=thresh)
+    c_clf = BoWEstimator(algo, " ".join, n=n_window)
+    c_clf_fname = base_fname_cal.copy()
+    c_clf_fname.set_ngram_opts(n=c_clf.n)
+    predict_on_prod(c_clf, cal_ds, c_clf_fname, thresh=thresh)
 
     print("> Remove PN, GN & underscores from the training & test set")
     # Remove personal names and place names from the training data
     # and train new classifiers
-    c_mnb_r = BoWEstimator(MultinomialNB(), " ".join)
-    c_mnb_r.set_preprocessor(remove_underscores)
-    c_mnb_r_fname = c_mnb_fname.copy()
-    c_mnb_r_fname.add_extra_opts(
+    c_clf_r = BoWEstimator(algo, " ".join)
+    c_clf_r.set_preprocessor(remove_underscores)
+    c_clf_r_fname = c_clf_fname.copy()
+    c_clf_r_fname.add_extra_opts(
         [
             FnameExtraOpts.REMOVE_UNDERSCORES,
             FnameExtraOpts.REMOVE_PROPN,
             FnameExtraOpts.REMOVE_FROM_BOTH,
         ]
     )
-    cal_loaded.test.map_on_samples(remove_proper_nouns)
-    predict_on_prod(c_mnb_r, cal_loaded, c_mnb_r_fname, thresh=thresh)
+    cal_ds.test.map_on_samples(remove_proper_nouns)
+    predict_on_prod(c_clf_r, cal_ds, c_clf_r_fname, thresh=thresh)
+
+if __name__ == "__main__":
+    thresh = 0.9  # probability threshold
+    n = 3  # n of n-gram
+
+    etcbc_loaded = load_etcbc_dataset()
+    cal_loaded = load_cal_dataset("./src")
+
+    print("MultinomialNB")
+    fname_etcbc = SavefileName("ETCBC", "mnb")
+    fname_cal = SavefileName("ETCBC", "mnb")
+    run_prod_clf("mnb", n, etcbc_loaded, cal_loaded, fname_etcbc, fname_cal)
+

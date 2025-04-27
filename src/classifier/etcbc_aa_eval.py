@@ -29,8 +29,7 @@ from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.base import BaseEstimator
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.eval_utils import (
@@ -46,6 +45,7 @@ from src.shared.etcbc_letters import (
     NON_CHARS_SYRIAC,
     NON_CHARS_TRANSLIT,
 )
+from src.shared.classification_algos import get_algo_by_name
 
 
 def csvify_etcbc(
@@ -205,15 +205,109 @@ def etcbc_eval_classifier(
         out_dir="./src/classifier/out/",
     )
 
+def run_clf(
+            algo_alias: str,
+            n_window: int,
+            etcbc_ds: LoadedDataset,
+            base_fname: SavefileName,
+            **kwargs
+        ) -> None:
+    """Run the classifier with the ETCBC data.
+
+    Args:
+        algo_alias: The name of the algorithm to use.
+        n_window: The size of the n-gram window.
+        etcbc_ds: The ETCBC dataset to use.
+        kwargs: Additional arguments to pass to the initialiser of
+            the classification algorithm.
+    """
+    algo = get_algo_by_name(algo_alias, **kwargs)
+    print("\nPlain Classifier")
+    print(f"\nChar {n_window}-gram Classifier")
+
+    clf = BoWEstimator(algo, " ".join, n=n_window)
+    clf.set_preprocessor(remove_non_chars)
+
+    # evaluate and save results
+    save_fname = base_fname.copy()
+    save_fname.set_ngram_opts(n=n_window)
+    save_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
+    etcbc_eval_classifier(clf, etcbc_ds, save_fname)
+
+    # Remove a few common proper nouns only from the training set
+    print("\nRemove common proper nouns from training verses")
+    # assert(train_verses_removed != train_verses)
+    clf_r = BoWEstimator(algo, " ".join, n=n_window)
+    clf_r.set_preprocessor(remove_non_chars)
+
+    # evaluate and save results
+    save_fname_r = save_fname.copy()
+    save_fname_r.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
+    etcbc_eval_classifier(
+        clf_r, etcbc_ds, save_fname_r, remove_proper_nouns
+    )
+
+    # Remove a few common proper nouns from both training and test sets
+    print("\nRemove common proper nouns from both training & test verses")
+    # evaluate and save results
+    save_fname_rb = save_fname.copy()
+    save_fname_rb.add_extra_opts(
+        [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
+    etcbc_eval_classifier(
+        clf_r,
+        etcbc_ds,
+        save_fname_rb,
+        remove_proper_nouns,
+        map_to_both=True,
+    )
+
+    print(f"\n=============== WORD {n_window}-GRAMS =====================")
+    print("\nPlain Classifier")
+    clf_w = BoWEstimator(algo, identity, n_window)
+    clf_w.set_preprocessor(remove_non_chars)
+    # evaluate and save results
+    save_fname_w = save_fname.copy()
+    save_fname_w.set_ngram_opts(n=n_window, is_char_level=False)
+    etcbc_eval_classifier(clf_w, etcbc_ds, save_fname_w)
+
+    # Remove a few common proper nouns only from the training set
+    print("\nRemove common proper nouns from training verses")
+    # configure classifier
+    clf_wr = BoWEstimator(algo, identity, n=n_window)
+    clf_wr.set_preprocessor(remove_non_chars)
+    # evaluate and save results
+    save_fname_wr = save_fname_w.copy()
+    save_fname_wr.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
+    etcbc_eval_classifier(
+        clf_wr, etcbc_ds, save_fname_wr, remove_proper_nouns
+    )
+
+    # Remove a few common proper nouns from both training and test sets
+    print("\nRemove common proper nouns from both training & test verses")
+    # evaluate and save results
+    save_fname_wrb = save_fname_w.copy()
+    save_fname_wrb.add_extra_opts(
+        [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
+    etcbc_eval_classifier(
+        clf_wr,
+        etcbc_ds,
+        save_fname_wrb,
+        remove_proper_nouns,
+        map_to_both=True,
+    )
+
 
 if __name__ == "__main__":
     etcbc_ds = load_etcbc_dataset()
     n_window = 3
+    clf_alias = "mnb"
 
     print("\n==================ERRONEOUS CHAR UNI-GRAM================")
     print("\nChar Uni-gram Classifier WITHOUT removing non chars")
     # erroneous results but interesting example of data leakage
-    c = BoWEstimator(MultinomialNB(), " ".join, n=1)
+    c = BoWEstimator(get_algo_by_name(clf_alias), " ".join, n=1)
     c_fname = SavefileName("ETCBC", "mnb")
     c_fname.set_ngram_opts(n=1)
     c_fname.add_extra_opts([FnameExtraOpts.IS_ERRONEOUS])
@@ -221,157 +315,23 @@ if __name__ == "__main__":
 
     print("\nChar Uni-gram Classifier AFTER removing non chars")
     # correct impl of char uni-gram classifier
-    c = BoWEstimator(MultinomialNB(), " ".join, n=1)
+    c = BoWEstimator(get_algo_by_name(clf_alias), " ".join, n=1)
     c.set_preprocessor(remove_non_chars)
     c_fname = SavefileName("ETCBC", "mnb")
     c_fname.set_ngram_opts(n=1)
     c_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
     etcbc_eval_classifier(c, etcbc_ds, c_fname)
 
-    print("\n==================REAL RESULTS================")
-    for n_window in range(1, 6):
-        print("\nPlain Classifier")
-        print(f"\nChar {n_window}-gram Classifier")
+    print("\n================== MNB REAL RESULTS================")
+    base_fname_mnb = SavefileName("ETCBC", clf_alias)
+    for n in range(1, 6):
+        run_clf(clf_alias, n, etcbc_ds, base_fname_mnb)
 
-        mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
-        mnb.set_preprocessor(remove_non_chars)
-
-        # evaluate and save results
-        save_fname_knn = SavefileName("ETCBC", "mnb")
-        save_fname_knn.set_ngram_opts(n=n_window)
-        save_fname_knn.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
-        etcbc_eval_classifier(mnb, etcbc_ds, save_fname_knn)
-
-        # Remove a few common proper nouns only from the training set
-        print("\nRemove common proper nouns from training verses")
-        # assert(train_verses_removed != train_verses)
-        mnb_r = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
-        mnb_r.set_preprocessor(remove_non_chars)
-
-        # evaluate and save results
-        save_fname_r = save_fname_knn.copy()
-        save_fname_r.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-        etcbc_eval_classifier(
-            mnb_r, etcbc_ds, save_fname_r, remove_proper_nouns
-        )
-
-        # Remove a few common proper nouns from both training and test sets
-        print("\nRemove common proper nouns from both training & test verses")
-        # evaluate and save results
-        save_fname_rb = save_fname_knn.copy()
-        save_fname_rb.add_extra_opts(
-            [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
-        )
-        etcbc_eval_classifier(
-            mnb_r,
-            etcbc_ds,
-            save_fname_rb,
-            remove_proper_nouns,
-            map_to_both=True,
-        )
-
-        print(f"\n=============== WORD {n_window}-GRAMS =====================")
-        print("\nPlain Classifier")
-        mnb_w = BoWEstimator(MultinomialNB(), identity, n_window)
-        mnb_w.set_preprocessor(remove_non_chars)
-        # evaluate and save results
-        save_fname_w = save_fname_knn.copy()
-        save_fname_w.set_ngram_opts(n=n_window, is_char_level=False)
-        etcbc_eval_classifier(mnb_w, etcbc_ds, save_fname_w)
-
-        # Remove a few common proper nouns only from the training set
-        print("\nRemove common proper nouns from training verses")
-        # configure classifier
-        mnb_wr = BoWEstimator(MultinomialNB(), identity, n=n_window)
-        mnb_wr.set_preprocessor(remove_non_chars)
-        # evaluate and save results
-        save_fname_wr = save_fname_w.copy()
-        save_fname_wr.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-        etcbc_eval_classifier(
-            mnb_wr, etcbc_ds, save_fname_wr, remove_proper_nouns
-        )
-
-        # Remove a few common proper nouns from both training and test sets
-        print("\nRemove common proper nouns from both training & test verses")
-        # evaluate and save results
-        save_fname_wrb = save_fname_w.copy()
-        save_fname_wrb.add_extra_opts(
-            [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
-        )
-        etcbc_eval_classifier(
-            mnb_wr,
-            etcbc_ds,
-            save_fname_wrb,
-            remove_proper_nouns,
-            map_to_both=True,
-        )
 
     print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
+    base_fname_knn = SavefileName("ETCBC", "knn")
     for n_window in range(1, 6):
-        for k in range(3, 7):
-            print(f"\nPlain KNN Classifier with k={k} and char {n_window}-gram")
-            knn = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), " ".join, n=n_window
-            )
-            knn.set_preprocessor(remove_non_chars)
-
-            # evaluate and save results
-            save_fname_knn = SavefileName("ETCBC", "knn")
-            save_fname_knn.set_ngram_opts(n=n_window)
-            save_fname_knn.set_knn_opts(k=k)
-            save_fname_knn.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
-            etcbc_eval_classifier(knn, etcbc_ds, save_fname_knn)
-
-            # Remove a few common proper nouns from both training and test sets
-            print(
-                "\nRemove common proper nouns from both training & test verses"
-            )
-            knn_r = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), " ".join, n=n_window
-            )
-            knn_r.set_preprocessor(remove_non_chars)
-            save_fname_knn_rb = save_fname_knn.copy()
-            save_fname_knn_rb.add_extra_opts(
-                [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
-            )
-            etcbc_eval_classifier(
-                knn_r,
-                etcbc_ds,
-                save_fname_knn_rb,
-                remove_proper_nouns,
-                map_to_both=True,
-            )
-
-    print("Word N-gram Classifier")
-    for n_window in range(1, 6):
-        for k in range(3, 7):
-            print(f"\nPlain KNN Classifier with k={k} and word {n_window}-gram")
-            knn_w = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), identity, n=n_window
-            )
-            knn_w.set_preprocessor(remove_non_chars)
-            save_fname_knn_w = SavefileName("ETCBC", "knn")
-            save_fname_knn_w.set_ngram_opts(n=n_window, is_char_level=False)
-            save_fname_knn_w.set_knn_opts(k=k)
-            save_fname_knn_w.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
-            etcbc_eval_classifier(knn_w, etcbc_ds, save_fname_knn_w)
-
-            # Remove a few common proper nouns from both training and test sets
-            print(
-                "\nRemove common proper nouns from both training & test verses"
-            )
-            knn_wr = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), identity, n=n_window
-            )
-            knn_wr.set_preprocessor(remove_non_chars)
-            save_fname_knn_wrb = save_fname_knn_w.copy()
-            save_fname_knn_wrb.add_extra_opts(
-                [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
-            )
-            etcbc_eval_classifier(
-                knn_wr,
-                etcbc_ds,
-                save_fname_knn_wrb,
-                remove_proper_nouns,
-                map_to_both=True,
-            )
+        for k in range(2, 10):
+            base_fname_knn.set_knn_opts(k=k)
+            print(f"\nKNN Classifier with k={k} and n_window={n_window}")
+            run_clf("knn", n_window, etcbc_ds, base_fname_knn,  n_neighbors=k)

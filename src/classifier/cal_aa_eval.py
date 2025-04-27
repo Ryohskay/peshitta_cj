@@ -27,6 +27,7 @@
 
 import re
 from collections.abc import Callable
+from unittest.mock import Base
 
 import numpy as np
 from numpy.typing import NDArray
@@ -43,6 +44,7 @@ from src.classifier.load_cal import load_cal_dataset
 from src.classifier.result_utils import Verse
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
+from src.shared.classification_algos import get_algo_by_name
 
 
 def csvify_cal(
@@ -201,32 +203,32 @@ def cal_eval_classifier(
         out_dir="./src/classifier/out/",
     )
 
-
-if __name__ == "__main__":
-    # load cal data from src/scraper/cal_results
-    cal_ds = load_cal_dataset("./src/")
-
-    for n_window in range(1, 6):
-        print(f"\n================= {n_window}-gram ===================")
+def run_cal_clf(
+        clf_alias: str,
+        n_window: int,
+        cal_ds: LoadedDataset,
+        base_fname: SavefileName,
+        **kwargs
+):
+        algo = get_algo_by_name(clf_alias, **kwargs)
+        print(f"\n================= char {n_window}-gram ===================")
         print("\n> Plain Classifier")
-        print("MultinomialNB")
-        c_mnb = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
-        save_fname = SavefileName("CAL", "mnb")
-        save_fname.set_ngram_opts(n=n_window)
+        c_clf = BoWEstimator(algo, " ".join, n=n_window)
+        save_fname = base_fname.copy()
+        save_fname.set_ngram_opts(n=n_window, is_char_level=True)
 
         # train and evaluate
-        cal_eval_classifier(c_mnb, cal_ds, save_fname)
+        cal_eval_classifier(c_clf, cal_ds, save_fname)
 
         print("\n> Remove PN & GN")
         print(">> Remove PN & GN from the training set")
-        print("MultinomialNB")
         # Remove personal names and place names from the training data
         # and train new classifiers
-        c_mnb_r = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
+        c_clf_r = BoWEstimator(algo, " ".join, n=n_window)
         save_fname_npn = save_fname.copy()
         save_fname_npn.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
         cal_eval_classifier(
-            c_mnb_r, cal_ds, save_fname_npn, remove_proper_nouns
+            c_clf_r, cal_ds, save_fname_npn, remove_proper_nouns
         )
 
         print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
@@ -235,28 +237,26 @@ if __name__ == "__main__":
             "\n> Remove underscores marking proclitics, "
             + "from both training & test sets"
         )
-        print("MultinomialNB")
-        c_mnb_nus = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
-        c_mnb_nus.set_preprocessor(remove_underscores)
+        c_clf_nus = BoWEstimator(algo, " ".join, n=n_window)
+        c_clf_nus.set_preprocessor(remove_underscores)
 
         save_fname_nus = save_fname.copy()
         save_fname_nus.add_extra_opts(
             [FnameExtraOpts.REMOVE_UNDERSCORES, FnameExtraOpts.REMOVE_FROM_BOTH]
         )
 
-        cal_eval_classifier(c_mnb_nus, cal_ds, save_fname_nus)
+        cal_eval_classifier(c_clf_nus, cal_ds, save_fname_nus)
 
         print("\n> Remove PN & GN")
         print(">> Remove PN & GN from both training & test sets")
-        print("MultinomialNB")
         # Remove personal names and place names from
         # both the training and test datasets
         # and train new classifiers
-        c_mnb_npn_both = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
+        c_clf_npn_both = BoWEstimator(algo, " ".join, n=n_window)
         save_fname_npn_both = save_fname_npn.copy()
         save_fname_npn_both.add_extra_opts([FnameExtraOpts.REMOVE_FROM_BOTH])
         cal_eval_classifier(
-            c_mnb_npn_both,
+            c_clf_npn_both,
             cal_ds,
             save_fname_npn_both,
             remove_proper_nouns,
@@ -264,12 +264,11 @@ if __name__ == "__main__":
         )
 
         print("\n>> Remove PN, GN, underscores from both training & test sets")
-        print("MultinomialNB")
         # Remove personal names and place names from
         # both the training and test datasets
         # and train new classifiers
-        c_mnb_rnus = BoWEstimator(MultinomialNB(), " ".join, n=n_window)
-        c_mnb_rnus.set_preprocessor(remove_underscores)
+        c_clf_rnus = BoWEstimator(algo, " ".join, n=n_window)
+        c_clf_rnus.set_preprocessor(remove_underscores)
 
         save_fname_rnus = save_fname_npn.copy()
         save_fname_rnus.add_extra_opts(
@@ -277,7 +276,7 @@ if __name__ == "__main__":
         )
 
         cal_eval_classifier(
-            c_mnb_rnus,
+            c_clf_rnus,
             cal_ds,
             save_fname_rnus,
             remove_proper_nouns,
@@ -286,36 +285,33 @@ if __name__ == "__main__":
 
         print("\n=============== Word n-grams =================")
         print("\n> Plain Classifier")
-        print("MultinomialNB")
-        w_mnb = BoWEstimator(MultinomialNB(), identity, n=n_window)
-        save_fname_w = SavefileName("CAL", "mnb")
+        w_clf = BoWEstimator(algo, identity, n=n_window)
+        save_fname_w = base_fname.copy()
         save_fname_w.set_ngram_opts(n=n_window, is_char_level=False)
 
         # train and evaluate
-        cal_eval_classifier(w_mnb, cal_ds, save_fname_w)
+        cal_eval_classifier(w_clf, cal_ds, save_fname_w)
 
         print("\n> Remove PN & GN")
         print(">> Remove PN & GN from the training set")
-        print("MultinomialNB")
         # Remove personal names and place names from the training data
         # and train new classifiers
-        w_mnb_r = BoWEstimator(MultinomialNB(), identity, n=n_window)
-        w_mnb_r.set_preprocessor(remove_underscores)
+        w_clf_r = BoWEstimator(algo, identity, n=n_window)
+        w_clf_r.set_preprocessor(remove_underscores)
 
         save_fname_npn_w = save_fname_w.copy()
         save_fname_npn_w.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
         cal_eval_classifier(
-            w_mnb_r, cal_ds, save_fname_npn, remove_proper_nouns
+            w_clf_r, cal_ds, save_fname_npn, remove_proper_nouns
         )
 
         print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
         print("\n>> Remove PN, GN from both training & test sets")
-        print("MultinomialNB")
         # Remove personal names and place names from
         # both the training and test datasets
         # and train new classifiers
-        w_mnb_rnus = BoWEstimator(MultinomialNB(), identity, n=n_window)
-        w_mnb_rnus.set_preprocessor(remove_underscores)
+        w_clf_rnus = BoWEstimator(algo, identity, n=n_window)
+        w_clf_rnus.set_preprocessor(remove_underscores)
 
         save_fname_rnus_w = save_fname_npn_w.copy()
         save_fname_rnus_w.add_extra_opts(
@@ -327,87 +323,27 @@ if __name__ == "__main__":
         )
 
         cal_eval_classifier(
-            w_mnb_rnus,
+            w_clf_rnus,
             cal_ds,
             save_fname_rnus_w,
             remove_proper_nouns,
             map_to_both=True,
         )
 
+
+if __name__ == "__main__":
+    # load cal data from src/scraper/cal_results
+    cal_ds = load_cal_dataset("./src/")
+    print("Multinomial NB")
+    base_fname_mnb = SavefileName("CAL", "mnb")
+    for n in range(1, 6):
+        run_cal_clf("mnb", n, cal_ds, base_fname_mnb)
+
     print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
-    for n_window in range(1, 6):
-        for k in range(3, 7):
-            print(
-                f"\nPlain KNN Classifier (underscore removed) with k={k} and"
-                + f" char {n_window}-gram"
-            )
-            knn = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), " ".join, n=n_window
-            )
-            knn.set_preprocessor(remove_underscores)
+    base_fname_knn = SavefileName("CAL", "knn")
 
-            # evaluate and save results
-            save_fname_knn = SavefileName("CAL", "knn")
-            save_fname_knn.set_ngram_opts(n=n_window)
-            save_fname_knn.set_knn_opts(k=k)
-            save_fname_knn.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
-            cal_eval_classifier(knn, cal_ds, save_fname_knn)
-
-            # Remove a proper nouns (GN, PN) & uscores from both training and
-            # test sets
-            print(
-                "\nRemove proper nouns and underscores from both training"
-                + " & test verses"
-            )
-            knn_r = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), " ".join, n=n_window
-            )
-            knn_r.set_preprocessor(remove_underscores)
-            save_fname_knn_rb = save_fname_knn.copy()
-            save_fname_knn_rb.add_extra_opts(
-                [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
-            )
-            cal_eval_classifier(
-                knn_r,
-                cal_ds,
-                save_fname_knn_rb,
-                remove_proper_nouns,
-                map_to_both=True,
-            )
-
-    print("Word N-gram Classifier")
-    for n_window in range(1, 6):
-        for k in range(3, 7):
-            print(
-                f"\nPlain KNN Classifier (underscore removed) with k={k} and"
-                + f" word {n_window}-gram"
-            )
-            knn_w = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), identity, n=n_window
-            )
-            knn_w.set_preprocessor(remove_underscores)
-            save_fname_knn_w = SavefileName("CAL", "knn")
-            save_fname_knn_w.set_ngram_opts(n=n_window, is_char_level=False)
-            save_fname_knn_w.set_knn_opts(k=k)
-            save_fname_knn_w.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
-            cal_eval_classifier(knn_w, cal_ds, save_fname_knn_w)
-
-            # Remove a few common proper nouns from both training and test sets
-            print(
-                "\nRemove common proper nouns from both training & test verses"
-            )
-            knn_wr = BoWEstimator(
-                KNeighborsClassifier(n_neighbors=k), identity, n=n_window
-            )
-            knn_wr.set_preprocessor(remove_underscores)
-            save_fname_knn_wrb = save_fname_knn_w.copy()
-            save_fname_knn_wrb.add_extra_opts(
-                [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
-            )
-            cal_eval_classifier(
-                knn_wr,
-                cal_ds,
-                save_fname_knn_wrb,
-                remove_proper_nouns,
-                map_to_both=True,
-            )
+    for n in range(1, 6):
+        for k in range(2, 10):
+            print(f"\n> K = {k}")
+            base_fname_knn.set_knn_opts(k=k)
+            run_cal_clf("knn", n, cal_ds, base_fname_knn, n_neighbors=k)
