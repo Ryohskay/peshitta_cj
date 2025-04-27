@@ -42,6 +42,10 @@ from src.classifier.result_utils import Verse
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
+from src.shared.etcbc_letters import (
+    NON_CHARS_SYRIAC,
+    NON_CHARS_TRANSLIT,
+)
 
 
 def csvify_etcbc(
@@ -149,19 +153,26 @@ def remove_proper_nouns(verse: Verse) -> Verse:
 def remove_non_chars(verse: list[str]) -> list[str]:
     """Remove non-character unicode codepoints from the text.
 
-    Specifically, this preprocessing function removes ``\u0308``
-    (Combining Diaeresis) used in place of Syriac diacritic Seyame (ܣܝ̈ܡܐ)
-    and ``\u0307`` (Combining Dot Above).
+    Specifically, this preprocessing function removes all non-consonantal
+    characters from text in Syriac scripts and transliteration, such as
+    ``\u0308`` (Combining Diaeresis) used in place of Syriac diacritic
+    Seyame (ܣܝ̈ܡܐ) and ``\u0307`` (Combining Dot Above).
+
+    .. note::
+        See `Text Fabric documentation <https://annotation.github.io/text-fabric/tf/writing/syriac.html>`
+        for more information on the diacritics used in the database.
 
     Returns:
         a list of str without non-character unicode codepoints.
     """
     res_verse = []
     for i in range(len(verse)):
+        word = ""
         # replace Syriac diacritics
-        word = verse[i].replace("\u0308", "").replace("\u0307", "")
-        # replace transliterations of above diacritics
-        res_verse.append(word.replace('"', "").replace("^", ""))
+        for char in verse[i]:
+            if char not in NON_CHARS_TRANSLIT and char not in NON_CHARS_SYRIAC:
+                word += char
+        res_verse.append(word)
     return res_verse
 
 

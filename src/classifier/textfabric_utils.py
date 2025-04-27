@@ -63,7 +63,7 @@ def get_verses(
         {"BOOK_TITLE": [list of ("VERSE_REF", [list of words])]}
     """
     # Load text-fabric library
-    handler = app.use(target_fabric, version=ver)
+    handler = app.use(target_fabric, version=ver, silent="clean")
     api = handler.api
     result_verses = []
 

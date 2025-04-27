@@ -1,0 +1,1 @@
+"""Package for shared variables and functions."""

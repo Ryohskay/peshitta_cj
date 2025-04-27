@@ -1,0 +1,267 @@
+CAL
+Loading dataset(s) from: /Users/ryohskay/Documents/uni/peshitta_cj/src/scraper/cal_results
+
+>> OT
+Book: Exodus
+Number of verses: 582
+Number of words: 12377
+Number of characters: 42728
+Book: Genesis
+Number of verses: 1533
+Number of words: 29188
+Number of characters: 99992
+
+Jewish Total number of books: 2
+Jewish Total number of verses: 2115
+Jewish Total number of words: 41565
+Jewish Total number of characters: 142720
+>> NT
+Book: Mark
+Number of verses: 678
+Number of words: 11613
+Number of characters: 40372
+Book: John
+Number of verses: 879
+Number of words: 15590
+Number of characters: 55037
+Book: Matthew
+Number of verses: 1071
+Number of words: 18276
+Number of characters: 63973
+Book: Luke
+Number of verses: 1151
+Number of words: 20134
+Number of characters: 69574
+
+Christian Total number of books: 4
+Christian Total number of verses: 3779
+Christian Total number of words: 65613
+Christian Total number of characters: 228956
+
+>> OT
+Book: Deuteronomy
+Number of verses: 557
+Number of words: 11857
+Number of characters: 40292
+
+Jewish Total number of books: 1
+Jewish Total number of verses: 557
+Jewish Total number of words: 11857
+Jewish Total number of characters: 40292
+>> NT
+Book: Acts
+Number of verses: 1007
+Number of words: 20828
+Number of characters: 73959
+
+Christian Total number of books: 1
+Christian Total number of verses: 1007
+Christian Total number of words: 20828
+Christian Total number of characters: 73959
+>> Production
+Book: Chronicles_2
+Number of verses: 750
+Number of words: 20446
+Number of characters: 71293
+Book: Kings_2
+Number of verses: 719
+Number of words: 17964
+Number of characters: 62591
+Book: Esther
+Number of verses: 167
+Number of words: 4196
+Number of characters: 14655
+Book: Nehemia
+Number of verses: 404
+Number of words: 7849
+Number of characters: 27973
+Book: Joshua
+Number of verses: 656
+Number of words: 15279
+Number of characters: 53652
+Book: Judges
+Number of verses: 617
+Number of words: 14287
+Number of characters: 49988
+Book: Samuel_2
+Number of verses: 702
+Number of words: 15805
+Number of characters: 55842
+Book: Chronicles_1
+Number of verses: 895
+Number of words: 17093
+Number of characters: 61136
+Book: Ruth
+Number of verses: 86
+Number of words: 1916
+Number of characters: 6541
+Book: Samuel_1
+Number of verses: 811
+Number of words: 18960
+Number of characters: 65531
+Book: Maccabees_1_B
+Number of verses: 908
+Number of words: 17133
+Number of characters: 60013
+Book: Kings_1
+Number of verses: 835
+Number of words: 19367
+Number of characters: 67583
+Book: Ezra
+Number of verses: 280
+Number of words: 5553
+Number of characters: 19995
+
+Christian Total number of books: 13
+Christian Total number of verses: 7830
+Christian Total number of words: 175848
+Christian Total number of characters: 616793
+
+ETCBC
+**Locating corpus resources ...**
+Genesis
+Exodus
+**Locating corpus resources ...**
+Deuteronomy
+**Locating corpus resources ...**
+Joshua
+Judges
+Samuel_1
+Samuel_2
+Kings_1
+Kings_2
+Ruth
+Esther
+Chronicles_1
+Chronicles_2
+Ezra
+Nehemia
+Maccabees_1_A
+Maccabees_1_B
+**Locating corpus resources ...**
+Matthew
+Mark
+Luke
+John
+**Locating corpus resources ...**
+Acts
+
+>> OT
+Book: Genesis
+Number of verses: 1533
+Number of words: 20080
+Number of characters: 104598
+Book: Exodus
+Number of verses: 582
+Number of words: 8424
+Number of characters: 45067
+
+Jewish Total number of books: 2
+Jewish Total number of verses: 2115
+Jewish Total number of words: 28504
+Jewish Total number of characters: 149665
+>> NT
+Book: Matthew
+Number of verses: 1071
+Number of words: 13979
+Number of characters: 70715
+Book: Mark
+Number of verses: 678
+Number of words: 8793
+Number of characters: 44457
+Book: Luke
+Number of verses: 1151
+Number of words: 15234
+Number of characters: 76686
+Book: John
+Number of verses: 879
+Number of words: 12408
+Number of characters: 60042
+
+Christian Total number of books: 4
+Christian Total number of verses: 3779
+Christian Total number of words: 50414
+Christian Total number of characters: 251900
+
+>> OT
+Book: Deuteronomy
+Number of verses: 555
+Number of words: 8348
+Number of characters: 44282
+
+Jewish Total number of books: 1
+Jewish Total number of verses: 555
+Jewish Total number of words: 8348
+Jewish Total number of characters: 44282
+>> NT
+Book: Acts
+Number of verses: 1007
+Number of words: 15383
+Number of characters: 80200
+
+Christian Total number of books: 1
+Christian Total number of verses: 1007
+Christian Total number of words: 15383
+Christian Total number of characters: 80200
+>> Production
+Book: Joshua
+Number of verses: 656
+Number of words: 10035
+Number of characters: 55278
+Book: Judges
+Number of verses: 617
+Number of words: 9794
+Number of characters: 51683
+Book: Samuel_1
+Number of verses: 809
+Number of words: 12953
+Number of characters: 67346
+Book: Samuel_2
+Number of verses: 693
+Number of words: 11106
+Number of characters: 56548
+Book: Kings_1
+Number of verses: 816
+Number of words: 12884
+Number of characters: 67398
+Book: Kings_2
+Number of verses: 719
+Number of words: 12026
+Number of characters: 63222
+Book: Ruth
+Number of verses: 86
+Number of words: 1392
+Number of characters: 7305
+Book: Esther
+Number of verses: 168
+Number of words: 2907
+Number of characters: 16184
+Book: Chronicles_1
+Number of verses: 891
+Number of words: 11263
+Number of characters: 61801
+Book: Chronicles_2
+Number of verses: 768
+Number of words: 13568
+Number of characters: 73631
+Book: Ezra
+Number of verses: 280
+Number of words: 3908
+Number of characters: 21308
+Book: Nehemia
+Number of verses: 405
+Number of words: 5496
+Number of characters: 30307
+Book: Maccabees_1_A
+Number of verses: 836
+Number of words: 11436
+Number of characters: 63536
+Book: Maccabees_1_B
+Number of verses: 908
+Number of words: 11722
+Number of characters: 65144
+
+Christian Total number of books: 14
+Christian Total number of verses: 8652
+Christian Total number of words: 130490
+Christian Total number of characters: 700691

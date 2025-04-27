@@ -290,9 +290,9 @@ def plot_charts(  # noqa: PLR0913
     )
     pr_display.plot()
     save_dest = (
-        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_cm" + save_fname_p.suffix)
+        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_pr" + save_fname_p.suffix)
         if save_fname_p is not None
-        else f"{out_dir}/confusion_matrix.jpeg"
+        else f"{out_dir}/precision_recall.jpeg"
     )
     if out_dir is None:
         plt.show()
@@ -308,7 +308,7 @@ def plot_charts(  # noqa: PLR0913
     save_dest = (
         save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_roc" + save_fname_p.suffix)
         if save_fname_p is not None
-        else f"{out_dir}/confusion_matrix.jpeg"
+        else f"{out_dir}/roc_auc.jpeg"
     )
     if out_dir is None:
         plt.show()
@@ -539,7 +539,7 @@ def eval_and_save(  # noqa: PLR0913
     save_fname: SavefileName,
     *,
     out_dir: str = "./out/",
-    do_plot: bool = False,
+    do_plot: bool = True,
     threshold: float = 0.5,
 ) -> tuple[BoWEstimator, list[ProbaPredictions]]:
     """Wrapper around evaluate_classifier, save_mislabels, and save_all_preds.
