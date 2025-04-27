@@ -8,9 +8,9 @@ from sklearn.base import BaseEstimator
 from src.classifier.wrappers import BoWEstimator
 
 ALGORITHMS = {
-    "mnb": {"algo": MultinomialNB},
-    "knn": {"algo": KNeighborsClassifier},
-    "rf": {"algo": RandomForestClassifier},
+    "mnb": {"algo": MultinomialNB, "description": "Multinomial Naive Bayes"},
+    "knn": {"algo": KNeighborsClassifier, "description": "K-Nearest Neighbors"},
+    "rf": {"algo": RandomForestClassifier, "description": "Random Forest"},
 }
 
 def get_algo_by_name(name: str, **kwargs) -> BaseEstimator: # noqa: ANN003
