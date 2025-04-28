@@ -86,7 +86,7 @@ class SavefileName(Any):
         # random forest
         self.n_estimators: int = 0
         # multi-layer perceptron
-        self.hidden_layer_sizes: Iterable[int] = []
+        self.hidden_layer_sizes: list[int] = []
         self.activation: str = ""  # relu, tanh, logistic, identity
         # Special file flags
         self.is_prod = False
@@ -125,7 +125,7 @@ class SavefileName(Any):
             and self.knn_k == obj.knn_k
             and self.knn_weights == obj.knn_weights
             and self.knn_minkowski_p == obj.knn_minkowski_p
-            and self.num_estimators == obj.n_estimators
+            and self.n_estimators == obj.n_estimators
             and self.hidden_layer_sizes == obj.hidden_layer_sizes
             and self.activation == obj.activation
             and self.extra_opts == obj.extra_opts
@@ -251,7 +251,7 @@ class SavefileName(Any):
             activation: the activation function for the hidden layer.
                 Possible values are ``identity``, ``logistic``, ``tanh``, and
                 ``relu``.
-        
+
         Raises:
             ValueError: if the name of the activation function is invalid.
         """
@@ -348,7 +348,7 @@ class SavefileName(Any):
         if self.n_estimators != 0:
             fname += f"_{self.n_estimators}rf"
         # append options related to multi-layer perceptron
-        if self.hidden_layer_sizes != (0,):
+        if len(self.hidden_layer_sizes) > 0:
             fname += f"_{len(list(self.hidden_layer_sizes))}layers"
             for layer in self.hidden_layer_sizes:
                 fname += f"_{layer}"

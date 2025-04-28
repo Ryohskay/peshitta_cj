@@ -57,7 +57,7 @@ ot_prod_books = {
 }
 
 nt_train_books = {
-    "Matthew": list(range(1, 30 + 1)),
+    "Matthew": list(range(1, 28 + 1)),
     "Mark": list(range(1, 16 + 1)),
     "Luke": list(range(1, 24 + 1)),
     "John": list(range(1, 21 + 1)),

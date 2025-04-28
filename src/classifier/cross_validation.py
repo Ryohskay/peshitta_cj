@@ -23,84 +23,109 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from ast import arg
 from collections.abc import Callable
-from email.policy import strict
-from sklearn.naive_bayes import MultinomialNB
 
-from src.classifier.cal_aa_eval import cal_eval_classifier, remove_underscores, run_cal_clf
-from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
-from src.classifier.etcbc_aa_eval import csvify_etcbc, etcbc_eval_classifier, remove_non_chars, remove_proper_nouns, run_etcbc_clf
+import numpy as np
+from sklearn.base import BaseEstimator
+
+from src.classifier.cal_aa_eval import remove_proper_nouns as nopropn_cal
+from src.classifier.cal_aa_eval import remove_underscores, run_cal_clf
+from src.classifier.dataset_skeleton import LoadedDataset
+from src.classifier.etcbc_aa_eval import remove_non_chars, run_etcbc_clf
+from src.classifier.etcbc_aa_eval import remove_proper_nouns as nopropn_etcbc
 from src.classifier.eval_utils import (
     cross_validate,
-    eval_and_save,
 )
-import numpy as np
 from src.classifier.fitting_utils import identity
 from src.classifier.fname_utils import FnameExtraOpts, SavefileName
-from src.classifier.result_utils import Verse
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 from src.shared.classification_algos import get_algo_by_name
 
-from src.classifier.cal_aa_eval import (
-    remove_underscores,
-)
-from src.classifier.cal_aa_eval import remove_proper_nouns as nopropn_cal
-from src.classifier.etcbc_aa_eval import remove_proper_nouns as nopropn_etcbc
-from sklearn.base import BaseEstimator
 
 def cross_validate_clf(
-        algo: BaseEstimator,
-        n_window_max: int,
-        ds: LoadedDataset,
-        formatter: Callable[[list[str]], str] = " ".join,
-        preprocessor: Callable[[list[str]],list[str]] | None = None,
-        **kwargs
+    algo: BaseEstimator,
+    n_window_max: int,
+    ds: LoadedDataset,
+    formatter: Callable[[list[str]], str] = " ".join,
+    preprocessor: Callable[[list[str]], list[str]] | None = None,
+    **kwargs,
 ) -> tuple[int, float, list[dict]]:
+    """Cross-validate the classifier with different n-gram spans.
+
+    Returns:
+        index of the best performing classifier, the best f-score, and a list of
+        configurations for each classifier.
+    """
     avg_f_scores = []
     configs = []
     for n_window in range(1, n_window_max + 1):
         classifier = BoWEstimator(algo, formatter, n=n_window)
         if preprocessor is not None:
             classifier.set_preprocessor(preprocessor)
+            print(f"preprocessor: {preprocessor.__name__}")  # debug
         _, _, _, fb = cross_validate(
             classifier,
             ds.train.get_samples(),
             ds.train.get_labels(),
         )
-        if len(np.array(fb, dtype=np.float64).shape) == 3:
-            avg_f_scores.append(np.average([score for v in fb for vals in v for score in vals]))
-        elif len(np.array(fb, dtype=np.float64).shape) == 2:
+        print(
+            f"n_window={n_window}, fb={fb}, shape={np.array(fb).shape}"
+        )  # debug
+        # if len(np.array(fb, dtype=np.float64).shape) == 3:
+        #     avg_f_scores.append(
+        #         np.average([score for v in fb for vals in v for score in vals])
+        #     )
+        if len(np.array(fb, dtype=np.float64).shape) == 2:
             avg_f_scores.append(np.average([score for v in fb for score in v]))
         else:
             msg = f"Unexpected shape of the cross-validation results: {np.array(fb).shape}"
             raise ValueError(msg)
         configs.append({"n_window": n_window, "other_opts": kwargs})
     max_idx = np.argmax(avg_f_scores)
-    print(f"\nBest performing classifier: {configs[max_idx]} with f-score {avg_f_scores[max_idx]}")
     return int(max_idx), avg_f_scores[max_idx], configs
 
+
 def find_best_clf(
-        clf_alias: str,
-        n_window_max: int,
-        ds: LoadedDataset,
-        base_fname: SavefileName,
-        **kwargs
-):
-    """Find the best performing classifier for a given dataset."""
-    print("Char n-grams")
+    clf_alias: str,
+    n_window_max: int,
+    ds: LoadedDataset,
+    base_fname: SavefileName,
+    **kwargs,
+) -> tuple[float, float]:
+    """Find the best performing classifier for a given dataset and run it.
+
+    Args:
+        clf_alias (str): The alias of the classifier to use.
+        n_window_max (int): The maximum n-gram span to consider.
+        ds (LoadedDataset): The dataset to use for training and testing.
+        base_fname (SavefileName): The base filename for saving results.
+        **kwargs: Additional arguments for the classifier.
+
+    Returns:
+        tuple[float, float]: The best f-scores for character and word n-grams.
+    """
     algo = get_algo_by_name(clf_alias, **kwargs)
     eval_clf = run_cal_clf if base_fname.origin == "CAL" else run_etcbc_clf
-    preprocessor = remove_underscores if base_fname.origin == "CAL" else remove_non_chars
+    preprocessor = (
+        remove_underscores if base_fname.origin == "CAL" else remove_non_chars
+    )
     data_map_func = nopropn_cal if base_fname.origin == "CAL" else nopropn_etcbc
 
-    # find the best performing classifier
-    max_idx, max_c_fscore, configs = cross_validate_clf(algo, n_window_max, ds, preprocessor=preprocessor)
+    # find the best performing classifier for the character n-grams
+    max_idx, max_c_fscore, configs = cross_validate_clf(
+        algo, n_window_max, ds, preprocessor=preprocessor
+    )
+    print(
+        "\nBest performing char-ngram classifier: "
+        + f"{configs[max_idx]} with f-score {max_c_fscore}"
+    )
+    exit()
 
     n_window = configs[max_idx]["n_window"]
     # apply the best performing classifier to the test set
     # and save the results
+    print(f"Char n-gram classifier with n_window={n_window}")
     print("\n>> Remove PN, GN, underscores from both training & test sets")
     # Remove personal names and place names from
     # both the training and test datasets
@@ -112,9 +137,11 @@ def find_best_clf(
     save_fname_rnus = base_fname.copy()
     save_fname_rnus.set_ngram_opts(n=n_window, is_char_level=True)
     save_fname_rnus.add_extra_opts(
-        [FnameExtraOpts.REMOVE_UNDERSCORES,
+        [
+            FnameExtraOpts.REMOVE_UNDERSCORES,
             FnameExtraOpts.REMOVE_PROPN,
-            FnameExtraOpts.REMOVE_FROM_BOTH]
+            FnameExtraOpts.REMOVE_FROM_BOTH,
+        ]
     )
 
     eval_clf(
@@ -124,12 +151,19 @@ def find_best_clf(
         base_fname,
     )
 
+    # find the best performing classifier for the word n-grams
+    max_idx, max_w_fscore, configs = cross_validate_clf(
+        algo, n_window_max, ds, identity, preprocessor
+    )
+    n_window = configs[max_idx]["n_window"]
+    print(
+        "\nBest performing word-ngram classifier: "
+        + f"{configs[max_idx]} with f-score {max_w_fscore}"
+    )
     print(f"\n=============== Word {n_window}-grams =================")
     print("\n>> Remove PN, GN from both training & test sets")
     # Remove personal names and place names from
     # both the training and test datasets
-    max_idx, max_w_fscore, configs = cross_validate_clf(algo, n_window_max, ds, identity, preprocessor)
-    n_window = configs[max_idx]["n_window"]
 
     # and train new classifiers
     w_clf_rnus = BoWEstimator(algo, identity, n=n_window)
@@ -159,10 +193,11 @@ if __name__ == "__main__":
     n_max = 6
 
     print("> ETCBC")
-    print("\n================== MNB REAL RESULTS================")
+    print("\n================== MNB RESULTS================")
     clf_alias = "mnb"
     base_fname_mnb = SavefileName("ETCBC", clf_alias)
     find_best_clf(clf_alias, n_max, etcbc_ds, base_fname_mnb)
+    exit()
 
     print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
     base_fname_knn = SavefileName("ETCBC", "knn")
@@ -171,13 +206,19 @@ if __name__ == "__main__":
     for k in range(2, 10):
         base_fname_knn.set_knn_opts(k=k)
         print(f"\nKNN Classifier with k={k}")
-        max_char_score, max_w_score = find_best_clf("knn", n_max, etcbc_ds, base_fname_knn, n_neighbors=k)
+        max_char_score, max_w_score = find_best_clf(
+            "knn", n_max, etcbc_ds, base_fname_knn, n_neighbors=k
+        )
         max_char_scores.append(max_char_score)
         max_word_scores.append(max_w_score)
     argmax_char = np.argmax(max_char_scores)
     argmax_word = np.argmax(max_word_scores)
-    print(f"\nBest char n-gram KNN classifier: {max_char_scores[argmax_char]} with k={argmax_char + 2}")
-    print(f"\nBest word n-gram KNN classifier: {max_word_scores[argmax_word]} with k={argmax_word + 2}")
+    print(
+        f"\nBest char n-gram KNN classifier: {max_char_scores[argmax_char]} with k={argmax_char + 2}"
+    )
+    print(
+        f"\nBest word n-gram KNN classifier: {max_word_scores[argmax_word]} with k={argmax_word + 2}"
+    )
 
     print("\n=========================== RANDOM FOREST =====================\n")
     base_fname_rf = SavefileName("ETCBC", "rf")
@@ -186,13 +227,19 @@ if __name__ == "__main__":
     for n_tree in range(100, 501, 100):
         base_fname_rf.set_rf_opts(n_estimators=n_tree)
         print(f"\nRandom Forest Classifier with {n_tree} trees")
-        max_char_score, max_w_score = find_best_clf("rf", n_max, etcbc_ds, base_fname_rf, num_estimators=n_tree)
+        max_char_score, max_w_score = find_best_clf(
+            "rf", n_max, etcbc_ds, base_fname_rf, n_estimators=n_tree
+        )
         max_char_scores.append(max_char_score)
         max_word_scores.append(max_w_score)
     argmax_char = np.argmax(max_char_scores)
     argmax_word = np.argmax(max_word_scores)
-    print(f"\nBest char n-gram Random Forest classifier: {max_char_scores[argmax_char]} with num_estimators={list(range(100, 501, 100))[argmax_char]}")
-    print(f"\nBest word n-gram Random Forest classifier: {max_word_scores[argmax_word]} with num_estimators={list(range(100, 501, 100))[argmax_char]}")
+    print(
+        f"\nBest char n-gram Random Forest classifier: {max_char_scores[argmax_char]} with n_estimators={list(range(100, 501, 100))[argmax_char]}"
+    )
+    print(
+        f"\nBest word n-gram Random Forest classifier: {max_word_scores[argmax_word]} with n_estimators={list(range(100, 501, 100))[argmax_char]}"
+    )
 
     print("\n===================SVC====================\n")
     base_fname_svc = SavefileName("ETCBC", "svc")
@@ -201,13 +248,19 @@ if __name__ == "__main__":
     for c in [0.1, 1, 10, 100]:
         base_fname_svc.set_svc_opts(c=c)
         print(f"\nSVC Classifier with C={c}")
-        max_char_score, max_w_score = find_best_clf("svc", n_max, etcbc_ds, base_fname_svc, c=c)
+        max_char_score, max_w_score = find_best_clf(
+            "svc", n_max, etcbc_ds, base_fname_svc, c=c
+        )
         max_char_scores.append(max_char_score)
         max_word_scores.append(max_w_score)
     argmax_char = np.argmax(max_char_scores)
     argmax_word = np.argmax(max_word_scores)
-    print(f"\nBest char n-gram SVC classifier: {max_char_scores[argmax_char]} with C={list([0.1, 1, 10, 100])[argmax_char]}")
-    print(f"\nBest word n-gram SVC classifier: {max_word_scores[argmax_word]} with C={list([0.1, 1, 10, 100])[argmax_word]}")
+    print(
+        f"\nBest char n-gram SVC classifier: {max_char_scores[argmax_char]} with C={list([0.1, 1, 10, 100])[argmax_char]}"
+    )
+    print(
+        f"\nBest word n-gram SVC classifier: {max_word_scores[argmax_word]} with C={list([0.1, 1, 10, 100])[argmax_word]}"
+    )
 
     print("\n=================MLP====================\n")
     base_fname_mlp = SavefileName("ETCBC", "mlp")
@@ -222,7 +275,13 @@ if __name__ == "__main__":
         for h in percepts:
             base_fname_mlp.set_mlp_opts(hidden_layer_sizes=(h,))
             print(f"\nMLP Classifier with {h} hidden units")
-            max_char_score, max_w_score = find_best_clf("mlp", n_max, etcbc_ds, base_fname_mlp, hidden_layer_sizes=[h] * n_layers)
+            max_char_score, max_w_score = find_best_clf(
+                "mlp",
+                n_max,
+                etcbc_ds,
+                base_fname_mlp,
+                hidden_layer_sizes=[h] * n_layers,
+            )
             max_char_scores.append(max_char_score)
             max_word_scores.append(max_w_score)
         best_char_percepts_idx.append(np.argmax(max_char_scores))
@@ -231,5 +290,9 @@ if __name__ == "__main__":
         max_all_word_scores.append(np.max(max_word_scores))
     argmax_char = np.argmax(max_all_char_scores)
     argmax_word = np.argmax(max_all_word_scores)
-    print(f"\nBest char n-gram MLP classifier: {max_all_char_scores[argmax_char]} with {percepts[best_char_percepts_idx[argmax_char]]} hidden units and {best_char_percepts_idx[argmax_char] + 1} layers")
-    print(f"\nBest word n-gram MLP classifier: {max_all_word_scores[argmax_word]} with {percepts[best_word_percepts_idx[argmax_word]]} hidden units and {best_word_percepts_idx[argmax_word] + 1} layers")
+    print(
+        f"\nBest char n-gram MLP classifier: {max_all_char_scores[argmax_char]} with {percepts[best_char_percepts_idx[argmax_char]]} hidden units and {best_char_percepts_idx[argmax_char] + 1} layers"
+    )
+    print(
+        f"\nBest word n-gram MLP classifier: {max_all_word_scores[argmax_word]} with {percepts[best_word_percepts_idx[argmax_word]]} hidden units and {best_word_percepts_idx[argmax_word] + 1} layers"
+    )

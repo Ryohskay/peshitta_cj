@@ -653,9 +653,18 @@ def cross_validate(
     Returns:
         a tuple of lists containing accuracy, precision, recall, and f1 score
         for each fold.
+
+    Raises:
+        ValueError: if the length of the training set is shorter than
+            the number of requested folds.
     """
     print("> Cross-Validation <")
     skf_splitter = StratifiedKFold(n_splits=fold)
+    if len(training_x) < fold:
+        msg = (
+            f"Cannot divide a list of length {len(training_x)} into {fold} parts!"
+        )
+        raise ValueError(msg)
     splits = skf_splitter.split(training_x, training_y)  # type: ignore[reportArgumentType]
     accs = []
     precs = []
@@ -671,6 +680,7 @@ def cross_validate(
             clf.n_gram_formatter,
             clf.n,
         )
+        proba_c.preprocessor = clf.preprocessor
         train_ids = list(train_g)
         test_ids = list(test_g)
         # train_samples = train[0]

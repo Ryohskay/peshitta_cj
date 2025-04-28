@@ -1,6 +1,10 @@
 """Tests for the eval_utils module."""
 
+from importlib.simple import ResourceContainer
 import pytest
+from pytest import MonkeyPatch
+from unittest.mock import MagicMock
+import numpy as np
 
 from src.classifier.dataset_skeleton import LoadedDataset
 from src.classifier.eval_utils import (
@@ -96,6 +100,7 @@ def test_evaluate_classifier(
 
 
 def test_cross_validate(
+    monkeypatch: MonkeyPatch,
     mnb_classifier: BoWEstimator,
     etcbc_chr_verses: list[Verse],
     etcbc_verse: Verse,
@@ -105,7 +110,17 @@ def test_cross_validate(
     etcbc_acts_verse: Verse,
     etcbc_cor1_verse: Verse,
 ) -> None:
-    mock_clf = mnb_classifier
+    # mock and patch other functions
+    n_fold = 3
+    mock_metricise = MagicMock(return_value=None)
+    measurements = []
+    for i in range(1,n_fold+1):
+        val = 0.1 * i
+        measurements.append((val, [val, val], [val, val], [val, val], None))
+    mock_metricise.side_effect = measurements
+    monkeypatch.setattr("src.classifier.eval_utils.predict_proba", MagicMock())
+    monkeypatch.setattr("src.classifier.eval_utils.metricise", mock_metricise)
+    # prepare the training data
     training_x = etcbc_chr_verses
     training_x.extend(
         [
@@ -118,8 +133,17 @@ def test_cross_validate(
         ]
     )
     training_y = [0, 0, 0, 0, 0, 0, 1, 1, 1]
-
-    cross_validate(mock_clf, training_x, training_y, fold=3, threshold=0.5)
+    # call cross validate
+    acc, prc, rec, fb = cross_validate(mnb_classifier, training_x, training_y, fold=n_fold, threshold=0.5)
+    # check the results
+    assert len(acc) == n_fold
+    assert len(prc) == n_fold
+    assert len(rec) == n_fold
+    assert len(fb) == n_fold
+    assert np.all(np.isclose(acc, [0.1, 0.2, 0.3], rtol=1e-09))
+    assert np.all(np.isclose(prc, [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]], rtol=1e-09))
+    assert np.all(np.isclose(rec, [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]], rtol=1e-09))
+    assert np.all(np.isclose(fb, [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]], rtol=1e-09))
 
 
 def test_csvify_total_proba() -> None:

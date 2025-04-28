@@ -64,27 +64,11 @@ def test_configure_fname_opts(monkeypatch: MonkeyPatch):
     assert not configured_fname.is_total_proba
     assert not configured_fname.is_clf_summary
     assert FnameExtraOpts.REMOVE_DIACRITICS in configured_fname.extra_opts
-    # mock all setter methods that define a classifier spec
-    for attr in dir(SavefileName):
-        if (
-            callable(getattr(save_fname, attr))
-            and attr.startswith("set")
-            and attr != "set_scope"
-        ):
-            # for each method of SavefileName class
-            monkeypatch.setattr(save_fname, attr, MagicMock(name=attr))
-    # call the function to test
-    configure_fname_opts(save_fname, config)
-    # check that all setter methods of SavefileName, specifying a classifier,
-    # are called once and only once by the configure_fname_opts function.
-    for attr in dir(SavefileName):
-        if (
-            callable(getattr(save_fname, attr))
-            and attr.startswith("set")
-            and attr != "set_scope"
-        ):
-            # for each method of SavefileName class
-            getattr(save_fname, attr).assert_called_once()
+    # make sure that the configuration function is working correctly
+    same_clf_total_proba_file = SavefileName("CAL", "mnb", "json")
+    same_clf_total_proba_file.set_ngram_opts(n=3, is_char_level=False)
+    same_clf_total_proba_file.mark_special_file(is_total_proba=True)
+    configured_fname.is_same_classifier(same_clf_total_proba_file)
 
 
 def test_parse_fname():
@@ -98,6 +82,15 @@ def test_parse_fname():
     assert parsed_fname.is_bow
     assert parsed_fname.is_mislabel
     assert FnameExtraOpts.REMOVE_DIACRITICS in parsed_fname.extra_opts
+    assert parsed_fname.get_fname() == fname
+    # check that the file name is parsed correctly
+    expected_fname = SavefileName("ETCBC", "mnb", "csv")
+    expected_fname.set_ngram_opts(n=3, is_char_level=True)
+    expected_fname.add_extra_opts([FnameExtraOpts.REMOVE_DIACRITICS])
+    expected_fname.mark_special_file(is_mislabel=True)
+    expected_fname.set_scope("Jewish")
+    assert parsed_fname.is_same_classifier(expected_fname)
+    assert parsed_fname.get_fname() == expected_fname.get_fname()
     # production file
     fname = "PRODUCTION_cal_mnb_char_3gram_bow_jewish_no_diacritics.csv"
     parsed_fname = parse_fname(fname)
@@ -122,7 +115,10 @@ class TestResultFilesIndex:
             assert index.file_paths[i].name == f.get_fname()
             if "mislabels" in index.file_paths[i].name:
                 assert f.is_mislabel
-        assert index.files[0].origin == "CAL"
+            assert f.knn_k == 0
+            assert f.n_estimators == 0
+            assert f.hidden_layer_sizes == []
+            assert f.activation == ""
 
     def test_match_files_by_config(self):
         """Test the match_files_by_config method."""

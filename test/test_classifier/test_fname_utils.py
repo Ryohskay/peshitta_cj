@@ -47,9 +47,11 @@ class TestSavefileName:
         fname1 = SavefileName(
             origin="CAL", classifier_alias="mnb", file_ext="csv"
         )
+        fname1.set_ngram_opts(n=3, is_char_level=True, is_n_gram=True)
         fname2 = SavefileName(
             origin="CAL", classifier_alias="mnb", file_ext="csv"
         )
+        fname2.set_ngram_opts(n=3, is_char_level=True, is_n_gram=True)
         fname3 = SavefileName(
             origin="ETCBC", classifier_alias="mnb", file_ext="csv"
         )

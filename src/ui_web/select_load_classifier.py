@@ -27,14 +27,14 @@ class ClassifierConfig:
     is_bow: bool = False
     is_char_level: bool = False
     # knn options
-    k: int = 0
-    weights: str = ""
-    p: int = 0
+    knn_k: int = 0
+    knn_weights: str = ""
+    knn_minkowski_p: int = 0
     # random forest options
     n_estimators = 0
     # MLP options
-    hidden_layer_sizes: list = field(default_factory=list)
-    activation: Literal["relu", "identity", "logistic", "tanh"] = "relu"
+    hidden_layer_sizes: list[int] = field(default_factory=list)
+    activation: Literal["relu", "identity", "logistic", "tanh", ""] = ""
     # extra options
     extra_opts: list[FnameExtraOpts] = field(default_factory=list)
 
@@ -71,18 +71,21 @@ def configure_fname_opts(
         is_bow=configs.is_bow,
         is_char_level=configs.is_char_level,
     )
-    save_fname.set_knn_opts(
-        k=configs.k,
-        weights=configs.weights,  # type: ignore[reportArgumentType]
-        p=configs.p,
-    )
-    save_fname.set_rf_opts(
-        n_estimators=configs.n_estimators
-    )
-    save_fname.set_mlp_opts(
-        hidden_layer_sizes=configs.hidden_layer_sizes,
-        activation=configs.activation
-    )
+    if configs.knn_k > 0:
+        save_fname.set_knn_opts(
+            k=configs.knn_k,
+            weights=configs.knn_weights,  # type: ignore[reportArgumentType]
+            p=configs.knn_minkowski_p,
+        )
+    if configs.n_estimators > 0:
+        save_fname.set_rf_opts(
+            n_estimators=configs.n_estimators
+        )
+    if len(configs.hidden_layer_sizes) > 0:
+        save_fname.set_mlp_opts(
+            hidden_layer_sizes=configs.hidden_layer_sizes,
+            activation=configs.activation
+        )
     if configs.extra_opts is not None and len(configs.extra_opts) > 0:
         save_fname.add_extra_opts(configs.extra_opts)
     return save_fname
