@@ -49,7 +49,7 @@ if __name__ == "__main__":
     ot_test_verses = cal_ds.test.get_samples(0)
     nt_test_verses = cal_ds.test.get_samples(1)
 
-    print("\n===================WORD N-GRAMS=========================\n")
+    print("\n===================WORD {n_window}-GRAMS=========================\n")
     print("\nPlain Classifier")
     print("MultinomialNB")
     c_mnb = BoWEstimator(MultinomialNB(), identity)

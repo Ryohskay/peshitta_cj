@@ -644,11 +644,15 @@ def cross_validate(
     training_y: list[int],
     fold: int = 5,
     threshold: float = 0.5,
-) -> None:
+) -> tuple[list, list, list, list]:
     """Perform cross validation with the provided training set.
 
     .. attention:: cross validation should be performed with the training set,
         and you still need to hold out the test set for final evaluation.
+
+    Returns:
+        a tuple of lists containing accuracy, precision, recall, and f1 score
+        for each fold.
     """
     print("> Cross-Validation <")
     skf_splitter = StratifiedKFold(n_splits=fold)
@@ -693,3 +697,4 @@ def cross_validate(
     print(f"Precision > avg: {np.average(precs)}, std: {np.std(precs)}")
     print(f"Recall > avg: {np.average(recs)}, std: {np.std(recs)}")
     print(f"F1 score > avg: {np.average(f_ones)}, std: {np.std(f_ones)}")
+    return accs, precs, recs, f_ones

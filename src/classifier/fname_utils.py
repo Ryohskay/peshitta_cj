@@ -1,10 +1,11 @@
 """Utilities to construct file names."""
 
+from multiprocessing import Value
 import re
 from copy import deepcopy
 from enum import Enum
 from pathlib import Path
-from typing import Any, Literal, Self
+from typing import Any, Iterable, Literal, Self
 
 from src.shared import label_data
 
@@ -82,6 +83,11 @@ class SavefileName(Any):
         self.knn_k: int = 0
         self.knn_weights: Literal["uniform", "distance", ""] = ""
         self.knn_minkowski_p: int = 0
+        # random forest
+        self.n_estimators: int = 0
+        # multi-layer perceptron
+        self.hidden_layer_sizes: Iterable[int] = []
+        self.activation: str = ""  # relu, tanh, logistic, identity
         # Special file flags
         self.is_prod = False
         self.is_mislabel = False
@@ -119,6 +125,9 @@ class SavefileName(Any):
             and self.knn_k == obj.knn_k
             and self.knn_weights == obj.knn_weights
             and self.knn_minkowski_p == obj.knn_minkowski_p
+            and self.num_estimators == obj.n_estimators
+            and self.hidden_layer_sizes == obj.hidden_layer_sizes
+            and self.activation == obj.activation
             and self.extra_opts == obj.extra_opts
         )
 
@@ -213,8 +222,45 @@ class SavefileName(Any):
             p: the power parameter for the Minkowski distance metric.
         """
         self.knn_k = int(k)
-        self.knn_weights = weights
+        self.knn_weights = weights.lower()  # type: ignore[reportArgumentType]
         self.knn_minkowski_p = int(p)
+
+    def set_rf_opts(self, n_estimators: int = 100) -> None:
+        """Set the options related to classifiers based on random forests.
+
+        Args:
+            n_estimators: the number of trees in the forest.
+        """
+        self.n_estimators = int(n_estimators)
+
+    def set_mlp_opts(
+        self,
+        hidden_layer_sizes: Iterable[int] = (100,),
+        *,
+        activation: Literal[
+            "identity",
+            "logistic",
+            "tanh",
+            "relu",
+        ] = "relu",
+    ) -> None:
+        """Set the options related to classifiers based on multi-layer perceptron.
+
+        Args:
+            hidden_layer_sizes: the number of neurons in each hidden layer.
+            activation: the activation function for the hidden layer.
+                Possible values are ``identity``, ``logistic``, ``tanh``, and
+                ``relu``.
+        
+        Raises:
+            ValueError: if the name of the activation function is invalid.
+        """
+        activation_f = activation.lower()
+        if activation_f not in {"relu", "tanh", "logistic", "identity"}:
+            msg = f"The name of activation function {activation_f} is invalid."
+            raise ValueError(msg)
+        self.hidden_layer_sizes = list(hidden_layer_sizes)
+        self.activation = activation_f
 
     def copy(self, memo: dict | None = None) -> Self:
         """Returns a deep copy of self."""
@@ -264,7 +310,7 @@ class SavefileName(Any):
         self.is_total_proba = is_total_proba
         self.is_clf_summary = is_clf_summary
 
-    def get_fname(
+    def get_fname(  # noqa: C901, PLR0912
         self,
     ) -> str:
         """Get a file name to save the classifier prediction results.
@@ -297,6 +343,18 @@ class SavefileName(Any):
                 fname += "_" + self.knn_weights
             if self.knn_minkowski_p:
                 fname += f"_p{self.knn_minkowski_p}"
+
+        # append options related to random forests
+        if self.n_estimators != 0:
+            fname += f"_{self.n_estimators}rf"
+        # append options related to multi-layer perceptron
+        if self.hidden_layer_sizes != (0,):
+            fname += f"_{len(list(self.hidden_layer_sizes))}layers"
+            for layer in self.hidden_layer_sizes:
+                fname += f"_{layer}"
+            fname += "perceps"
+            if self.activation:
+                fname += "_activate_" + self.activation
 
         if self.scope:
             fname += "_" + self.scope

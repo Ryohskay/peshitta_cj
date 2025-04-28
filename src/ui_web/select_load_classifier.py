@@ -7,13 +7,13 @@ from typing import Literal
 from venv import logger
 
 from src.classifier.fname_utils import FnameExtraOpts, SavefileName, _sanitise
-from src.classifier.result_utils import ResultStats
 from src.shared import label_data
 from src.ui_web.load_book_probas import BookProbas, load_book_probas
 from src.ui_web.load_clf_stats import JsonifiedSummaryDict, load_clf_stats
 from src.ui_web.load_predictions import BookVerses, load_preds
 
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class ClassifierConfig:
@@ -30,6 +30,11 @@ class ClassifierConfig:
     k: int = 0
     weights: str = ""
     p: int = 0
+    # random forest options
+    n_estimators = 0
+    # MLP options
+    hidden_layer_sizes: list = field(default_factory=list)
+    activation: Literal["relu", "identity", "logistic", "tanh"] = "relu"
     # extra options
     extra_opts: list[FnameExtraOpts] = field(default_factory=list)
 
@@ -70,6 +75,13 @@ def configure_fname_opts(
         k=configs.k,
         weights=configs.weights,  # type: ignore[reportArgumentType]
         p=configs.p,
+    )
+    save_fname.set_rf_opts(
+        n_estimators=configs.n_estimators
+    )
+    save_fname.set_mlp_opts(
+        hidden_layer_sizes=configs.hidden_layer_sizes,
+        activation=configs.activation
     )
     if configs.extra_opts is not None and len(configs.extra_opts) > 0:
         save_fname.add_extra_opts(configs.extra_opts)
@@ -117,7 +129,7 @@ def parse_fname(fname: str) -> SavefileName:
     if ngram_fname is not None:
         # find the n-gram options
         ngram_opts = ngram_fname.group().split("_")
-        is_char_level = (ngram_opts[0] == "char")
+        is_char_level = ngram_opts[0] == "char"
         n = ngram_opts[1].replace("gram", "")
         is_bow = re.search(r"_bow", fname) is not None
         # set the n-gram options
@@ -141,6 +153,39 @@ def parse_fname(fname: str) -> SavefileName:
             weights=weights,  # type: ignore[reportArgumentType]
             p=p,
         )
+    # check if it is for random forest
+    rf_match = re.search(r"\d+rf", fname)
+    if rf_match:
+        # find the rf options
+        n_estimators = int(rf_match.group().replace("rf", ""))
+        # set the rf options
+        save_fname.set_rf_opts(n_estimators=n_estimators)
+
+    # check if it is for a multilayer perceptron
+    mlp_match = re.search(r"_\d+layers", fname)
+    if mlp_match:
+        n_layers = int(mlp_match.group().replace("_", "").replace("layers", ""))
+        # extract a subsection of the filename between "layers" and "perceps"
+        sub_mlp_fname = fname.split("layers")[1]
+        sub_mlp_fname = sub_mlp_fname.split("perceps")[0]
+        # find the numbers of perceptrons
+        perceptrons = []
+        for _ in range(n_layers):
+            # find the number of neurons in each layer
+            pc_found = re.findall(r"\d+", sub_mlp_fname)
+            if pc_found:
+                perceptrons.extend([int(n_neurons) for n_neurons in pc_found])
+        # extract the name of activation method
+        activation = "relu"
+        act_f = re.search(r"_activate_(identity|logistic|tanh|relu)", fname)
+        if act_f:
+            activation = act_f.group().replace("_activate_", "")
+        # set the mlp options
+        save_fname.set_mlp_opts(
+            hidden_layer_sizes=perceptrons,
+            activation=activation  # type: ignore[reportArgumentType]
+        )
+
     # check if it contains scope name
     for scope in label_data.LabelToVal:
         if scope.lower() in parts:
@@ -172,9 +217,6 @@ def parse_fname(fname: str) -> SavefileName:
 # TODO (mid-low priority): find some way to generate diagrams based on the
 # results ... maybe using scikit-learn's \*Display classes with
 # ``.from_predictions()`` methods?
-
-# TODO (essential): create a file index to enable data retrieval for a
-# particular classifier's results by matching the classifier configurations
 
 
 class ResultFilesIndex:
@@ -224,11 +266,6 @@ class ResultFilesIndex:
                 print(f"Matched File: {config} -> {sf.get_fname()}")
                 matched_fnames.append(file)
         return matched_fnames
-
-
-# TODO (essential): define a class to represent the classifier results
-# (a model for loading data to be controlled by the Flask view functions
-# = contain data to be listed on one HTML page)
 
 
 class ClassifierResultsModel:

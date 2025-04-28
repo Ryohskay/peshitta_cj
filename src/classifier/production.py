@@ -25,9 +25,6 @@
 
 import logging
 from pathlib import Path
-from pdb import run
-
-from sklearn.naive_bayes import MultinomialNB
 
 from src.classifier.cal_aa_eval import (
     csvify_cal,
@@ -100,6 +97,7 @@ def predict_on_prod(
     logger.info(msg)
     total_proba_save_fp.write_text(csvify_total_proba(preds.get_total_probas()))
 
+
 def run_prod_clf(  # noqa: PLR0913
     clf_alias: str,
     n_window: int,
@@ -107,8 +105,19 @@ def run_prod_clf(  # noqa: PLR0913
     cal_ds: LoadedDataset,
     base_fname_etc: SavefileName,
     base_fname_cal: SavefileName,
-    **kwargs
+    **kwargs,
 ):
+    """Run the production classifier on the ETCBC and CAL datasets.
+
+    Args:
+        clf_alias: The name of the classifier to use.
+        n_window: The size of the n-gram window.
+        etcbc_ds: The ETCBC dataset.
+        cal_ds: The CAL dataset.
+        base_fname_etc: The base filename for the ETCBC dataset.
+        base_fname_cal: The base filename for the CAL dataset.
+        kwargs: Additional arguments to pass to the classifier.
+    """
     print("ETCBC --->")
     algo = get_algo_by_name(clf_alias, **kwargs)
     print("> Plain Classifier")
@@ -143,6 +152,7 @@ def run_prod_clf(  # noqa: PLR0913
     cal_ds.test.map_on_samples(remove_proper_nouns)
     predict_on_prod(c_clf_r, cal_ds, c_clf_r_fname, thresh=thresh)
 
+
 if __name__ == "__main__":
     thresh = 0.9  # probability threshold
     n = 3  # n of n-gram
@@ -154,4 +164,3 @@ if __name__ == "__main__":
     fname_etcbc = SavefileName("ETCBC", "mnb")
     fname_cal = SavefileName("ETCBC", "mnb")
     run_prod_clf("mnb", n, etcbc_loaded, cal_loaded, fname_etcbc, fname_cal)
-

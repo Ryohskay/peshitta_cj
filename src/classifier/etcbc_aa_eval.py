@@ -205,7 +205,7 @@ def etcbc_eval_classifier(
         out_dir="./src/classifier/out/",
     )
 
-def run_clf(
+def run_etcbc_clf(
             algo_alias: str,
             n_window: int,
             etcbc_ds: LoadedDataset,
@@ -218,6 +218,7 @@ def run_clf(
         algo_alias: The name of the algorithm to use.
         n_window: The size of the n-gram window.
         etcbc_ds: The ETCBC dataset to use.
+        base_fname: The base filename to use for saving the results.
         kwargs: Additional arguments to pass to the initialiser of
             the classification algorithm.
     """
@@ -325,7 +326,7 @@ if __name__ == "__main__":
     print("\n================== MNB REAL RESULTS================")
     base_fname_mnb = SavefileName("ETCBC", clf_alias)
     for n in range(1, 6):
-        run_clf(clf_alias, n, etcbc_ds, base_fname_mnb)
+        run_etcbc_clf(clf_alias, n, etcbc_ds, base_fname_mnb)
 
 
     print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
@@ -334,4 +335,12 @@ if __name__ == "__main__":
         for k in range(2, 10):
             base_fname_knn.set_knn_opts(k=k)
             print(f"\nKNN Classifier with k={k} and n_window={n_window}")
-            run_clf("knn", n_window, etcbc_ds, base_fname_knn,  n_neighbors=k)
+            run_etcbc_clf("knn", n_window, etcbc_ds, base_fname_knn,  n_neighbors=k)
+
+    print("\n=========================== RANDOM FOREST =====================\n")
+    base_fname_rf = SavefileName("ETCBC", "rf")
+    for n_window in range(1, 6):
+        for n_tree in range(100, 501, 100):
+            base_fname_rf.set_rf_opts(n_estimators=n_tree)
+            print(f"\nRandom Forest Classifier with n_tree={n_tree} and n_window={n_window}")
+            run_etcbc_clf("rf", n_window, etcbc_ds, base_fname_rf, n_estimators=n_tree)
