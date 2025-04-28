@@ -51,7 +51,7 @@ def load_preds(
     books: list[BookVerses] = []
 
     print(f"Loading predictions from {fname_p}")
-    with fname_p.open(newline="") as csvfile:
+    with fname_p.open(newline="", encoding="utf-8") as csvfile:
         read_data = csv.reader(csvfile)
         first_row = True
         current_book = ""
