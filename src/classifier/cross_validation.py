@@ -63,15 +63,15 @@ def cross_validate_clf(
         classifier = BoWEstimator(algo, formatter, n=n_window)
         if preprocessor is not None:
             classifier.set_preprocessor(preprocessor)
-            print(f"preprocessor: {preprocessor.__name__}")  # debug
+            # print(f"preprocessor: {preprocessor.__name__}")  # debug
         _, _, _, fb = cross_validate(
             classifier,
             ds.train.get_samples(),
             ds.train.get_labels(),
         )
-        print(
-            f"n_window={n_window}, fb={fb}, shape={np.array(fb).shape}"
-        )  # debug
+        # print(
+        #     f"n_window={n_window}, fb={fb}, shape={np.array(fb).shape}"
+        # )  # debug
         # if len(np.array(fb, dtype=np.float64).shape) == 3:
         #     avg_f_scores.append(
         #         np.average([score for v in fb for vals in v for score in vals])
@@ -120,7 +120,7 @@ def find_best_clf(
         "\nBest performing char-ngram classifier: "
         + f"{configs[max_idx]} with f-score {max_c_fscore}"
     )
-    exit()
+    # exit()
 
     n_window = configs[max_idx]["n_window"]
     # apply the best performing classifier to the test set
@@ -197,7 +197,6 @@ if __name__ == "__main__":
     clf_alias = "mnb"
     base_fname_mnb = SavefileName("ETCBC", clf_alias)
     find_best_clf(clf_alias, n_max, etcbc_ds, base_fname_mnb)
-    exit()
 
     print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
     base_fname_knn = SavefileName("ETCBC", "knn")
