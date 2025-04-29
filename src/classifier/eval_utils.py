@@ -28,11 +28,13 @@
 import json
 import logging
 from pathlib import Path
+import re
 from typing import Literal, TypedDict
 
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import NDArray
+from sklearn import base
 from sklearn.base import clone
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
@@ -266,23 +268,27 @@ def plot_charts(  # noqa: PLR0913
             is not provided, the charts will be plotted
             on a graphical interface.
     """
-    save_fname_p = None
-    if save_fname is not None and out_dir is not None:
-        save_fname.ext = "jpeg"
-        save_fname_p = Path(out_dir) / save_fname.get_fname()
-
     # evaluate with more statistics
+    # plot confusion matrix
     cm_display = ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
     cm_display.plot()
-    save_dest = (
-        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_cm" + save_fname_p.suffix)
-        if save_fname_p is not None
-        else f"{out_dir}/confusion_matrix.jpeg"
-    )
+    # if out_dir is not specified, display the plot in GUI
     if out_dir is None:
         plt.show()
     else:
+        # if out_dir is specified, save the plot to the path
+        save_dest = None
+        if save_fname is not None:
+            save_fname.ext = "jpeg"
+            save_fname_p = Path(out_dir) / save_fname.get_fname()
+            re_fname = save_fname_p.stem + "_cm" + save_fname_p.suffix
+            save_dest = save_fname_p.parent / re_fname
+        else:
+            save_dest = Path(f"{out_dir}/confusion_matrix.jpeg")
+        print(f"plot_chart: {save_dest.name}")
+        # save figure
         plt.savefig(save_dest, bbox_inches="tight")
+        # make sure that the figure window is closed
     plt.close("all")
 
     # Precision Recall curve
@@ -290,15 +296,23 @@ def plot_charts(  # noqa: PLR0913
         y_true=y_true, y_pred=y_pred
     )
     pr_display.plot()
-    save_dest = (
-        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_pr" + save_fname_p.suffix)
-        if save_fname_p is not None
-        else f"{out_dir}/precision_recall.jpeg"
-    )
+    # if out_dir is not specified, display the plot in GUI
     if out_dir is None:
         plt.show()
     else:
+        # if out_dir is specified, save the plot to the path
+        save_dest = None
+        if save_fname is not None:
+            save_fname.ext = "jpeg"
+            save_fname_p = Path(out_dir) / save_fname.get_fname()
+            re_fname = save_fname_p.stem + "_cm" + save_fname_p.suffix
+            save_dest = save_fname_p.parent / re_fname
+        else:
+            save_dest = Path(f"{out_dir}/confusion_matrix.jpeg")
+        print(f"plot_chart: {save_dest.name}")
+        # save figure
         plt.savefig(save_dest, bbox_inches="tight")
+        # make sure that the figure window is closed
     plt.close("all")
 
     # Roc curve
@@ -307,15 +321,23 @@ def plot_charts(  # noqa: PLR0913
         y_true=y_true, y_pred=proba_pred_pos
     )
     roc_display.plot()
-    save_dest = (
-        save_fname_p.parent / save_fname_p.rename(save_fname_p.stem + "_roc" + save_fname_p.suffix)
-        if save_fname_p is not None
-        else f"{out_dir}/roc_auc.jpeg"
-    )
+    # if out_dir is not specified, display the plot in GUI
     if out_dir is None:
         plt.show()
     else:
+        # if out_dir is specified, save the plot to the path
+        save_dest = None
+        if save_fname is not None:
+            save_fname.ext = "jpeg"
+            save_fname_p = Path(out_dir) / save_fname.get_fname()
+            re_fname = save_fname_p.stem + "_cm" + save_fname_p.suffix
+            save_dest = save_fname_p.parent / re_fname
+        else:
+            save_dest = Path(f"{out_dir}/confusion_matrix.jpeg")
+        print(f"plot_chart: {save_dest.name}")
+        # save figure
         plt.savefig(save_dest, bbox_inches="tight")
+        # make sure that the figure window is closed
     plt.close("all")
 
 
@@ -478,6 +500,7 @@ def evaluate_classifier(
         RuntimeError: if the result of `metricise` function fails to return
             a `ResultStats` instance even if probabilities are provided.
     """
+    print(f"evaluate_classifier: {base_save_fname.get_fname()}")
     ot_test_x = test_ds.get_samples(0)
     nt_test_x = test_ds.get_samples(1)
     # cast / convert lists from the dataset to np.ndarray
@@ -536,7 +559,7 @@ def evaluate_classifier(
     stats.add_thresh_stats(measurements)
 
     if plot:
-        plot_charts(all_test_y, pred_y_all, probas, base_save_fname)
+        plot_charts(all_test_y, pred_y_all, probas, save_fname=base_save_fname)
 
     return (ot_proba_preds, nt_proba_preds, ot_mislabels, nt_mislabels, stats)
 
@@ -588,6 +611,7 @@ def eval_and_save(  # noqa: PLR0913
     out_dir_p = Path(out_dir)
 
     # evaluate the classifier with the provided samples
+    print(f"eval_and_save: {save_fname.get_fname()}")
     (ot_probas, nt_probas, ot_mislabels, nt_mislabels, results) = (
         evaluate_classifier(clf, loaded.test, threshold=threshold, plot=do_plot, base_save_fname=save_fname)
     )
