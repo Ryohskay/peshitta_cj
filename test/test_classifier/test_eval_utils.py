@@ -17,6 +17,7 @@ from src.classifier.eval_utils import (
     plot_charts,
     split_list,
 )
+from src.classifier.fname_utils import SavefileName
 from src.classifier.result_utils import (
     Mislabels,
     ProbaPredictions,
@@ -83,13 +84,16 @@ def test_split_list_raises() -> None:
 
 
 def test_evaluate_classifier(
-    mnb_classifier: BoWEstimator, loaded_etcbc: LoadedDataset
+    mnb_classifier: BoWEstimator,
+    loaded_etcbc: LoadedDataset,
 ) -> None:
     mnb_classifier.fit(
         loaded_etcbc.train.get_samples(), loaded_etcbc.train.get_labels()
     )
+    save_fname = SavefileName("ETCBC", "mnb")
     result = evaluate_classifier(
-        mnb_classifier, loaded_etcbc.test, plot=False, threshold=0.5
+        mnb_classifier, loaded_etcbc.test, plot=False, threshold=0.5,
+        base_save_fname=save_fname
     )
     assert len(result) == 5
     assert isinstance(result[0], ProbaPredictions)
