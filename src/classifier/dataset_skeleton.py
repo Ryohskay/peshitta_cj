@@ -352,7 +352,7 @@ class LoadedDataset:
                     text += json.dumps(verse)
                     text += "\n"
                 fp.write(text)
-            print(f"Saved: {save_file.resolve()}")
+            # print(f"Saved: {save_file.resolve()}")
 
         # save test dataset
         for i in range(self.test.num_classes):
@@ -368,7 +368,7 @@ class LoadedDataset:
                     text += json.dumps(verse)
                     text += "\n"
                 fp.write(text)
-            print(f"Saved: {save_file.resolve()}")
+            # print(f"Saved: {save_file.resolve()}")
 
         # save production dataset
         prod_verses = []
@@ -385,5 +385,4 @@ class LoadedDataset:
                 text += json.dumps(verse)
                 text += "\n"
             fp.write(text)
-
-        print(f"Saved: {save_file.resolve()}")
+        # print(f"Saved: {save_file.resolve()}")

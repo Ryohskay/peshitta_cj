@@ -140,16 +140,39 @@ def get_book_verses(
         list of :class:`src.classifier.result_utils.Verse` instances
     """
     verse_box: list[Verse] = []
+    overlaps = {
+        "Deuteronomy Chapter 14 Verse 16": False,
+        "Deuteronomy Chapter 14 Verse 17": False,
+    }
     for book in jso_lis:
         # one book
         book["book_title"] = normalise_book_title(book["book_title"])
         if book["book_title"] in target_books:
             # print(book["book_title"])
             for i in range(len(book["lemmatised_verses"])):
-                # one verse
-                if verse_in_chapters(
-                    book["verse_refs"][i], target_books[book["book_title"]]
+                # for each verse
+                if (
+                    verse_in_chapters(
+                        book["verse_refs"][i], target_books[book["book_title"]]
+                    )
+                    and book["verse_refs"][i] in overlaps
+                    and not overlaps[book["verse_refs"][i]]
                 ):
+                    # if the line is in overlaps and it is not
+                    # processed, set it to True
+                    overlaps[book["verse_refs"][i]] = True
+                    # and add the verse
+                    verse_box.append(
+                        extract_verse(book, i, trim_none=trim_none)
+                    )
+                elif (
+                    verse_in_chapters(
+                        book["verse_refs"][i], target_books[book["book_title"]]
+                    )
+                    and book["verse_refs"][i] not in overlaps
+                ):
+                    # if the line is not in overlaps, but is target chapter,
+                    # process it
                     verse_box.append(
                         extract_verse(book, i, trim_none=trim_none)
                     )
