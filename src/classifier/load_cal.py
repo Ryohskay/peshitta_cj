@@ -173,6 +173,16 @@ def load_cal_dataset(
     Args:
         src_dir: string containing path to the ``src`` directory, or where
             ``scraper/cal_results/`` is located.
+        ot_train: dictionary containing the chapters to load for the OT training
+            data.
+        nt_train: dictionary containing the chapters to load for the NT training
+            data.
+        ot_test: dictionary containing the chapters to load for the OT test
+            data.
+        nt_test: dictionary containing the chapters to load for the NT test
+            data.
+        ot_prod: dictionary containing the chapters to load for the
+            production data.
 
     Returns:
         a :class:`src.classifier.dataset_skeleton.LoadedDataset` instance.

@@ -310,7 +310,7 @@ class LoadedDataset:
         self.test = DataSplit(ot_test_verses, nt_test_verses)
         if production_verses is not None:
             self.production = production_verses
-        self.origin = self.train.verses[0][0].words[0].origin
+        self.origin = ot_train_verses[0].words[0].origin
 
 
     def save_as_json(
@@ -345,32 +345,45 @@ class LoadedDataset:
             else:
                 verse_data = list(self.train.generate_translit_hf(i))
 
-            save_file = save_dir_p / f"train_data_{i}.json"
+            save_file = save_dir_p / (mode + f"_train_data_{i}.json")
             with save_file.open("w", encoding="utf-8") as fp:
-                json.dump(verse_data, fp)
-
+                text = ""
+                for verse in verse_data:
+                    text += json.dumps(verse)
+                    text += "\n"
+                fp.write(text)
             print(f"Saved: {save_file.resolve()}")
 
         # save test dataset
         for i in range(self.test.num_classes):
             if mode_s == "syriac":
-                verse_data = list(self.train.generate_syriac_hf(i))
+                verse_data = list(self.test.generate_syriac_hf(i))
             else:
-                verse_data = list(self.train.generate_translit_hf(i))
+                verse_data = list(self.test.generate_translit_hf(i))
 
-            save_file = save_dir_p / f"etcbc_test_data_{i}.json"
+            save_file = save_dir_p / (mode + f"_test_data_{i}.json")
             with save_file.open("w", encoding="utf-8") as fp:
-                json.dump(verse_data, fp)
-
+                text = ""
+                for verse in verse_data:
+                    text += json.dumps(verse)
+                    text += "\n"
+                fp.write(text)
             print(f"Saved: {save_file.resolve()}")
 
         # save production dataset
         prod_verses = []
         for verse in self.production:
-            prod_verses.append({"text": f"{verse.get_syriac_words()}"})
+            if mode_s == "syriac":
+                prod_verses.append({"text": f"{verse.get_syriac_words()}"})
+            else:
+                prod_verses.append({"text": f"{verse.get_translit_words()}"})
 
-        save_file = save_dir_p / "production_data.json"
+        save_file = save_dir_p / (mode + "_production_data.json")
         with save_file.open("w", encoding="utf-8") as fp:
-            json.dump(prod_verses, fp)
+            text = ""
+            for verse in prod_verses:
+                text += json.dumps(verse)
+                text += "\n"
+            fp.write(text)
 
         print(f"Saved: {save_file.resolve()}")

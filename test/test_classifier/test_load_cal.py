@@ -8,6 +8,7 @@ from src.classifier.load_cal import (
     verse_in_chapters,
 )
 from src.classifier.result_utils import Verse
+from test.conftest import cal_verse
 
 
 def test_load_json(cal_book_data_est: BookData):
@@ -59,20 +60,23 @@ def test_get_book_verses(cal_books_data: list):
     assert verses[0].reference == "Genesis Chapter 01 Verse 01"
 
 
-def test_load_cal_dataset(cal_books_data: list[BookData]):
+def test_load_cal_dataset(
+        cal_books_data: list[BookData],
+        cal_verse: Verse
+        ):
     """Test the load_cal_dataset function."""
     dataset = load_cal_dataset(
         src_dir="./assets/",
-        ot_train={"Genesis": [1]},
-        nt_train={"Genesis": [1]},
-        ot_test={"Esther": [1]},
+        ot_train={"Esther": [1]},
+        nt_train={"Esther": [1]},
+        ot_test={"Esther": [0]},
         nt_test={"Esther": [6]},
     )
 
     assert isinstance(dataset, LoadedDataset)
-    assert len(dataset.train.get_samples()) == 0
-    assert len(dataset.test.get_samples()) == 2
+    assert len(dataset.train.get_samples()) == 4
+    assert len(dataset.test.get_samples()) == 1
     assert dataset.test.get_samples()[0].book == "Esther"
     assert (
-        dataset.test.get_samples()[0].reference == "Esther Chapter 01 Verse 01"
+        dataset.train.get_samples()[0].reference == "Esther Chapter 01 Verse 01"
     )
