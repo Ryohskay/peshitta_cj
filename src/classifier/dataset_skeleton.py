@@ -172,7 +172,8 @@ class DataSplit:
         return [target for v in self.verses[target]]
 
     def generate_syriac_hf(
-        self, target: int | None = None
+        self,
+        target: int | None = None,
     ) -> Generator[DatasetDict]:
         """Generate the syriac text of verses in Huggingface datasets format.
 
@@ -221,7 +222,8 @@ class DataSplit:
                 yield {"label": label, "text": syriac_text}
 
     def generate_translit_hf(
-        self, target: int | None = None
+        self,
+        target: int | None = None,
     ) -> Generator[DatasetDict]:
         """Generate the transliterated verses in Huggingface datasets format.
 
@@ -343,7 +345,7 @@ class LoadedDataset:
             else:
                 verse_data = list(self.train.generate_translit_hf(i))
 
-            save_file = save_dir_p / f"etcbc_train_data_{i}.json"
+            save_file = save_dir_p / f"train_data_{i}.json"
             with save_file.open("w", encoding="utf-8") as fp:
                 json.dump(verse_data, fp)
 
@@ -367,7 +369,7 @@ class LoadedDataset:
         for verse in self.production:
             prod_verses.append({"text": f"{verse.get_syriac_words()}"})
 
-        save_file = save_dir_p / "_production_data.json"
+        save_file = save_dir_p / "production_data.json"
         with save_file.open("w", encoding="utf-8") as fp:
             json.dump(prod_verses, fp)
 

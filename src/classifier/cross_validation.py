@@ -78,15 +78,15 @@ def cross_validate_clf(
         #         np.average([score for v in fb for vals in v
         #                           for score in vals])
         #     )
-        if len(np.array(fb, dtype=np.float64).shape) == 2:
-            avg_f_scores.append(np.average([score for v in fb for score in v]))
-        else:
+        if len(np.array(fb, dtype=np.float64).shape) != 2:
             msg = (
                 "Unexpected shape of the cross-validation results: "
                 + f"{np.array(fb).shape}"
             )
             raise ValueError(msg)
-        configs.append({"n_window": n_window, "other_opts": kwargs})
+        mean_f_score = np.mean([score for v in fb for score in v])
+        avg_f_scores.append(mean_f_score)
+        configs.append({"n_window": n_window, "other_opts": kwargs, "f_score": mean_f_score})
     max_idx = np.argmax(avg_f_scores)
     return int(max_idx), avg_f_scores[max_idx], configs
 
@@ -135,7 +135,8 @@ def find_best_clf(
     # Save configs for the best performing classifier
     msg = (
         "Best performing char-ngram classifier: "
-        + f"{configs[max_idx]} with f-score {max_c_fscore}"
+        + f"{configs[max_idx]} with f-score {max_c_fscore}\n"
+        + f"configs: {configs}"
     )
     base_fname.ext = "txt"
     base_fname.set_ngram_opts(
