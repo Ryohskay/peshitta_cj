@@ -308,6 +308,8 @@ class LoadedDataset:
         self.test = DataSplit(ot_test_verses, nt_test_verses)
         if production_verses is not None:
             self.production = production_verses
+        self.origin = self.train.verses[0][0].words[0].origin
+
 
     def save_as_json(
         self,
@@ -365,7 +367,7 @@ class LoadedDataset:
         for verse in self.production:
             prod_verses.append({"text": f"{verse.get_syriac_words()}"})
 
-        save_file = save_dir_p / "etcbc_production_data.json"
+        save_file = save_dir_p / "_production_data.json"
         with save_file.open("w", encoding="utf-8") as fp:
             json.dump(prod_verses, fp)
 

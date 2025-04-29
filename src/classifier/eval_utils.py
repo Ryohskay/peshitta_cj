@@ -419,15 +419,21 @@ def get_summary(
     # n-gram formatter.
     n_gram_form = "word" if clf.n_gram_formatter == identity else "char"
     # percentage of mislabelled verses out of all supports per each class.
+    if ot_mislab is not None:
+        ot_mislab_propo = (len(ot_mislab.mislabels)
+                           / len(test_split.get_labels(0)))
+    else:
+        ot_mislab_propo = 0.0
+
+    if nt_mislab is not None:
+        nt_mislab_propo = (len(nt_mislab.mislabels)
+                           / len(test_split.get_labels(1)))
+    else:
+        nt_mislab_propo = 0.0
+
     mislab_percents = {
-        label_data.ValToLabel[0]: (
-            len(ot_mislab.mislabels) / len(test_split.get_labels(0))
-        )
-        * 100,
-        label_data.ValToLabel[1]: (
-            len(nt_mislab.mislabels) / len(test_split.get_labels(1))
-        )
-        * 100,
+        label_data.ValToLabel[0]: ot_mislab_propo * 100,
+        label_data.ValToLabel[1]: nt_mislab_propo * 100,
     }
     return {
         "n_gram_form": n_gram_form,
