@@ -451,6 +451,7 @@ def evaluate_classifier(
     *,
     plot: bool = True,
     threshold: float = 0.5,
+    base_save_fname: SavefileName | None = None,
 ) -> tuple[
     ProbaPredictions, ProbaPredictions, Mislabels | None, Mislabels | None, ResultStats
 ]:
@@ -535,7 +536,7 @@ def evaluate_classifier(
     stats.add_thresh_stats(measurements)
 
     if plot:
-        plot_charts(all_test_y, pred_y_all, probas)
+        plot_charts(all_test_y, pred_y_all, probas, base_save_fname)
 
     return (ot_proba_preds, nt_proba_preds, ot_mislabels, nt_mislabels, stats)
 
@@ -588,7 +589,7 @@ def eval_and_save(  # noqa: PLR0913
 
     # evaluate the classifier with the provided samples
     (ot_probas, nt_probas, ot_mislabels, nt_mislabels, results) = (
-        evaluate_classifier(clf, loaded.test, threshold=threshold, plot=do_plot)
+        evaluate_classifier(clf, loaded.test, threshold=threshold, plot=do_plot, base_save_fname=save_fname)
     )
 
     # Configure and prepare save files' names
