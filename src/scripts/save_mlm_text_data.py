@@ -95,7 +95,7 @@ def to_books_data(verses: list[Verse]) -> dict[str, list[Verse]]:
 
 if __name__ == "__main__":
     ot_verses = to_books_data(get_verses(OT_TARGETS))
-    nt_verses = to_books_data(get_verses(NT_TARGETS))
+    nt_verses = to_books_data(get_verses(NT_TARGETS, "etcbc/syrnt", "0.1"))
     print("OT")
     print(f"{len(ot_verses)} books")
     save_txt = ""
@@ -108,8 +108,8 @@ if __name__ == "__main__":
     save_txt = ""
     print("NT")
     print(f"{len(nt_verses)} books")
-    for book in ot_verses:
-        print(f"Book of {book}: {len(ot_verses[book])} verses")
-        for v in ot_verses[book]:
+    for book in nt_verses:
+        print(f"Book of {book}: {len(nt_verses[book])} verses")
+        for v in nt_verses[book]:
             save_txt += f"{v.get_translit_words()}\n"    
     Path("src/neural/nt_mlm_data.txt").write_text(save_txt, encoding="utf-8")
