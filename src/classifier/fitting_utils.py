@@ -27,7 +27,6 @@
 
 from collections import Counter
 from collections.abc import Callable, Sequence
-from typing import Any
 
 from nltk.util import ngrams
 
@@ -121,7 +120,7 @@ def make_vocab(
     return (n_gram_vocabs, n_gram_counters)
 
 
-def identity(input_data: Any) -> Any:  # noqa: ANN401
+def identity(input_data) -> object:  # noqa: ANN401
     """Identity function that returns the same thing as the input.
 
     Args:

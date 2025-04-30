@@ -4,7 +4,7 @@ import re
 from copy import deepcopy
 from enum import Enum
 from pathlib import Path
-from typing import Any, Iterable, Literal, Self
+from typing import Iterable, Literal, Self
 
 from src.shared import label_data
 
@@ -28,7 +28,7 @@ def _sanitise(s: str) -> str:
     return re.sub(r"\W", "_", s)
 
 
-class SavefileName(Any):
+class SavefileName():
     """A class to handle and construct a save file's name."""
 
     def __init__(
