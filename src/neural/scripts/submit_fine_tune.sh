@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --job-name=cross_validate
-#SBATCH --output=out/cross_validate_%j.out
-#SBATCH --error=out/cross_validate_%j.err
+#SBATCH --job-name=fine_tune
+#SBATCH --output=out/fine_tune_%j.out
+#SBATCH --error=out/fine_tune_%j.err
 #SBATCH --time=12:00:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --partition=compute
 #SBATCH --mail-type=END,FAIL,REQUEUE
