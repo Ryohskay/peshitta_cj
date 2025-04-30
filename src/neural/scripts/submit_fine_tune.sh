@@ -12,16 +12,17 @@
 
 module load python/3.11.7
 
-source /home/u05rn21/venv/bin/activate
+source $HOME/venv/bin/activate
 python --version
 
 python -m pip install --upgrade pip
-python -m pip install numpy
-python -m pip install nltk
-python -m pip install scikit-learn
-python -m pip install text-fabric
+python3 -m pip install -r $HOME/peshitta_cj_ssh/src/neural/requirements.txt
+# python -m pip install numpy
+# python -m pip install nltk
+# python -m pip install scikit-learn
+# python -m pip install text-fabric
 
-python -m src.neural.fine_tune
+$HOME/peshitta_cj_ssh/src/neural/run_mlm
 
 deactivate
 exit 0
