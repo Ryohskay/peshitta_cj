@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=cross_validate
-#SBATCH --output=out/cross_validate_%j.out
-#SBATCH --error=out/cross_validate_%j.err
+#SBATCH --job-name=etcbc_eval
+#SBATCH --output=out/etcbc_eval_%j.out
+#SBATCH --error=out/etcbc_eval_%j.err
 #SBATCH --time=12:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
@@ -22,7 +22,7 @@ python -m pip install scikit-learn
 python -m pip install nltk
 python -m pip install text-fabric
 
-python -m src.classifier.cross_validation
+python -m src.classifier.etcbc_aa_eval
 
 deactivate
 exit 0

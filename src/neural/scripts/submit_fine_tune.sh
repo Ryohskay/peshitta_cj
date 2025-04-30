@@ -24,7 +24,7 @@ python3 -m pip install -r $HOME/peshitta_cj_ssh/src/neural/requirements.txt
 
 $HOME/peshitta_cj_ssh/src/neural/run_mlm.py \
     --model_name_or_path FacebookAI/roberta-base \
-    --train_file "$HOME/peshitta_cj_ssh/src/neural/data/all_verses.txt" \
+    --train_file $HOME/peshitta_cj_ssh/src/neural/data/all_verses.txt \
     --validation_split_percentage 10 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 8 \
