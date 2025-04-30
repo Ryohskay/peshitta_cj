@@ -98,10 +98,18 @@ if __name__ == "__main__":
     nt_verses = to_books_data(get_verses(NT_TARGETS))
     print("OT")
     print(f"{len(ot_verses)} books")
-    with Path("src/neural/ot_mlm_data.json").open(encoding="utf-8") as fp:
-        json.dump(ot_verses, fp)
+    save_txt = ""
+    for book in ot_verses:
+        print(f"Book of {book}: {len(ot_verses[book])} verses")
+        for v in ot_verses[book]:
+            save_txt += f"{v.get_translit_words()}\n"
+    Path("src/neural/ot_mlm_data.txt").write_text(save_txt, encoding="utf-8")
     
+    save_txt = ""
     print("NT")
     print(f"{len(nt_verses)} books")
-    with Path("src/neural/nt_mlm_data.json").open(encoding="utf-8") as fp:
-        json.dump(nt_verses, fp)
+    for book in ot_verses:
+        print(f"Book of {book}: {len(ot_verses[book])} verses")
+        for v in ot_verses[book]:
+            save_txt += f"{v.get_translit_words()}\n"    
+    Path("src/neural/nt_mlm_data.txt").write_text(save_txt, encoding="utf-8")
