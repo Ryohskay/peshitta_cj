@@ -102,7 +102,7 @@ if __name__ == "__main__":
     for book in ot_verses:
         print(f"Book of {book}: {len(ot_verses[book])} verses")
         for v in ot_verses[book]:
-            save_txt += f"{" ".join(v.get_translit_words())}\n"
+            save_txt += f"{' '.join(v.get_translit_words())}\n"
     Path("src/neural/data/ot_mlm_data.txt").write_text(save_txt, encoding="utf-8")
     
     save_txt = ""
@@ -111,5 +111,5 @@ if __name__ == "__main__":
     for book in nt_verses:
         print(f"Book of {book}: {len(nt_verses[book])} verses")
         for v in nt_verses[book]:
-            save_txt += f"{" ".join(v.get_translit_words())}\n"    
+            save_txt += f"{' '.join(v.get_translit_words())}\n"    
     Path("src/neural/data/nt_mlm_data.txt").write_text(save_txt, encoding="utf-8")
