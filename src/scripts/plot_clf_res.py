@@ -92,9 +92,10 @@ if __name__ == "__main__":
                 is_n_gram=file.is_n_gram,
                 is_bow=file.is_bow,
                 is_char_level=file.is_char_level,
-                k=file.knn_k,
-                weights=file.knn_weights,
-                p=file.knn_minkowski_p,
+                n_estimators=file.n_estimators,
+                knn_k=file.knn_k,
+                knn_weights=file.knn_weights,
+                knn_minkowski_p=file.knn_minkowski_p,
                 extra_opts=[opt for opt in file.extra_opts if file.extra_opts[opt]],
             )
             # print(clf_configs)
@@ -111,4 +112,6 @@ if __name__ == "__main__":
             else:
                 clf_f1_scores[clf_name] = [(m.config.n, f1_score)]
 
-    plot_f1_scores(clf_f1_scores)
+        plot_f1_scores(clf_f1_scores)
+        plt.savefig(f"f1_scores_{m.config.name}.png")
+        plt.close("all")

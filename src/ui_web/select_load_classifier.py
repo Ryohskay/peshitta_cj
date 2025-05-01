@@ -31,7 +31,7 @@ class ClassifierConfig:
     knn_weights: str = ""
     knn_minkowski_p: int = 0
     # random forest options
-    n_estimators = 0
+    n_estimators: int = 0
     # MLP options
     hidden_layer_sizes: list[int] = field(default_factory=list)
     activation: Literal["relu", "identity", "logistic", "tanh", ""] = ""

@@ -268,6 +268,7 @@ def plot_charts(  # noqa: PLR0913
             is not provided, the charts will be plotted
             on a graphical interface.
     """
+    base_save_fname = save_fname.copy() if save_fname is not None else None
     # evaluate with more statistics
     # plot confusion matrix
     cm_display = ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
@@ -278,9 +279,9 @@ def plot_charts(  # noqa: PLR0913
     else:
         # if out_dir is specified, save the plot to the path
         save_dest = None
-        if save_fname is not None:
-            save_fname.ext = "jpeg"
-            save_fname_p = Path(out_dir) / save_fname.get_fname()
+        if base_save_fname is not None:
+            base_save_fname.ext = "jpeg"
+            save_fname_p = Path(out_dir) / base_save_fname.get_fname()
             re_fname = save_fname_p.stem + "_cm" + save_fname_p.suffix
             save_dest = save_fname_p.parent / re_fname
         else:
@@ -302,9 +303,9 @@ def plot_charts(  # noqa: PLR0913
     else:
         # if out_dir is specified, save the plot to the path
         save_dest = None
-        if save_fname is not None:
-            save_fname.ext = "jpeg"
-            save_fname_p = Path(out_dir) / save_fname.get_fname()
+        if base_save_fname is not None:
+            base_save_fname.ext = "jpeg"
+            save_fname_p = Path(out_dir) / base_save_fname.get_fname()
             re_fname = save_fname_p.stem + "_pr" + save_fname_p.suffix
             save_dest = save_fname_p.parent / re_fname
         else:
@@ -327,9 +328,9 @@ def plot_charts(  # noqa: PLR0913
     else:
         # if out_dir is specified, save the plot to the path
         save_dest = None
-        if save_fname is not None:
-            save_fname.ext = "jpeg"
-            save_fname_p = Path(out_dir) / save_fname.get_fname()
+        if base_save_fname is not None:
+            base_save_fname.ext = "jpeg"
+            save_fname_p = Path(out_dir) / base_save_fname.get_fname()
             re_fname = save_fname_p.stem + "_roc" + save_fname_p.suffix
             save_dest = save_fname_p.parent / re_fname
         else:
@@ -559,7 +560,7 @@ def evaluate_classifier(
     stats.add_thresh_stats(measurements)
 
     if plot:
-        plot_charts(all_test_y, pred_y_all, probas, save_fname=base_save_fname)
+        plot_charts(all_test_y, pred_y_all, probas, base_save_fname=base_save_fname)
 
     return (ot_proba_preds, nt_proba_preds, ot_mislabels, nt_mislabels, stats)
 
