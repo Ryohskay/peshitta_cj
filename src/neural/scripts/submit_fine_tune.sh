@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --partition=gpu02
+#SBATCH --partition=gpu
 #SBATCH --mail-type=END,FAIL,REQUEUE
 
 module load python/3.11.7
