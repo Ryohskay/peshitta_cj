@@ -76,6 +76,13 @@ def parse_clf_configs(req: LocalProxy) -> ClassifierConfig:
                     setattr(result, field.name, config_val)
     return result
 
+@app.route("/get_verses")
+def get_verses(conf: ClassifierConfig):
+    """Render the classifier results based on the request parameters."""
+    cr = ClassifierResultsModel(conf, file_index, "./src/classifier/out")
+    cr.load_results()
+    print(cr.get_book_verses())
+    return render_template("verses.html", results=cr, label_map=ValToLabel)
 
 @app.route("/")
 def display_default():
@@ -99,10 +106,7 @@ def display_default():
             FnameExtraOpts.REMOVE_FROM_BOTH
         ],
     )
-    cr = ClassifierResultsModel(conf, file_index, "./src/classifier/out")
-    cr.load_results()
-    print(cr.get_book_verses())
-    return render_template("verses.html", results=cr, label_map=ValToLabel)
+    return get_verses(conf)
 
 # Code adapted from https://github.com/pallets/flask/blob/main/examples/javascript/js_example
 # (Accessed: 15 April 2025)
