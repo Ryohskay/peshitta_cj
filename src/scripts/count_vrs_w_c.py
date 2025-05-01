@@ -12,12 +12,15 @@ from src.classifier.result_utils import Verse
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.shared.label_data import ValToLabel
 from src.ui_web.load_predictions import BookVerses
-
+import matplotlib.pyplot as plt
+from src.classifier.result_utils import Verse
+from src.classifier.dataset_skeleton import LoadedDataset
 
 def get_per_book_verses(
     samples: list[Verse],
     *, trim_none: bool = True
 ) -> list[BookVerses]:
+    """Get the verses per book from the samples."""
     lis_book_verses: list[BookVerses] = []
     current_book = ""
     book_verses = []
@@ -60,7 +63,17 @@ def per_label_per_book_verses(
     book_verses: list[BookVerses],
     label: int = 0,
     preprocessor: Callable[[list[str]], list[str]] = identity,
-):
+) -> tuple[int, int, int]:
+    """Count the number of verses, words, and characters in each book.
+
+    Args:
+        book_verses: The list of books and their verses.
+        label: The label for the dataset (0 for OT, 1 for NT, -1 for production)
+        preprocessor: A preprocessing function to apply to the verses.
+
+    Returns:
+        A tuple containing the total number of verses, words, and characters.
+    """
     translit_words_per_book = []
     for book in book_verses:
         book_translit_words = [
@@ -130,6 +143,124 @@ def count_verses_words_characters(
             label=-1,
             preprocessor=preprocessor,
         )
+
+def plot_verses_per_book(
+    dataset: LoadedDataset,
+    title: str = "Number of Verses per Book",
+    output_file: str | None = None,
+) -> None:
+    """Create a bar chart showing the number of verses per book.
+
+    Args:
+        dataset: The dataset to analyze.
+        title: The title of the chart.
+        output_file: If provided, saves the chart to the specified file.
+
+    Raises:
+        ValueError: If the split is not one of "train", "test", or "production".
+    """
+    # Get the dataset split
+    ot_books: list[BookVerses] = []
+    nt_books: list[BookVerses] = []
+    for split in ["train", "test"]:
+        ds = getattr(dataset, split)
+        ot_books.extend(get_per_book_verses(ds.get_samples(0), trim_none=True))
+        nt_books.extend(get_per_book_verses(ds.get_samples(1), trim_none=True))
+
+    # Extract book names and verse counts for OT and NT
+    ot_book_names = [book["book_name"] for book in ot_books]
+    ot_verse_counts = [len(book["verses"]) for book in ot_books]
+
+    nt_book_names = [book["book_name"] for book in nt_books]
+    nt_verse_counts = [len(book["verses"]) for book in nt_books]
+
+    # Create the bar charts
+    fig, axes = plt.subplots(3, 1, figsize=(16, 6), sharey=True)
+
+    # OT chart
+    axes[0].bar(ot_book_names, ot_verse_counts, color="skyblue")
+    axes[0].set_title("OT Books")
+    axes[0].set_xlabel("Books")
+    axes[0].set_ylabel("Number of Verses")
+    axes[0].tick_params(axis="x", rotation=45)
+
+    # NT chart
+    axes[1].bar(nt_book_names, nt_verse_counts, color="lightgreen")
+    axes[1].set_title("NT Books")
+    axes[1].set_xlabel("Books")
+    axes[1].tick_params(axis="x", rotation=45)
+
+    # Set the overall title
+    fig.suptitle(title)
+
+    # Adjust layout
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+    # Save or show the chart
+    if output_file:
+        plt.savefig(output_file)
+        print(f"Chart saved to {output_file}")
+    else:
+        plt.show()
+
+def plot_verses_per_prod_book(
+    dataset: LoadedDataset,
+    title: str = "Number of Verses per Book",
+    output_file: str | None = None,
+) -> None:
+    """Create a bar chart showing the number of verses per book.
+
+    Args:
+        dataset: The dataset to analyze.
+        title: The title of the chart.
+        output_file: If provided, saves the chart to the specified file.
+
+    Raises:
+        ValueError: If the split is not one of "train", "test", or "production".
+    """
+    # Get the dataset split
+    ot_books = []
+    nt_books = []
+    for split in ["train", "test"]:
+        ds = getattr(dataset, split)
+        ot_books.extend(get_per_book_verses(ds.get_samples(0), trim_none=True))
+        nt_books.extend(get_per_book_verses(ds.get_samples(1), trim_none=True))
+
+    # Extract book names and verse counts for OT and NT
+    ot_book_names = [book["book_name"] for book in ot_books]
+    ot_verse_counts = [len(book["verses"]) for book in ot_books]
+
+    nt_book_names = [book["book_name"] for book in nt_books]
+    nt_verse_counts = [len(book["verses"]) for book in nt_books]
+
+    # Create the bar charts
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6), sharey=True)
+
+    # OT chart
+    axes[0].bar(ot_book_names, ot_verse_counts, color="skyblue")
+    axes[0].set_title("OT Books")
+    axes[0].set_xlabel("Books")
+    axes[0].set_ylabel("Number of Verses")
+    axes[0].tick_params(axis="x", rotation=45)
+
+    # NT chart
+    axes[1].bar(nt_book_names, nt_verse_counts, color="lightgreen")
+    axes[1].set_title("NT Books")
+    axes[1].set_xlabel("Books")
+    axes[1].tick_params(axis="x", rotation=45)
+
+    # Set the overall title
+    fig.suptitle(title)
+
+    # Adjust layout
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+    # Save or show the chart
+    if output_file:
+        plt.savefig(output_file)
+        print(f"Chart saved to {output_file}")
+    else:
+        plt.show()
 
 
 if __name__ == "__main__":
