@@ -77,8 +77,9 @@ def parse_clf_configs(req: LocalProxy) -> ClassifierConfig:
     return result
 
 @app.route("/get_verses")
-def get_verses(conf: ClassifierConfig):
+def get_verses():
     """Render the classifier results based on the request parameters."""
+    conf = parse_clf_configs(request)
     cr = ClassifierResultsModel(conf, file_index, "./src/classifier/out")
     cr.load_results()
     print(cr.get_book_verses())
