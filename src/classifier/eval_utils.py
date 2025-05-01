@@ -305,10 +305,10 @@ def plot_charts(  # noqa: PLR0913
         if save_fname is not None:
             save_fname.ext = "jpeg"
             save_fname_p = Path(out_dir) / save_fname.get_fname()
-            re_fname = save_fname_p.stem + "_cm" + save_fname_p.suffix
+            re_fname = save_fname_p.stem + "_pr" + save_fname_p.suffix
             save_dest = save_fname_p.parent / re_fname
         else:
-            save_dest = Path(f"{out_dir}/confusion_matrix.jpeg")
+            save_dest = Path(f"{out_dir}/precision_recall.jpeg")
         print(f"plot_chart: {save_dest.name}")
         # save figure
         plt.savefig(save_dest, bbox_inches="tight")
@@ -330,10 +330,10 @@ def plot_charts(  # noqa: PLR0913
         if save_fname is not None:
             save_fname.ext = "jpeg"
             save_fname_p = Path(out_dir) / save_fname.get_fname()
-            re_fname = save_fname_p.stem + "_cm" + save_fname_p.suffix
+            re_fname = save_fname_p.stem + "_roc" + save_fname_p.suffix
             save_dest = save_fname_p.parent / re_fname
         else:
-            save_dest = Path(f"{out_dir}/confusion_matrix.jpeg")
+            save_dest = Path(f"{out_dir}/roc_curve.jpeg")
         print(f"plot_chart: {save_dest.name}")
         # save figure
         plt.savefig(save_dest, bbox_inches="tight")
@@ -443,13 +443,13 @@ def get_summary(
     # percentage of mislabelled verses out of all supports per each class.
     if ot_mislab is not None:
         ot_mislab_propo = (len(ot_mislab.mislabels)
-                           / len(test_split.get_labels(0)))
+                            / len(test_split.get_labels(0)))
     else:
         ot_mislab_propo = 0.0
 
     if nt_mislab is not None:
         nt_mislab_propo = (len(nt_mislab.mislabels)
-                           / len(test_split.get_labels(1)))
+                            / len(test_split.get_labels(1)))
     else:
         nt_mislab_propo = 0.0
 
