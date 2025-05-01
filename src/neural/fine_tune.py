@@ -1,8 +1,6 @@
 # Code adapted from:
 # https://huggingface.co/docs/transformers/en/training (Acc. 22 March 2025)
-from itertools import batched
 from datasets import load_dataset
-from huggingface_hub import notebook_login
 from transformers import (
     AutoTokenizer,
 )
@@ -38,9 +36,14 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 # print(res)
 # print(tokenizer.decode(res["input_ids"]))
 
+
 def tokenize_function(data):
+    """Tokenize the input data using the specified tokenizer"""
     target_text = remove_underscores(remove_non_chars(data["text"]))
-    return tokenizer(target_text, padding="max_length", truncation=True, return_tensors="pt")
+    return tokenizer(
+        target_text, padding="max_length", truncation=True, return_tensors="pt"
+    )
+
 
 tokenized_data = dataset.map(
     tokenize_function,
