@@ -16,7 +16,7 @@ source /home/u05rn21/venv/bin/activate
 python --version
 
 cd /home/u05rn21/peshitta_cj_ssh
-src/scripts/ensure_dir.sh
+src/scripts/ensure_dirs.sh
 
 python -m pip install --upgrade pip
 python -m pip install numpy
