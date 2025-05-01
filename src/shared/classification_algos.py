@@ -5,12 +5,14 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
 
 ALGORITHMS = {
     "mnb": {"algo": MultinomialNB, "description": "Multinomial Naive Bayes"},
     "knn": {"algo": KNeighborsClassifier, "description": "K-Nearest Neighbors"},
     "rf": {"algo": RandomForestClassifier, "description": "Random Forest"},
     "mlp": {"algo": MLPClassifier, "description": "Multi-layer Perceptron"},
+    "svc": {"algo": SVC, "description": "Support Vector Classifier"},
 }
 
 

@@ -1,0 +1,3890 @@
+Loading dataset(s) from: /Users/ryohskay/Documents/uni/peshitta_cj/src/scraper/cal_results
+================== RANDOM FOREST =====================
+
+
+================= char 3-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 3789 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_100rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_3gram_bow_100rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11849 words from 555 verses
+Local accuracy: 0.6270
+Number of mislabelled points out of the total 555 verses: 207 (11 labelled as unknown)
+NT --->
+Parsed 20828 words from 1007 verses
+Local accuracy: 0.9007
+Number of mislabelled points out of the total 1007 verses: 100 (8 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8035
+Precisions: [0] 0.0000, [1] 0.7909
+Recalls: [0] 0.0000, [1] 0.6270
+F1 Score: [0] 0.0000, [1] 0.6995
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.344835977216365, 0.46628433916309286]
+roc auc: [np.float64(0.1401477942689462), np.float64(0.8598522057310539)]
+plot_chart: cal_rf_char_3gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11849 words from 555 verses
+Local accuracy: 0.6414
+Number of mislabelled points out of the total 555 verses: 199 (11 labelled as unknown)
+NT --->
+Parsed 20828 words from 1007 verses
+Local accuracy: 0.8878
+Number of mislabelled points out of the total 1007 verses: 113 (8 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8003
+Precisions: [0] 0.0000, [1] 0.7722
+Recalls: [0] 0.0000, [1] 0.6414
+F1 Score: [0] 0.0000, [1] 0.7008
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2331714047423605, 0.46622695132564995]
+roc auc: [np.float64(0.12959911251867556), np.float64(0.8704008874813245)]
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_100rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_100rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11849 words from 555 verses
+Local accuracy: 0.6126
+Number of mislabelled points out of the total 555 verses: 215 (8 labelled as unknown)
+NT --->
+Parsed 20828 words from 1007 verses
+Local accuracy: 0.9057
+Number of mislabelled points out of the total 1007 verses: 95 (9 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8015
+Precisions: [0] 0.0000, [1] 0.7981
+Recalls: [0] 0.0000, [1] 0.6126
+F1 Score: [0] 0.0000, [1] 0.6932
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3924786253313255, 0.46331647922117086]
+roc auc: [np.float64(0.13774479544092255), np.float64(0.8622552045590774)]
+plot_chart: cal_rf_char_3gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6378
+Number of mislabelled points out of the total 555 verses: 201 (13 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8967
+Number of mislabelled points out of the total 1007 verses: 104 (10 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8047
+Precisions: [0] 0.0000, [1] 0.7902
+Recalls: [0] 0.0000, [1] 0.6378
+F1 Score: [0] 0.0000, [1] 0.7059
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3147380662319927, 0.45582111156844424]
+roc auc: [np.float64(0.12155899693139016), np.float64(0.8784410030686098)]
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6649
+Number of mislabelled points out of the total 555 verses: 186 (12 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9096
+Number of mislabelled points out of the total 1007 verses: 91 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8227
+Precisions: [0] 0.0000, [1] 0.8057
+Recalls: [0] 0.0000, [1] 0.6649
+F1 Score: [0] 0.0000, [1] 0.7285
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.305948684111489, 0.44297002592786255]
+roc auc: [np.float64(0.11169918677366542), np.float64(0.8883008132263346)]
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_100rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_3gram_bow_100rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7856
+Number of mislabelled points out of the total 555 verses: 119 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5452
+Number of mislabelled points out of the total 1007 verses: 458 (6 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6306
+Precisions: [0] 0.0000, [1] 0.4910
+Recalls: [0] 0.0000, [1] 0.7856
+F1 Score: [0] 0.0000, [1] 0.6043
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.860816265137357, 0.8936371412835156]
+roc auc: [np.float64(0.2989148035821323), np.float64(0.7010851964178678)]
+plot_chart: cal_rf_word_3gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_100rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7820
+Number of mislabelled points out of the total 555 verses: 121 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5134
+Number of mislabelled points out of the total 1007 verses: 490 (10 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6088
+Precisions: [0] 0.0000, [1] 0.4748
+Recalls: [0] 0.0000, [1] 0.7820
+F1 Score: [0] 0.0000, [1] 0.5909
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [3.10669095543415, 2.146035389787461]
+roc auc: [np.float64(0.30633314545926266), np.float64(0.6936668545407373)]
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0828, (NT) 0.9172
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_3gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7676
+Number of mislabelled points out of the total 555 verses: 129 (6 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5263
+Number of mislabelled points out of the total 1007 verses: 477 (11 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6120
+Precisions: [0] 0.0000, [1] 0.4776
+Recalls: [0] 0.0000, [1] 0.7676
+F1 Score: [0] 0.0000, [1] 0.5888
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.705546963947044, 0.9981836780320328]
+roc auc: [np.float64(0.30836755325335263), np.float64(0.6916324467466474)]
+plot_chart: cal_rf_word_3gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= char 3-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 3789 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_200rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_3gram_bow_200rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5838
+Number of mislabelled points out of the total 555 verses: 231 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9295
+Number of mislabelled points out of the total 1007 verses: 71 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8067
+Precisions: [0] 0.0000, [1] 0.8244
+Recalls: [0] 0.0000, [1] 0.5838
+F1 Score: [0] 0.0000, [1] 0.6835
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3082329329459315, 0.46520427945101783]
+roc auc: [np.float64(0.13628116696637055), np.float64(0.8637188330336294)]
+plot_chart: cal_rf_char_3gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6649
+Number of mislabelled points out of the total 555 verses: 186 (6 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9076
+Number of mislabelled points out of the total 1007 verses: 93 (5 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8214
+Precisions: [0] 0.0000, [1] 0.8074
+Recalls: [0] 0.0000, [1] 0.6649
+F1 Score: [0] 0.0000, [1] 0.7292
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2921795525294117, 0.4475932578905517]
+roc auc: [np.float64(0.11453966379487729), np.float64(0.8854603362051227)]
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_200rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_200rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5856
+Number of mislabelled points out of the total 555 verses: 230 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9394
+Number of mislabelled points out of the total 1007 verses: 61 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8137
+Precisions: [0] 0.0000, [1] 0.8442
+Recalls: [0] 0.0000, [1] 0.5856
+F1 Score: [0] 0.0000, [1] 0.6915
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3256327608597949, 0.4551811722866676]
+roc auc: [np.float64(0.12661012551777198), np.float64(0.873389874482228)]
+plot_chart: cal_rf_char_3gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6775
+Number of mislabelled points out of the total 555 verses: 179 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8967
+Number of mislabelled points out of the total 1007 verses: 104 (7 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8188
+Precisions: [0] 0.0000, [1] 0.7949
+Recalls: [0] 0.0000, [1] 0.6775
+F1 Score: [0] 0.0000, [1] 0.7315
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2852815700163842, 0.4506445419114071]
+roc auc: [np.float64(0.12027250686634999), np.float64(0.8797274931336501)]
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6685
+Number of mislabelled points out of the total 555 verses: 184 (9 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9027
+Number of mislabelled points out of the total 1007 verses: 98 (8 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8195
+Precisions: [0] 0.0000, [1] 0.8048
+Recalls: [0] 0.0000, [1] 0.6685
+F1 Score: [0] 0.0000, [1] 0.7303
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.295917614864136, 0.4419007013840736]
+roc auc: [np.float64(0.10917720103420203), np.float64(0.890822798965798)]
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_200rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_3gram_bow_200rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7730
+Number of mislabelled points out of the total 555 verses: 126 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5382
+Number of mislabelled points out of the total 1007 verses: 465 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6216
+Precisions: [0] 0.0000, [1] 0.4815
+Recalls: [0] 0.0000, [1] 0.7730
+F1 Score: [0] 0.0000, [1] 0.5934
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.497290431662323, 0.82800146699652]
+roc auc: [np.float64(0.2969063403025668), np.float64(0.7030936596974332)]
+plot_chart: cal_rf_word_3gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_200rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7856
+Number of mislabelled points out of the total 555 verses: 119 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5353
+Number of mislabelled points out of the total 1007 verses: 468 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6242
+Precisions: [0] 0.0000, [1] 0.4828
+Recalls: [0] 0.0000, [1] 0.7856
+F1 Score: [0] 0.0000, [1] 0.5981
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.5319971859999952, 0.8586409281087454]
+roc auc: [np.float64(0.29977902430732617), np.float64(0.7002209756926738)]
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_3gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7802
+Number of mislabelled points out of the total 555 verses: 122 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5402
+Number of mislabelled points out of the total 1007 verses: 463 (6 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6255
+Precisions: [0] 0.0000, [1] 0.4865
+Recalls: [0] 0.0000, [1] 0.7802
+F1 Score: [0] 0.0000, [1] 0.5993
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4315088125063207, 0.8343132871875711]
+roc auc: [np.float64(0.2956189555990946), np.float64(0.7043810444009053)]
+plot_chart: cal_rf_word_3gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= char 3-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 3789 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_300rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_3gram_bow_300rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5856
+Number of mislabelled points out of the total 555 verses: 230 (8 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9335
+Number of mislabelled points out of the total 1007 verses: 67 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8099
+Precisions: [0] 0.0000, [1] 0.8355
+Recalls: [0] 0.0000, [1] 0.5856
+F1 Score: [0] 0.0000, [1] 0.6886
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.287424061447318, 0.46483488219031643]
+roc auc: [np.float64(0.13697630102793956), np.float64(0.8630236989720603)]
+plot_chart: cal_rf_char_3gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6505
+Number of mislabelled points out of the total 555 verses: 194 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9017
+Number of mislabelled points out of the total 1007 verses: 99 (5 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8124
+Precisions: [0] 0.0000, [1] 0.7934
+Recalls: [0] 0.0000, [1] 0.6505
+F1 Score: [0] 0.0000, [1] 0.7149
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2733133838318573, 0.4532412053483581]
+roc auc: [np.float64(0.11994685847714645), np.float64(0.8800531415228535)]
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_300rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_300rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5676
+Number of mislabelled points out of the total 555 verses: 240 (6 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9404
+Number of mislabelled points out of the total 1007 verses: 60 (5 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8079
+Precisions: [0] 0.0000, [1] 0.8514
+Recalls: [0] 0.0000, [1] 0.5676
+F1 Score: [0] 0.0000, [1] 0.6811
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3399314553098753, 0.4550482110698766]
+roc auc: [np.float64(0.12551240416185797), np.float64(0.874487595838142)]
+plot_chart: cal_rf_char_3gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6541
+Number of mislabelled points out of the total 555 verses: 192 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9076
+Number of mislabelled points out of the total 1007 verses: 93 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8175
+Precisions: [0] 0.0000, [1] 0.7978
+Recalls: [0] 0.0000, [1] 0.6541
+F1 Score: [0] 0.0000, [1] 0.7188
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.273358012639493, 0.4498834625277761]
+roc auc: [np.float64(0.1151265466061891), np.float64(0.884873453393811)]
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6631
+Number of mislabelled points out of the total 555 verses: 187 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9176
+Number of mislabelled points out of the total 1007 verses: 83 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8271
+Precisions: [0] 0.0000, [1] 0.8196
+Recalls: [0] 0.0000, [1] 0.6631
+F1 Score: [0] 0.0000, [1] 0.7331
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2961685694191492, 0.4437648079343698]
+roc auc: [np.float64(0.11080007514962828), np.float64(0.8891999248503717)]
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_300rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_3gram_bow_300rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7676
+Number of mislabelled points out of the total 555 verses: 129 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5551
+Number of mislabelled points out of the total 1007 verses: 448 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6306
+Precisions: [0] 0.0000, [1] 0.4880
+Recalls: [0] 0.0000, [1] 0.7676
+F1 Score: [0] 0.0000, [1] 0.5966
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.5121810346300546, 0.800660751274503]
+roc auc: [np.float64(0.29482898986374656), np.float64(0.7051710101362535)]
+plot_chart: cal_rf_word_3gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_300rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7838
+Number of mislabelled points out of the total 555 verses: 120 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5382
+Number of mislabelled points out of the total 1007 verses: 465 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6255
+Precisions: [0] 0.0000, [1] 0.4844
+Recalls: [0] 0.0000, [1] 0.7838
+F1 Score: [0] 0.0000, [1] 0.5988
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.427379340860121, 0.8653592095359608]
+roc auc: [np.float64(0.2981731483221056), np.float64(0.7018268516778943)]
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_3gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7838
+Number of mislabelled points out of the total 555 verses: 120 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5362
+Number of mislabelled points out of the total 1007 verses: 467 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6242
+Precisions: [0] 0.0000, [1] 0.4823
+Recalls: [0] 0.0000, [1] 0.7838
+F1 Score: [0] 0.0000, [1] 0.5971
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4807265238752498, 0.9052669055582142]
+roc auc: [np.float64(0.3006504021399751), np.float64(0.6993495978600249)]
+plot_chart: cal_rf_word_3gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= char 3-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 3789 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_400rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_3gram_bow_400rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5856
+Number of mislabelled points out of the total 555 verses: 230 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9335
+Number of mislabelled points out of the total 1007 verses: 67 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8099
+Precisions: [0] 0.0000, [1] 0.8291
+Recalls: [0] 0.0000, [1] 0.5856
+F1 Score: [0] 0.0000, [1] 0.6864
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2921063866853923, 0.4639145548603042]
+roc auc: [np.float64(0.13569070560133123), np.float64(0.8643092943986688)]
+plot_chart: cal_rf_char_3gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6523
+Number of mislabelled points out of the total 555 verses: 193 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9076
+Number of mislabelled points out of the total 1007 verses: 93 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8169
+Precisions: [0] 0.0000, [1] 0.7974
+Recalls: [0] 0.0000, [1] 0.6523
+F1 Score: [0] 0.0000, [1] 0.7175
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.266513023935951, 0.45367624476953594]
+roc auc: [np.float64(0.11944854487059056), np.float64(0.8805514551294094)]
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_400rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_400rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5892
+Number of mislabelled points out of the total 555 verses: 228 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9384
+Number of mislabelled points out of the total 1007 verses: 62 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8143
+Precisions: [0] 0.0000, [1] 0.8428
+Recalls: [0] 0.0000, [1] 0.5892
+F1 Score: [0] 0.0000, [1] 0.6935
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3039988458890397, 0.456611385131431]
+roc auc: [np.float64(0.12543367597985272), np.float64(0.8745663240201472)]
+plot_chart: cal_rf_char_3gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6396
+Number of mislabelled points out of the total 555 verses: 200 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9047
+Number of mislabelled points out of the total 1007 verses: 96 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8105
+Precisions: [0] 0.0000, [1] 0.7906
+Recalls: [0] 0.0000, [1] 0.6396
+F1 Score: [0] 0.0000, [1] 0.7072
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.26419865979378, 0.454060527781472]
+roc auc: [np.float64(0.11948075185413813), np.float64(0.8805192481458617)]
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6775
+Number of mislabelled points out of the total 555 verses: 179 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9176
+Number of mislabelled points out of the total 1007 verses: 83 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8323
+Precisions: [0] 0.0000, [1] 0.8192
+Recalls: [0] 0.0000, [1] 0.6775
+F1 Score: [0] 0.0000, [1] 0.7416
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2905295308078926, 0.44338733708327843]
+roc auc: [np.float64(0.10960215428934396), np.float64(0.8903978457106559)]
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_400rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_3gram_bow_400rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7766
+Number of mislabelled points out of the total 555 verses: 124 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5541
+Number of mislabelled points out of the total 1007 verses: 449 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6332
+Precisions: [0] 0.0000, [1] 0.4909
+Recalls: [0] 0.0000, [1] 0.7766
+F1 Score: [0] 0.0000, [1] 0.6015
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3788850402728026, 0.7727334146125241]
+roc auc: [np.float64(0.2904721007005019), np.float64(0.7095278992994981)]
+plot_chart: cal_rf_word_3gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_400rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7784
+Number of mislabelled points out of the total 555 verses: 123 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5372
+Number of mislabelled points out of the total 1007 verses: 466 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6229
+Precisions: [0] 0.0000, [1] 0.4827
+Recalls: [0] 0.0000, [1] 0.7784
+F1 Score: [0] 0.0000, [1] 0.5959
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4066958059738932, 0.8688068303726314]
+roc auc: [np.float64(0.30040795512493623), np.float64(0.6995920448750637)]
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_3gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7820
+Number of mislabelled points out of the total 555 verses: 121 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5313
+Number of mislabelled points out of the total 1007 verses: 472 (7 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6204
+Precisions: [0] 0.0000, [1] 0.4828
+Recalls: [0] 0.0000, [1] 0.7820
+F1 Score: [0] 0.0000, [1] 0.5970
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4508520970925969, 0.8955320512939837]
+roc auc: [np.float64(0.3020988217611852), np.float64(0.6979011782388149)]
+plot_chart: cal_rf_word_3gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= char 3-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 3789 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_500rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_3gram_bow_500rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5928
+Number of mislabelled points out of the total 555 verses: 226 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9335
+Number of mislabelled points out of the total 1007 verses: 67 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8124
+Precisions: [0] 0.0000, [1] 0.8329
+Recalls: [0] 0.0000, [1] 0.5928
+F1 Score: [0] 0.0000, [1] 0.6926
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2875853433479045, 0.4652917490405648]
+roc auc: [np.float64(0.13655313704966138), np.float64(0.8634468629503386)]
+plot_chart: cal_rf_char_3gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6613
+Number of mislabelled points out of the total 555 verses: 188 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9057
+Number of mislabelled points out of the total 1007 verses: 95 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8188
+Precisions: [0] 0.0000, [1] 0.7944
+Recalls: [0] 0.0000, [1] 0.6613
+F1 Score: [0] 0.0000, [1] 0.7217
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2689160228543241, 0.45139871953095484]
+roc auc: [np.float64(0.11670379416158957), np.float64(0.8832962058384104)]
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 3762 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_500rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_500rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5820
+Number of mislabelled points out of the total 555 verses: 232 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9424
+Number of mislabelled points out of the total 1007 verses: 58 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8143
+Precisions: [0] 0.0000, [1] 0.8522
+Recalls: [0] 0.0000, [1] 0.5820
+F1 Score: [0] 0.0000, [1] 0.6916
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3102026939106184, 0.45575430555550656]
+roc auc: [np.float64(0.12627195219052217), np.float64(0.8737280478094778)]
+plot_chart: cal_rf_char_3gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 3369 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6559
+Number of mislabelled points out of the total 555 verses: 191 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9047
+Number of mislabelled points out of the total 1007 verses: 96 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8163
+Precisions: [0] 0.0000, [1] 0.7948
+Recalls: [0] 0.0000, [1] 0.6559
+F1 Score: [0] 0.0000, [1] 0.7187
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.2730491975298601, 0.4510888069294418]
+roc auc: [np.float64(0.11783998497007435), np.float64(0.8821600150299257)]
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 3342 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6919
+Number of mislabelled points out of the total 555 verses: 171 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9126
+Number of mislabelled points out of the total 1007 verses: 88 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8342
+Precisions: [0] 0.0000, [1] 0.8153
+Recalls: [0] 0.0000, [1] 0.6919
+F1 Score: [0] 0.0000, [1] 0.7485
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.283284598103337, 0.44485393102379633]
+roc auc: [np.float64(0.1091539404349732), np.float64(0.8908460595650267)]
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 62249 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_500rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_3gram_bow_500rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7712
+Number of mislabelled points out of the total 555 verses: 127 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5422
+Number of mislabelled points out of the total 1007 verses: 461 (5 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6236
+Precisions: [0] 0.0000, [1] 0.4842
+Recalls: [0] 0.0000, [1] 0.7712
+F1 Score: [0] 0.0000, [1] 0.5949
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3768223232691879, 0.8056894627645775]
+roc auc: [np.float64(0.2964402336795584), np.float64(0.7035597663204416)]
+plot_chart: cal_rf_word_3gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_500rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7892
+Number of mislabelled points out of the total 555 verses: 117 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5392
+Number of mislabelled points out of the total 1007 verses: 464 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6280
+Precisions: [0] 0.0000, [1] 0.4872
+Recalls: [0] 0.0000, [1] 0.7892
+F1 Score: [0] 0.0000, [1] 0.6025
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3842879874160734, 0.8673399392250499]
+roc auc: [np.float64(0.30089016523971834), np.float64(0.6991098347602815)]
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_3gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 56778 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_3gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_3gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7820
+Number of mislabelled points out of the total 555 verses: 121 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.5362
+Number of mislabelled points out of the total 1007 verses: 467 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.6236
+Precisions: [0] 0.0000, [1] 0.4822
+Recalls: [0] 0.0000, [1] 0.7820
+F1 Score: [0] 0.0000, [1] 0.5966
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4227946450998965, 0.8628303780396575]
+roc auc: [np.float64(0.3012569669967883), np.float64(0.6987430330032116)]
+plot_chart: cal_rf_word_3gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_3gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+================= char 4-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 14455 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_100rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_4gram_bow_100rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5982
+Number of mislabelled points out of the total 555 verses: 223 (8 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9424
+Number of mislabelled points out of the total 1007 verses: 58 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8201
+Precisions: [0] 0.0000, [1] 0.8557
+Recalls: [0] 0.0000, [1] 0.5982
+F1 Score: [0] 0.0000, [1] 0.7041
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4198412894719985, 0.44438266322439673]
+roc auc: [np.float64(0.12057668393318839), np.float64(0.8794233160668117)]
+plot_chart: cal_rf_char_4gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6595
+Number of mislabelled points out of the total 555 verses: 189 (13 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8848
+Number of mislabelled points out of the total 1007 verses: 116 (10 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8047
+Precisions: [0] 0.0000, [1] 0.7754
+Recalls: [0] 0.0000, [1] 0.6595
+F1 Score: [0] 0.0000, [1] 0.7128
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.304955040366916, 0.4487223445997637]
+roc auc: [np.float64(0.12025282482084865), np.float64(0.8797471751791514)]
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_100rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_100rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5820
+Number of mislabelled points out of the total 555 verses: 232 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9275
+Number of mislabelled points out of the total 1007 verses: 73 (10 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8047
+Precisions: [0] 0.0000, [1] 0.8368
+Recalls: [0] 0.0000, [1] 0.5820
+F1 Score: [0] 0.0000, [1] 0.6865
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.399289233061837, 0.4444476417477376]
+roc auc: [np.float64(0.12447999141147105), np.float64(0.8755200085885289)]
+plot_chart: cal_rf_char_4gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6703
+Number of mislabelled points out of the total 555 verses: 183 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8828
+Number of mislabelled points out of the total 1007 verses: 118 (10 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8073
+Precisions: [0] 0.0000, [1] 0.7750
+Recalls: [0] 0.0000, [1] 0.6703
+F1 Score: [0] 0.0000, [1] 0.7188
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3378612187782066, 0.44639283347155145]
+roc auc: [np.float64(0.1184080803743167), np.float64(0.8815919196256832)]
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6757
+Number of mislabelled points out of the total 555 verses: 180 (12 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8888
+Number of mislabelled points out of the total 1007 verses: 112 (4 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8131
+Precisions: [0] 0.0000, [1] 0.7764
+Recalls: [0] 0.0000, [1] 0.6757
+F1 Score: [0] 0.0000, [1] 0.7225
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.367859920103866, 0.44252263543257786]
+roc auc: [np.float64(0.11567138141120266), np.float64(0.8843286185887973)]
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_100rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_4gram_bow_100rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9423
+Number of mislabelled points out of the total 555 verses: 32 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1202
+Number of mislabelled points out of the total 1007 verses: 886 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4123
+Precisions: [0] 0.0000, [1] 0.3720
+Recalls: [0] 0.0000, [1] 0.9423
+F1 Score: [0] 0.0000, [1] 0.5334
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.6400318586627136, 1.905988105524108]
+roc auc: [np.float64(0.3903826368573141), np.float64(0.609617363142686)]
+plot_chart: cal_rf_word_4gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_100rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9297
+Number of mislabelled points out of the total 555 verses: 39 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1589
+Number of mislabelled points out of the total 1007 verses: 847 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4328
+Precisions: [0] 0.3786, [1] 0.8040
+Recalls: [0] 0.9297, [1] 0.1589
+F1 Score: [0] 0.5381, [1] 0.2653
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9461149956051106, 0.9841471676705186]
+roc auc: [np.float64(0.33437827102176654), np.float64(0.6656235182550971)]
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_4gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9243
+Number of mislabelled points out of the total 555 verses: 42 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1529
+Number of mislabelled points out of the total 1007 verses: 853 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4270
+Precisions: [0] 0.3755, [1] 0.7857
+Recalls: [0] 0.9243, [1] 0.1529
+F1 Score: [0] 0.5341, [1] 0.2560
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9298795174890011, 0.9930185416440118]
+roc auc: [np.float64(0.331799028422663), np.float64(0.668200971577337)]
+plot_chart: cal_rf_word_4gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 4-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 14455 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_200rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_4gram_bow_200rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5910
+Number of mislabelled points out of the total 555 verses: 227 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9374
+Number of mislabelled points out of the total 1007 verses: 63 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8143
+Precisions: [0] 0.0000, [1] 0.8432
+Recalls: [0] 0.0000, [1] 0.5910
+F1 Score: [0] 0.0000, [1] 0.6949
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.366034272140245, 0.4462497691643198]
+roc auc: [np.float64(0.1206124694704635), np.float64(0.8793875305295364)]
+plot_chart: cal_rf_char_4gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6757
+Number of mislabelled points out of the total 555 verses: 180 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8977
+Number of mislabelled points out of the total 1007 verses: 103 (4 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8188
+Precisions: [0] 0.0000, [1] 0.7911
+Recalls: [0] 0.0000, [1] 0.6757
+F1 Score: [0] 0.0000, [1] 0.7289
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3153141177000798, 0.4386383051181171]
+roc auc: [np.float64(0.10798285872764521), np.float64(0.8920171412723548)]
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_200rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_200rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5802
+Number of mislabelled points out of the total 555 verses: 233 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9355
+Number of mislabelled points out of the total 1007 verses: 65 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8092
+Precisions: [0] 0.0000, [1] 0.8364
+Recalls: [0] 0.0000, [1] 0.5802
+F1 Score: [0] 0.0000, [1] 0.6851
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4028919118840555, 0.440732533212871]
+roc auc: [np.float64(0.11845549621120624), np.float64(0.8815445037887937)]
+plot_chart: cal_rf_char_4gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6775
+Number of mislabelled points out of the total 555 verses: 179 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9047
+Number of mislabelled points out of the total 1007 verses: 96 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8239
+Precisions: [0] 0.0000, [1] 0.8017
+Recalls: [0] 0.0000, [1] 0.6775
+F1 Score: [0] 0.0000, [1] 0.7344
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3117924698269046, 0.44018930732556927]
+roc auc: [np.float64(0.11013804271003871), np.float64(0.8898619572899611)]
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6829
+Number of mislabelled points out of the total 555 verses: 176 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8918
+Number of mislabelled points out of the total 1007 verses: 109 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8175
+Precisions: [0] 0.0000, [1] 0.7814
+Recalls: [0] 0.0000, [1] 0.6829
+F1 Score: [0] 0.0000, [1] 0.7288
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3423272138620654, 0.4351979427964242]
+roc auc: [np.float64(0.10970593234744178), np.float64(0.8902940676525581)]
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_200rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_4gram_bow_200rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9459
+Number of mislabelled points out of the total 555 verses: 30 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1202
+Number of mislabelled points out of the total 1007 verses: 886 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4136
+Precisions: [0] 0.0000, [1] 0.3723
+Recalls: [0] 0.0000, [1] 0.9459
+F1 Score: [0] 0.0000, [1] 0.5344
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.1222591684637004, 1.43786580470026]
+roc auc: [np.float64(0.3646483623643505), np.float64(0.6353516376356496)]
+plot_chart: cal_rf_word_4gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_200rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9207
+Number of mislabelled points out of the total 555 verses: 44 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1569
+Number of mislabelled points out of the total 1007 verses: 849 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4283
+Precisions: [0] 0.3757, [1] 0.7822
+Recalls: [0] 0.9207, [1] 0.1569
+F1 Score: [0] 0.5337, [1] 0.2614
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9504745510012684, 1.0317886434780106]
+roc auc: [np.float64(0.3412562512860427), np.float64(0.658745537990821)]
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_4gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9243
+Number of mislabelled points out of the total 555 verses: 42 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1629
+Number of mislabelled points out of the total 1007 verses: 843 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4334
+Precisions: [0] 0.3783, [1] 0.7961
+Recalls: [0] 0.9243, [1] 0.1629
+F1 Score: [0] 0.5369, [1] 0.2704
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9491750801404347, 1.028788950626935]
+roc auc: [np.float64(0.34116678744285495), np.float64(0.6588358964724407)]
+plot_chart: cal_rf_word_4gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 4-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 14455 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_300rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_4gram_bow_300rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5748
+Number of mislabelled points out of the total 555 verses: 236 (6 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9374
+Number of mislabelled points out of the total 1007 verses: 63 (5 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8086
+Precisions: [0] 0.0000, [1] 0.8462
+Recalls: [0] 0.0000, [1] 0.5748
+F1 Score: [0] 0.0000, [1] 0.6845
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3541763053916653, 0.4420717624511083]
+roc auc: [np.float64(0.11568301171081707), np.float64(0.884316988289183)]
+plot_chart: cal_rf_char_4gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6757
+Number of mislabelled points out of the total 555 verses: 180 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8967
+Number of mislabelled points out of the total 1007 verses: 104 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8182
+Precisions: [0] 0.0000, [1] 0.7878
+Recalls: [0] 0.0000, [1] 0.6757
+F1 Score: [0] 0.0000, [1] 0.7274
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3147931511699895, 0.4400930954520151]
+roc auc: [np.float64(0.11156320173201999), np.float64(0.8884367982679799)]
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_300rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_300rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5874
+Number of mislabelled points out of the total 555 verses: 229 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9374
+Number of mislabelled points out of the total 1007 verses: 63 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8131
+Precisions: [0] 0.0000, [1] 0.8380
+Recalls: [0] 0.0000, [1] 0.5874
+F1 Score: [0] 0.0000, [1] 0.6907
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3719976575134847, 0.43983059088841414]
+roc auc: [np.float64(0.11709654043318393), np.float64(0.8829034595668162)]
+plot_chart: cal_rf_char_4gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6757
+Number of mislabelled points out of the total 555 verses: 180 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8967
+Number of mislabelled points out of the total 1007 verses: 104 (4 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8182
+Precisions: [0] 0.0000, [1] 0.7895
+Recalls: [0] 0.0000, [1] 0.6757
+F1 Score: [0] 0.0000, [1] 0.7282
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3118765170187632, 0.4416581753944094]
+roc auc: [np.float64(0.1126689748338209), np.float64(0.8873310251661792)]
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6829
+Number of mislabelled points out of the total 555 verses: 176 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8987
+Number of mislabelled points out of the total 1007 verses: 102 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8220
+Precisions: [0] 0.0000, [1] 0.7929
+Recalls: [0] 0.0000, [1] 0.6829
+F1 Score: [0] 0.0000, [1] 0.7338
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3385519828943009, 0.4326510049278416]
+roc auc: [np.float64(0.10650491603818318), np.float64(0.8934950839618169)]
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_300rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_4gram_bow_300rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9423
+Number of mislabelled points out of the total 555 verses: 32 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1162
+Number of mislabelled points out of the total 1007 verses: 890 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4097
+Precisions: [0] 0.3701, [1] 0.7852
+Recalls: [0] 0.9423, [1] 0.1162
+F1 Score: [0] 0.5315, [1] 0.2024
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [1.1192768197380178, 1.3774210813648493]
+roc auc: [np.float64(0.3615394938135752), np.float64(0.6384605061864248)]
+plot_chart: cal_rf_word_4gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_300rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9297
+Number of mislabelled points out of the total 555 verses: 39 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1569
+Number of mislabelled points out of the total 1007 verses: 849 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4315
+Precisions: [0] 0.3780, [1] 0.8020
+Recalls: [0] 0.9297, [1] 0.1569
+F1 Score: [0] 0.5375, [1] 0.2625
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9452364212666555, 1.0117662637044484]
+roc auc: [np.float64(0.33181960510659614), np.float64(0.6681786056165402)]
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_4gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9261
+Number of mislabelled points out of the total 555 verses: 41 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1529
+Number of mislabelled points out of the total 1007 verses: 853 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4277
+Precisions: [0] 0.3760, [1] 0.7897
+Recalls: [0] 0.9261, [1] 0.1529
+F1 Score: [0] 0.5349, [1] 0.2562
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9516477103807002, 1.0320846480182457]
+roc auc: [np.float64(0.3376982742424649), np.float64(0.6623008311191033)]
+plot_chart: cal_rf_word_4gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 4-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 14455 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_400rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_4gram_bow_400rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5874
+Number of mislabelled points out of the total 555 verses: 229 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9444
+Number of mislabelled points out of the total 1007 verses: 56 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8175
+Precisions: [0] 0.0000, [1] 0.8579
+Recalls: [0] 0.0000, [1] 0.5874
+F1 Score: [0] 0.0000, [1] 0.6973
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3435925120426495, 0.4452837027769596]
+roc auc: [np.float64(0.11964625996403552), np.float64(0.8803537400359644)]
+plot_chart: cal_rf_char_4gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6631
+Number of mislabelled points out of the total 555 verses: 187 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8997
+Number of mislabelled points out of the total 1007 verses: 101 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8156
+Precisions: [0] 0.0000, [1] 0.7880
+Recalls: [0] 0.0000, [1] 0.6631
+F1 Score: [0] 0.0000, [1] 0.7202
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3085556974377663, 0.43975272331721366]
+roc auc: [np.float64(0.10973008758510248), np.float64(0.8902699124148975)]
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_400rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_400rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5784
+Number of mislabelled points out of the total 555 verses: 234 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9345
+Number of mislabelled points out of the total 1007 verses: 66 (4 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8079
+Precisions: [0] 0.0000, [1] 0.8381
+Recalls: [0] 0.0000, [1] 0.5784
+F1 Score: [0] 0.0000, [1] 0.6844
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3817299462372536, 0.4418855110095548]
+roc auc: [np.float64(0.11938860409565473), np.float64(0.8806113959043453)]
+plot_chart: cal_rf_char_4gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6811
+Number of mislabelled points out of the total 555 verses: 177 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9007
+Number of mislabelled points out of the total 1007 verses: 100 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8227
+Precisions: [0] 0.0000, [1] 0.7958
+Recalls: [0] 0.0000, [1] 0.6811
+F1 Score: [0] 0.0000, [1] 0.7340
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3045446354901873, 0.43966457249206903]
+roc auc: [np.float64(0.10855184877031947), np.float64(0.8914481512296806)]
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6883
+Number of mislabelled points out of the total 555 verses: 173 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8987
+Number of mislabelled points out of the total 1007 verses: 102 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8239
+Precisions: [0] 0.0000, [1] 0.7909
+Recalls: [0] 0.0000, [1] 0.6883
+F1 Score: [0] 0.0000, [1] 0.7360
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3434413461706927, 0.43174724842580153]
+roc auc: [np.float64(0.10564248458985301), np.float64(0.8943575154101469)]
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_400rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_4gram_bow_400rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9477
+Number of mislabelled points out of the total 555 verses: 29 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1072
+Number of mislabelled points out of the total 1007 verses: 899 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4059
+Precisions: [0] 0.3691, [1] 0.7883
+Recalls: [0] 0.9477, [1] 0.1072
+F1 Score: [0] 0.5313, [1] 0.1888
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [1.2060748705180084, 1.599467835313188]
+roc auc: [np.float64(0.3646412052568954), np.float64(0.6353587947431045)]
+plot_chart: cal_rf_word_4gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_400rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9297
+Number of mislabelled points out of the total 555 verses: 39 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1559
+Number of mislabelled points out of the total 1007 verses: 850 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4309
+Precisions: [0] 0.3777, [1] 0.8010
+Recalls: [0] 0.9297, [1] 0.1559
+F1 Score: [0] 0.5372, [1] 0.2610
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9510983312439651, 1.0325381387621206]
+roc auc: [np.float64(0.33637689327858145), np.float64(0.6636231067214186)]
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_4gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9333
+Number of mislabelled points out of the total 555 verses: 37 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1569
+Number of mislabelled points out of the total 1007 verses: 849 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4328
+Precisions: [0] 0.3789, [1] 0.8103
+Recalls: [0] 0.9333, [1] 0.1569
+F1 Score: [0] 0.5390, [1] 0.2629
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9406313787765985, 1.0073595564464222]
+roc auc: [np.float64(0.33318303407677785), np.float64(0.6668169659232221)]
+plot_chart: cal_rf_word_4gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 4-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 14455 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_500rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_4gram_bow_500rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5946
+Number of mislabelled points out of the total 555 verses: 225 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9384
+Number of mislabelled points out of the total 1007 verses: 62 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8163
+Precisions: [0] 0.0000, [1] 0.8440
+Recalls: [0] 0.0000, [1] 0.5946
+F1 Score: [0] 0.0000, [1] 0.6977
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3459074059040927, 0.44168742393031757]
+roc auc: [np.float64(0.11620190200130617), np.float64(0.8837980979986939)]
+plot_chart: cal_rf_char_4gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6775
+Number of mislabelled points out of the total 555 verses: 179 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8937
+Number of mislabelled points out of the total 1007 verses: 107 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8169
+Precisions: [0] 0.0000, [1] 0.7817
+Recalls: [0] 0.0000, [1] 0.6775
+F1 Score: [0] 0.0000, [1] 0.7259
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3081349478000213, 0.43998904541726874]
+roc auc: [np.float64(0.11080723225708329), np.float64(0.8891927677429167)]
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 14415 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_500rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_500rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5856
+Number of mislabelled points out of the total 555 verses: 230 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9394
+Number of mislabelled points out of the total 1007 verses: 61 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8137
+Precisions: [0] 0.0000, [1] 0.8464
+Recalls: [0] 0.0000, [1] 0.5856
+F1 Score: [0] 0.0000, [1] 0.6922
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3701211861050766, 0.4408939689492617]
+roc auc: [np.float64(0.11814774059064029), np.float64(0.8818522594093597)]
+plot_chart: cal_rf_char_4gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 12853 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6703
+Number of mislabelled points out of the total 555 verses: 183 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9057
+Number of mislabelled points out of the total 1007 verses: 95 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8220
+Precisions: [0] 0.0000, [1] 0.7983
+Recalls: [0] 0.0000, [1] 0.6703
+F1 Score: [0] 0.0000, [1] 0.7287
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3035845827926538, 0.4391452253426263]
+roc auc: [np.float64(0.1083899192141496), np.float64(0.8916100807858505)]
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 12812 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6937
+Number of mislabelled points out of the total 555 verses: 170 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9017
+Number of mislabelled points out of the total 1007 verses: 99 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8278
+Precisions: [0] 0.0000, [1] 0.7955
+Recalls: [0] 0.0000, [1] 0.6937
+F1 Score: [0] 0.0000, [1] 0.7411
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.330225464830591, 0.4356811899824097]
+roc auc: [np.float64(0.10827808941016487), np.float64(0.8917219105898352)]
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 75839 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_500rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_4gram_bow_500rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9459
+Number of mislabelled points out of the total 555 verses: 30 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1142
+Number of mislabelled points out of the total 1007 verses: 892 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4097
+Precisions: [0] 0.3705, [1] 0.7931
+Recalls: [0] 0.9459, [1] 0.1142
+F1 Score: [0] 0.5325, [1] 0.1997
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [1.125085569882945, 1.4685825918034787]
+roc auc: [np.float64(0.36115211537257214), np.float64(0.6388478846274278)]
+plot_chart: cal_rf_word_4gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_500rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9261
+Number of mislabelled points out of the total 555 verses: 41 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1599
+Number of mislabelled points out of the total 1007 verses: 846 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4321
+Precisions: [0] 0.3779, [1] 0.7970
+Recalls: [0] 0.9261, [1] 0.1599
+F1 Score: [0] 0.5368, [1] 0.2663
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9431395982230959, 1.0104595101273213]
+roc auc: [np.float64(0.3308551848770319), np.float64(0.6691466043998318)]
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_4gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 70521 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_4gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_4gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9243
+Number of mislabelled points out of the total 555 verses: 42 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.1619
+Number of mislabelled points out of the total 1007 verses: 844 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.4328
+Precisions: [0] 0.3780, [1] 0.7951
+Recalls: [0] 0.9243, [1] 0.1619
+F1 Score: [0] 0.5366, [1] 0.2690
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.9657282597991699, 1.0131353506999714]
+roc auc: [np.float64(0.33034166241713414), np.float64(0.6696601268597296)]
+plot_chart: cal_rf_word_4gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_4gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 5-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 38161 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_100rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_5gram_bow_100rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6180
+Number of mislabelled points out of the total 555 verses: 212 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9325
+Number of mislabelled points out of the total 1007 verses: 68 (4 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8207
+Precisions: [0] 0.0000, [1] 0.8428
+Recalls: [0] 0.0000, [1] 0.6180
+F1 Score: [0] 0.0000, [1] 0.7131
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4410470035086589, 0.432263293163336]
+roc auc: [np.float64(0.11404582338048078), np.float64(0.8859541766195191)]
+plot_chart: cal_rf_char_5gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6667
+Number of mislabelled points out of the total 555 verses: 185 (7 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8967
+Number of mislabelled points out of the total 1007 verses: 104 (10 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8150
+Precisions: [0] 0.0000, [1] 0.7974
+Recalls: [0] 0.0000, [1] 0.6667
+F1 Score: [0] 0.0000, [1] 0.7262
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3548064333922487, 0.43955232427668445]
+roc auc: [np.float64(0.11512296805246158), np.float64(0.8848770319475385)]
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_100rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_100rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6036
+Number of mislabelled points out of the total 555 verses: 220 (6 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9335
+Number of mislabelled points out of the total 1007 verses: 67 (4 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8163
+Precisions: [0] 0.0000, [1] 0.8417
+Recalls: [0] 0.0000, [1] 0.6036
+F1 Score: [0] 0.0000, [1] 0.7030
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.557693099397732, 0.42996633546788626]
+roc auc: [np.float64(0.11940381294899668), np.float64(0.8805961870510035)]
+plot_chart: cal_rf_char_5gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6703
+Number of mislabelled points out of the total 555 verses: 183 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8908
+Number of mislabelled points out of the total 1007 verses: 110 (9 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8124
+Precisions: [0] 0.0000, [1] 0.7865
+Recalls: [0] 0.0000, [1] 0.6703
+F1 Score: [0] 0.0000, [1] 0.7237
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.38208605477229, 0.4382836264524631]
+roc auc: [np.float64(0.11621800549307998), np.float64(0.8837819945069201)]
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7459
+Number of mislabelled points out of the total 555 verses: 141 (8 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8729
+Number of mislabelled points out of the total 1007 verses: 128 (7 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8278
+Precisions: [0] 0.0000, [1] 0.7738
+Recalls: [0] 0.0000, [1] 0.7459
+F1 Score: [0] 0.0000, [1] 0.7596
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4159263142598613, 0.4242842244927461]
+roc auc: [np.float64(0.10488740975334818), np.float64(0.8951125902466517)]
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_100rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_5gram_bow_100rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9856
+Number of mislabelled points out of the total 555 verses: 8 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0417
+Number of mislabelled points out of the total 1007 verses: 965 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3771
+Precisions: [0] 0.3618, [1] 0.8400
+Recalls: [0] 0.9856, [1] 0.0417
+F1 Score: [0] 0.5293, [1] 0.0795
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6866708667114927, 0.7698852289112476]
+roc auc: [np.float64(0.3976435223704339), np.float64(0.6023511097989749)]
+plot_chart: cal_rf_word_5gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_100rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_100rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0298
+Number of mislabelled points out of the total 1007 verses: 977 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3707
+Precisions: [0] 0.3598, [1] 0.8333
+Recalls: [0] 0.9892, [1] 0.0298
+F1 Score: [0] 0.5276, [1] 0.0575
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6917051641970964, 0.8725310275317879]
+roc auc: [np.float64(0.39541139948289905), np.float64(0.6045886005171011)]
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_100rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_5gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0258
+Number of mislabelled points out of the total 1007 verses: 981 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3681
+Precisions: [0] 0.3588, [1] 0.8125
+Recalls: [0] 0.9892, [1] 0.0258
+F1 Score: [0] 0.5266, [1] 0.0500
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6930626135779515, 0.8834259243900705]
+roc auc: [np.float64(0.3946572192848262), np.float64(0.605342780715174)]
+plot_chart: cal_rf_word_5gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_100rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 5-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 38161 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_200rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_5gram_bow_200rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6036
+Number of mislabelled points out of the total 555 verses: 220 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9414
+Number of mislabelled points out of the total 1007 verses: 59 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8214
+Precisions: [0] 0.0000, [1] 0.8503
+Recalls: [0] 0.0000, [1] 0.6036
+F1 Score: [0] 0.0000, [1] 0.7060
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4113015532016135, 0.4317546599485789]
+roc auc: [np.float64(0.11330416812045412), np.float64(0.8866958318795458)]
+plot_chart: cal_rf_char_5gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6631
+Number of mislabelled points out of the total 555 verses: 187 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8957
+Number of mislabelled points out of the total 1007 verses: 105 (8 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8131
+Precisions: [0] 0.0000, [1] 0.7914
+Recalls: [0] 0.0000, [1] 0.6631
+F1 Score: [0] 0.0000, [1] 0.7216
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3436827189009894, 0.4394185573497196]
+roc auc: [np.float64(0.11319323295490127), np.float64(0.8868067670450988)]
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_200rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_200rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6396
+Number of mislabelled points out of the total 555 verses: 200 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9305
+Number of mislabelled points out of the total 1007 verses: 70 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8271
+Precisions: [0] 0.0000, [1] 0.8392
+Recalls: [0] 0.0000, [1] 0.6396
+F1 Score: [0] 0.0000, [1] 0.7260
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.491786303694765, 0.4234973632270642]
+roc auc: [np.float64(0.112697603263641), np.float64(0.8873023967363591)]
+plot_chart: cal_rf_char_5gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6685
+Number of mislabelled points out of the total 555 verses: 184 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9057
+Number of mislabelled points out of the total 1007 verses: 95 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8214
+Precisions: [0] 0.0000, [1] 0.7978
+Recalls: [0] 0.0000, [1] 0.6685
+F1 Score: [0] 0.0000, [1] 0.7275
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3474177922218207, 0.43824485862072565]
+roc auc: [np.float64(0.11543519686518694), np.float64(0.8845648031348132)]
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7459
+Number of mislabelled points out of the total 555 verses: 141 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8719
+Number of mislabelled points out of the total 1007 verses: 129 (5 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8271
+Precisions: [0] 0.0000, [1] 0.7695
+Recalls: [0] 0.0000, [1] 0.7459
+F1 Score: [0] 0.0000, [1] 0.7575
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4309259540995225, 0.4230451164479983]
+roc auc: [np.float64(0.1039212002469202), np.float64(0.8960787997530798)]
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_200rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_5gram_bow_200rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9802
+Number of mislabelled points out of the total 555 verses: 11 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0447
+Number of mislabelled points out of the total 1007 verses: 962 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3771
+Precisions: [0] 0.3612, [1] 0.8036
+Recalls: [0] 0.9802, [1] 0.0447
+F1 Score: [0] 0.5279, [1] 0.0847
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.689477563462484, 0.752763771314609]
+roc auc: [np.float64(0.39748248745269604), np.float64(0.602517512547304)]
+plot_chart: cal_rf_word_5gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_200rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_200rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0209
+Number of mislabelled points out of the total 1007 verses: 986 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3649
+Precisions: [0] 0.3577, [1] 0.7778
+Recalls: [0] 0.9892, [1] 0.0209
+F1 Score: [0] 0.5254, [1] 0.0406
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.696446658745376, 0.9017462354268884]
+roc auc: [np.float64(0.39223006521914167), np.float64(0.6077699347808583)]
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_200rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_5gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9856
+Number of mislabelled points out of the total 555 verses: 8 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0278
+Number of mislabelled points out of the total 1007 verses: 979 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3681
+Precisions: [0] 0.3585, [1] 0.7778
+Recalls: [0] 0.9856, [1] 0.0278
+F1 Score: [0] 0.5257, [1] 0.0537
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6922466964169502, 0.8788987248305097]
+roc auc: [np.float64(0.39207529277042685), np.float64(0.6079247072295731)]
+plot_chart: cal_rf_word_5gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_200rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 5-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 38161 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_300rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_5gram_bow_300rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.5928
+Number of mislabelled points out of the total 555 verses: 226 (4 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9454
+Number of mislabelled points out of the total 1007 verses: 55 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8201
+Precisions: [0] 0.0000, [1] 0.8590
+Recalls: [0] 0.0000, [1] 0.5928
+F1 Score: [0] 0.0000, [1] 0.7015
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4095903089272397, 0.4343973911906894]
+roc auc: [np.float64(0.11369333583832095), np.float64(0.886306664161679)]
+plot_chart: cal_rf_char_5gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6703
+Number of mislabelled points out of the total 555 verses: 183 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9007
+Number of mislabelled points out of the total 1007 verses: 100 (4 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8188
+Precisions: [0] 0.0000, [1] 0.7949
+Recalls: [0] 0.0000, [1] 0.6703
+F1 Score: [0] 0.0000, [1] 0.7273
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3397921561885966, 0.4350546742366043]
+roc auc: [np.float64(0.109858020880861), np.float64(0.8901419791191391)]
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_300rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_300rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6234
+Number of mislabelled points out of the total 555 verses: 209 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9345
+Number of mislabelled points out of the total 1007 verses: 66 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8239
+Precisions: [0] 0.0000, [1] 0.8439
+Recalls: [0] 0.0000, [1] 0.6234
+F1 Score: [0] 0.0000, [1] 0.7171
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4616227663239265, 0.42450160998010605]
+roc auc: [np.float64(0.11337842311029996), np.float64(0.8866215768896999)]
+plot_chart: cal_rf_char_5gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6919
+Number of mislabelled points out of the total 555 verses: 171 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9106
+Number of mislabelled points out of the total 1007 verses: 90 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8329
+Precisions: [0] 0.0000, [1] 0.8136
+Recalls: [0] 0.0000, [1] 0.6919
+F1 Score: [0] 0.0000, [1] 0.7478
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3442064005608672, 0.4324560872365265]
+roc auc: [np.float64(0.10814210436851947), np.float64(0.8918578956314804)]
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7405
+Number of mislabelled points out of the total 555 verses: 144 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8719
+Number of mislabelled points out of the total 1007 verses: 129 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8252
+Precisions: [0] 0.0000, [1] 0.7639
+Recalls: [0] 0.0000, [1] 0.7405
+F1 Score: [0] 0.0000, [1] 0.7521
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.387780589218823, 0.42645171623098316]
+roc auc: [np.float64(0.10500997521851543), np.float64(0.8949900247814846)]
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_300rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_5gram_bow_300rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9784
+Number of mislabelled points out of the total 555 verses: 12 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0457
+Number of mislabelled points out of the total 1007 verses: 961 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3771
+Precisions: [0] 0.3610, [1] 0.7931
+Recalls: [0] 0.9784, [1] 0.0457
+F1 Score: [0] 0.5274, [1] 0.0864
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6902378008253229, 0.7506914834876964]
+roc auc: [np.float64(0.39742165203932833), np.float64(0.6025810318759672)]
+plot_chart: cal_rf_word_5gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_300rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_300rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0298
+Number of mislabelled points out of the total 1007 verses: 977 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3707
+Precisions: [0] 0.3598, [1] 0.8333
+Recalls: [0] 0.9892, [1] 0.0298
+F1 Score: [0] 0.5276, [1] 0.0575
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6956251698196733, 0.8922170956425549]
+roc auc: [np.float64(0.38356280809111004), np.float64(0.6164371919088899)]
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_300rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_5gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0278
+Number of mislabelled points out of the total 1007 verses: 979 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3694
+Precisions: [0] 0.3593, [1] 0.8235
+Recalls: [0] 0.9892, [1] 0.0278
+F1 Score: [0] 0.5271, [1] 0.0538
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6929397480327901, 0.8794053744165518]
+roc auc: [np.float64(0.3908326399885487), np.float64(0.6091673600114513)]
+plot_chart: cal_rf_word_5gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_300rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 5-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 38161 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_400rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_5gram_bow_400rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6108
+Number of mislabelled points out of the total 555 verses: 216 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9424
+Number of mislabelled points out of the total 1007 verses: 58 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8246
+Precisions: [0] 0.0000, [1] 0.8539
+Recalls: [0] 0.0000, [1] 0.6108
+F1 Score: [0] 0.0000, [1] 0.7122
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4032379319068973, 0.43515731135380337]
+roc auc: [np.float64(0.11577784338459611), np.float64(0.8842221566154038)]
+plot_chart: cal_rf_char_5gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6685
+Number of mislabelled points out of the total 555 verses: 184 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8957
+Number of mislabelled points out of the total 1007 verses: 105 (3 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8150
+Precisions: [0] 0.0000, [1] 0.7844
+Recalls: [0] 0.0000, [1] 0.6685
+F1 Score: [0] 0.0000, [1] 0.7218
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3462184134765705, 0.4358235937130565]
+roc auc: [np.float64(0.10980255329808458), np.float64(0.8901974467019154)]
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_400rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_400rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6342
+Number of mislabelled points out of the total 555 verses: 203 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9305
+Number of mislabelled points out of the total 1007 verses: 70 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8252
+Precisions: [0] 0.0000, [1] 0.8361
+Recalls: [0] 0.0000, [1] 0.6342
+F1 Score: [0] 0.0000, [1] 0.7213
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4657097625240212, 0.4228079870230115]
+roc auc: [np.float64(0.11174212941839556), np.float64(0.8882578705816044)]
+plot_chart: cal_rf_char_5gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6775
+Number of mislabelled points out of the total 555 verses: 179 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9067
+Number of mislabelled points out of the total 1007 verses: 94 (1 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8252
+Precisions: [0] 0.0000, [1] 0.8017
+Recalls: [0] 0.0000, [1] 0.6775
+F1 Score: [0] 0.0000, [1] 0.7344
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3382385910408217, 0.4362362779655668]
+roc auc: [np.float64(0.11123576406595273), np.float64(0.8887642359340472)]
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7477
+Number of mislabelled points out of the total 555 verses: 140 (3 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8719
+Number of mislabelled points out of the total 1007 verses: 129 (5 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8278
+Precisions: [0] 0.0000, [1] 0.7699
+Recalls: [0] 0.0000, [1] 0.7477
+F1 Score: [0] 0.0000, [1] 0.7587
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3911402832977042, 0.4270513351360111]
+roc auc: [np.float64(0.10526584181003246), np.float64(0.8947341581899675)]
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_400rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_5gram_bow_400rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9856
+Number of mislabelled points out of the total 555 verses: 8 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0417
+Number of mislabelled points out of the total 1007 verses: 965 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3771
+Precisions: [0] 0.3618, [1] 0.8400
+Recalls: [0] 0.9856, [1] 0.0417
+F1 Score: [0] 0.5293, [1] 0.0795
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6854954260635092, 0.7669136674914295]
+roc auc: [np.float64(0.39718367821644884), np.float64(0.602816321783551)]
+plot_chart: cal_rf_word_5gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_400rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_400rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9874
+Number of mislabelled points out of the total 555 verses: 7 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0288
+Number of mislabelled points out of the total 1007 verses: 978 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3694
+Precisions: [0] 0.3591, [1] 0.8056
+Recalls: [0] 0.9874, [1] 0.0288
+F1 Score: [0] 0.5267, [1] 0.0556
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6931389980588541, 0.8806404086843111]
+roc auc: [np.float64(0.3901258756273652), np.float64(0.6098741243726349)]
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_400rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_5gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0278
+Number of mislabelled points out of the total 1007 verses: 979 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3694
+Precisions: [0] 0.3593, [1] 0.8235
+Recalls: [0] 0.9892, [1] 0.0278
+F1 Score: [0] 0.5271, [1] 0.0538
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6974267643730813, 0.8895941230351716]
+roc auc: [np.float64(0.3893385938073127), np.float64(0.6106614061926874)]
+plot_chart: cal_rf_word_5gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_400rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+================= char 5-gram ===================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 38161 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_500rf_prediction_all.csv
+evaluate_classifier: cal_rf_char_5gram_bow_500rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6162
+Number of mislabelled points out of the total 555 verses: 213 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9454
+Number of mislabelled points out of the total 1007 verses: 55 (2 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8284
+Precisions: [0] 0.0000, [1] 0.8658
+Recalls: [0] 0.0000, [1] 0.6162
+F1 Score: [0] 0.0000, [1] 0.7200
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3948744658430954, 0.4322401734094842]
+roc auc: [np.float64(0.11159988190772699), np.float64(0.8884001180922729)]
+plot_chart: cal_rf_char_5gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6739
+Number of mislabelled points out of the total 555 verses: 181 (1 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9057
+Number of mislabelled points out of the total 1007 verses: 95 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8233
+Precisions: [0] 0.0000, [1] 0.7974
+Recalls: [0] 0.0000, [1] 0.6739
+F1 Score: [0] 0.0000, [1] 0.7305
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3367289028558629, 0.4358933997883083]
+roc auc: [np.float64(0.11078128774255883), np.float64(0.8892187122574412)]
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+> Remove underscores marking proclitics, from both training & test sets
+Total words parsed: 107178
+Found 39991 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_500rf_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_500rf_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6144
+Number of mislabelled points out of the total 555 verses: 214 (2 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9295
+Number of mislabelled points out of the total 1007 verses: 71 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8175
+Precisions: [0] 0.0000, [1] 0.8277
+Recalls: [0] 0.0000, [1] 0.6144
+F1 Score: [0] 0.0000, [1] 0.7053
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.4503933155210558, 0.4247090059476094]
+roc auc: [np.float64(0.11210266870644231), np.float64(0.8878973312935576)]
+plot_chart: cal_rf_char_5gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+> Remove PN & GN
+>> Remove PN & GN from both training & test sets
+Total words parsed: 102130
+Found 33668 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.6613
+Number of mislabelled points out of the total 555 verses: 188 (5 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.9116
+Number of mislabelled points out of the total 1007 verses: 89 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8227
+Precisions: [0] 0.0000, [1] 0.8048
+Recalls: [0] 0.0000, [1] 0.6613
+F1 Score: [0] 0.0000, [1] 0.7260
+Supports: [0] 0.0000, [1] 555.0000
+log loss: [1.3307098124054795, 0.4370028317556945]
+roc auc: [np.float64(0.11066587938484662), np.float64(0.8893341206151534)]
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+>> Remove PN, GN, underscores from both training & test sets
+Total words parsed: 102130
+Found 35418 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.7477
+Number of mislabelled points out of the total 555 verses: 140 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.8699
+Number of mislabelled points out of the total 1007 verses: 131 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.8265
+Precisions: [0] 0.7601, [1] 0.8622
+Recalls: [0] 0.7477, [1] 0.8699
+F1 Score: [0] 0.7539, [1] 0.8660
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [1.3906270645562502, 0.4254553104499065]
+roc auc: [np.float64(0.10387646832532632), np.float64(0.8961235316746736)]
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 0.0000, (NT) 1.0000
+
+=============== Word n-grams =================
+
+> Plain Classifier
+Total words parsed: 107178
+Found 76895 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_500rf_prediction_all.csv
+evaluate_classifier: cal_rf_word_5gram_bow_500rf_prediction_all.csv
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9820
+Number of mislabelled points out of the total 555 verses: 10 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0467
+Number of mislabelled points out of the total 1007 verses: 960 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3790
+Precisions: [0] 0.3621, [1] 0.8246
+Recalls: [0] 0.9820, [1] 0.0467
+F1 Score: [0] 0.5291, [1] 0.0883
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.688160649521265, 0.7527990058701882]
+roc auc: [np.float64(0.39640981597287456), np.float64(0.6035901840271254)]
+plot_chart: cal_rf_word_5gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_500rf_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_500rf_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+> Remove PN & GN
+>> Remove PN & GN from the training set
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all.jpeg
+evaluate_classifier: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0268
+Number of mislabelled points out of the total 1007 verses: 980 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3688
+Precisions: [0] 0.3591, [1] 0.8182
+Recalls: [0] 0.9892, [1] 0.0268
+F1 Score: [0] 0.5269, [1] 0.0519
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6936408589900891, 0.8851815144321582]
+roc auc: [np.float64(0.38985390554407434), np.float64(0.6101460944559256)]
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+plot_chart: cal_rf_char_5gram_bow_500rf_no_propn_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+
+!!!!!!BELOW REQUIRES DS-wide processing!!!!!!
+
+>> Remove PN, GN from both training & test sets
+Total words parsed: 102130
+Found 71795 independent n-grams from 5894 verses!
+eval_and_save: cal_rf_word_5gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+evaluate_classifier: cal_rf_word_5gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all.jpeg
+test size: (1562,)
+OT --->
+Parsed 11583 words from 555 verses
+Local accuracy: 0.9892
+Number of mislabelled points out of the total 555 verses: 6 (0 labelled as unknown)
+NT --->
+Parsed 19816 words from 1007 verses
+Local accuracy: 0.0298
+Number of mislabelled points out of the total 1007 verses: 977 (0 labelled as unknown)
+All --->
+> with threshold: 0.5
+Overall Accuracy: 0.3707
+Precisions: [0] 0.3598, [1] 0.8333
+Recalls: [0] 0.9892, [1] 0.0298
+F1 Score: [0] 0.5276, [1] 0.0575
+Supports: [0] 555.0000, [1] 1007.0000
+log loss: [0.6934960758315556, 0.8744976126732558]
+roc auc: [np.float64(0.39073065120731454), np.float64(0.6092693487926855)]
+plot_chart: cal_rf_word_5gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+plot_chart: cal_rf_word_5gram_bow_500rf_no_propn_no_uscore_both_removed_prediction_all_cm.jpeg
+>> per-book total probabilities:
+Deuteronomy: (OT) 1.0000, (NT) 0.0000
+>> per-book total probabilities:
+Acts: (OT) 1.0000, (NT) 0.0000
+================== MULTI-LAYER PERCEPTRON =====================
+

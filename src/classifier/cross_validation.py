@@ -310,23 +310,14 @@ if __name__ == "__main__":
     base_fname_svc = SavefileName("ETCBC", "svc")
     max_char_scores = []
     max_word_scores = []
-    for c in [0.1, 1, 10, 100]:
-        base_fname_svc.set_svc_opts(c=c)
-        print(f"\nSVC Classifier with C={c}")
-        max_char_score, max_w_score = find_best_clf(
-            "svc", n_max, etcbc_ds, base_fname_svc, c=c
-        )
-        max_char_scores.append(max_char_score)
-        max_word_scores.append(max_w_score)
-    argmax_char = np.argmax(max_char_scores)
-    argmax_word = np.argmax(max_word_scores)
-    print(
-        f"\nBest char n-gram SVC classifier: {max_char_scores[argmax_char]} "
-        + f"with C={[0.1, 1, 10, 100][argmax_char]}"
+    max_char_score, max_word_score = find_best_clf(
+        "svc", n_max, etcbc_ds, base_fname_svc
     )
     print(
-        f"\nBest word n-gram SVC classifier: {max_word_scores[argmax_word]} "
-        + f"with C={[0.1, 1, 10, 100][argmax_word]}"
+        f"\nBest char n-gram SVC classifier: {max_char_score} "
+    )
+    print(
+        f"\nBest word n-gram SVC classifier: {max_word_score} "
     )
 
     print("\n=================MLP====================\n")
