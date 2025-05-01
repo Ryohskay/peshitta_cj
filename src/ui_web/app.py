@@ -108,13 +108,16 @@ def display_default():
 # (Accessed: 15 April 2025)
 @app.route("/get_classifier")
 def get_classifier():
+    """Render the classifier results based on the request parameters."""
     clf_configs = parse_clf_configs(request)
     print(clf_configs)
     files = file_index.match_files_by_config(clf_configs)
     for file in files:
         if file.is_clf_summary:
             cr = ClassifierResultsModel(clf_configs, file_index, "./src/classifier/out")
+            cr.load_results()
             return render_template("clf_summary.html", results=cr)
     # if no file is found, return 404
     abort(404)  # Not found
+    return None
     # code after abort is never executed

@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 class ClassifierConfig:
     """Dataclass of configurations for the classifier."""
 
-    name: str
-    origin: Literal["CAL", "ETCBC"]
+    name: str = "mnb"
+    origin: Literal["CAL", "ETCBC"] = "CAL"
     # n-gram options
     is_n_gram: bool = False
     n: int = 0
@@ -81,7 +81,7 @@ def configure_fname_opts(
         save_fname.set_rf_opts(
             n_estimators=configs.n_estimators
         )
-    if len(configs.hidden_layer_sizes) > 0:
+    if len(configs.hidden_layer_sizes) > 0 and configs.activation:
         save_fname.set_mlp_opts(
             hidden_layer_sizes=configs.hidden_layer_sizes,
             activation=configs.activation

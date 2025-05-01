@@ -1,24 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="border-3">
-        <p>Classifier Summary</p>
-        <p>Model: {{ results.config.name }}</p>
-        <p>Trained on: {{ results.config.origin }} data</p>
-        {% if results.config.is_n_gram %}
-        <div>
-            <p>{{ "Word" if results.config.is_char_level else "Character" }} level
-                {{ results.config.n }}-gram</p>
-        </div>
-        {% endif %}
-        <div>
-            <h4>Options:</h4>
-            <ul>
-                {% for opt in results.config["extra_opts"] %}
-                    <li>
-                        {{ opt.name }}
-                    </li>
-                {% endfor %}
-            </ul>
+        <h3 class="text-3xl font-bold">Classifier Summary</h3>
+        <div class="my-4">
+            <p>Model: {{ results.config.name }}</p>
+            <p>Trained on: {{ results.config.origin }} data</p>
+            {% if results.config.is_n_gram %}
+            <div>
+                <p>{{ "Word" if results.config.is_char_level else "Character" }} level
+                    {{ results.config.n }}-gram</p>
+            </div>
+            {% endif %}
+            <div>
+                <h4>Options:</h4>
+                <ul>
+                    {% for opt in results.config["extra_opts"] %}
+                        <li>
+                            {{ opt.name }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
         <div>
             <h3>Classifier Evaluation Results</h3>
