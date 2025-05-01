@@ -1,0 +1,8 @@
+Best performing char-ngram classifier: {'n_window': 2} with f-score 0.85
+configs: [{'n_window': 1}, {'n_window': 2}, {'n_window': 3}]
+Best performing char-ngram classifier: {'n_window': 2} with f-score 0.85
+configs: [{'n_window': 1}, {'n_window': 2}, {'n_window': 3}]
+Best performing char-ngram classifier: {'n_window': 2} with f-score 0.85
+configs: [{'n_window': 1}, {'n_window': 2}, {'n_window': 3}]
+Best performing char-ngram classifier: {'n_window': 2} with f-score 0.85
+configs: [{'n_window': 1}, {'n_window': 2}, {'n_window': 3}]
