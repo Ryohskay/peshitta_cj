@@ -24,7 +24,7 @@ python3 -m pip install datasets
 # python -m pip install text-fabric
 
 python3 $HOME/peshitta_cj_ssh/src/neural/run_mlm.py \
-    --model_name_or_path FacebookAI/roberta-base \
+    --model_name_or_path google-bert/bert-base-multilingual-uncased \
     --train_file $HOME/peshitta_cj_ssh/src/neural/data/all_verses.txt \
     --validation_split_percentage 10 \
     --per_device_train_batch_size 8 \
@@ -32,7 +32,7 @@ python3 $HOME/peshitta_cj_ssh/src/neural/run_mlm.py \
     --do_train \
     --do_eval \
     --line_by_line \
-    --output_dir $HOME/test_mlm
+    --output_dir $HOME/mbert_uncased_aa
 
 deactivate
 exit 0
