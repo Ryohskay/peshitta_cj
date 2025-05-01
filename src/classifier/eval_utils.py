@@ -714,28 +714,34 @@ def cross_validate(
         proba_c.preprocessor = clf.preprocessor
         train_ids = list(train_g)
         test_ids = list(test_g)
-        # train_samples = train[0]
-        # train_labels = train[1]
+
         train_verses = [training_x[int(idx)] for idx in train_ids]
         train_labels = [training_y[int(idx)] for idx in train_ids]
         test_verses = [training_x[int(idx)] for idx in test_ids]
         test_labels = [training_y[int(idx)] for idx in test_ids]
-        # test_samples = test[0]
-        # test_labels = test[1]
 
         proba_c.fit(train_verses, train_labels)
         predictions = predict_proba(
             proba_c, test_verses, test_labels, threshold=threshold
         )
         acc, prec, rec, fone, _ = metricise(
-            test_labels, y_all=predictions.predictions
+            test_labels,
+            y_all=predictions.predictions
         )
         accs.append(acc)
-        precs.append(prec)
-        recs.append(rec)
-        f_ones.append(fone)
+        if len(prec) > len(label_data.ValToLabel):
+            # exclude the first element of the precision, recall, and f1 score
+            # lists, which is the precision for the "unknown" (-1) class
+            precs.append(prec[1:])
+            recs.append(rec[1:])
+            f_ones.append(fone[1:])
+        else:
+            precs.append(prec)
+            recs.append(rec)
+            f_ones.append(fone)
     print(f"Accuracy > avg: {np.average(accs)}, std: {np.std(accs)}")
     print(f"Precision > avg: {np.average(precs)}, std: {np.std(precs)}")
     print(f"Recall > avg: {np.average(recs)}, std: {np.std(recs)}")
+    print(f"F1 scores: {f_ones}")
     print(f"F1 score > avg: {np.average(f_ones)}, std: {np.std(f_ones)}")
     return accs, precs, recs, f_ones
