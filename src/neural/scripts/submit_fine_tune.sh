@@ -17,8 +17,9 @@ python3 --version
 
 python3 -m pip install --upgrade pip
 python3 -m pip install -r $HOME/peshitta_cj_ssh/src/neural/requirements.txt
-# python -m pip install numpy
-# python -m pip install nltk
+python3 -m pip install numpy
+python3 -m pip install transformers
+python3 -m pip install datasets
 # python -m pip install scikit-learn
 # python -m pip install text-fabric
 
