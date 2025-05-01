@@ -13,16 +13,16 @@
 module load python/3.11.7
 
 source $HOME/venv/bin/activate
-python --version
+python3 --version
 
-python -m pip install --upgrade pip
+python3 -m pip install --upgrade pip
 python3 -m pip install -r $HOME/peshitta_cj_ssh/src/neural/requirements.txt
 # python -m pip install numpy
 # python -m pip install nltk
 # python -m pip install scikit-learn
 # python -m pip install text-fabric
 
-$HOME/peshitta_cj_ssh/src/neural/run_mlm.py \
+python3 $HOME/peshitta_cj_ssh/src/neural/run_mlm.py \
     --model_name_or_path FacebookAI/roberta-base \
     --train_file $HOME/peshitta_cj_ssh/src/neural/data/all_verses.txt \
     --validation_split_percentage 10 \
