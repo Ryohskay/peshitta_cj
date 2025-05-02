@@ -162,5 +162,5 @@ if __name__ == "__main__":
 
     print("MultinomialNB")
     fname_etcbc = SavefileName("ETCBC", "mnb")
-    fname_cal = SavefileName("ETCBC", "mnb")
+    fname_cal = SavefileName("CAL", "mnb")
     run_prod_clf("mnb", n, etcbc_loaded, cal_loaded, fname_etcbc, fname_cal)

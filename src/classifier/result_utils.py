@@ -567,6 +567,9 @@ class ProbaPredictions(Predictions):
                     # if we encounter a new book
                     # update current_book
                     current_book = self.samples[i].book
+                    # reset the book-level variables
+                    num_book_verses = 0
+                    mislabel_book = BookMislabels(current_book)
 
                 if mislabel_book is None:
                     mislabel_book = BookMislabels(current_book)
@@ -594,9 +597,6 @@ class ProbaPredictions(Predictions):
                     if len(mislabel_book.mislabels) > 0:
                         # register the mislabels from the current book
                         results.append(mislabel_book)
-                    # reset the book-level variables
-                    num_book_verses = 0
-                    mislabel_book = BookMislabels(current_book)
             return results
         return results
 

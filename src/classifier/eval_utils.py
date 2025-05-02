@@ -560,7 +560,7 @@ def evaluate_classifier(
     stats.add_thresh_stats(measurements)
 
     if plot:
-        plot_charts(all_test_y, pred_y_all, probas, base_save_fname=base_save_fname)
+        plot_charts(all_test_y, pred_y_all, probas, save_fname=base_save_fname)
 
     return (ot_proba_preds, nt_proba_preds, ot_mislabels, nt_mislabels, stats)
 
