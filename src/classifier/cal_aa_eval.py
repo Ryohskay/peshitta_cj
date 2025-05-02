@@ -25,6 +25,7 @@
 
 """Authorship attribution using CAL data."""
 
+from email.mime import base
 import re
 from collections.abc import Callable
 from unittest.mock import Base
@@ -334,16 +335,47 @@ def run_cal_clf(
 if __name__ == "__main__":
     # load cal data from src/scraper/cal_results
     cal_ds = load_cal_dataset("./src/")
-    print("Multinomial NB")
-    base_fname_mnb = SavefileName("CAL", "mnb")
-    for n in range(1, 6):
-        run_cal_clf("mnb", n, cal_ds, base_fname_mnb)
+    # print("Multinomial NB")
+    # base_fname_mnb = SavefileName("CAL", "mnb")
+    # for n in range(1, 6):
+    #     run_cal_clf("mnb", n, cal_ds, base_fname_mnb)
 
-    print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
-    base_fname_knn = SavefileName("CAL", "knn")
+    # print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
+    # base_fname_knn = SavefileName("CAL", "knn")
 
-    for n in range(1, 6):
-        for k in range(2, 10):
-            print(f"\n> K = {k}")
-            base_fname_knn.set_knn_opts(k=k)
-            run_cal_clf("knn", n, cal_ds, base_fname_knn, n_neighbors=k)
+    # for n in range(1, 6):
+    #     for k in range(2, 10):
+    #         print(f"\n> K = {k}")
+    #         base_fname_knn.set_knn_opts(k=k)
+    #         run_cal_clf("knn", n, cal_ds, base_fname_knn, n_neighbors=k)
+
+    # print("=================== SVC =====================\n")
+    # base_fname_svm = SavefileName("CAL", "svc")
+    # for n in range(1, 6):
+    #     run_cal_clf("svc", n, cal_ds, base_fname_svm, probability=True)
+
+    # print("================ KNN with DISTANCE ==================\n")
+    # base_fname_knn = SavefileName("CAL", "knn")
+
+    # for n in range(1, 6):
+    #     for k in range(2, 10):
+    #         print(f"\n> K = {k}")
+    #         base_fname_knn.set_knn_opts(k=k, weights="distance")
+    #         run_cal_clf("knn", n, cal_ds, base_fname_knn, n_neighbors=k, weights="distance")
+
+    # print("================== RANDOM FOREST =====================\n")
+    # base_fname_rf = SavefileName("CAL", "rf")
+    # for n in range(3, 6):
+    #     for ne in [100, 200, 300, 400, 500]:
+    #         base_fname_rf.set_rf_opts(n_estimators=ne)
+    #         run_cal_clf("rf", n, cal_ds, base_fname_rf, n_estimators=ne)
+
+    # print("================== MULTI-LAYER PERCEPTRON =====================\n")
+    # base_fname_mlp = SavefileName("CAL", "mlp")
+    # for n in range(1, 6):
+    #     for n_neurons in [100, 200, 300, 400, 500]:
+    #         for i in range(1,3):
+    #             hl = [n_neurons] * i
+    #             base_fname_mlp.set_mlp_opts(hidden_layer_sizes=hl)
+    #             run_cal_clf("mlp", n, cal_ds, base_fname_mlp, hidden_layer_sizes=hl, solver="lbfgs")
+    #     run_cal_clf("mlp", n, cal_ds, base_fname_mlp)

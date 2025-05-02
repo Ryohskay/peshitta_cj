@@ -76,6 +76,14 @@ def parse_clf_configs(req: LocalProxy) -> ClassifierConfig:
                     setattr(result, field.name, config_val)
     return result
 
+@app.route("/get_verses")
+def get_verses():
+    """Render the classifier results based on the request parameters."""
+    conf = parse_clf_configs(request)
+    cr = ClassifierResultsModel(conf, file_index, "./src/classifier/out")
+    cr.load_results()
+    print(cr.get_book_verses())
+    return render_template("verses.html", results=cr, label_map=ValToLabel)
 
 @app.route("/")
 def display_default():
@@ -99,22 +107,22 @@ def display_default():
             FnameExtraOpts.REMOVE_FROM_BOTH
         ],
     )
-    cr = ClassifierResultsModel(conf, file_index, "./src/classifier/out")
-    cr.load_results()
-    print(cr.get_book_verses())
-    return render_template("verses.html", results=cr, label_map=ValToLabel)
+    return get_verses(conf)
 
 # Code adapted from https://github.com/pallets/flask/blob/main/examples/javascript/js_example
 # (Accessed: 15 April 2025)
 @app.route("/get_classifier")
 def get_classifier():
+    """Render the classifier results based on the request parameters."""
     clf_configs = parse_clf_configs(request)
     print(clf_configs)
     files = file_index.match_files_by_config(clf_configs)
     for file in files:
         if file.is_clf_summary:
             cr = ClassifierResultsModel(clf_configs, file_index, "./src/classifier/out")
+            cr.load_results()
             return render_template("clf_summary.html", results=cr)
     # if no file is found, return 404
     abort(404)  # Not found
+    return None
     # code after abort is never executed

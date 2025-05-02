@@ -12,7 +12,7 @@ ALGORITHMS = {
     "knn": {"algo": KNeighborsClassifier, "description": "K-Nearest Neighbors"},
     "rf": {"algo": RandomForestClassifier, "description": "Random Forest"},
     "mlp": {"algo": MLPClassifier, "description": "Multi-layer Perceptron"},
-    "svc": {"algo": SVC, "description": "Support Vector Classifier"}
+    "svc": {"algo": SVC, "description": "Support Vector Classifier"},
 }
 
 

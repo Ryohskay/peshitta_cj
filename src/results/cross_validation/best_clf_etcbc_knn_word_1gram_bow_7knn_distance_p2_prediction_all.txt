@@ -1,0 +1,2 @@
+Best performing word-ngram classifier: {'n_window': 1, 'other_opts': {}, 'f_score': np.float64(0.6983877818994608)} with f-score 0.6983877818994608
+Best performing word-ngram classifier: {'n_window': 1, 'other_opts': {}, 'f_score': np.float64(0.6983877818994608)} with f-score 0.6983877818994608

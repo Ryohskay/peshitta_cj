@@ -1,0 +1,4 @@
+Best performing word-ngram classifier: {'n_window': 2} with f-score 0.85
+Best performing word-ngram classifier: {'n_window': 2} with f-score 0.85
+Best performing word-ngram classifier: {'n_window': 2} with f-score 0.85
+Best performing word-ngram classifier: {'n_window': 2} with f-score 0.85

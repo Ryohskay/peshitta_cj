@@ -2,18 +2,21 @@
 
 ## Purpose
 
-Categorise the OT Peshitta (a *Classical Syriac* Translation of the Old Testament) into:
+Categorise verses from OT Peshitta (a *Classical Syriac* Translation of the Old Testament) with unknown authorship, into books translated by Jews and by Christians, through training ML classifiers to assign probabilities.
 
-1. books translated from Hebrew by Jews and
-2. books translated from Greek (with some help of Hebrew references) by Christians.
+## See also
+
+- User Manual
+- Maintenance Manual
 
 ## Repository Structure
 
-- `./docs/`: Sphinx directory
-- `./src/`: python scripts and utility files 
- - `scraper/`: code to extract Peshitta texts from the [CAL (Comprehensive Aramaic Lexicon, Stephen A. Kaufman et al.)](https://cal.huc.edu/)
- - `classifier/`: code to build and evaluate classifiers for categorising Peshitta verses.1
-- `./cite_tf/`: Jupyter notebook files for experiments
+- `docs/`: Sphinx directory
+- `src/`: python scripts and utility files 
+  - `shared/`: utilities and constants to be shared among multiple modules
+  - `scraper/`: code to extract Peshitta texts from the [CAL (Comprehensive Aramaic Lexicon, Stephen A. Kaufman et al.)](https://cal.huc.edu/)
+  - `classifier/`: code to build and evaluate classifiers for categorising Peshitta verses.
+- `notebooks/`: Jupyter notebook files for experiments
 
 ## System Design
 
@@ -25,10 +28,3 @@ Categorise the OT Peshitta (a *Classical Syriac* Translation of the Old Testamen
 ## Author
 
 This project is a work by Ryosuke Nagata (to be) submitted as his dissertation project for Computing, MA., Hons. at the University of Aberdeen.
-
-## Notes
-- To run the classifier code, execute `python3 -m classifier.{module-name}` at the `./src/` directory.
-- To build the Sphinx documentation, run `make html` at the `./docs/` directory.
- - You can use `make autobuild` to run a web server that automatically rebuilds upon source file changes.
- - But for this, you need to install `sphinx-autobuild` dependency yourself: `pip install -U sphinx-autobuild`
- - In order to build the documentation locally, you also need the ReadTheDoc theme: `pip install -U sphinx-rtd-theme` 

@@ -65,6 +65,7 @@ def cross_validate_clf(
         if preprocessor is not None:
             classifier.set_preprocessor(preprocessor)
             # print(f"preprocessor: {preprocessor.__name__}")  # debug
+        print(f"n={classifier.n}, classifier={classifier.algo.__class__.__name__}")
         _, _, _, fb = cross_validate(
             classifier,
             ds.train.get_samples(),
@@ -176,18 +177,18 @@ def find_best_clf(
     )
 
     # find the best performing classifier for the word n-grams
-    max_idx, max_w_fscore, configs = cross_validate_clf(
+    max_idx, max_w_fscore, w_configs = cross_validate_clf(
         algo, n_window_max, ds, identity, preprocessor
     )
-    n_window = configs[max_idx]["n_window"]
+    n_window = w_configs[max_idx]["n_window"]
     # Save configs for the best performing classifier
     msg = (
         "Best performing word-ngram classifier: "
-        + f"{configs[max_idx]} with f-score {max_c_fscore}"
+        + f"{w_configs[max_idx]} with f-score {max_w_fscore}"
     )
     base_fname.ext = "txt"
     base_fname.set_ngram_opts(
-        n=configs[max_idx]["n_window"], is_char_level=False
+        n=w_configs[max_idx]["n_window"], is_char_level=False
     )
     local_save = local_save_dir / ("best_clf_" + base_fname.get_fname())
     with local_save.open("a+", encoding="utf-8") as f:
@@ -225,145 +226,134 @@ if __name__ == "__main__":
     n_max = 6
 
     print("> ETCBC")
-    print("\n================== MNB RESULTS================")
-    clf_alias = "mnb"
-    base_fname_mnb = SavefileName("ETCBC", clf_alias)
-    find_best_clf(clf_alias, n_max, etcbc_ds, base_fname_mnb)
+    # print("\n================== MNB RESULTS================")
+    # clf_alias = "mnb"
+    # base_fname_mnb = SavefileName("ETCBC", clf_alias)
+    # find_best_clf(clf_alias, n_max, etcbc_ds, base_fname_mnb)
 
-    print("\n============== K-NEAREST NEIGHBOURS: UNIFORM ==================\n")
-    base_fname_knn = SavefileName("ETCBC", "knn")
-    max_char_scores = []
-    max_word_scores = []
-    for k in range(3, 10):
-        base_fname_knn.set_knn_opts(k=k)
-        print(f"\nKNN Classifier with k={k}")
-        max_char_score, max_w_score = find_best_clf(
-            "knn", n_max, etcbc_ds, base_fname_knn, n_neighbors=k
-        )
-        max_char_scores.append(max_char_score)
-        max_word_scores.append(max_w_score)
-    argmax_char = np.argmax(max_char_scores)
-    argmax_word = np.argmax(max_word_scores)
-    print(
-        f"\nBest char n-gram KNN classifier: {max_char_scores[argmax_char]} "
-        + f"with k={argmax_char + 1}"
-    )
-    print(
-        f"\nBest word n-gram KNN classifier: {max_word_scores[argmax_word]} "
-        + f"with k={argmax_word + 1}"
-    )
+    # print("\n============== K-NEAREST NEIGHBOURS: UNIFORM ==================\n")
+    # base_fname_knn = SavefileName("ETCBC", "knn")
+    # max_char_scores = []
+    # max_word_scores = []
+    # for k in range(3, 10):
+    #     base_fname_knn.set_knn_opts(k=k)
+    #     print(f"\nKNN Classifier with k={k}")
+    #     max_char_score, max_w_score = find_best_clf(
+    #         "knn", n_max, etcbc_ds, base_fname_knn, n_neighbors=k
+    #     )
+    #     max_char_scores.append(max_char_score)
+    #     max_word_scores.append(max_w_score)
+    # argmax_char = np.argmax(max_char_scores)
+    # argmax_word = np.argmax(max_word_scores)
+    # print(
+    #     f"\nBest char n-gram KNN classifier: {max_char_scores[argmax_char]} "
+    #     + f"with k={argmax_char + 1}"
+    # )
+    # print(
+    #     f"\nBest word n-gram KNN classifier: {max_word_scores[argmax_word]} "
+    #     + f"with k={argmax_word + 1}"
+    # )
 
-    print("\n============== K-NEAREST NEIGHBOURS: DISTANCE =================\n")
-    base_fname_knn = SavefileName("ETCBC", "knn")
-    max_char_scores = []
-    max_word_scores = []
-    for k in range(3, 10):
-        base_fname_knn.set_knn_opts(k=k, weights="distance")
-        print(f"\nKNN Classifier with k={k}")
-        max_char_score, max_w_score = find_best_clf(
-            "knn",
-            n_max,
-            etcbc_ds,
-            base_fname_knn,
-            n_neighbors=k,
-            weights="distance",
-        )
-        max_char_scores.append(max_char_score)
-        max_word_scores.append(max_w_score)
-    argmax_char = np.argmax(max_char_scores)
-    argmax_word = np.argmax(max_word_scores)
-    print(
-        f"\nBest char n-gram KNN classifier: {max_char_scores[argmax_char]} "
-        + f"with k={argmax_char + 1}"
-    )
-    print(
-        f"\nBest word n-gram KNN classifier: {max_word_scores[argmax_word]} "
-        + f"with k={argmax_word + 1}"
-    )
+    # print("\n============== K-NEAREST NEIGHBOURS: DISTANCE =================\n")
+    # base_fname_knn = SavefileName("ETCBC", "knn")
+    # max_char_scores = []
+    # max_word_scores = []
+    # for k in range(3, 10):
+    #     base_fname_knn.set_knn_opts(k=k, weights="distance")
+    #     print(f"\nKNN Classifier with k={k}")
+    #     max_char_score, max_w_score = find_best_clf(
+    #         "knn",
+    #         n_max,
+    #         etcbc_ds,
+    #         base_fname_knn,
+    #         n_neighbors=k,
+    #         weights="distance",
+    #     )
+    #     max_char_scores.append(max_char_score)
+    #     max_word_scores.append(max_w_score)
+    # argmax_char = np.argmax(max_char_scores)
+    # argmax_word = np.argmax(max_word_scores)
+    # print(
+    #     f"\nBest char n-gram KNN classifier: {max_char_scores[argmax_char]} "
+    #     + f"with k={argmax_char + 1}"
+    # )
+    # print(
+    #     f"\nBest word n-gram KNN classifier: {max_word_scores[argmax_word]} "
+    #     + f"with k={argmax_word + 1}"
+    # )
 
-    print("\n=========================== RANDOM FOREST =====================\n")
-    base_fname_rf = SavefileName("ETCBC", "rf")
-    max_char_scores = []
-    max_word_scores = []
-    for n_tree in range(100, 501, 100):
-        base_fname_rf.set_rf_opts(n_estimators=n_tree)
-        print(f"\nRandom Forest Classifier with {n_tree} trees")
-        max_char_score, max_w_score = find_best_clf(
-            "rf", n_max, etcbc_ds, base_fname_rf, n_estimators=n_tree
-        )
-        max_char_scores.append(max_char_score)
-        max_word_scores.append(max_w_score)
-    argmax_char = np.argmax(max_char_scores)
-    argmax_word = np.argmax(max_word_scores)
-    print(
-        "\nBest char n-gram Random Forest classifier: "
-        + f"{max_char_scores[argmax_char]} with n_estimators="
-        + f"{list(range(100, 501, 100))[argmax_char]}"
-    )
-    print(
-        "\nBest word n-gram Random Forest classifier: "
-        + f"{max_word_scores[argmax_word]} with "
-        + f"n_estimators={list(range(100, 501, 100))[argmax_char]}"
-    )
+    # print("\n=========================== RANDOM FOREST =====================\n")
+    # base_fname_rf = SavefileName("ETCBC", "rf")
+    # max_char_scores = []
+    # max_word_scores = []
+    # for n_tree in range(100, 501, 100):
+    #     base_fname_rf.set_rf_opts(n_estimators=n_tree)
+    #     print(f"\nRandom Forest Classifier with {n_tree} trees")
+    #     max_char_score, max_w_score = find_best_clf(
+    #         "rf", n_max, etcbc_ds, base_fname_rf, n_estimators=n_tree
+    #     )
+    #     max_char_scores.append(max_char_score)
+    #     max_word_scores.append(max_w_score)
+    # argmax_char = np.argmax(max_char_scores)
+    # argmax_word = np.argmax(max_word_scores)
+    # print(
+    #     "\nBest char n-gram Random Forest classifier: "
+    #     + f"{max_char_scores[argmax_char]} with n_estimators="
+    #     + f"{list(range(100, 501, 100))[argmax_char]}"
+    # )
+    # print(
+    #     "\nBest word n-gram Random Forest classifier: "
+    #     + f"{max_word_scores[argmax_word]} with "
+    #     + f"n_estimators={list(range(100, 501, 100))[argmax_char]}"
+    # )
 
     print("\n===================SVC====================\n")
     base_fname_svc = SavefileName("ETCBC", "svc")
-    max_char_scores = []
-    max_word_scores = []
-    for c in [0.1, 1, 10, 100]:
-        base_fname_svc.set_svc_opts(c=c)
-        print(f"\nSVC Classifier with C={c}")
-        max_char_score, max_w_score = find_best_clf(
-            "svc", n_max, etcbc_ds, base_fname_svc, c=c
-        )
-        max_char_scores.append(max_char_score)
-        max_word_scores.append(max_w_score)
-    argmax_char = np.argmax(max_char_scores)
-    argmax_word = np.argmax(max_word_scores)
-    print(
-        f"\nBest char n-gram SVC classifier: {max_char_scores[argmax_char]} "
-        + f"with C={[0.1, 1, 10, 100][argmax_char]}"
+    max_char_score, max_word_score = find_best_clf(
+        "svc", n_max, etcbc_ds, base_fname_svc, probability=True
     )
     print(
-        f"\nBest word n-gram SVC classifier: {max_word_scores[argmax_word]} "
-        + f"with C={[0.1, 1, 10, 100][argmax_word]}"
+        f"\nBest char n-gram SVC classifier: {max_char_score}\n"
+    )
+    print(
+        f"\nBest word n-gram SVC classifier: {max_word_score}\n"
     )
 
-    print("\n=================MLP====================\n")
-    base_fname_mlp = SavefileName("ETCBC", "mlp")
-    percepts = [10, 50, 100, 200, 500]
-    max_all_char_scores = []
-    max_all_word_scores = []
-    best_char_percepts_idx = []
-    best_word_percepts_idx = []
-    for n_layers in [1, 2, 3]:
-        max_char_scores = []
-        max_word_scores = []
-        for h in percepts:
-            base_fname_mlp.set_mlp_opts(hidden_layer_sizes=(h,))
-            print(f"\nMLP Classifier with {h} hidden units")
-            max_char_score, max_w_score = find_best_clf(
-                "mlp",
-                n_max,
-                etcbc_ds,
-                base_fname_mlp,
-                hidden_layer_sizes=[h] * n_layers,
-            )
-            max_char_scores.append(max_char_score)
-            max_word_scores.append(max_w_score)
-        best_char_percepts_idx.append(np.argmax(max_char_scores))
-        best_word_percepts_idx.append(np.argmax(max_word_scores))
-        max_all_char_scores.append(np.max(max_char_scores))
-        max_all_word_scores.append(np.max(max_word_scores))
-    argmax_char = np.argmax(max_all_char_scores)
-    argmax_word = np.argmax(max_all_word_scores)
-    print(
-        f"\nBest char n-gram MLP classifier: {max_all_char_scores[argmax_char]}"
-        + f" with {percepts[best_char_percepts_idx[argmax_char]]} hidden units"
-        + f" and {best_char_percepts_idx[argmax_char] + 1} layers"
-    )
-    print(
-        f"\nBest word n-gram MLP classifier: {max_all_word_scores[argmax_word]}"
-        + f" with {percepts[best_word_percepts_idx[argmax_word]]} hidden units "
-        + f"and {best_word_percepts_idx[argmax_word] + 1} layers"
-    )
+    # print("\n=================MLP====================\n")
+    # base_fname_mlp = SavefileName("ETCBC", "mlp")
+    # percepts = [10, 50, 100, 200, 500]
+    # max_all_char_scores = []
+    # max_all_word_scores = []
+    # best_char_percepts_idx = []
+    # best_word_percepts_idx = []
+    # for n_layers in [1, 2, 3]:
+    #     max_char_scores = []
+    #     max_word_scores = []
+    #     for h in percepts:
+    #         base_fname_mlp.set_mlp_opts(hidden_layer_sizes=(h,))
+    #         print(f"\nMLP Classifier with {h} hidden units")
+    #         max_char_score, max_w_score = find_best_clf(
+    #             "mlp",
+    #             n_max,
+    #             etcbc_ds,
+    #             base_fname_mlp,
+    #             hidden_layer_sizes=[h] * n_layers,
+    #         )
+    #         max_char_scores.append(max_char_score)
+    #         max_word_scores.append(max_w_score)
+    #     best_char_percepts_idx.append(np.argmax(max_char_scores))
+    #     best_word_percepts_idx.append(np.argmax(max_word_scores))
+    #     max_all_char_scores.append(np.max(max_char_scores))
+    #     max_all_word_scores.append(np.max(max_word_scores))
+    # argmax_char = np.argmax(max_all_char_scores)
+    # argmax_word = np.argmax(max_all_word_scores)
+    # print(
+    #     f"\nBest char n-gram MLP classifier: {max_all_char_scores[argmax_char]}"
+    #     + f" with {percepts[best_char_percepts_idx[argmax_char]]} hidden units"
+    #     + f" and {best_char_percepts_idx[argmax_char] + 1} layers"
+    # )
+    # print(
+    #     f"\nBest word n-gram MLP classifier: {max_all_word_scores[argmax_word]}"
+    #     + f" with {percepts[best_word_percepts_idx[argmax_word]]} hidden units "
+    #     + f"and {best_word_percepts_idx[argmax_word] + 1} layers"
+    # )

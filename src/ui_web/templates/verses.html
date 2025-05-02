@@ -1,23 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-    <p>
-        Classifier Info:
-        <a href="{{ url_for('get_classifier', name=results.config.name, origin=results.config.origin, is_n_gram=results.config.is_n_gram, n=results.config.n, is_bow=results.config.is_bow, is_char_level=results.config.is_char_level, extra_opts=results.config.extra_opts) }}">
+    <p class="mt-8">
+        About this classifier:
+        <a class="text-blue-600 underline"
+            href="{{ url_for('get_classifier', name=results.config.name, origin=results.config.origin, is_n_gram=results.config.is_n_gram, n=results.config.n, is_bow=results.config.is_bow, is_char_level=results.config.is_char_level, knn_k=results.config.knn_k, knn_weights=results.config.knn_weights, knn_minkowski_p=results.config.knn_minkowski_p,  n_estimators=results.config.n_estimators, extra_opts=results.config.extra_opts) }}">
             {{ results.config.name }}
         </a>
     </p>
-    {% for book_verses in results.get_book_verses() %}
-        <h2>Book: {{ book_verses["book_name"] }}</h2>
+    {% set result_book_verses = results.get_book_verses() %}
+    <div class="my-5">
+        <h3>Books</h3>
+        <ul class="list-disc">
+        {% for book_verses in result_book_verses %}
+            <li class="ml-4"><a class="text-blue-600 underline" href="#{{ book_verses['book_name'] }}">{{ book_verses['book_name'] }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% for book_verses in result_book_verses %}
+        <h2 class="mt-5" id="{{ book_verses['book_name'] }}">Book: {{ book_verses["book_name"] }}</h2>
         {% for i in range(book_verses["verses"] | length) %}
             <div class="border-3">
-                <p>Verse</p>
+                <p>{{ book_verses["verses"][i].reference }}</p>
                 <p dir="rtl" lang="syc-Syre" translate="no">
                     <!-- Classical Syriac text in Estrangelo script. -->
                     {{ " ".join(book_verses["verses"][i].get_syriac_words()) }}
                 </p>
-                <p>
-                    {{ book_verses["verses"][i].reference }}
-                </p>
+                <div>
+                    <ul>
+                        <li>Jewish: {{ "{:.05f}".format(book_verses["verse_probas"][i][0]) }}</li>
+                        <li>Christian: {{ "{:.05f}".format(book_verses["verse_probas"][i][1]) }}</li>
+                    </ul>
+                </div>
             </div>
         {% endfor %}
     {% endfor %}

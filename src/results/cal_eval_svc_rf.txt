@@ -1,0 +1,7 @@
+Loading dataset(s) from: /Users/ryohskay/Documents/uni/peshitta_cj/src/scraper/cal_results
+=================== SVC =====================
+
+
+================= char 1-gram ===================
+
+> Plain Classifier
