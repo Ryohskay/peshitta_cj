@@ -1,0 +1,301 @@
+Python 3.11.7
+Requirement already satisfied: pip in /home/u05rn21/venv/lib/python3.11/site-packages (25.1)
+Requirement already satisfied: accelerate>=0.12.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from -r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 1)) (1.6.0)
+Requirement already satisfied: torch>=1.3 in /home/u05rn21/venv/lib/python3.11/site-packages (from -r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (2.6.0)
+Requirement already satisfied: datasets>=2.14.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from -r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (3.5.1)
+Requirement already satisfied: sentencepiece!=0.1.92 in /home/u05rn21/venv/lib/python3.11/site-packages (from -r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 4)) (0.2.0)
+Requirement already satisfied: protobuf in /home/u05rn21/venv/lib/python3.11/site-packages (from -r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 5)) (6.30.2)
+Requirement already satisfied: evaluate in /home/u05rn21/venv/lib/python3.11/site-packages (from -r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 6)) (0.4.3)
+Requirement already satisfied: scikit-learn in /home/u05rn21/venv/lib/python3.11/site-packages (from -r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 7)) (1.6.1)
+Requirement already satisfied: numpy<3.0.0,>=1.17 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from accelerate>=0.12.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 1)) (2.1.0)
+Requirement already satisfied: packaging>=20.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from accelerate>=0.12.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 1)) (24.1)
+Requirement already satisfied: psutil in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from accelerate>=0.12.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 1)) (7.0.0)
+Requirement already satisfied: pyyaml in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from accelerate>=0.12.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 1)) (6.0.2)
+Requirement already satisfied: huggingface-hub>=0.21.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from accelerate>=0.12.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 1)) (0.30.2)
+Requirement already satisfied: safetensors>=0.4.3 in /home/u05rn21/venv/lib/python3.11/site-packages (from accelerate>=0.12.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 1)) (0.5.3)
+Requirement already satisfied: filelock in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (3.15.4)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (4.12.2)
+Requirement already satisfied: networkx in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (3.3)
+Requirement already satisfied: jinja2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (3.1.4)
+Requirement already satisfied: fsspec in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (2025.3.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (12.3.1.170)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.6.2 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (0.6.2)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (12.4.127)
+Requirement already satisfied: triton==3.2.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (3.2.0)
+Requirement already satisfied: sympy==1.13.1 in /home/u05rn21/venv/lib/python3.11/site-packages (from torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from sympy==1.13.1->torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (1.3.0)
+Requirement already satisfied: pyarrow>=15.0.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (20.0.0)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (0.3.8)
+Requirement already satisfied: pandas in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2.2.3)
+Requirement already satisfied: requests>=2.32.2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2.32.3)
+Requirement already satisfied: tqdm>=4.66.3 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (4.66.5)
+Requirement already satisfied: xxhash in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (3.5.0)
+Requirement already satisfied: multiprocess<0.70.17 in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (0.70.16)
+Requirement already satisfied: aiohttp in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (3.11.18)
+Requirement already satisfied: scipy>=1.6.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from scikit-learn->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 7)) (1.15.2)
+Requirement already satisfied: joblib>=1.2.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from scikit-learn->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 7)) (1.4.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from scikit-learn->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 7)) (3.6.0)
+Requirement already satisfied: aiohappyeyeballs>=2.3.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2.6.1)
+Requirement already satisfied: aiosignal>=1.1.2 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (1.3.2)
+Requirement already satisfied: attrs>=17.3.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (25.1.0)
+Requirement already satisfied: frozenlist>=1.1.1 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (1.6.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (6.4.3)
+Requirement already satisfied: propcache>=0.2.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (0.3.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (1.20.0)
+Requirement already satisfied: idna>=2.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from yarl<2.0,>=1.17.0->aiohttp->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (3.8)
+Requirement already satisfied: charset-normalizer<4,>=2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests>=2.32.2->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (3.3.2)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests>=2.32.2->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2.2.2)
+Requirement already satisfied: certifi>=2017.4.17 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests>=2.32.2->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2024.7.4)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from jinja2->torch>=1.3->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 2)) (2.1.5)
+Requirement already satisfied: python-dateutil>=2.8.2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from pandas->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from pandas->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2025.1)
+Requirement already satisfied: tzdata>=2022.7 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from pandas->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (2024.1)
+Requirement already satisfied: six>=1.5 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from python-dateutil>=2.8.2->pandas->datasets>=2.14.0->-r /home/u05rn21/peshitta_cj_ssh/src/neural/requirements.txt (line 3)) (1.16.0)
+Requirement already satisfied: numpy in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (2.1.0)
+Requirement already satisfied: transformers in /home/u05rn21/venv/lib/python3.11/site-packages (4.51.3)
+Requirement already satisfied: filelock in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from transformers) (3.15.4)
+Requirement already satisfied: huggingface-hub<1.0,>=0.30.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from transformers) (0.30.2)
+Requirement already satisfied: numpy>=1.17 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from transformers) (2.1.0)
+Requirement already satisfied: packaging>=20.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from transformers) (24.1)
+Requirement already satisfied: pyyaml>=5.1 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from transformers) (6.0.2)
+Requirement already satisfied: regex!=2019.12.17 in /home/u05rn21/venv/lib/python3.11/site-packages (from transformers) (2024.11.6)
+Requirement already satisfied: requests in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from transformers) (2.32.3)
+Requirement already satisfied: tokenizers<0.22,>=0.21 in /home/u05rn21/venv/lib/python3.11/site-packages (from transformers) (0.21.1)
+Requirement already satisfied: safetensors>=0.4.3 in /home/u05rn21/venv/lib/python3.11/site-packages (from transformers) (0.5.3)
+Requirement already satisfied: tqdm>=4.27 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from transformers) (4.66.5)
+Requirement already satisfied: fsspec>=2023.5.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from huggingface-hub<1.0,>=0.30.0->transformers) (2025.3.0)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from huggingface-hub<1.0,>=0.30.0->transformers) (4.12.2)
+Requirement already satisfied: charset-normalizer<4,>=2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests->transformers) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests->transformers) (3.8)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests->transformers) (2.2.2)
+Requirement already satisfied: certifi>=2017.4.17 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests->transformers) (2024.7.4)
+Requirement already satisfied: datasets in /home/u05rn21/venv/lib/python3.11/site-packages (3.5.1)
+Requirement already satisfied: filelock in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets) (3.15.4)
+Requirement already satisfied: numpy>=1.17 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets) (2.1.0)
+Requirement already satisfied: pyarrow>=15.0.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets) (20.0.0)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets) (0.3.8)
+Requirement already satisfied: pandas in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets) (2.2.3)
+Requirement already satisfied: requests>=2.32.2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets) (2.32.3)
+Requirement already satisfied: tqdm>=4.66.3 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets) (4.66.5)
+Requirement already satisfied: xxhash in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets) (3.5.0)
+Requirement already satisfied: multiprocess<0.70.17 in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets) (0.70.16)
+Requirement already satisfied: fsspec<=2025.3.0,>=2023.1.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets) (2025.3.0)
+Requirement already satisfied: aiohttp in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets) (3.11.18)
+Requirement already satisfied: huggingface-hub>=0.24.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from datasets) (0.30.2)
+Requirement already satisfied: packaging in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets) (24.1)
+Requirement already satisfied: pyyaml>=5.1 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from datasets) (6.0.2)
+Requirement already satisfied: aiohappyeyeballs>=2.3.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets) (2.6.1)
+Requirement already satisfied: aiosignal>=1.1.2 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets) (1.3.2)
+Requirement already satisfied: attrs>=17.3.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from aiohttp->datasets) (25.1.0)
+Requirement already satisfied: frozenlist>=1.1.1 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets) (1.6.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets) (6.4.3)
+Requirement already satisfied: propcache>=0.2.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets) (0.3.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in /home/u05rn21/venv/lib/python3.11/site-packages (from aiohttp->datasets) (1.20.0)
+Requirement already satisfied: idna>=2.0 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from yarl<2.0,>=1.17.0->aiohttp->datasets) (3.8)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from huggingface-hub>=0.24.0->datasets) (4.12.2)
+Requirement already satisfied: charset-normalizer<4,>=2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests>=2.32.2->datasets) (3.3.2)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests>=2.32.2->datasets) (2.2.2)
+Requirement already satisfied: certifi>=2017.4.17 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from requests>=2.32.2->datasets) (2024.7.4)
+Requirement already satisfied: python-dateutil>=2.8.2 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from pandas->datasets) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from pandas->datasets) (2025.1)
+Requirement already satisfied: tzdata>=2022.7 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from pandas->datasets) (2024.1)
+Requirement already satisfied: six>=1.5 in /opt/software/uoa/python-pkgs/3.11/pypi/lib/python3.11/site-packages (from python-dateutil>=2.8.2->pandas->datasets) (1.16.0)
+05/01/2025 01:23:50 - WARNING - __main__ - Process rank: 0, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+05/01/2025 01:23:50 - INFO - __main__ - Training/evaluation parameters TrainingArguments(
+_n_gpu=0,
+accelerator_config={'split_batches': False, 'dispatch_batches': None, 'even_batches': True, 'use_seedable_sampler': True, 'non_blocking': False, 'gradient_accumulation_kwargs': None, 'use_configured_state': False},
+adafactor=False,
+adam_beta1=0.9,
+adam_beta2=0.999,
+adam_epsilon=1e-08,
+auto_find_batch_size=False,
+average_tokens_across_devices=False,
+batch_eval_metrics=False,
+bf16=False,
+bf16_full_eval=False,
+data_seed=None,
+dataloader_drop_last=False,
+dataloader_num_workers=0,
+dataloader_persistent_workers=False,
+dataloader_pin_memory=True,
+dataloader_prefetch_factor=None,
+ddp_backend=None,
+ddp_broadcast_buffers=None,
+ddp_bucket_cap_mb=None,
+ddp_find_unused_parameters=None,
+ddp_timeout=1800,
+debug=[],
+deepspeed=None,
+disable_tqdm=False,
+do_eval=True,
+do_predict=False,
+do_train=True,
+eval_accumulation_steps=None,
+eval_delay=0,
+eval_do_concat_batches=True,
+eval_on_start=False,
+eval_steps=None,
+eval_strategy=IntervalStrategy.NO,
+eval_use_gather_object=False,
+fp16=False,
+fp16_backend=auto,
+fp16_full_eval=False,
+fp16_opt_level=O1,
+fsdp=[],
+fsdp_config={'min_num_params': 0, 'xla': False, 'xla_fsdp_v2': False, 'xla_fsdp_grad_ckpt': False},
+fsdp_min_num_params=0,
+fsdp_transformer_layer_cls_to_wrap=None,
+full_determinism=False,
+gradient_accumulation_steps=1,
+gradient_checkpointing=False,
+gradient_checkpointing_kwargs=None,
+greater_is_better=None,
+group_by_length=False,
+half_precision_backend=auto,
+hub_always_push=False,
+hub_model_id=None,
+hub_private_repo=None,
+hub_strategy=HubStrategy.EVERY_SAVE,
+hub_token=<HUB_TOKEN>,
+ignore_data_skip=False,
+include_for_metrics=[],
+include_inputs_for_metrics=False,
+include_num_input_tokens_seen=False,
+include_tokens_per_second=False,
+jit_mode_eval=False,
+label_names=None,
+label_smoothing_factor=0.0,
+learning_rate=5e-05,
+length_column_name=length,
+load_best_model_at_end=False,
+local_rank=0,
+log_level=passive,
+log_level_replica=warning,
+log_on_each_node=True,
+logging_dir=/home/u05rn21/test_mlm/runs/May01_01-23-50_compute05.cluster.local,
+logging_first_step=False,
+logging_nan_inf_filter=True,
+logging_steps=500,
+logging_strategy=IntervalStrategy.STEPS,
+lr_scheduler_kwargs={},
+lr_scheduler_type=SchedulerType.LINEAR,
+max_grad_norm=1.0,
+max_steps=-1,
+metric_for_best_model=None,
+mp_parameters=,
+neftune_noise_alpha=None,
+no_cuda=False,
+num_train_epochs=3.0,
+optim=OptimizerNames.ADAMW_TORCH,
+optim_args=None,
+optim_target_modules=None,
+output_dir=/home/u05rn21/test_mlm,
+overwrite_output_dir=False,
+past_index=-1,
+per_device_eval_batch_size=8,
+per_device_train_batch_size=8,
+prediction_loss_only=False,
+push_to_hub=False,
+push_to_hub_model_id=None,
+push_to_hub_organization=None,
+push_to_hub_token=<PUSH_TO_HUB_TOKEN>,
+ray_scope=last,
+remove_unused_columns=True,
+report_to=[],
+restore_callback_states_from_checkpoint=False,
+resume_from_checkpoint=None,
+run_name=/home/u05rn21/test_mlm,
+save_on_each_node=False,
+save_only_model=False,
+save_safetensors=True,
+save_steps=500,
+save_strategy=SaveStrategy.STEPS,
+save_total_limit=None,
+seed=42,
+skip_memory_metrics=True,
+tf32=None,
+torch_compile=False,
+torch_compile_backend=None,
+torch_compile_mode=None,
+torch_empty_cache_steps=None,
+torchdynamo=None,
+tp_size=0,
+tpu_metrics_debug=False,
+tpu_num_cores=None,
+use_cpu=False,
+use_ipex=False,
+use_legacy_prediction_loop=False,
+use_liger_kernel=False,
+use_mps_device=False,
+warmup_ratio=0.0,
+warmup_steps=0,
+weight_decay=0.0,
+)
+05/01/2025 01:23:51 - INFO - datasets.builder - Using custom data configuration default-e56abeef951bba85
+05/01/2025 01:23:51 - INFO - datasets.info - Loading Dataset Infos from /home/u05rn21/venv/lib/python3.11/site-packages/datasets/packaged_modules/text
+05/01/2025 01:23:51 - INFO - datasets.builder - Generating dataset text (/home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99)
+05/01/2025 01:23:51 - INFO - datasets.builder - Downloading and preparing dataset text/default to /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99...
+05/01/2025 01:23:51 - INFO - datasets.download.download_manager - Downloading took 0.0 min
+05/01/2025 01:23:51 - INFO - datasets.download.download_manager - Checksum Computation took 0.0 min
+05/01/2025 01:23:51 - INFO - datasets.builder - Generating train split
+05/01/2025 01:23:51 - INFO - datasets.utils.info_utils - Unable to verify splits sizes.
+05/01/2025 01:23:51 - INFO - datasets.builder - Dataset text downloaded and prepared to /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99. Subsequent calls will reuse this data.
+05/01/2025 01:23:51 - INFO - datasets.builder - Using custom data configuration default-e56abeef951bba85
+05/01/2025 01:23:51 - INFO - datasets.info - Loading Dataset Infos from /home/u05rn21/venv/lib/python3.11/site-packages/datasets/packaged_modules/text
+05/01/2025 01:23:51 - INFO - datasets.builder - Overwrite dataset info from restored data version if exists.
+05/01/2025 01:23:51 - INFO - datasets.info - Loading Dataset info from /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99
+05/01/2025 01:23:51 - INFO - datasets.builder - Found cached dataset text (/home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99)
+05/01/2025 01:23:51 - INFO - datasets.info - Loading Dataset info from /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99
+05/01/2025 01:23:52 - INFO - datasets.builder - Using custom data configuration default-e56abeef951bba85
+05/01/2025 01:23:52 - INFO - datasets.info - Loading Dataset Infos from /home/u05rn21/venv/lib/python3.11/site-packages/datasets/packaged_modules/text
+05/01/2025 01:23:52 - INFO - datasets.builder - Overwrite dataset info from restored data version if exists.
+05/01/2025 01:23:52 - INFO - datasets.info - Loading Dataset info from /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99
+05/01/2025 01:23:52 - INFO - datasets.builder - Found cached dataset text (/home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99)
+05/01/2025 01:23:52 - INFO - datasets.info - Loading Dataset info from /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99
+05/01/2025 01:23:55 - WARNING - huggingface_hub.file_download - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+05/01/2025 01:24:19 - WARNING - huggingface_hub.file_download - Error while downloading from https://huggingface.co/FacebookAI/roberta-base/resolve/main/model.safetensors: HTTPSConnectionPool(host='cas-bridge.xethub.hf.co', port=443): Read timed out.
+Trying to resume download...
+05/01/2025 01:24:29 - INFO - datasets.arrow_dataset - Caching processed dataset at /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99/cache-72b8667ac36b9303.arrow
+05/01/2025 01:24:31 - INFO - datasets.arrow_dataset - Caching processed dataset at /home/u05rn21/.cache/huggingface/datasets/text/default-e56abeef951bba85/0.0.0/37eaf37ac90527a7fd768c94b312ee84f8815c9b7ac00acf81c1c364e8392f99/cache-693b848c18946ee8.arrow
+05/01/2025 01:27:52 - WARNING - accelerate.utils.other - Detected kernel version 3.10.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+{'loss': 3.1079, 'grad_norm': 13.73094367980957, 'learning_rate': 4.606962822936358e-05, 'epoch': 0.24}
+{'loss': 2.5896, 'grad_norm': 14.292491912841797, 'learning_rate': 4.213137996219282e-05, 'epoch': 0.47}
+{'loss': 2.3843, 'grad_norm': 15.154292106628418, 'learning_rate': 3.819313169502205e-05, 'epoch': 0.71}
+{'loss': 2.2615, 'grad_norm': 11.739945411682129, 'learning_rate': 3.425488342785129e-05, 'epoch': 0.95}
+{'loss': 2.1562, 'grad_norm': 12.056117057800293, 'learning_rate': 3.031663516068053e-05, 'epoch': 1.18}
+{'loss': 2.0616, 'grad_norm': 11.285852432250977, 'learning_rate': 2.6378386893509767e-05, 'epoch': 1.42}
+{'loss': 1.9804, 'grad_norm': 11.778940200805664, 'learning_rate': 2.2440138626339004e-05, 'epoch': 1.65}
+{'loss': 1.9442, 'grad_norm': 15.563035011291504, 'learning_rate': 1.850189035916824e-05, 'epoch': 1.89}
+{'loss': 1.9008, 'grad_norm': 12.969511032104492, 'learning_rate': 1.4563642091997482e-05, 'epoch': 2.13}
+{'loss': 1.83, 'grad_norm': 14.510946273803711, 'learning_rate': 1.0625393824826719e-05, 'epoch': 2.36}
+{'loss': 1.8217, 'grad_norm': 13.499445915222168, 'learning_rate': 6.687145557655955e-06, 'epoch': 2.6}
+{'loss': 1.7844, 'grad_norm': 16.37937355041504, 'learning_rate': 2.7488972904851925e-06, 'epoch': 2.84}
+{'train_runtime': 5641.7431, 'train_samples_per_second': 9.001, 'train_steps_per_second': 1.125, 'train_loss': 2.131142023155054, 'epoch': 3.0}
+***** train metrics *****
+  epoch                    =        3.0
+  total_flos               =  1990025GF
+  train_loss               =     2.1311
+  train_runtime            = 1:34:01.74
+  train_samples            =      16928
+  train_samples_per_second =      9.001
+  train_steps_per_second   =      1.125
+05/01/2025 03:01:55 - INFO - __main__ - *** Evaluate ***
+***** eval metrics *****
+  epoch                   =        3.0
+  eval_accuracy           =     0.5855
+  eval_loss               =      1.858
+  eval_runtime            = 0:00:54.76
+  eval_samples            =       1881
+  eval_samples_per_second =     34.348
+  eval_steps_per_second   =      4.309
+  perplexity              =     6.4111
