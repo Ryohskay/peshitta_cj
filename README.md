@@ -1,5 +1,7 @@
 # Peshitta CJ
 
+[GitHub](https://github.com/Ryohskay/peshitta_cj)
+
 ## Purpose
 
 Categorise verses from OT Peshitta (a *Classical Syriac* Translation of the Old Testament) with unknown authorship, into books translated by Jews and by Christians, through training ML classifiers to assign probabilities.
