@@ -1,6 +1,32 @@
+# BSD 2-Clause License
+
+# Copyright (c) 2025, Ryosuke Nagata
+
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""Load the classifier statistics from the summary files"""
 import json
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable, Literal, TypedDict
+from typing import Literal, TypedDict
 
 from src.classifier.fname_utils import SavefileName
 from src.classifier.result_utils import (
@@ -9,23 +35,16 @@ from src.classifier.result_utils import (
 
 
 class JsonifiedSummaryDict(TypedDict):
-    """TypedDict for the JSON summary file.
+    """TypedDict for the JSON summary file."""
 
-    Attributes:
-        n_gram_form: the n-gram form (word or char).
-        n: the n for n-grams.
-        top_ten_in_training: the top ten n-grams in the training set.
-        test_mislabel_percent: the mislabel percentages for the test set.
-        total_n_grams_parsed: the total number of n-grams parsed.
-        metrics: dictionary containing the metrics, of
-            :class:``src.classifier.result_utils.ResultStatsDict`` type.
-    """
-
-    n_gram_form: Literal["word", "char"]
-    n: int
-    total_n_grams_parsed: int
-    top_ten_in_training: list[tuple[Iterable[str], int]]
+    n_gram_form: Literal["word", "char"]  # the n-gram form (word or char).
+    n: int  # the n for n-grams.
+    total_n_grams_parsed: int  # the total number of n-grams parsed.
+    top_ten_in_training: list[tuple[Iterable[str], int]]  # the top ten
+    # the percentages of the mislabelled verses in the test set
     test_mislabel_percent: dict[str, float]
+    # dictionary containing the metrics, of
+    # :class:``src.classifier.result_utils.ResultStatsDict`` type.
     metrics: ResultStatsDict
 
 

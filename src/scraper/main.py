@@ -1,3 +1,27 @@
+# BSD 2-Clause License
+
+# Copyright (c) 2025, Ryosuke Nagata
+
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """The main scraping script to get Syriac texts from CAL."""
 
 import json
@@ -37,7 +61,7 @@ def get_lemma_line(markup_tag: Tag) -> str | None:
     # idk why but CAL places periods outside of any html tags,
     # which the HTML parser considers as a raw string under
     # the body tag.
-    in_tag_txt = re.sub("^\\.$", "", stripped)
+    in_tag_txt = re.sub("^\.$", "", stripped)
     if markup_tag.name is None and in_tag_txt != "":
         # if the content of body tag is not within any tag
         # but a raw string directly under body tag
@@ -76,7 +100,7 @@ def extract_lemma_annot(tag_txt: str) -> tuple[str | None, str | None]:
         lemma = split_line[0]
         # remove numbering appended to lemma, like "???#2"
         # and replace "@" in compound words with a space
-        lemma = re.sub("#\\d", "", lemma).replace("@", " ")
+        lemma = re.sub("#\d", "", lemma).replace("@", " ")
         # record the annotations if they exist
         if len(split_line) > 1:
             annot = " ".join(
@@ -192,7 +216,7 @@ if __name__ == "__main__":
                 stripped = str(table_data.text).strip()
                 # when the scraper reaches a new row on the table.
                 # add the verse identifier (e.g. "01:01")
-                verse_ref = re.match("\\d\\d:\\d\\d", stripped)
+                verse_ref = re.match("\d\d:\d\d", stripped)
                 if verse_ref is not None:
                     vid = verse_ref.group()
                     if normalise_cset(cset) == "S":
@@ -303,7 +327,8 @@ if __name__ == "__main__":
         # # format the data in a string of CSV format
         # formatted_data = (
         #         'Verse Ref. No.,Verse URL,Raw Text,'
-        #         + 'Lemmatised Text,Lemma Annotations\n'
+        #         + 'Lemmatised Text,Lemma Annotations
+'
         #         )
         # print(verse_annots)
         # for i in range(len(verses)):
@@ -315,7 +340,8 @@ if __name__ == "__main__":
         #             formatted_data
         #             + f'"Chapter {indices[0]} verse {indices[1]}",'
         #             + '"{verse_urls[i]}","{raw_txt_verse}",'
-        #             + '"{lemma_verse}","{annot_verse}"\n'
+        #             + '"{lemma_verse}","{annot_verse}"
+'
         #             )
 
         # Store the scraped lines into a csv file

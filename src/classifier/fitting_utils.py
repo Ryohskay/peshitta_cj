@@ -120,7 +120,7 @@ def make_vocab(
     return (n_gram_vocabs, n_gram_counters)
 
 
-def identity(input_data) -> object:  # noqa: ANN401
+def identity(input_data) -> object:
     """Identity function that returns the same thing as the input.
 
     Args:

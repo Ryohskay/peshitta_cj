@@ -28,13 +28,11 @@
 import json
 import logging
 from pathlib import Path
-import re
 from typing import Literal, TypedDict
 
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import NDArray
-from sklearn import base
 from sklearn.base import clone
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
@@ -443,14 +441,16 @@ def get_summary(
     n_gram_form = "word" if clf.n_gram_formatter == identity else "char"
     # percentage of mislabelled verses out of all supports per each class.
     if ot_mislab is not None:
-        ot_mislab_propo = (len(ot_mislab.mislabels)
-                            / len(test_split.get_labels(0)))
+        ot_mislab_propo = len(ot_mislab.mislabels) / len(
+            test_split.get_labels(0)
+        )
     else:
         ot_mislab_propo = 0.0
 
     if nt_mislab is not None:
-        nt_mislab_propo = (len(nt_mislab.mislabels)
-                            / len(test_split.get_labels(1)))
+        nt_mislab_propo = len(nt_mislab.mislabels) / len(
+            test_split.get_labels(1)
+        )
     else:
         nt_mislab_propo = 0.0
 
@@ -476,7 +476,11 @@ def evaluate_classifier(
     threshold: float = 0.5,
     base_save_fname: SavefileName | None = None,
 ) -> tuple[
-    ProbaPredictions, ProbaPredictions, Mislabels | None, Mislabels | None, ResultStats
+    ProbaPredictions,
+    ProbaPredictions,
+    Mislabels | None,
+    Mislabels | None,
+    ResultStats,
 ]:
     """Evaluate a classifier with provided test sets.
 
@@ -614,7 +618,13 @@ def eval_and_save(  # noqa: PLR0913
     # evaluate the classifier with the provided samples
     print(f"eval_and_save: {save_fname.get_fname()}")
     (ot_probas, nt_probas, ot_mislabels, nt_mislabels, results) = (
-        evaluate_classifier(clf, loaded.test, threshold=threshold, plot=do_plot, base_save_fname=save_fname)
+        evaluate_classifier(
+            clf,
+            loaded.test,
+            threshold=threshold,
+            plot=do_plot,
+            base_save_fname=save_fname,
+        )
     )
 
     # Configure and prepare save files' names
@@ -693,9 +703,7 @@ def cross_validate(
     print("> Cross-Validation <")
     skf_splitter = StratifiedKFold(n_splits=fold)
     if len(training_x) < fold:
-        msg = (
-            f"Cannot divide a list of length {len(training_x)} into {fold} parts!"
-        )
+        msg = f"Cannot divide a list of length {len(training_x)} into {fold} parts!"
         raise ValueError(msg)
     splits = skf_splitter.split(training_x, training_y)  # type: ignore[reportArgumentType]
     accs = []
@@ -726,8 +734,7 @@ def cross_validate(
             proba_c, test_verses, test_labels, threshold=threshold
         )
         acc, prec, rec, fone, _ = metricise(
-            test_labels,
-            y_all=predictions.predictions
+            test_labels, y_all=predictions.predictions
         )
         accs.append(acc)
         if len(prec) > len(label_data.ValToLabel):

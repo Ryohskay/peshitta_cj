@@ -29,7 +29,6 @@ from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
-from sklearn.base import BaseEstimator
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.eval_utils import (
@@ -41,11 +40,11 @@ from src.classifier.result_utils import Verse
 from src.classifier.textfabric_utils import load_etcbc_dataset
 from src.classifier.wrappers import BoWEstimator
 from src.shared import label_data
+from src.shared.classification_algos import get_algo_by_name
 from src.shared.etcbc_letters import (
     NON_CHARS_SYRIAC,
     NON_CHARS_TRANSLIT,
 )
-from src.shared.classification_algos import get_algo_by_name
 
 
 def csvify_etcbc(
@@ -205,13 +204,14 @@ def etcbc_eval_classifier(
         out_dir="./src/classifier/out/",
     )
 
+
 def run_etcbc_clf(
-            algo_alias: str,
-            n_window: int,
-            etcbc_ds: LoadedDataset,
-            base_fname: SavefileName,
-            **kwargs
-        ) -> None:
+    algo_alias: str,
+    n_window: int,
+    etcbc_ds: LoadedDataset,
+    base_fname: SavefileName,
+    **kwargs,
+) -> None:
     """Run the classifier with the ETCBC data.
 
     Args:
@@ -244,9 +244,7 @@ def run_etcbc_clf(
     # evaluate and save results
     save_fname_r = save_fname.copy()
     save_fname_r.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-    etcbc_eval_classifier(
-        clf_r, etcbc_ds, save_fname_r, remove_proper_nouns
-    )
+    etcbc_eval_classifier(clf_r, etcbc_ds, save_fname_r, remove_proper_nouns)
 
     # Remove a few common proper nouns from both training and test sets
     print("\nRemove common proper nouns from both training & test verses")
@@ -280,9 +278,7 @@ def run_etcbc_clf(
     # evaluate and save results
     save_fname_wr = save_fname_w.copy()
     save_fname_wr.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-    etcbc_eval_classifier(
-        clf_wr, etcbc_ds, save_fname_wr, remove_proper_nouns
-    )
+    etcbc_eval_classifier(clf_wr, etcbc_ds, save_fname_wr, remove_proper_nouns)
 
     # Remove a few common proper nouns from both training and test sets
     print("\nRemove common proper nouns from both training & test verses")
@@ -328,30 +324,46 @@ if __name__ == "__main__":
     for n in range(1, 6):
         run_etcbc_clf(clf_alias, n, etcbc_ds, base_fname_mnb)
 
-
-    print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS UNIFORM ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
+    print(
+        "\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS UNIFORM ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n"
+    )
     base_fname_knn = SavefileName("ETCBC", "knn")
     for n_window in range(1, 6):
         for k in range(2, 10):
             base_fname_knn.set_knn_opts(k=k)
             print(f"\nKNN Classifier with k={k} and n_window={n_window}")
-            run_etcbc_clf("knn", n_window, etcbc_ds, base_fname_knn,  n_neighbors=k)
+            run_etcbc_clf(
+                "knn", n_window, etcbc_ds, base_fname_knn, n_neighbors=k
+            )
 
-    print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS DISTANCE ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
+    print(
+        "\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS DISTANCE ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n"
+    )
     base_fname_knn = SavefileName("ETCBC", "knn")
     for n_window in range(1, 6):
         for k in range(2, 10):
             base_fname_knn.set_knn_opts(k=k, weights="distance")
             print(f"\nKNN Classifier with k={k} and n_window={n_window}")
-            run_etcbc_clf("knn", n_window, etcbc_ds, base_fname_knn,  n_neighbors=k, weights="distance")
+            run_etcbc_clf(
+                "knn",
+                n_window,
+                etcbc_ds,
+                base_fname_knn,
+                n_neighbors=k,
+                weights="distance",
+            )
 
     print("\n=========================== RANDOM FOREST =====================\n")
     base_fname_rf = SavefileName("ETCBC", "rf")
     for n_window in range(1, 6):
         for n_tree in range(100, 501, 100):
             base_fname_rf.set_rf_opts(n_estimators=n_tree)
-            print(f"\nRandom Forest Classifier with n_tree={n_tree} and n_window={n_window}")
-            run_etcbc_clf("rf", n_window, etcbc_ds, base_fname_rf, n_estimators=n_tree)
+            print(
+                f"\nRandom Forest Classifier with n_tree={n_tree} and n_window={n_window}"
+            )
+            run_etcbc_clf(
+                "rf", n_window, etcbc_ds, base_fname_rf, n_estimators=n_tree
+            )
 
     print("\n================== SVC ================")
     base_fname_mnb = SavefileName("ETCBC", "svc")

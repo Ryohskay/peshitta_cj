@@ -1,7 +1,7 @@
-src
-===
-
 .. toctree::
-   :maxdepth: 4
+    :maxdepth: 4
 
-   classifier
+    src.shared
+    src.classifier
+    src.scraper
+    src.ui_web

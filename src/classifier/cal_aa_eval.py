@@ -25,15 +25,11 @@
 
 """Authorship attribution using CAL data."""
 
-from email.mime import base
 import re
 from collections.abc import Callable
-from unittest.mock import Base
 
 import numpy as np
 from numpy.typing import NDArray
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.neighbors import KNeighborsClassifier
 
 from src.classifier.dataset_skeleton import DataSplit, LoadedDataset
 from src.classifier.eval_utils import (
@@ -204,132 +200,129 @@ def cal_eval_classifier(
         out_dir="./src/classifier/out/",
     )
 
+
 def run_cal_clf(
-        clf_alias: str,
-        n_window: int,
-        cal_ds: LoadedDataset,
-        base_fname: SavefileName,
-        **kwargs
+    clf_alias: str,
+    n_window: int,
+    cal_ds: LoadedDataset,
+    base_fname: SavefileName,
+    **kwargs,
 ):
-        algo = get_algo_by_name(clf_alias, **kwargs)
-        print(f"\n================= char {n_window}-gram ===================")
-        print("\n> Plain Classifier")
-        c_clf = BoWEstimator(algo, " ".join, n=n_window)
-        save_fname = base_fname.copy()
-        save_fname.set_ngram_opts(n=n_window, is_char_level=True)
+    algo = get_algo_by_name(clf_alias, **kwargs)
+    print(f"\n================= char {n_window}-gram ===================")
+    print("\n> Plain Classifier")
+    c_clf = BoWEstimator(algo, " ".join, n=n_window)
+    save_fname = base_fname.copy()
+    save_fname.set_ngram_opts(n=n_window, is_char_level=True)
 
-        # train and evaluate
-        cal_eval_classifier(c_clf, cal_ds, save_fname)
+    # train and evaluate
+    cal_eval_classifier(c_clf, cal_ds, save_fname)
 
-        print("\n> Remove PN & GN")
-        print(">> Remove PN & GN from the training set")
-        # Remove personal names and place names from the training data
-        # and train new classifiers
-        c_clf_r = BoWEstimator(algo, " ".join, n=n_window)
-        save_fname_npn = save_fname.copy()
-        save_fname_npn.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-        cal_eval_classifier(
-            c_clf_r, cal_ds, save_fname_npn, remove_proper_nouns
-        )
+    print("\n> Remove PN & GN")
+    print(">> Remove PN & GN from the training set")
+    # Remove personal names and place names from the training data
+    # and train new classifiers
+    c_clf_r = BoWEstimator(algo, " ".join, n=n_window)
+    save_fname_npn = save_fname.copy()
+    save_fname_npn.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
+    cal_eval_classifier(c_clf_r, cal_ds, save_fname_npn, remove_proper_nouns)
 
-        print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
+    print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
 
-        print(
-            "\n> Remove underscores marking proclitics, "
-            + "from both training & test sets"
-        )
-        c_clf_nus = BoWEstimator(algo, " ".join, n=n_window)
-        c_clf_nus.set_preprocessor(remove_underscores)
+    print(
+        "\n> Remove underscores marking proclitics, "
+        + "from both training & test sets"
+    )
+    c_clf_nus = BoWEstimator(algo, " ".join, n=n_window)
+    c_clf_nus.set_preprocessor(remove_underscores)
 
-        save_fname_nus = save_fname.copy()
-        save_fname_nus.add_extra_opts(
-            [FnameExtraOpts.REMOVE_UNDERSCORES, FnameExtraOpts.REMOVE_FROM_BOTH]
-        )
+    save_fname_nus = save_fname.copy()
+    save_fname_nus.add_extra_opts(
+        [FnameExtraOpts.REMOVE_UNDERSCORES, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
 
-        cal_eval_classifier(c_clf_nus, cal_ds, save_fname_nus)
+    cal_eval_classifier(c_clf_nus, cal_ds, save_fname_nus)
 
-        print("\n> Remove PN & GN")
-        print(">> Remove PN & GN from both training & test sets")
-        # Remove personal names and place names from
-        # both the training and test datasets
-        # and train new classifiers
-        c_clf_npn_both = BoWEstimator(algo, " ".join, n=n_window)
-        save_fname_npn_both = save_fname_npn.copy()
-        save_fname_npn_both.add_extra_opts([FnameExtraOpts.REMOVE_FROM_BOTH])
-        cal_eval_classifier(
-            c_clf_npn_both,
-            cal_ds,
-            save_fname_npn_both,
-            remove_proper_nouns,
-            map_to_both=True,
-        )
+    print("\n> Remove PN & GN")
+    print(">> Remove PN & GN from both training & test sets")
+    # Remove personal names and place names from
+    # both the training and test datasets
+    # and train new classifiers
+    c_clf_npn_both = BoWEstimator(algo, " ".join, n=n_window)
+    save_fname_npn_both = save_fname_npn.copy()
+    save_fname_npn_both.add_extra_opts([FnameExtraOpts.REMOVE_FROM_BOTH])
+    cal_eval_classifier(
+        c_clf_npn_both,
+        cal_ds,
+        save_fname_npn_both,
+        remove_proper_nouns,
+        map_to_both=True,
+    )
 
-        print("\n>> Remove PN, GN, underscores from both training & test sets")
-        # Remove personal names and place names from
-        # both the training and test datasets
-        # and train new classifiers
-        c_clf_rnus = BoWEstimator(algo, " ".join, n=n_window)
-        c_clf_rnus.set_preprocessor(remove_underscores)
+    print("\n>> Remove PN, GN, underscores from both training & test sets")
+    # Remove personal names and place names from
+    # both the training and test datasets
+    # and train new classifiers
+    c_clf_rnus = BoWEstimator(algo, " ".join, n=n_window)
+    c_clf_rnus.set_preprocessor(remove_underscores)
 
-        save_fname_rnus = save_fname_npn.copy()
-        save_fname_rnus.add_extra_opts(
-            [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
-        )
+    save_fname_rnus = save_fname_npn.copy()
+    save_fname_rnus.add_extra_opts(
+        [FnameExtraOpts.REMOVE_PROPN, FnameExtraOpts.REMOVE_FROM_BOTH]
+    )
 
-        cal_eval_classifier(
-            c_clf_rnus,
-            cal_ds,
-            save_fname_rnus,
-            remove_proper_nouns,
-            map_to_both=True,
-        )
+    cal_eval_classifier(
+        c_clf_rnus,
+        cal_ds,
+        save_fname_rnus,
+        remove_proper_nouns,
+        map_to_both=True,
+    )
 
-        print("\n=============== Word n-grams =================")
-        print("\n> Plain Classifier")
-        w_clf = BoWEstimator(algo, identity, n=n_window)
-        save_fname_w = base_fname.copy()
-        save_fname_w.set_ngram_opts(n=n_window, is_char_level=False)
+    print("\n=============== Word n-grams =================")
+    print("\n> Plain Classifier")
+    w_clf = BoWEstimator(algo, identity, n=n_window)
+    save_fname_w = base_fname.copy()
+    save_fname_w.set_ngram_opts(n=n_window, is_char_level=False)
 
-        # train and evaluate
-        cal_eval_classifier(w_clf, cal_ds, save_fname_w)
+    # train and evaluate
+    cal_eval_classifier(w_clf, cal_ds, save_fname_w)
 
-        print("\n> Remove PN & GN")
-        print(">> Remove PN & GN from the training set")
-        # Remove personal names and place names from the training data
-        # and train new classifiers
-        w_clf_r = BoWEstimator(algo, identity, n=n_window)
-        w_clf_r.set_preprocessor(remove_underscores)
+    print("\n> Remove PN & GN")
+    print(">> Remove PN & GN from the training set")
+    # Remove personal names and place names from the training data
+    # and train new classifiers
+    w_clf_r = BoWEstimator(algo, identity, n=n_window)
+    w_clf_r.set_preprocessor(remove_underscores)
 
-        save_fname_npn_w = save_fname_w.copy()
-        save_fname_npn_w.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
-        cal_eval_classifier(
-            w_clf_r, cal_ds, save_fname_npn, remove_proper_nouns
-        )
+    save_fname_npn_w = save_fname_w.copy()
+    save_fname_npn_w.add_extra_opts([FnameExtraOpts.REMOVE_PROPN])
+    cal_eval_classifier(w_clf_r, cal_ds, save_fname_npn, remove_proper_nouns)
 
-        print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
-        print("\n>> Remove PN, GN from both training & test sets")
-        # Remove personal names and place names from
-        # both the training and test datasets
-        # and train new classifiers
-        w_clf_rnus = BoWEstimator(algo, identity, n=n_window)
-        w_clf_rnus.set_preprocessor(remove_underscores)
+    print("\n!!!!!!BELOW REQUIRES DS-wide processing!!!!!!")
+    print("\n>> Remove PN, GN from both training & test sets")
+    # Remove personal names and place names from
+    # both the training and test datasets
+    # and train new classifiers
+    w_clf_rnus = BoWEstimator(algo, identity, n=n_window)
+    w_clf_rnus.set_preprocessor(remove_underscores)
 
-        save_fname_rnus_w = save_fname_npn_w.copy()
-        save_fname_rnus_w.add_extra_opts(
-            [
-                FnameExtraOpts.REMOVE_UNDERSCORES,
-                FnameExtraOpts.REMOVE_PROPN,
-                FnameExtraOpts.REMOVE_FROM_BOTH,
-            ]
-        )
+    save_fname_rnus_w = save_fname_npn_w.copy()
+    save_fname_rnus_w.add_extra_opts(
+        [
+            FnameExtraOpts.REMOVE_UNDERSCORES,
+            FnameExtraOpts.REMOVE_PROPN,
+            FnameExtraOpts.REMOVE_FROM_BOTH,
+        ]
+    )
 
-        cal_eval_classifier(
-            w_clf_rnus,
-            cal_ds,
-            save_fname_rnus_w,
-            remove_proper_nouns,
-            map_to_both=True,
-        )
+    cal_eval_classifier(
+        w_clf_rnus,
+        cal_ds,
+        save_fname_rnus_w,
+        remove_proper_nouns,
+        map_to_both=True,
+    )
 
 
 if __name__ == "__main__":
