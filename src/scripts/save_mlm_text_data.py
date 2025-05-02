@@ -95,13 +95,25 @@ def to_books_data(verses: list[Verse]) -> dict[str, list[Verse]]:
 
 if __name__ == "__main__":
     ot_verses = to_books_data(get_verses(OT_TARGETS))
-    nt_verses = to_books_data(get_verses(NT_TARGETS))
+    nt_verses = to_books_data(get_verses(NT_TARGETS, "etcbc/syrnt", "0.1"))
     print("OT")
     print(f"{len(ot_verses)} books")
-    with Path("src/neural/ot_mlm_data.json").open(encoding="utf-8") as fp:
-        json.dump(ot_verses, fp)
+    save_txt = ""
+    for book in ot_verses:
+        num_words = 0
+        for v in ot_verses[book]:
+            num_words += len(v.words)
+            save_txt += f"{' '.join(v.get_translit_words())}\n"
+        print(f"Book of {book}: {len(ot_verses[book])} verses / {num_words} words")        
+    Path("src/neural/data/ot_mlm_data.txt").write_text(save_txt, encoding="utf-8")
     
+    save_txt = ""
     print("NT")
     print(f"{len(nt_verses)} books")
-    with Path("src/neural/nt_mlm_data.json").open(encoding="utf-8") as fp:
-        json.dump(nt_verses, fp)
+    for book in nt_verses:
+        num_words = 0
+        for v in nt_verses[book]:
+            num_words += len(v.words)
+            save_txt += f"{' '.join(v.get_translit_words())}\n"    
+        print(f"Book of {book}: {len(nt_verses[book])} verses / {num_words} words")
+    Path("src/neural/data/nt_mlm_data.txt").write_text(save_txt, encoding="utf-8")

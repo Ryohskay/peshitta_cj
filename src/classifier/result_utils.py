@@ -27,7 +27,7 @@
 
 import logging
 from pathlib import Path
-from typing import Any, Literal, Protocol, TypedDict
+from typing import Literal, Protocol, TypedDict
 
 import numpy as np
 from numpy.typing import NDArray
@@ -121,7 +121,7 @@ class PeshittaWord:
         return value in {self.translit, self.syriac}
 
 
-class Verse(Any):
+class Verse():
     """Represents a verse in a biblical text.
 
     Attributes:
@@ -385,7 +385,7 @@ class BookMislabels:
         self.num_unk: int = 0  # number of verses mislabelled as unknown (-1)
 
 
-class Predictions(Any):
+class Predictions():
     """A dataclass to hold predictions by some classifier.
 
     Attributes:
@@ -633,7 +633,7 @@ class ProbaPredictions(Predictions):
         Path(save_file).write_text(data_str, encoding="utf-8")
 
 
-class Mislabels(Any):
+class Mislabels():
     """Wrapper of mislabelled results summary to facilitate human inspection.
 
     An instance of this class represents a group of mislabelled samples

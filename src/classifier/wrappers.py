@@ -26,7 +26,7 @@
 """Classes for general pipeline representation."""
 
 from collections.abc import Callable, Sequence
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Self
 
 from numpy.typing import NDArray
 
@@ -78,7 +78,7 @@ class Classifier(ClassifierMixin, BaseEstimator):
 
     def fit(
         self,
-        X: list[Any] | np.ndarray,
+        X: list | np.ndarray,
         y: list[int] | None = None,
     ) -> Self:
         """Fit a model on the provided data.
@@ -97,7 +97,7 @@ class Classifier(ClassifierMixin, BaseEstimator):
             return self.algo.fit(X)  # type: ignore[reportArgumentType]
         return self.algo.fit(X, y)  # type: ignore[reportArgumentType]
 
-    def predict(self, X: list[Any] | np.ndarray) -> list[Any] | np.ndarray:
+    def predict(self, X: list | np.ndarray) -> list | np.ndarray:
         """Predict on the provided data with the model.
 
         Args:
@@ -131,7 +131,7 @@ class ProbaClassifier(Classifier):
         super().__init__(clf)
 
     def predict_proba(
-        self, X: list[Any] | NDArray
+        self, X: list | NDArray
     ) -> list[list[float]] | NDArray:
         """Predict probabilities on the provided samples.
 

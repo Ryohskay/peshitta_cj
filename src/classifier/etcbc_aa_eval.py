@@ -329,13 +329,21 @@ if __name__ == "__main__":
         run_etcbc_clf(clf_alias, n, etcbc_ds, base_fname_mnb)
 
 
-    print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
+    print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS UNIFORM ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
     base_fname_knn = SavefileName("ETCBC", "knn")
     for n_window in range(1, 6):
         for k in range(2, 10):
             base_fname_knn.set_knn_opts(k=k)
             print(f"\nKNN Classifier with k={k} and n_window={n_window}")
             run_etcbc_clf("knn", n_window, etcbc_ds, base_fname_knn,  n_neighbors=k)
+
+    print("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ K-NEAREST NEIGHBOURS DISTANCE ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n")
+    base_fname_knn = SavefileName("ETCBC", "knn")
+    for n_window in range(1, 6):
+        for k in range(2, 10):
+            base_fname_knn.set_knn_opts(k=k, weights="distance")
+            print(f"\nKNN Classifier with k={k} and n_window={n_window}")
+            run_etcbc_clf("knn", n_window, etcbc_ds, base_fname_knn,  n_neighbors=k, weights="distance")
 
     print("\n=========================== RANDOM FOREST =====================\n")
     base_fname_rf = SavefileName("ETCBC", "rf")
@@ -344,3 +352,8 @@ if __name__ == "__main__":
             base_fname_rf.set_rf_opts(n_estimators=n_tree)
             print(f"\nRandom Forest Classifier with n_tree={n_tree} and n_window={n_window}")
             run_etcbc_clf("rf", n_window, etcbc_ds, base_fname_rf, n_estimators=n_tree)
+
+    print("\n================== SVC ================")
+    base_fname_mnb = SavefileName("ETCBC", "svc")
+    for n in range(1, 6):
+        run_etcbc_clf("svc", n, etcbc_ds, base_fname_mnb)
