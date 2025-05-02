@@ -1,0 +1,3 @@
+[submodule "src/classifier/out"]
+	path = src/classifier/out
+	url = https://github.com/Ryohskay/peshitta_cj_data.git
