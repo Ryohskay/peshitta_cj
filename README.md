@@ -6,11 +6,12 @@
 
 ***NOTE:***
 
+- Some parts of this project's current implementation, mainly the ones in the "src/ui_web" subpackage, relies on classifier results stored in raw text files (CSV and JSON)
+  - at the end of the project there were thousands of these files each representing different classifier configurations.
+  - If you really want to try these files, clone this GitHub repository using `git clone --recurse-submodules` ***or*** [download the data zip file here](https://github.com/Ryohskay/peshitta_cj_data/archive/refs/tags/zip.zip) and unzip its contents into `src/classifier/out`.
+
 - This project is based on scikit-learn, which ***only supports CPU-based training.***
   - Because of this, this project is very slow and can easily take a day to finish a whole script if you pack it with many classifier configurations.
-
-- Some parts of this project's current implementation, mainly the ones in the "src/ui_web" subpackage, relies on classifier results stored in raw text files (CSV and JSON)
-  - at the end of the project there were thousands of these files each representing different classifier configurations. If you really want to try these files, clone this GitHub repository using `git clone --recurse-submodules` ***or*** [download the data zip file here](https://github.com/Ryohskay/peshitta_cj_data/archive/refs/tags/zip.zip) and unzip its contents into `src/classifier/out`.
 
 ### Dependencies
 
