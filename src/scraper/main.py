@@ -65,7 +65,7 @@ def get_lemma_line(markup_tag: Tag) -> str | None:
     if markup_tag.name is None and in_tag_txt != "":
         # if the content of body tag is not within any tag
         # but a raw string directly under body tag
-        # (this is how CAL lists lemmata in lexcicon entries)
+        # (this is how CAL lists lemmata in lexicon entries)
         return in_tag_txt
     return None
 
@@ -132,28 +132,35 @@ if __name__ == "__main__":
     OT = False
     NT = True
 
+    # target_books = [
+    #     ("Matthew", "62040", NT),
+    #     ("Mark", "62041", NT),
+    #     ("Luke", "62042", NT),
+    #     ("John", "62043", NT),
+    #     ("Genesis", "62001", OT),
+    #     ("Exodus", "62002", OT),
+    #     ("Acts", "62044", NT),
+    #     ("Deuteronomy", "62005", OT),
+    #     ("Joshua", "62006", OT),
+    #     ("Judges", "62007", OT),
+    #     ("1_Samuel", "62008", OT),
+    #     ("2_Samuel", "62009", OT),
+    #     ("1_Kings", "62010", OT),
+    #     ("2_Kings", "62011", OT),
+    #     ("Ruth", "62030", OT),
+    #     ("Esther", "62034", OT),
+    #     ("Ezra", "62036", OT),
+    #     ("Nehemiah", "62037", OT),
+    #     ("1_Chronicles", "62038", OT),
+    #     ("2_Chronicles", "62039", OT),
+    #     ("1_Maccabees", "62078", OT),
+    # ]
+
     target_books = [
-        ("Matthew", "62040", NT),
-        ("Mark", "62041", NT),
-        ("Luke", "62042", NT),
-        ("John", "62043", NT),
-        ("Genesis", "62001", OT),
-        ("Exodus", "62002", OT),
-        ("Acts", "62044", NT),
-        ("Deuteronomy", "62005", OT),
-        ("Joshua", "62006", OT),
-        ("Judges", "62007", OT),
-        ("1_Samuel", "62008", OT),
-        ("2_Samuel", "62009", OT),
-        ("1_Kings", "62010", OT),
-        ("2_Kings", "62011", OT),
-        ("Ruth", "62030", OT),
-        ("Esther", "62034", OT),
-        ("Ezra", "62036", OT),
-        ("Nehemiah", "62037", OT),
-        ("1_Chronicles", "62038", OT),
-        ("2_Chronicles", "62039", OT),
-        ("1_Maccabees", "62078", OT),
+        ("OldSyriacMatthew", "60040", NT),
+        ("OldSyriacMark", "60041", NT),
+        ("OldSyriacLuke", "60042", NT),
+        ("OldSyriacJohn", "60043", NT)
     ]
 
     # book_idx = "62006"
@@ -171,7 +178,7 @@ if __name__ == "__main__":
                 http, book_id=book[1], needs_est=book[2]
             )
         else:
-            result = get_a_chapter(http, book_id=book[1], display_in=cset)
+            result = get_a_chapter(http, book_id=book[1])
         # for i in range(15,16):
         # book_idx = target_books[0]
         # print(f"Chapter: {i}")
@@ -327,8 +334,7 @@ if __name__ == "__main__":
         # # format the data in a string of CSV format
         # formatted_data = (
         #         'Verse Ref. No.,Verse URL,Raw Text,'
-        #         + 'Lemmatised Text,Lemma Annotations
-'
+        #         + 'Lemmatised Text,Lemma Annotations'
         #         )
         # print(verse_annots)
         # for i in range(len(verses)):
@@ -340,11 +346,10 @@ if __name__ == "__main__":
         #             formatted_data
         #             + f'"Chapter {indices[0]} verse {indices[1]}",'
         #             + '"{verse_urls[i]}","{raw_txt_verse}",'
-        #             + '"{lemma_verse}","{annot_verse}"
-'
+        #             + '"{lemma_verse}","{annot_verse}"'
         #             )
 
-        # Store the scraped lines into a csv file
+        # Store the scraped lines into a json file
         with Path(f"./out/scraper_results_{cset}_{book[0]}.json").open(
             mode="w"
         ) as fp:
