@@ -30,7 +30,8 @@ import time
 from pathlib import Path
 
 from bs4 import BeautifulSoup, Tag
-from cal_handler import (
+
+from src.scraper.cal_handler import (
     follow_link,
     get_a_chapter,
     get_a_syriac_chapter,
