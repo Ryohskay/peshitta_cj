@@ -188,7 +188,7 @@ def get_and_save(
     fpath: str | Path,
     pool_mgr: urllib3.PoolManager,
     book_id: str,
-    section: int,
+    section: int | None = None,
     display_in: str = "Latin",
     allow_overwrite: bool = False,
     needs_est: bool = False,
